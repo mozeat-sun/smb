@@ -1,0 +1,20 @@
+# ZooConfig.cmake.in
+# Configuration file for the ZOO library package
+
+@PACKAGE_INIT@
+
+# Set up import targets
+include("${CMAKE_CURRENT_LIST_DIR}/ZooTargets.cmake" OPTIONAL)
+
+# Provide legacy variables for compatibility
+set(ZOO_FOUND TRUE)
+set(ZOO_VERSION "@PROJECT_VERSION@")
+set(ZOO_INCLUDE_DIRS "@CMAKE_INSTALL_PREFIX@/include/zoo")
+
+# Check if all requested components are available
+check_required_components(Zoo)
+
+# Display found message
+if(NOT Zoo_FIND_QUIETLY)
+    message(STATUS "Found ZOO: ${ZOO_VERSION} (${ZOO_INCLUDE_DIRS})")
+endif()

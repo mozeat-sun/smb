@@ -1,0 +1,46 @@
+################################################################################
+# Copyright (C) 2025, ZOO Ltd
+#
+# Product: ZOO
+# Module: Socket
+# File name: zoo_socket_config.cmake.in
+# Description: CMake package configuration file template
+#
+# Change History:
+# Version   Date           Author          Description
+# -------   ----------     -----------     ---------------------------------
+# 1.0       2025-08-05     assistant       Initial creation
+################################################################################
+
+@PACKAGE_INIT@
+
+# Include the targets file
+if(NOT TARGET zoo::zoo_socket_static AND NOT TARGET zoo::zoo_socket_shared)
+    include("${CMAKE_CURRENT_LIST_DIR}/zoo_socket_targets.cmake")
+endif()
+
+# Set component variables
+set(zoo_socket_VERSION @PROJECT_VERSION@)
+
+# Check required components
+check_required_components(zoo_socket)
+
+# Provide imported targets
+if(TARGET zoo::zoo_socket_static)
+    set(zoo_socket_FOUND TRUE)
+    set(zoo_socket_LIBRARIES zoo::zoo_socket_static)
+    set(zoo_socket_INCLUDE_DIRS $<TARGET_PROPERTY:zoo::zoo_socket_static,INTERFACE_INCLUDE_DIRECTORIES>)
+endif()
+
+if(TARGET zoo::zoo_socket_shared)
+    set(zoo_socket_FOUND TRUE)
+    if(NOT DEFINED zoo_socket_LIBRARIES)
+        set(zoo_socket_LIBRARIES zoo::zoo_socket_shared)
+        set(zoo_socket_INCLUDE_DIRS $<TARGET_PROPERTY:zoo::zoo_socket_shared,INTERFACE_INCLUDE_DIRECTORIES>)
+    endif()
+endif()
+
+# Provide usage information
+if(zoo_socket_FOUND AND NOT zoo_socket_FIND_QUIETLY)
+    message(STATUS "Found zoo_socket: ${zoo_socket_VERSION}")
+endif()

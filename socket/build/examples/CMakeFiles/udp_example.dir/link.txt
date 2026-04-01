@@ -1,0 +1,1 @@
+/usr/bin/cc  -Wall -Wextra -Wpedantic -D_GNU_SOURCE -O3 -DNDEBUG -O2 -DNDEBUG CMakeFiles/udp_example.dir/udp_example.c.o -o udp_example  ../libzoo_socket.a -lpthread 

@@ -1,0 +1,77 @@
+Start testing: Aug 05 17:49 CST
+----------------------------------------------------------
+1/1 Testing: zoo_socket_unit_tests
+1/1 Test: zoo_socket_unit_tests
+Command: "/home/sky/zoo/socket/build/tests/zoo_socket_tests"
+Directory: /home/sky/zoo/socket/build/tests
+"zoo_socket_unit_tests" start time: Aug 05 17:49 CST
+Output:
+----------------------------------------------------------
+
+================================================================================
+ZOO Socket Library Unit Tests
+================================================================================
+
+Running initialization tests...
+/home/sky/zoo/socket/tests/test_runner.c:106:test_zoo_socket_init_success:PASS
+/home/sky/zoo/socket/tests/test_runner.c:107:test_zoo_socket_init_multiple_calls:PASS
+/home/sky/zoo/socket/tests/test_runner.c:108:test_zoo_socket_cleanup:PASS
+Running socket creation tests...
+/home/sky/zoo/socket/tests/test_runner.c:33:test_zoo_socket_create_tcp_ipv4:FAIL: Expected 0 Was -8
+/home/sky/zoo/socket/tests/test_runner.c:57:test_zoo_socket_create_udp_ipv4:FAIL: Expected 0 Was -8
+/home/sky/zoo/socket/tests/test_runner.c:114:test_zoo_socket_create_tcp_ipv6:PASS
+/home/sky/zoo/socket/tests/test_runner.c:102:test_zoo_socket_create_invalid_params:FAIL: Expected -2 Was -8
+/home/sky/zoo/socket/tests/test_runner.c:129:test_zoo_socket_close:FAIL: Expected 0 Was -8
+Running address utility tests...
+/home/sky/zoo/socket/tests/test_runner.c:28:test_zoo_sockaddr_inet_init:FAIL: Expected 2130706433 Was 0
+/home/sky/zoo/socket/tests/test_runner.c:45:test_zoo_sockaddr_inet6_init:FAIL: Memory Mismatch. Byte 11 Expected 0x00 Was 0x01
+/home/sky/zoo/socket/tests/test_runner.c:68:test_zoo_sockaddr_any_init:FAIL: Expected 8080 Was 0
+/home/sky/zoo/socket/tests/test_runner.c:101:test_zoo_sockaddr_loopback_init:FAIL: Expected 2130706433 Was 0
+/home/sky/zoo/socket/tests/test_runner.c:140:test_zoo_sockaddr_equal:FAIL: Expected FALSE Was TRUE
+Running connection tests...
+/home/sky/zoo/socket/tests/test_runner.c:36:test_zoo_socket_connect_success:FAIL: Expected 0 Was -8
+/home/sky/zoo/socket/tests/test_runner.c:64:test_zoo_socket_connect_invalid_params:FAIL: Expected 0 Was -8
+/home/sky/zoo/socket/tests/test_runner.c:99:test_zoo_socket_connect_timeout:FAIL: Expected 0 Was -8
+Running bind and listen tests...
+/home/sky/zoo/socket/tests/test_runner.c:17:test_zoo_socket_bind_success:FAIL: Expected 0 Was -1
+/home/sky/zoo/socket/tests/test_runner.c:135:test_zoo_socket_bind_invalid_params:PASS
+/home/sky/zoo/socket/tests/test_runner.c:48:test_zoo_socket_listen_success:FAIL: Expected 0 Was -1
+/home/sky/zoo/socket/tests/test_runner.c:137:test_zoo_socket_listen_invalid_params:PASS
+/home/sky/zoo/socket/tests/test_runner.c:138:test_zoo_socket_accept_invalid_params:PASS
+Running send/receive tests...
+/home/sky/zoo/socket/tests/test_runner.c:11:test_zoo_socket_send_success:INFO: Send functionality requires connected socket pair
+/home/sky/zoo/socket/tests/test_runner.c:142:test_zoo_socket_send_success:PASS
+/home/sky/zoo/socket/tests/test_runner.c:29:test_zoo_socket_send_invalid_params:FAIL: Expected -9 Was -1
+/home/sky/zoo/socket/tests/test_runner.c:144:test_zoo_socket_recv_invalid_params:PASS
+/home/sky/zoo/socket/tests/test_runner.c:145:test_zoo_socket_sendto_success:PASS
+/home/sky/zoo/socket/tests/test_runner.c:69:test_zoo_socket_recvfrom_success:INFO: Recvfrom functionality requires data to be available
+/home/sky/zoo/socket/tests/test_runner.c:146:test_zoo_socket_recvfrom_success:PASS
+Running socket options tests...
+/home/sky/zoo/socket/tests/test_runner.c:17:test_zoo_socket_setsockopt_success:FAIL: Expected 0 Was -1
+/home/sky/zoo/socket/tests/test_runner.c:31:test_zoo_socket_getsockopt_success:FAIL: Expected 0 Was -1
+/home/sky/zoo/socket/tests/test_runner.c:42:test_zoo_socket_set_blocking:FAIL: Expected 0 Was -1
+Running select tests...
+/home/sky/zoo/socket/tests/test_runner.c:62:test_zoo_socket_select_read:FAIL: Expected -5 Was -2
+/home/sky/zoo/socket/tests/test_runner.c:76:test_zoo_socket_select_write:FAIL: Expected TRUE Was FALSE
+/home/sky/zoo/socket/tests/test_runner.c:89:test_zoo_socket_select_timeout:FAIL: Expected -5 Was -2
+Running error handling tests...
+/home/sky/zoo/socket/tests/test_runner.c:162:test_zoo_socket_get_last_error:PASS
+/home/sky/zoo/socket/tests/test_runner.c:163:test_zoo_socket_error_string:PASS
+/home/sky/zoo/socket/tests/test_runner.c:113:test_zoo_socket_is_initialized:FAIL: Expected TRUE Was FALSE
+
+================================================================================
+Test Summary
+================================================================================
+
+-----------------------
+35 Tests 22 Failures 0 Ignored 
+FAIL
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Failed.
+"zoo_socket_unit_tests" end time: Aug 05 17:49 CST
+"zoo_socket_unit_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Aug 05 17:49 CST
