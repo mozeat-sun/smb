@@ -8,7 +8,7 @@
  ******************************************************************************/
 
 #include "zoo_select.h"
-#include "../platform/inc/zoo_error.h"
+#include "../../platform/inc/zoo_error.h"
 #include <string.h>
 #include <errno.h>
 
@@ -682,6 +682,7 @@ use_select_fallback:
 #endif /* ZOO_USE_EPOLL */
 
 #ifdef ZOO_HAS_POSIX
+    {
     fd_set read_fds, write_fds, error_fds;
     fd_set *read_fds_ptr = NULL, *write_fds_ptr = NULL, *error_fds_ptr = NULL;
     int max_fd = -1;
@@ -756,7 +757,7 @@ use_select_fallback:
     }
 
     // Check results and update readiness flags
-    size_t total_ready = 0;
+    size_t total_ready_select = 0;
 
     if (read_impl && read_fds_ptr)
     {
@@ -766,7 +767,7 @@ use_select_fallback:
             if (fd >= 0 && FD_ISSET(fd, &read_fds))
             {
                 read_impl->read_ready[i] = true;
-                total_ready++;
+                total_ready_select++;
                 if (result) result->read_ready_count++;
             }
         }
@@ -780,7 +781,7 @@ use_select_fallback:
             if (fd >= 0 && FD_ISSET(fd, &write_fds))
             {
                 write_impl->write_ready[i] = true;
-                total_ready++;
+                total_ready_select++;
                 if (result) result->write_ready_count++;
             }
         }
@@ -794,13 +795,14 @@ use_select_fallback:
             if (fd >= 0 && FD_ISSET(fd, &error_fds))
             {
                 error_impl->error_ready[i] = true;
-                total_ready++;
+                total_ready_select++;
                 if (result) result->error_ready_count++;
             }
         }
     }
 
-    if (result) result->ready_count = total_ready;
+    if (result) result->ready_count = total_ready_select;
+    }
 
 #endif /* ZOO_HAS_POSIX */
 

@@ -163,6 +163,7 @@ foreach(target zoo_socket_static zoo_socket_shared)
             ${ZOO_PLATFORM_INCLUDE}
             ${ZOO_UTIL_INCLUDE}
     )
+    target_compile_options(${target} PRIVATE -Wno-unused-value)
 endforeach()
 
 # Set include directories for interface library

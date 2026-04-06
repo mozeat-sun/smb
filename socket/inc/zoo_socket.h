@@ -34,7 +34,7 @@ extern "C"
 
 // Include platform headers for error codes
 #include "zoo_platform.h"
-#include "../platform/inc/zoo_error.h"
+#include "../../platform/inc/zoo_error.h"
 
 // Use platform error codes instead of redefining them
 // ZOO_OK, ZOO_ERROR_INVALID_PARAM, etc. are already defined in zoo_error.h

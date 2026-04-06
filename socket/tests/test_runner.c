@@ -14,6 +14,7 @@
  ******************************************************************************/
 
 #include "unity.h"
+#include "zoo_socket.h"
 #include <stdio.h>
 #include <stdlib.h>
 

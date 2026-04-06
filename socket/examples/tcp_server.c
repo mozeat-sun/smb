@@ -19,6 +19,8 @@
 #include <stdlib.h>
 
 int main(int argc, char* argv[]) {
+    (void)argc;
+    (void)argv;
     ZOO_ERROR_TYPE result;
     ZOO_SOCKET_INFO_STRUCT server_socket, client_socket;
     ZOO_SOCKADDR_UNION server_addr, client_addr;

@@ -15,6 +15,10 @@
 
 cmake_minimum_required(VERSION 3.16)
 
+get_filename_component(ZOO_SOCKET_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOLUTE)
+get_filename_component(ZOO_REPO_ROOT_DIR "${ZOO_SOCKET_ROOT_DIR}/.." ABSOLUTE)
+set(ZOO_VENDORED_UNITY_ROOT "${ZOO_REPO_ROOT_DIR}/third_party/test/unity")
+
 # ==============================================================================
 # UNITY TEST FRAMEWORK SETUP
 # ==============================================================================
@@ -23,36 +27,25 @@ cmake_minimum_required(VERSION 3.16)
 find_path(UNITY_INCLUDE_DIR
     NAMES unity.h
     PATHS
+        ${ZOO_VENDORED_UNITY_ROOT}/src
         ${CMAKE_CURRENT_SOURCE_DIR}/unity
         ${CMAKE_CURRENT_SOURCE_DIR}/../third_party/unity
         /usr/local/include
         /usr/include
 )
 
-find_library(UNITY_LIBRARY
-    NAMES unity
-    PATHS
-        ${CMAKE_CURRENT_SOURCE_DIR}/unity
-        ${CMAKE_CURRENT_SOURCE_DIR}/../third_party/unity
-        /usr/local/lib
-        /usr/lib
-)
-
-# If Unity not found, download and build it
-if(NOT UNITY_INCLUDE_DIR OR NOT UNITY_LIBRARY)
-    message(STATUS "Unity test framework not found, downloading...")
-    
-    include(FetchContent)
-    FetchContent_Declare(
-        unity
-        GIT_REPOSITORY https://github.com/ThrowTheSwitch/Unity.git
-        GIT_TAG v2.5.2
+# Use vendored Unity source from the repository when available.
+if(EXISTS "${ZOO_VENDORED_UNITY_ROOT}/src/unity.c")
+    add_library(zoo_socket_unity STATIC
+        ${ZOO_VENDORED_UNITY_ROOT}/src/unity.c
     )
-    
-    FetchContent_MakeAvailable(unity)
-    
-    set(UNITY_INCLUDE_DIR ${unity_SOURCE_DIR}/src)
-    set(UNITY_LIBRARY unity)
+    target_include_directories(zoo_socket_unity PUBLIC
+        ${ZOO_VENDORED_UNITY_ROOT}/src
+    )
+    set(UNITY_INCLUDE_DIR ${ZOO_VENDORED_UNITY_ROOT}/src)
+    set(UNITY_LIBRARY zoo_socket_unity)
+elseif(NOT UNITY_INCLUDE_DIR)
+    message(FATAL_ERROR "Unity test framework not found. Expected vendored Unity at ${ZOO_VENDORED_UNITY_ROOT}")
 endif()
 
 # ==============================================================================
@@ -62,7 +55,7 @@ endif()
 # Include directories
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/../inc
+    ${ZOO_SOCKET_ROOT_DIR}/inc
     ${UNITY_INCLUDE_DIR}
     ${ZOO_PLATFORM_INCLUDE}
     ${ZOO_UTIL_INCLUDE}
@@ -134,7 +127,7 @@ set_tests_properties(zoo_socket_unit_tests PROPERTIES
 # ==============================================================================
 
 # Custom target to run tests with verbose output
-add_custom_target(test_verbose
+add_custom_target(socket_test_verbose
     COMMAND ${CMAKE_CTEST_COMMAND} --verbose
     DEPENDS zoo_socket_tests
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
@@ -147,7 +140,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
         target_link_libraries(zoo_socket_tests gcov)
         
-        add_custom_target(coverage
+        add_custom_target(socket_coverage
             COMMAND ${CMAKE_CTEST_COMMAND}
             COMMAND gcov -r ${CMAKE_CURRENT_BINARY_DIR}/*.gcno
             DEPENDS zoo_socket_tests

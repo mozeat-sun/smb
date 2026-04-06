@@ -14,5 +14,5 @@
         "stdint.h": "c"
     },
     "C_Cpp.default.compilerPath": "D:/Mingw/bin/gcc.exe",
-    "cmake.sourceDirectory": "/home/sky/zoo/memory_pool"
+    "cmake.sourceDirectory": "/home/mozeat/zoo/socket/tests"
 }

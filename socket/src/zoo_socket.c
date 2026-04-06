@@ -508,14 +508,14 @@ ZOO_ERROR_TYPE zoo_socket_send(ZOO_SOCKET_INFO_STRUCT *socket_info,
                                size_t data_len,
                                size_t *bytes_sent)
 {
-    ZOO_SOCKET_VALIDATE_SOCKET(socket_info->fd);
-    ZOO_SOCKET_VALIDATE_BUFFER(data, data_len);
-
-    ZOO_SOCKET_LOCK();
     if (!socket_info || !data || !bytes_sent)
     {
         return ZOO_ERROR_INVALID_PARAM;
     }
+    ZOO_SOCKET_VALIDATE_SOCKET(socket_info->fd);
+    ZOO_SOCKET_VALIDATE_BUFFER(data, data_len);
+
+    ZOO_SOCKET_LOCK();
 
     if (!socket_info->is_connected)
     {
@@ -556,14 +556,14 @@ ZOO_ERROR_TYPE zoo_socket_recv(ZOO_SOCKET_INFO_STRUCT *socket_info,
                                size_t buffer_len,
                                size_t *bytes_received)
 {
-    ZOO_SOCKET_VALIDATE_SOCKET(socket_info->fd);
-    ZOO_SOCKET_VALIDATE_BUFFER(buffer, buffer_len);
-
-    ZOO_SOCKET_LOCK();
     if (!socket_info || !buffer || !bytes_received)
     {
         return ZOO_ERROR_INVALID_PARAM;
     }
+    ZOO_SOCKET_VALIDATE_SOCKET(socket_info->fd);
+    ZOO_SOCKET_VALIDATE_BUFFER(buffer, buffer_len);
+
+    ZOO_SOCKET_LOCK();
 
     ssize_t result;
 #ifdef ZOO_HAS_POSIX
