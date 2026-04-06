@@ -1,0 +1,1 @@
+/usr/bin/cc -fPIC  -Wall -Wextra -Wpedantic -D_GNU_SOURCE -O3 -DNDEBUG -O2 -DNDEBUG -shared -Wl,-soname,libzoo_socket.so.1 -o libzoo_socket.so.1.0.0 CMakeFiles/zoo_socket_shared.dir/src/zoo_socket.c.o CMakeFiles/zoo_socket_shared.dir/src/zoo_select.c.o  -lpthread 

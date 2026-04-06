@@ -1,0 +1,8 @@
+/home/mozeat/zoo/build/CMakeFiles/zoo_socket_unity.dir
+/home/mozeat/zoo/build/CMakeFiles/zoo_socket_tests.dir
+/home/mozeat/zoo/build/CMakeFiles/socket_test_verbose.dir
+/home/mozeat/zoo/build/CMakeFiles/socket_coverage.dir
+/home/mozeat/zoo/build/CMakeFiles/package.dir
+/home/mozeat/zoo/build/CMakeFiles/package_source.dir
+/home/mozeat/zoo/build/CMakeFiles/edit_cache.dir
+/home/mozeat/zoo/build/CMakeFiles/rebuild_cache.dir

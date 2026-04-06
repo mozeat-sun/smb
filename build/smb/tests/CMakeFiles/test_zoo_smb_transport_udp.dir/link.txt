@@ -1,0 +1,1 @@
+/usr/bin/cc -O3 -DNDEBUG CMakeFiles/test_zoo_smb_transport_udp.dir/integration/test_zoo_smb_transport_udp.c.o -o ../../bin/test_zoo_smb_transport_udp  ../../lib/libzoo_smb.a ../../lib/libunity.a -lpthread -lm ../../lib/libtest_utils.a ../../lib/libzoo_smb.a -latomic ../../lib/libunity.a -lpthread -lm 

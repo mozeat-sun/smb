@@ -1,0 +1,1 @@
+/usr/bin/cc -O3 -DNDEBUG CMakeFiles/test_port_manager.dir/unit/test_port_manager.c.o -o ../../bin/test_port_manager  ../../lib/libzoo_smb.a ../../lib/libunity.a -lpthread -lm ../../lib/libtest_utils.a ../../lib/libzoo_smb.a -latomic ../../lib/libunity.a -lpthread -lm 

@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../lib/libzoo_platform.a CMakeFiles/zoo_platform_static.dir/src/zoo_error.c.o
+/usr/bin/ranlib ../lib/libzoo_platform.a

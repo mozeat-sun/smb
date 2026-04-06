@@ -1,0 +1,1 @@
+/usr/bin/cc -O3 -DNDEBUG CMakeFiles/test_zoo_smb_protocol.dir/unit/test_zoo_smb_protocol.c.o -o ../../bin/test_zoo_smb_protocol  ../../lib/libzoo_smb.a ../../lib/libunity.a -lpthread -lm ../../lib/libtest_utils.a ../../lib/libzoo_smb.a -latomic ../../lib/libunity.a -lpthread -lm 

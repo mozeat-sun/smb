@@ -1,0 +1,2 @@
+/usr/bin/ar qc libzoo_socket_unity.a CMakeFiles/zoo_socket_unity.dir/home/mozeat/zoo/third_party/test/unity/src/unity.c.o
+/usr/bin/ranlib libzoo_socket_unity.a

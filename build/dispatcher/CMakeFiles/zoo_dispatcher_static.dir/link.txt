@@ -1,0 +1,2 @@
+/usr/bin/ar qc libzoo_dispatcher.a CMakeFiles/zoo_dispatcher_static.dir/src/zoo_dispatcher.c.o
+/usr/bin/ranlib libzoo_dispatcher.a

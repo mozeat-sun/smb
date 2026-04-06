@@ -1,0 +1,1 @@
+/usr/bin/cc -O3 -DNDEBUG CMakeFiles/test_service_discovery.dir/integration/test_service_discovery.c.o -o ../../bin/test_service_discovery  ../../lib/libzoo_smb.a ../../lib/libunity.a -lpthread -lm ../../lib/libtest_utils.a ../../lib/libzoo_smb.a -latomic ../../lib/libunity.a -lpthread -lm 
