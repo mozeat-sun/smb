@@ -1,0 +1,34 @@
+# ZOO Thread Pool CMake Configuration File
+
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+# Find required dependencies
+find_dependency(Threads)
+
+# Include targets
+include("${CMAKE_CURRENT_LIST_DIR}/ZOOThreadPoolTargets.cmake")
+
+# Set variables
+set(ZOO_THREAD_POOL_VERSION @PROJECT_VERSION@)
+set(ZOO_THREAD_POOL_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@")
+set(ZOO_THREAD_POOL_LIBRARIES ZOO::zoo_thread_pool)
+
+# Check if all required components are found
+check_required_components(ZOOThreadPool)
+
+# Provide imported target
+if(TARGET ZOO::zoo_thread_pool)
+    get_target_property(ZOO_THREAD_POOL_INCLUDE_DIRS ZOO::zoo_thread_pool INTERFACE_INCLUDE_DIRECTORIES)
+    set(ZOO_THREAD_POOL_FOUND TRUE)
+else()
+    set(ZOO_THREAD_POOL_FOUND FALSE)
+endif()
+
+# Print status message
+if(ZOO_THREAD_POOL_FOUND)
+    message(STATUS "Found ZOO Thread Pool: ${ZOO_THREAD_POOL_VERSION}")
+    message(STATUS "  Include dirs: ${ZOO_THREAD_POOL_INCLUDE_DIRS}")
+    message(STATUS "  Libraries: ${ZOO_THREAD_POOL_LIBRARIES}")
+endif()

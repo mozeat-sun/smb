@@ -1,0 +1,15 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: ZooDispatcher
+Description: ZOO Framework Message Dispatcher Library
+Version: @PROJECT_VERSION@
+URL: https://github.com/niopower/zoo-dispatcher
+Requires: 
+Requires.private: 
+Conflicts:
+Libs: -L${libdir} -lzoo_dispatcher
+Libs.private: -lpthread
+Cflags: -I${includedir}

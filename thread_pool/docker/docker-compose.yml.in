@@ -1,0 +1,85 @@
+# ==============================================================================
+# ZOO Thread Pool - Docker Compose for Testing
+# Development and testing environment
+# ==============================================================================
+
+version: '3.8'
+
+services:
+  zoo-thread-pool-test:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.in
+      target: runtime
+    image: @ZOO_DOCKER_REGISTRY@/zoo-thread-pool:@ZOO_THREAD_POOL_VERSION@
+    container_name: zoo-thread-pool-test
+    environment:
+      - ZOO_LOG_LEVEL=INFO
+      - ZOO_THREAD_POOL_SIZE=4
+    volumes:
+      - ./test-results:/tmp/test-results
+    command: |
+      sh -c "
+        echo 'Running ZOO Thread Pool tests...' &&
+        /usr/local/bin/zoo_thread_pool_tests --gtest_output=xml:/tmp/test-results/unit-tests.xml &&
+        /usr/local/bin/zoo_thread_pool_integration_tests --gtest_output=xml:/tmp/test-results/integration-tests.xml &&
+        echo 'All tests completed successfully!'
+      "
+    restart: "no"
+    
+  zoo-thread-pool-benchmark:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.in
+      target: runtime
+    image: @ZOO_DOCKER_REGISTRY@/zoo-thread-pool:@ZOO_THREAD_POOL_VERSION@
+    container_name: zoo-thread-pool-benchmark
+    environment:
+      - ZOO_LOG_LEVEL=WARN
+      - ZOO_THREAD_POOL_SIZE=8
+    volumes:
+      - ./benchmark-results:/tmp/benchmark-results
+    command: |
+      sh -c "
+        echo 'Running ZOO Thread Pool benchmarks...' &&
+        /usr/local/bin/zoo_thread_pool_benchmark --output=/tmp/benchmark-results/benchmark.json &&
+        echo 'Benchmarks completed!'
+      "
+    restart: "no"
+    depends_on:
+      - zoo-thread-pool-test
+      
+  zoo-thread-pool-demo:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.in
+      target: runtime
+    image: @ZOO_DOCKER_REGISTRY@/zoo-thread-pool:@ZOO_THREAD_POOL_VERSION@
+    container_name: zoo-thread-pool-demo
+    environment:
+      - ZOO_LOG_LEVEL=DEBUG
+      - ZOO_THREAD_POOL_SIZE=6
+    ports:
+      - "8080:8080"
+    command: |
+      sh -c "
+        echo 'Starting ZOO Thread Pool demo application...' &&
+        /usr/local/bin/zoo_thread_pool_demo --port=8080 --threads=6
+      "
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  test-results:
+    driver: local
+  benchmark-results:
+    driver: local
+
+networks:
+  default:
+    driver: bridge

@@ -27,7 +27,7 @@ Overall conclusion:
 | REQ-SAFE-001 | Partial | Layering and policy separation are good foundations for deterministic behavior, but deterministic execution is not yet a defined operating mode with bounded timing semantics. | Clear separation of node, runtime, routing, policy, transport, and platform layers. | Need deterministic scheduling profile, timing budgets, and critical-path analysis. |
 | REQ-SAFE-002 | Partial | Memory-pool usage is present in core paths, but bounded-memory behavior is not yet an explicitly enforced system mode. | SMB uses memory-pool-backed objects in multiple core components and the code audit notes low runtime heap use in src. | Need a formal bounded-memory profile, allocation rules, and enforcement tests. |
 | REQ-SAFE-003 | Partial | Repository-level traceability scaffolding now exists, but the current architecture and implementation are not yet systematically tagged to requirements. | Requirements catalog and traceability tooling have been added. | Need requirement IDs embedded in tests, design decisions, and critical code paths. |
-| REQ-SEC-001 | Missing | Security hooks exist, but there is not yet a maintained threat model as an architectural artifact. | SMB requirements and design mention security policy hooks and enforcement toggles. | Need a formal threat model for protocol, control plane, update path, and deployment assumptions. |
+| REQ-SEC-001 | Partial | A maintained threat-model baseline now exists, but identity, replay protection, and update-trust controls are still not fully designed into the product architecture. | SMB threat model and security architecture now define threats, boundaries, and control allocation. | Need concrete identity, replay-protection, and secure-update architecture decisions. |
 | REQ-SEC-002 | Present | Continuous static analysis is now supported at the repository quality-gate level. | Quality workflow includes static-analysis automation. | Need tuning and policy thresholds so results become release-gating evidence. |
 | REQ-SEC-003 | Present | Dependency and component inventory scanning is now supported at the repository quality-gate level. | Quality workflow includes dependency inventory generation. | Need stronger provenance and vulnerability correlation for higher assurance grades. |
 | REQ-SEC-004 | Partial | Vulnerability reporting exists, but tracked remediation workflow is still more governance than architecture. | Root security policy and release scorecard process exist. | Need SLA tracking, remediation evidence, and link to release authority gates. |
@@ -55,7 +55,6 @@ Overall conclusion:
 
 ### Still missing as architectural capabilities
 
-- Formal threat model
 - Crash-safe durability or persistence model for restart-sensitive behavior
 - Automotive-grade mixed-criticality partitioning and freedom-from-interference controls
 - High-assurance security architecture needed for military/aerospace progression

@@ -145,4 +145,6 @@ Mitigation:
 
 - Requirements: SMB_REQUIREMENTS.md
 - Design: SMB_DESIGN.md
+- Threat model: SMB_THREAT_MODEL.md
+- Security architecture: SMB_SECURITY_ARCHITECTURE.md
 - Existing combined architecture/design background: SMB_ARCHITECTURE_DESIGN.md

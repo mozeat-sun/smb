@@ -147,3 +147,5 @@ Global and per-channel metrics include:
 
 Requirements baseline: SMB_REQUIREMENTS.md
 System decomposition and flows: SMB_ARCHITECTURE.md
+Threat analysis baseline: SMB_THREAT_MODEL.md
+Security control allocation: SMB_SECURITY_ARCHITECTURE.md
