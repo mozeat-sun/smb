@@ -220,32 +220,32 @@ zoo_log_shared/fast:
 	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f log/CMakeFiles/zoo_log_shared.dir/build.make log/CMakeFiles/zoo_log_shared.dir/build
 .PHONY : zoo_log_shared/fast
 
-src/zoo_log.o: src/zoo_log.c.o
-.PHONY : src/zoo_log.o
+__/src/log/zoo_log.o: __/src/log/zoo_log.c.o
+.PHONY : __/src/log/zoo_log.o
 
 # target to build an object file
-src/zoo_log.c.o:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f log/CMakeFiles/zoo_log_static.dir/build.make log/CMakeFiles/zoo_log_static.dir/src/zoo_log.c.o
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f log/CMakeFiles/zoo_log_shared.dir/build.make log/CMakeFiles/zoo_log_shared.dir/src/zoo_log.c.o
-.PHONY : src/zoo_log.c.o
+__/src/log/zoo_log.c.o:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f log/CMakeFiles/zoo_log_static.dir/build.make log/CMakeFiles/zoo_log_static.dir/__/src/log/zoo_log.c.o
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f log/CMakeFiles/zoo_log_shared.dir/build.make log/CMakeFiles/zoo_log_shared.dir/__/src/log/zoo_log.c.o
+.PHONY : __/src/log/zoo_log.c.o
 
-src/zoo_log.i: src/zoo_log.c.i
-.PHONY : src/zoo_log.i
+__/src/log/zoo_log.i: __/src/log/zoo_log.c.i
+.PHONY : __/src/log/zoo_log.i
 
 # target to preprocess a source file
-src/zoo_log.c.i:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f log/CMakeFiles/zoo_log_static.dir/build.make log/CMakeFiles/zoo_log_static.dir/src/zoo_log.c.i
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f log/CMakeFiles/zoo_log_shared.dir/build.make log/CMakeFiles/zoo_log_shared.dir/src/zoo_log.c.i
-.PHONY : src/zoo_log.c.i
+__/src/log/zoo_log.c.i:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f log/CMakeFiles/zoo_log_static.dir/build.make log/CMakeFiles/zoo_log_static.dir/__/src/log/zoo_log.c.i
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f log/CMakeFiles/zoo_log_shared.dir/build.make log/CMakeFiles/zoo_log_shared.dir/__/src/log/zoo_log.c.i
+.PHONY : __/src/log/zoo_log.c.i
 
-src/zoo_log.s: src/zoo_log.c.s
-.PHONY : src/zoo_log.s
+__/src/log/zoo_log.s: __/src/log/zoo_log.c.s
+.PHONY : __/src/log/zoo_log.s
 
 # target to generate assembly for a file
-src/zoo_log.c.s:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f log/CMakeFiles/zoo_log_static.dir/build.make log/CMakeFiles/zoo_log_static.dir/src/zoo_log.c.s
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f log/CMakeFiles/zoo_log_shared.dir/build.make log/CMakeFiles/zoo_log_shared.dir/src/zoo_log.c.s
-.PHONY : src/zoo_log.c.s
+__/src/log/zoo_log.c.s:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f log/CMakeFiles/zoo_log_static.dir/build.make log/CMakeFiles/zoo_log_static.dir/__/src/log/zoo_log.c.s
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f log/CMakeFiles/zoo_log_shared.dir/build.make log/CMakeFiles/zoo_log_shared.dir/__/src/log/zoo_log.c.s
+.PHONY : __/src/log/zoo_log.c.s
 
 # Help Target
 help:
@@ -264,9 +264,9 @@ help:
 	@echo "... test"
 	@echo "... zoo_log_shared"
 	@echo "... zoo_log_static"
-	@echo "... src/zoo_log.o"
-	@echo "... src/zoo_log.i"
-	@echo "... src/zoo_log.s"
+	@echo "... __/src/log/zoo_log.o"
+	@echo "... __/src/log/zoo_log.i"
+	@echo "... __/src/log/zoo_log.s"
 .PHONY : help
 
 

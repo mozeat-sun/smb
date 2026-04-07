@@ -70,125 +70,125 @@ include timer/tests/CMakeFiles/zoo_timer_tests.dir/progress.make
 include timer/tests/CMakeFiles/zoo_timer_tests.dir/flags.make
 
 timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer.c.o: timer/tests/CMakeFiles/zoo_timer_tests.dir/flags.make
-timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer.c.o: ../timer/tests/unit/test_zoo_timer.c
+timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer.c.o: ../tests/timer/unit/test_zoo_timer.c
 timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer.c.o: timer/tests/CMakeFiles/zoo_timer_tests.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer.c.o"
-	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer.c.o -MF CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer.c.o.d -o CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer.c.o -c /home/mozeat/zoo/timer/tests/unit/test_zoo_timer.c
+	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer.c.o -MF CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer.c.o.d -o CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer.c.o -c /home/mozeat/zoo/tests/timer/unit/test_zoo_timer.c
 
 timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer.c.i"
-	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/timer/tests/unit/test_zoo_timer.c > CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer.c.i
+	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/timer/unit/test_zoo_timer.c > CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer.c.i
 
 timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer.c.s"
-	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/timer/tests/unit/test_zoo_timer.c -o CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer.c.s
+	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/timer/unit/test_zoo_timer.c -o CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer.c.s
 
 timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer_platform.c.o: timer/tests/CMakeFiles/zoo_timer_tests.dir/flags.make
-timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer_platform.c.o: ../timer/tests/unit/test_zoo_timer_platform.c
+timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer_platform.c.o: ../tests/timer/unit/test_zoo_timer_platform.c
 timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer_platform.c.o: timer/tests/CMakeFiles/zoo_timer_tests.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer_platform.c.o"
-	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer_platform.c.o -MF CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer_platform.c.o.d -o CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer_platform.c.o -c /home/mozeat/zoo/timer/tests/unit/test_zoo_timer_platform.c
+	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer_platform.c.o -MF CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer_platform.c.o.d -o CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer_platform.c.o -c /home/mozeat/zoo/tests/timer/unit/test_zoo_timer_platform.c
 
 timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer_platform.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer_platform.c.i"
-	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/timer/tests/unit/test_zoo_timer_platform.c > CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer_platform.c.i
+	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/timer/unit/test_zoo_timer_platform.c > CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer_platform.c.i
 
 timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer_platform.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer_platform.c.s"
-	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/timer/tests/unit/test_zoo_timer_platform.c -o CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer_platform.c.s
+	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/timer/unit/test_zoo_timer_platform.c -o CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer_platform.c.s
 
 timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_runner.c.o: timer/tests/CMakeFiles/zoo_timer_tests.dir/flags.make
-timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_runner.c.o: ../timer/tests/unit/test_runner.c
+timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_runner.c.o: ../tests/timer/unit/test_runner.c
 timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_runner.c.o: timer/tests/CMakeFiles/zoo_timer_tests.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_runner.c.o"
-	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_runner.c.o -MF CMakeFiles/zoo_timer_tests.dir/unit/test_runner.c.o.d -o CMakeFiles/zoo_timer_tests.dir/unit/test_runner.c.o -c /home/mozeat/zoo/timer/tests/unit/test_runner.c
+	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_runner.c.o -MF CMakeFiles/zoo_timer_tests.dir/unit/test_runner.c.o.d -o CMakeFiles/zoo_timer_tests.dir/unit/test_runner.c.o -c /home/mozeat/zoo/tests/timer/unit/test_runner.c
 
 timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_runner.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_timer_tests.dir/unit/test_runner.c.i"
-	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/timer/tests/unit/test_runner.c > CMakeFiles/zoo_timer_tests.dir/unit/test_runner.c.i
+	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/timer/unit/test_runner.c > CMakeFiles/zoo_timer_tests.dir/unit/test_runner.c.i
 
 timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_runner.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_timer_tests.dir/unit/test_runner.c.s"
-	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/timer/tests/unit/test_runner.c -o CMakeFiles/zoo_timer_tests.dir/unit/test_runner.c.s
+	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/timer/unit/test_runner.c -o CMakeFiles/zoo_timer_tests.dir/unit/test_runner.c.s
 
-timer/tests/CMakeFiles/zoo_timer_tests.dir/__/src/zoo_timer.c.o: timer/tests/CMakeFiles/zoo_timer_tests.dir/flags.make
-timer/tests/CMakeFiles/zoo_timer_tests.dir/__/src/zoo_timer.c.o: ../timer/src/zoo_timer.c
-timer/tests/CMakeFiles/zoo_timer_tests.dir/__/src/zoo_timer.c.o: timer/tests/CMakeFiles/zoo_timer_tests.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object timer/tests/CMakeFiles/zoo_timer_tests.dir/__/src/zoo_timer.c.o"
-	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT timer/tests/CMakeFiles/zoo_timer_tests.dir/__/src/zoo_timer.c.o -MF CMakeFiles/zoo_timer_tests.dir/__/src/zoo_timer.c.o.d -o CMakeFiles/zoo_timer_tests.dir/__/src/zoo_timer.c.o -c /home/mozeat/zoo/timer/src/zoo_timer.c
+timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/src/timer/zoo_timer.c.o: timer/tests/CMakeFiles/zoo_timer_tests.dir/flags.make
+timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/src/timer/zoo_timer.c.o: ../src/timer/zoo_timer.c
+timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/src/timer/zoo_timer.c.o: timer/tests/CMakeFiles/zoo_timer_tests.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/src/timer/zoo_timer.c.o"
+	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/src/timer/zoo_timer.c.o -MF CMakeFiles/zoo_timer_tests.dir/__/__/src/timer/zoo_timer.c.o.d -o CMakeFiles/zoo_timer_tests.dir/__/__/src/timer/zoo_timer.c.o -c /home/mozeat/zoo/src/timer/zoo_timer.c
 
-timer/tests/CMakeFiles/zoo_timer_tests.dir/__/src/zoo_timer.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_timer_tests.dir/__/src/zoo_timer.c.i"
-	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/timer/src/zoo_timer.c > CMakeFiles/zoo_timer_tests.dir/__/src/zoo_timer.c.i
+timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/src/timer/zoo_timer.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_timer_tests.dir/__/__/src/timer/zoo_timer.c.i"
+	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/src/timer/zoo_timer.c > CMakeFiles/zoo_timer_tests.dir/__/__/src/timer/zoo_timer.c.i
 
-timer/tests/CMakeFiles/zoo_timer_tests.dir/__/src/zoo_timer.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_timer_tests.dir/__/src/zoo_timer.c.s"
-	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/timer/src/zoo_timer.c -o CMakeFiles/zoo_timer_tests.dir/__/src/zoo_timer.c.s
+timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/src/timer/zoo_timer.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_timer_tests.dir/__/__/src/timer/zoo_timer.c.s"
+	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/src/timer/zoo_timer.c -o CMakeFiles/zoo_timer_tests.dir/__/__/src/timer/zoo_timer.c.s
 
-timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/unity/src/unity.c.o: timer/tests/CMakeFiles/zoo_timer_tests.dir/flags.make
-timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/unity/src/unity.c.o: ../third_party/test/unity/src/unity.c
-timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/unity/src/unity.c.o: timer/tests/CMakeFiles/zoo_timer_tests.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/unity/src/unity.c.o"
-	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/unity/src/unity.c.o -MF CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/unity/src/unity.c.o.d -o CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/unity/src/unity.c.o -c /home/mozeat/zoo/third_party/test/unity/src/unity.c
+timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o: timer/tests/CMakeFiles/zoo_timer_tests.dir/flags.make
+timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o: ../thirdparty/test/unity/src/unity.c
+timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o: timer/tests/CMakeFiles/zoo_timer_tests.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o"
+	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o -MF CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o.d -o CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o -c /home/mozeat/zoo/thirdparty/test/unity/src/unity.c
 
-timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/unity/src/unity.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/unity/src/unity.c.i"
-	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/third_party/test/unity/src/unity.c > CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/unity/src/unity.c.i
+timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/unity/src/unity.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/unity/src/unity.c.i"
+	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/thirdparty/test/unity/src/unity.c > CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/unity/src/unity.c.i
 
-timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/unity/src/unity.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/unity/src/unity.c.s"
-	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/third_party/test/unity/src/unity.c -o CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/unity/src/unity.c.s
+timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/unity/src/unity.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/unity/src/unity.c.s"
+	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/thirdparty/test/unity/src/unity.c -o CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/unity/src/unity.c.s
 
-timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/CMock/src/cmock.c.o: timer/tests/CMakeFiles/zoo_timer_tests.dir/flags.make
-timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/CMock/src/cmock.c.o: ../third_party/test/CMock/src/cmock.c
-timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/CMock/src/cmock.c.o: timer/tests/CMakeFiles/zoo_timer_tests.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/CMock/src/cmock.c.o"
-	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/CMock/src/cmock.c.o -MF CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/CMock/src/cmock.c.o.d -o CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/CMock/src/cmock.c.o -c /home/mozeat/zoo/third_party/test/CMock/src/cmock.c
+timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.o: timer/tests/CMakeFiles/zoo_timer_tests.dir/flags.make
+timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.o: ../thirdparty/test/CMock/src/cmock.c
+timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.o: timer/tests/CMakeFiles/zoo_timer_tests.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.o"
+	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.o -MF CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.o.d -o CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.o -c /home/mozeat/zoo/thirdparty/test/CMock/src/cmock.c
 
-timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/CMock/src/cmock.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/CMock/src/cmock.c.i"
-	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/third_party/test/CMock/src/cmock.c > CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/CMock/src/cmock.c.i
+timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.i"
+	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/thirdparty/test/CMock/src/cmock.c > CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.i
 
-timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/CMock/src/cmock.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/CMock/src/cmock.c.s"
-	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/third_party/test/CMock/src/cmock.c -o CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/CMock/src/cmock.c.s
+timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.s"
+	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/thirdparty/test/CMock/src/cmock.c -o CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.s
 
 timer/tests/CMakeFiles/zoo_timer_tests.dir/mocks/mock_zoo_platform.c.o: timer/tests/CMakeFiles/zoo_timer_tests.dir/flags.make
-timer/tests/CMakeFiles/zoo_timer_tests.dir/mocks/mock_zoo_platform.c.o: ../timer/tests/mocks/mock_zoo_platform.c
+timer/tests/CMakeFiles/zoo_timer_tests.dir/mocks/mock_zoo_platform.c.o: ../tests/timer/mocks/mock_zoo_platform.c
 timer/tests/CMakeFiles/zoo_timer_tests.dir/mocks/mock_zoo_platform.c.o: timer/tests/CMakeFiles/zoo_timer_tests.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object timer/tests/CMakeFiles/zoo_timer_tests.dir/mocks/mock_zoo_platform.c.o"
-	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT timer/tests/CMakeFiles/zoo_timer_tests.dir/mocks/mock_zoo_platform.c.o -MF CMakeFiles/zoo_timer_tests.dir/mocks/mock_zoo_platform.c.o.d -o CMakeFiles/zoo_timer_tests.dir/mocks/mock_zoo_platform.c.o -c /home/mozeat/zoo/timer/tests/mocks/mock_zoo_platform.c
+	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT timer/tests/CMakeFiles/zoo_timer_tests.dir/mocks/mock_zoo_platform.c.o -MF CMakeFiles/zoo_timer_tests.dir/mocks/mock_zoo_platform.c.o.d -o CMakeFiles/zoo_timer_tests.dir/mocks/mock_zoo_platform.c.o -c /home/mozeat/zoo/tests/timer/mocks/mock_zoo_platform.c
 
 timer/tests/CMakeFiles/zoo_timer_tests.dir/mocks/mock_zoo_platform.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_timer_tests.dir/mocks/mock_zoo_platform.c.i"
-	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/timer/tests/mocks/mock_zoo_platform.c > CMakeFiles/zoo_timer_tests.dir/mocks/mock_zoo_platform.c.i
+	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/timer/mocks/mock_zoo_platform.c > CMakeFiles/zoo_timer_tests.dir/mocks/mock_zoo_platform.c.i
 
 timer/tests/CMakeFiles/zoo_timer_tests.dir/mocks/mock_zoo_platform.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_timer_tests.dir/mocks/mock_zoo_platform.c.s"
-	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/timer/tests/mocks/mock_zoo_platform.c -o CMakeFiles/zoo_timer_tests.dir/mocks/mock_zoo_platform.c.s
+	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/timer/mocks/mock_zoo_platform.c -o CMakeFiles/zoo_timer_tests.dir/mocks/mock_zoo_platform.c.s
 
 timer/tests/CMakeFiles/zoo_timer_tests.dir/mocks/mock_stdlib.c.o: timer/tests/CMakeFiles/zoo_timer_tests.dir/flags.make
-timer/tests/CMakeFiles/zoo_timer_tests.dir/mocks/mock_stdlib.c.o: ../timer/tests/mocks/mock_stdlib.c
+timer/tests/CMakeFiles/zoo_timer_tests.dir/mocks/mock_stdlib.c.o: ../tests/timer/mocks/mock_stdlib.c
 timer/tests/CMakeFiles/zoo_timer_tests.dir/mocks/mock_stdlib.c.o: timer/tests/CMakeFiles/zoo_timer_tests.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building C object timer/tests/CMakeFiles/zoo_timer_tests.dir/mocks/mock_stdlib.c.o"
-	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT timer/tests/CMakeFiles/zoo_timer_tests.dir/mocks/mock_stdlib.c.o -MF CMakeFiles/zoo_timer_tests.dir/mocks/mock_stdlib.c.o.d -o CMakeFiles/zoo_timer_tests.dir/mocks/mock_stdlib.c.o -c /home/mozeat/zoo/timer/tests/mocks/mock_stdlib.c
+	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT timer/tests/CMakeFiles/zoo_timer_tests.dir/mocks/mock_stdlib.c.o -MF CMakeFiles/zoo_timer_tests.dir/mocks/mock_stdlib.c.o.d -o CMakeFiles/zoo_timer_tests.dir/mocks/mock_stdlib.c.o -c /home/mozeat/zoo/tests/timer/mocks/mock_stdlib.c
 
 timer/tests/CMakeFiles/zoo_timer_tests.dir/mocks/mock_stdlib.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_timer_tests.dir/mocks/mock_stdlib.c.i"
-	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/timer/tests/mocks/mock_stdlib.c > CMakeFiles/zoo_timer_tests.dir/mocks/mock_stdlib.c.i
+	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/timer/mocks/mock_stdlib.c > CMakeFiles/zoo_timer_tests.dir/mocks/mock_stdlib.c.i
 
 timer/tests/CMakeFiles/zoo_timer_tests.dir/mocks/mock_stdlib.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_timer_tests.dir/mocks/mock_stdlib.c.s"
-	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/timer/tests/mocks/mock_stdlib.c -o CMakeFiles/zoo_timer_tests.dir/mocks/mock_stdlib.c.s
+	cd /home/mozeat/zoo/build/timer/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/timer/mocks/mock_stdlib.c -o CMakeFiles/zoo_timer_tests.dir/mocks/mock_stdlib.c.s
 
 # Object files for target zoo_timer_tests
 zoo_timer_tests_OBJECTS = \
 "CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer.c.o" \
 "CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer_platform.c.o" \
 "CMakeFiles/zoo_timer_tests.dir/unit/test_runner.c.o" \
-"CMakeFiles/zoo_timer_tests.dir/__/src/zoo_timer.c.o" \
-"CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/unity/src/unity.c.o" \
-"CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/CMock/src/cmock.c.o" \
+"CMakeFiles/zoo_timer_tests.dir/__/__/src/timer/zoo_timer.c.o" \
+"CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o" \
+"CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.o" \
 "CMakeFiles/zoo_timer_tests.dir/mocks/mock_zoo_platform.c.o" \
 "CMakeFiles/zoo_timer_tests.dir/mocks/mock_stdlib.c.o"
 
@@ -198,9 +198,9 @@ zoo_timer_tests_EXTERNAL_OBJECTS =
 timer/tests/zoo_timer_tests: timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer.c.o
 timer/tests/zoo_timer_tests: timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_zoo_timer_platform.c.o
 timer/tests/zoo_timer_tests: timer/tests/CMakeFiles/zoo_timer_tests.dir/unit/test_runner.c.o
-timer/tests/zoo_timer_tests: timer/tests/CMakeFiles/zoo_timer_tests.dir/__/src/zoo_timer.c.o
-timer/tests/zoo_timer_tests: timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/unity/src/unity.c.o
-timer/tests/zoo_timer_tests: timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/CMock/src/cmock.c.o
+timer/tests/zoo_timer_tests: timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/src/timer/zoo_timer.c.o
+timer/tests/zoo_timer_tests: timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o
+timer/tests/zoo_timer_tests: timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.o
 timer/tests/zoo_timer_tests: timer/tests/CMakeFiles/zoo_timer_tests.dir/mocks/mock_zoo_platform.c.o
 timer/tests/zoo_timer_tests: timer/tests/CMakeFiles/zoo_timer_tests.dir/mocks/mock_stdlib.c.o
 timer/tests/zoo_timer_tests: timer/tests/CMakeFiles/zoo_timer_tests.dir/build.make
@@ -217,6 +217,6 @@ timer/tests/CMakeFiles/zoo_timer_tests.dir/clean:
 .PHONY : timer/tests/CMakeFiles/zoo_timer_tests.dir/clean
 
 timer/tests/CMakeFiles/zoo_timer_tests.dir/depend:
-	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/timer/tests /home/mozeat/zoo/build /home/mozeat/zoo/build/timer/tests /home/mozeat/zoo/build/timer/tests/CMakeFiles/zoo_timer_tests.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/tests/timer /home/mozeat/zoo/build /home/mozeat/zoo/build/timer/tests /home/mozeat/zoo/build/timer/tests/CMakeFiles/zoo_timer_tests.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : timer/tests/CMakeFiles/zoo_timer_tests.dir/depend
 

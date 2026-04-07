@@ -8,9 +8,9 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/mozeat/zoo/third_party/test/unity/src/unity.c" "log/tests/CMakeFiles/zoo_log_tests.dir/__/__/third_party/test/unity/src/unity.c.o" "gcc" "log/tests/CMakeFiles/zoo_log_tests.dir/__/__/third_party/test/unity/src/unity.c.o.d"
-  "/home/mozeat/zoo/log/tests/test_runner.c" "log/tests/CMakeFiles/zoo_log_tests.dir/test_runner.c.o" "gcc" "log/tests/CMakeFiles/zoo_log_tests.dir/test_runner.c.o.d"
-  "/home/mozeat/zoo/log/tests/test_zoo_log.c" "log/tests/CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.o" "gcc" "log/tests/CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.o.d"
+  "/home/mozeat/zoo/thirdparty/test/unity/src/unity.c" "log/tests/CMakeFiles/zoo_log_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o" "gcc" "log/tests/CMakeFiles/zoo_log_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o.d"
+  "/home/mozeat/zoo/tests/log/test_runner.c" "log/tests/CMakeFiles/zoo_log_tests.dir/test_runner.c.o" "gcc" "log/tests/CMakeFiles/zoo_log_tests.dir/test_runner.c.o.d"
+  "/home/mozeat/zoo/tests/log/test_zoo_log.c" "log/tests/CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.o" "gcc" "log/tests/CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.o.d"
   )
 
 # Targets to which this target links.

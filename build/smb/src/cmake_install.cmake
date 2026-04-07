@@ -1,4 +1,4 @@
-# Install script for directory: /home/mozeat/zoo/smb/src
+# Install script for directory: /home/mozeat/zoo/src/smb
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -56,6 +56,10 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "/home/mozeat/zoo/build/lib/libzoo_smb.so")
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libzoo_smb.so" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libzoo_smb.so")
+    file(RPATH_CHANGE
+         FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libzoo_smb.so"
+         OLD_RPATH "/home/mozeat/zoo/build/thread_pool:/home/mozeat/zoo/build/socket:/home/mozeat/zoo/build/log:/home/mozeat/zoo/build/memory_pool:/home/mozeat/zoo/build/util:/home/mozeat/zoo/build/lib:/home/mozeat/zoo/build/buffer:"
+         NEW_RPATH "")
     if(CMAKE_INSTALL_DO_STRIP)
       execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libzoo_smb.so")
     endif()

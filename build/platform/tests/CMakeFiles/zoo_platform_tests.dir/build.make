@@ -70,102 +70,102 @@ include platform/tests/CMakeFiles/zoo_platform_tests.dir/progress.make
 include platform/tests/CMakeFiles/zoo_platform_tests.dir/flags.make
 
 platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_basic.c.o: platform/tests/CMakeFiles/zoo_platform_tests.dir/flags.make
-platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_basic.c.o: ../platform/tests/test_platform_basic.c
+platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_basic.c.o: ../tests/platform/test_platform_basic.c
 platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_basic.c.o: platform/tests/CMakeFiles/zoo_platform_tests.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_basic.c.o"
-	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_basic.c.o -MF CMakeFiles/zoo_platform_tests.dir/test_platform_basic.c.o.d -o CMakeFiles/zoo_platform_tests.dir/test_platform_basic.c.o -c /home/mozeat/zoo/platform/tests/test_platform_basic.c
+	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_basic.c.o -MF CMakeFiles/zoo_platform_tests.dir/test_platform_basic.c.o.d -o CMakeFiles/zoo_platform_tests.dir/test_platform_basic.c.o -c /home/mozeat/zoo/tests/platform/test_platform_basic.c
 
 platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_basic.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_platform_tests.dir/test_platform_basic.c.i"
-	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/platform/tests/test_platform_basic.c > CMakeFiles/zoo_platform_tests.dir/test_platform_basic.c.i
+	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/platform/test_platform_basic.c > CMakeFiles/zoo_platform_tests.dir/test_platform_basic.c.i
 
 platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_basic.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_platform_tests.dir/test_platform_basic.c.s"
-	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/platform/tests/test_platform_basic.c -o CMakeFiles/zoo_platform_tests.dir/test_platform_basic.c.s
+	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/platform/test_platform_basic.c -o CMakeFiles/zoo_platform_tests.dir/test_platform_basic.c.s
 
 platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_threading.c.o: platform/tests/CMakeFiles/zoo_platform_tests.dir/flags.make
-platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_threading.c.o: ../platform/tests/test_platform_threading.c
+platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_threading.c.o: ../tests/platform/test_platform_threading.c
 platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_threading.c.o: platform/tests/CMakeFiles/zoo_platform_tests.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_threading.c.o"
-	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_threading.c.o -MF CMakeFiles/zoo_platform_tests.dir/test_platform_threading.c.o.d -o CMakeFiles/zoo_platform_tests.dir/test_platform_threading.c.o -c /home/mozeat/zoo/platform/tests/test_platform_threading.c
+	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_threading.c.o -MF CMakeFiles/zoo_platform_tests.dir/test_platform_threading.c.o.d -o CMakeFiles/zoo_platform_tests.dir/test_platform_threading.c.o -c /home/mozeat/zoo/tests/platform/test_platform_threading.c
 
 platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_threading.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_platform_tests.dir/test_platform_threading.c.i"
-	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/platform/tests/test_platform_threading.c > CMakeFiles/zoo_platform_tests.dir/test_platform_threading.c.i
+	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/platform/test_platform_threading.c > CMakeFiles/zoo_platform_tests.dir/test_platform_threading.c.i
 
 platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_threading.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_platform_tests.dir/test_platform_threading.c.s"
-	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/platform/tests/test_platform_threading.c -o CMakeFiles/zoo_platform_tests.dir/test_platform_threading.c.s
+	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/platform/test_platform_threading.c -o CMakeFiles/zoo_platform_tests.dir/test_platform_threading.c.s
 
 platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_atomic.c.o: platform/tests/CMakeFiles/zoo_platform_tests.dir/flags.make
-platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_atomic.c.o: ../platform/tests/test_platform_atomic.c
+platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_atomic.c.o: ../tests/platform/test_platform_atomic.c
 platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_atomic.c.o: platform/tests/CMakeFiles/zoo_platform_tests.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_atomic.c.o"
-	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_atomic.c.o -MF CMakeFiles/zoo_platform_tests.dir/test_platform_atomic.c.o.d -o CMakeFiles/zoo_platform_tests.dir/test_platform_atomic.c.o -c /home/mozeat/zoo/platform/tests/test_platform_atomic.c
+	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_atomic.c.o -MF CMakeFiles/zoo_platform_tests.dir/test_platform_atomic.c.o.d -o CMakeFiles/zoo_platform_tests.dir/test_platform_atomic.c.o -c /home/mozeat/zoo/tests/platform/test_platform_atomic.c
 
 platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_atomic.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_platform_tests.dir/test_platform_atomic.c.i"
-	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/platform/tests/test_platform_atomic.c > CMakeFiles/zoo_platform_tests.dir/test_platform_atomic.c.i
+	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/platform/test_platform_atomic.c > CMakeFiles/zoo_platform_tests.dir/test_platform_atomic.c.i
 
 platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_atomic.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_platform_tests.dir/test_platform_atomic.c.s"
-	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/platform/tests/test_platform_atomic.c -o CMakeFiles/zoo_platform_tests.dir/test_platform_atomic.c.s
+	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/platform/test_platform_atomic.c -o CMakeFiles/zoo_platform_tests.dir/test_platform_atomic.c.s
 
 platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_time.c.o: platform/tests/CMakeFiles/zoo_platform_tests.dir/flags.make
-platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_time.c.o: ../platform/tests/test_platform_time.c
+platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_time.c.o: ../tests/platform/test_platform_time.c
 platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_time.c.o: platform/tests/CMakeFiles/zoo_platform_tests.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_time.c.o"
-	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_time.c.o -MF CMakeFiles/zoo_platform_tests.dir/test_platform_time.c.o.d -o CMakeFiles/zoo_platform_tests.dir/test_platform_time.c.o -c /home/mozeat/zoo/platform/tests/test_platform_time.c
+	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_time.c.o -MF CMakeFiles/zoo_platform_tests.dir/test_platform_time.c.o.d -o CMakeFiles/zoo_platform_tests.dir/test_platform_time.c.o -c /home/mozeat/zoo/tests/platform/test_platform_time.c
 
 platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_time.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_platform_tests.dir/test_platform_time.c.i"
-	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/platform/tests/test_platform_time.c > CMakeFiles/zoo_platform_tests.dir/test_platform_time.c.i
+	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/platform/test_platform_time.c > CMakeFiles/zoo_platform_tests.dir/test_platform_time.c.i
 
 platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_time.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_platform_tests.dir/test_platform_time.c.s"
-	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/platform/tests/test_platform_time.c -o CMakeFiles/zoo_platform_tests.dir/test_platform_time.c.s
+	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/platform/test_platform_time.c -o CMakeFiles/zoo_platform_tests.dir/test_platform_time.c.s
 
 platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_rtthread.c.o: platform/tests/CMakeFiles/zoo_platform_tests.dir/flags.make
-platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_rtthread.c.o: ../platform/tests/test_platform_rtthread.c
+platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_rtthread.c.o: ../tests/platform/test_platform_rtthread.c
 platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_rtthread.c.o: platform/tests/CMakeFiles/zoo_platform_tests.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_rtthread.c.o"
-	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_rtthread.c.o -MF CMakeFiles/zoo_platform_tests.dir/test_platform_rtthread.c.o.d -o CMakeFiles/zoo_platform_tests.dir/test_platform_rtthread.c.o -c /home/mozeat/zoo/platform/tests/test_platform_rtthread.c
+	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_rtthread.c.o -MF CMakeFiles/zoo_platform_tests.dir/test_platform_rtthread.c.o.d -o CMakeFiles/zoo_platform_tests.dir/test_platform_rtthread.c.o -c /home/mozeat/zoo/tests/platform/test_platform_rtthread.c
 
 platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_rtthread.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_platform_tests.dir/test_platform_rtthread.c.i"
-	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/platform/tests/test_platform_rtthread.c > CMakeFiles/zoo_platform_tests.dir/test_platform_rtthread.c.i
+	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/platform/test_platform_rtthread.c > CMakeFiles/zoo_platform_tests.dir/test_platform_rtthread.c.i
 
 platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_rtthread.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_platform_tests.dir/test_platform_rtthread.c.s"
-	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/platform/tests/test_platform_rtthread.c -o CMakeFiles/zoo_platform_tests.dir/test_platform_rtthread.c.s
+	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/platform/test_platform_rtthread.c -o CMakeFiles/zoo_platform_tests.dir/test_platform_rtthread.c.s
 
 platform/tests/CMakeFiles/zoo_platform_tests.dir/test_runner.c.o: platform/tests/CMakeFiles/zoo_platform_tests.dir/flags.make
-platform/tests/CMakeFiles/zoo_platform_tests.dir/test_runner.c.o: ../platform/tests/test_runner.c
+platform/tests/CMakeFiles/zoo_platform_tests.dir/test_runner.c.o: ../tests/platform/test_runner.c
 platform/tests/CMakeFiles/zoo_platform_tests.dir/test_runner.c.o: platform/tests/CMakeFiles/zoo_platform_tests.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object platform/tests/CMakeFiles/zoo_platform_tests.dir/test_runner.c.o"
-	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT platform/tests/CMakeFiles/zoo_platform_tests.dir/test_runner.c.o -MF CMakeFiles/zoo_platform_tests.dir/test_runner.c.o.d -o CMakeFiles/zoo_platform_tests.dir/test_runner.c.o -c /home/mozeat/zoo/platform/tests/test_runner.c
+	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT platform/tests/CMakeFiles/zoo_platform_tests.dir/test_runner.c.o -MF CMakeFiles/zoo_platform_tests.dir/test_runner.c.o.d -o CMakeFiles/zoo_platform_tests.dir/test_runner.c.o -c /home/mozeat/zoo/tests/platform/test_runner.c
 
 platform/tests/CMakeFiles/zoo_platform_tests.dir/test_runner.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_platform_tests.dir/test_runner.c.i"
-	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/platform/tests/test_runner.c > CMakeFiles/zoo_platform_tests.dir/test_runner.c.i
+	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/platform/test_runner.c > CMakeFiles/zoo_platform_tests.dir/test_runner.c.i
 
 platform/tests/CMakeFiles/zoo_platform_tests.dir/test_runner.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_platform_tests.dir/test_runner.c.s"
-	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/platform/tests/test_runner.c -o CMakeFiles/zoo_platform_tests.dir/test_runner.c.s
+	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/platform/test_runner.c -o CMakeFiles/zoo_platform_tests.dir/test_runner.c.s
 
-platform/tests/CMakeFiles/zoo_platform_tests.dir/__/__/third_party/test/unity/src/unity.c.o: platform/tests/CMakeFiles/zoo_platform_tests.dir/flags.make
-platform/tests/CMakeFiles/zoo_platform_tests.dir/__/__/third_party/test/unity/src/unity.c.o: ../third_party/test/unity/src/unity.c
-platform/tests/CMakeFiles/zoo_platform_tests.dir/__/__/third_party/test/unity/src/unity.c.o: platform/tests/CMakeFiles/zoo_platform_tests.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object platform/tests/CMakeFiles/zoo_platform_tests.dir/__/__/third_party/test/unity/src/unity.c.o"
-	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT platform/tests/CMakeFiles/zoo_platform_tests.dir/__/__/third_party/test/unity/src/unity.c.o -MF CMakeFiles/zoo_platform_tests.dir/__/__/third_party/test/unity/src/unity.c.o.d -o CMakeFiles/zoo_platform_tests.dir/__/__/third_party/test/unity/src/unity.c.o -c /home/mozeat/zoo/third_party/test/unity/src/unity.c
+platform/tests/CMakeFiles/zoo_platform_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o: platform/tests/CMakeFiles/zoo_platform_tests.dir/flags.make
+platform/tests/CMakeFiles/zoo_platform_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o: ../thirdparty/test/unity/src/unity.c
+platform/tests/CMakeFiles/zoo_platform_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o: platform/tests/CMakeFiles/zoo_platform_tests.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object platform/tests/CMakeFiles/zoo_platform_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o"
+	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT platform/tests/CMakeFiles/zoo_platform_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o -MF CMakeFiles/zoo_platform_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o.d -o CMakeFiles/zoo_platform_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o -c /home/mozeat/zoo/thirdparty/test/unity/src/unity.c
 
-platform/tests/CMakeFiles/zoo_platform_tests.dir/__/__/third_party/test/unity/src/unity.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_platform_tests.dir/__/__/third_party/test/unity/src/unity.c.i"
-	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/third_party/test/unity/src/unity.c > CMakeFiles/zoo_platform_tests.dir/__/__/third_party/test/unity/src/unity.c.i
+platform/tests/CMakeFiles/zoo_platform_tests.dir/__/__/thirdparty/test/unity/src/unity.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_platform_tests.dir/__/__/thirdparty/test/unity/src/unity.c.i"
+	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/thirdparty/test/unity/src/unity.c > CMakeFiles/zoo_platform_tests.dir/__/__/thirdparty/test/unity/src/unity.c.i
 
-platform/tests/CMakeFiles/zoo_platform_tests.dir/__/__/third_party/test/unity/src/unity.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_platform_tests.dir/__/__/third_party/test/unity/src/unity.c.s"
-	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/third_party/test/unity/src/unity.c -o CMakeFiles/zoo_platform_tests.dir/__/__/third_party/test/unity/src/unity.c.s
+platform/tests/CMakeFiles/zoo_platform_tests.dir/__/__/thirdparty/test/unity/src/unity.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_platform_tests.dir/__/__/thirdparty/test/unity/src/unity.c.s"
+	cd /home/mozeat/zoo/build/platform/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/thirdparty/test/unity/src/unity.c -o CMakeFiles/zoo_platform_tests.dir/__/__/thirdparty/test/unity/src/unity.c.s
 
 # Object files for target zoo_platform_tests
 zoo_platform_tests_OBJECTS = \
@@ -175,7 +175,7 @@ zoo_platform_tests_OBJECTS = \
 "CMakeFiles/zoo_platform_tests.dir/test_platform_time.c.o" \
 "CMakeFiles/zoo_platform_tests.dir/test_platform_rtthread.c.o" \
 "CMakeFiles/zoo_platform_tests.dir/test_runner.c.o" \
-"CMakeFiles/zoo_platform_tests.dir/__/__/third_party/test/unity/src/unity.c.o"
+"CMakeFiles/zoo_platform_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o"
 
 # External object files for target zoo_platform_tests
 zoo_platform_tests_EXTERNAL_OBJECTS =
@@ -186,7 +186,7 @@ platform/tests/zoo_platform_tests: platform/tests/CMakeFiles/zoo_platform_tests.
 platform/tests/zoo_platform_tests: platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_time.c.o
 platform/tests/zoo_platform_tests: platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_rtthread.c.o
 platform/tests/zoo_platform_tests: platform/tests/CMakeFiles/zoo_platform_tests.dir/test_runner.c.o
-platform/tests/zoo_platform_tests: platform/tests/CMakeFiles/zoo_platform_tests.dir/__/__/third_party/test/unity/src/unity.c.o
+platform/tests/zoo_platform_tests: platform/tests/CMakeFiles/zoo_platform_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o
 platform/tests/zoo_platform_tests: platform/tests/CMakeFiles/zoo_platform_tests.dir/build.make
 platform/tests/zoo_platform_tests: platform/tests/CMakeFiles/zoo_platform_tests.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking C executable zoo_platform_tests"
@@ -201,6 +201,6 @@ platform/tests/CMakeFiles/zoo_platform_tests.dir/clean:
 .PHONY : platform/tests/CMakeFiles/zoo_platform_tests.dir/clean
 
 platform/tests/CMakeFiles/zoo_platform_tests.dir/depend:
-	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/platform/tests /home/mozeat/zoo/build /home/mozeat/zoo/build/platform/tests /home/mozeat/zoo/build/platform/tests/CMakeFiles/zoo_platform_tests.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/tests/platform /home/mozeat/zoo/build /home/mozeat/zoo/build/platform/tests /home/mozeat/zoo/build/platform/tests/CMakeFiles/zoo_platform_tests.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : platform/tests/CMakeFiles/zoo_platform_tests.dir/depend
 

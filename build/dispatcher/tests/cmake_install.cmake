@@ -1,4 +1,4 @@
-# Install script for directory: /home/mozeat/zoo/dispatcher/tests
+# Install script for directory: /home/mozeat/zoo/tests/dispatcher
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

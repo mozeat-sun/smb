@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/zoo_timer_shared.dir/src/zoo_timer.c.o"
-  "CMakeFiles/zoo_timer_shared.dir/src/zoo_timer.c.o.d"
+  "CMakeFiles/zoo_timer_shared.dir/__/src/timer/zoo_timer.c.o"
+  "CMakeFiles/zoo_timer_shared.dir/__/src/timer/zoo_timer.c.o.d"
   "libzoo_timer.pdb"
   "libzoo_timer.so"
   "libzoo_timer.so.1"

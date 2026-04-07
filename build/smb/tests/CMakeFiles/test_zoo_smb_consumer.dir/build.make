@@ -70,18 +70,18 @@ include smb/tests/CMakeFiles/test_zoo_smb_consumer.dir/progress.make
 include smb/tests/CMakeFiles/test_zoo_smb_consumer.dir/flags.make
 
 smb/tests/CMakeFiles/test_zoo_smb_consumer.dir/unit/test_zoo_smb_consumer.c.o: smb/tests/CMakeFiles/test_zoo_smb_consumer.dir/flags.make
-smb/tests/CMakeFiles/test_zoo_smb_consumer.dir/unit/test_zoo_smb_consumer.c.o: ../smb/tests/unit/test_zoo_smb_consumer.c
+smb/tests/CMakeFiles/test_zoo_smb_consumer.dir/unit/test_zoo_smb_consumer.c.o: ../tests/smb/unit/test_zoo_smb_consumer.c
 smb/tests/CMakeFiles/test_zoo_smb_consumer.dir/unit/test_zoo_smb_consumer.c.o: smb/tests/CMakeFiles/test_zoo_smb_consumer.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object smb/tests/CMakeFiles/test_zoo_smb_consumer.dir/unit/test_zoo_smb_consumer.c.o"
-	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT smb/tests/CMakeFiles/test_zoo_smb_consumer.dir/unit/test_zoo_smb_consumer.c.o -MF CMakeFiles/test_zoo_smb_consumer.dir/unit/test_zoo_smb_consumer.c.o.d -o CMakeFiles/test_zoo_smb_consumer.dir/unit/test_zoo_smb_consumer.c.o -c /home/mozeat/zoo/smb/tests/unit/test_zoo_smb_consumer.c
+	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT smb/tests/CMakeFiles/test_zoo_smb_consumer.dir/unit/test_zoo_smb_consumer.c.o -MF CMakeFiles/test_zoo_smb_consumer.dir/unit/test_zoo_smb_consumer.c.o.d -o CMakeFiles/test_zoo_smb_consumer.dir/unit/test_zoo_smb_consumer.c.o -c /home/mozeat/zoo/tests/smb/unit/test_zoo_smb_consumer.c
 
 smb/tests/CMakeFiles/test_zoo_smb_consumer.dir/unit/test_zoo_smb_consumer.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/test_zoo_smb_consumer.dir/unit/test_zoo_smb_consumer.c.i"
-	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/smb/tests/unit/test_zoo_smb_consumer.c > CMakeFiles/test_zoo_smb_consumer.dir/unit/test_zoo_smb_consumer.c.i
+	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/smb/unit/test_zoo_smb_consumer.c > CMakeFiles/test_zoo_smb_consumer.dir/unit/test_zoo_smb_consumer.c.i
 
 smb/tests/CMakeFiles/test_zoo_smb_consumer.dir/unit/test_zoo_smb_consumer.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/test_zoo_smb_consumer.dir/unit/test_zoo_smb_consumer.c.s"
-	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/smb/tests/unit/test_zoo_smb_consumer.c -o CMakeFiles/test_zoo_smb_consumer.dir/unit/test_zoo_smb_consumer.c.s
+	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/smb/unit/test_zoo_smb_consumer.c -o CMakeFiles/test_zoo_smb_consumer.dir/unit/test_zoo_smb_consumer.c.s
 
 # Object files for target test_zoo_smb_consumer
 test_zoo_smb_consumer_OBJECTS = \
@@ -96,7 +96,13 @@ bin/test_zoo_smb_consumer: lib/libzoo_smb.a
 bin/test_zoo_smb_consumer: lib/libunity.a
 bin/test_zoo_smb_consumer: lib/libtest_utils.a
 bin/test_zoo_smb_consumer: lib/libzoo_smb.a
-bin/test_zoo_smb_consumer: lib/libunity.a
+bin/test_zoo_smb_consumer: thread_pool/libzoo_thread_pool.a
+bin/test_zoo_smb_consumer: buffer/libzoo_buffer.a
+bin/test_zoo_smb_consumer: socket/libzoo_socket.a
+bin/test_zoo_smb_consumer: log/libzoo_log.a
+bin/test_zoo_smb_consumer: memory_pool/libzoo_memory_pool.a
+bin/test_zoo_smb_consumer: util/libzoo_util.a
+bin/test_zoo_smb_consumer: lib/libzoo_platform.a
 bin/test_zoo_smb_consumer: smb/tests/CMakeFiles/test_zoo_smb_consumer.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable ../../bin/test_zoo_smb_consumer"
 	cd /home/mozeat/zoo/build/smb/tests && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/test_zoo_smb_consumer.dir/link.txt --verbose=$(VERBOSE)
@@ -110,6 +116,6 @@ smb/tests/CMakeFiles/test_zoo_smb_consumer.dir/clean:
 .PHONY : smb/tests/CMakeFiles/test_zoo_smb_consumer.dir/clean
 
 smb/tests/CMakeFiles/test_zoo_smb_consumer.dir/depend:
-	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/smb/tests /home/mozeat/zoo/build /home/mozeat/zoo/build/smb/tests /home/mozeat/zoo/build/smb/tests/CMakeFiles/test_zoo_smb_consumer.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/tests/smb /home/mozeat/zoo/build /home/mozeat/zoo/build/smb/tests /home/mozeat/zoo/build/smb/tests/CMakeFiles/test_zoo_smb_consumer.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : smb/tests/CMakeFiles/test_zoo_smb_consumer.dir/depend
 

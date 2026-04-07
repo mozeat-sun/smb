@@ -1,8 +1,8 @@
 util/tests/CMakeFiles/test_timestamp_unity.dir/test_zoo_util_timestamp_unity.c.o: \
- /home/mozeat/zoo/util/tests/test_zoo_util_timestamp_unity.c \
+ /home/mozeat/zoo/tests/util/test_zoo_util_timestamp_unity.c \
  /usr/include/stdc-predef.h \
- /home/mozeat/zoo/third_party/test/unity/src/unity.h \
- /home/mozeat/zoo/third_party/test/unity/src/unity_internals.h \
+ /home/mozeat/zoo/thirdparty/test/unity/src/unity.h \
+ /home/mozeat/zoo/thirdparty/test/unity/src/unity_internals.h \
  /usr/include/setjmp.h /usr/include/features.h \
  /usr/include/features-time64.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -55,9 +55,10 @@ util/tests/CMakeFiles/test_timestamp_unity.dir/test_zoo_util_timestamp_unity.c.o
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/stdio2.h \
- /home/mozeat/zoo/util/inc/zoo_util.h /home/mozeat/zoo/platform/inc/zoo.h \
+ /home/mozeat/zoo/include/util/zoo_util.h \
+ /home/mozeat/zoo/include/platform/zoo.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdbool.h \
- /home/mozeat/zoo/platform/inc/zoo_platform.h /usr/include/time.h \
+ /home/mozeat/zoo/include/platform/zoo_platform.h /usr/include/time.h \
  /usr/include/x86_64-linux-gnu/bits/time.h \
  /usr/include/x86_64-linux-gnu/bits/timex.h \
  /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
@@ -119,13 +120,13 @@ util/tests/CMakeFiles/test_timestamp_unity.dir/test_zoo_util_timestamp_unity.c.o
  /usr/include/x86_64-linux-gnu/sys/syslog.h \
  /usr/include/x86_64-linux-gnu/bits/syslog-path.h \
  /usr/include/x86_64-linux-gnu/bits/syslog.h \
- /home/mozeat/zoo/platform/inc/zoo_types.h /usr/include/inttypes.h \
+ /home/mozeat/zoo/include/platform/zoo_types.h /usr/include/inttypes.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdatomic.h \
- /home/mozeat/zoo/platform/inc/zoo_error.h \
- /home/mozeat/zoo/platform/inc/zoo_error.h \
- /home/mozeat/zoo/util/inc/zoo_timestamp.h \
+ /home/mozeat/zoo/include/platform/zoo_error.h \
+ /home/mozeat/zoo/include/platform/zoo_error.h \
+ /home/mozeat/zoo/include/util/zoo_timestamp.h \
  /usr/include/x86_64-linux-gnu/sys/time.h \
- /home/mozeat/zoo/util/inc/zoo_string.h /usr/include/string.h \
+ /home/mozeat/zoo/include/util/zoo_string.h /usr/include/string.h \
  /usr/include/strings.h \
  /usr/include/x86_64-linux-gnu/bits/strings_fortified.h \
  /usr/include/x86_64-linux-gnu/bits/string_fortified.h \
@@ -134,5 +135,5 @@ util/tests/CMakeFiles/test_timestamp_unity.dir/test_zoo_util_timestamp_unity.c.o
  /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib.h \
- /home/mozeat/zoo/util/inc/zoo_memory.h \
- /home/mozeat/zoo/util/inc/zoo_math.h
+ /home/mozeat/zoo/include/util/zoo_memory.h \
+ /home/mozeat/zoo/include/util/zoo_math.h

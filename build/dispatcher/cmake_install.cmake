@@ -97,7 +97,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/zoo" TYPE FILE FILES "/home/mozeat/zoo/dispatcher/inc/zoo_dispatcher.h")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/zoo" TYPE FILE FILES "/home/mozeat/zoo/include/dispatcher/zoo_dispatcher.h")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)

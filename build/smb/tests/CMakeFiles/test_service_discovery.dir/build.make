@@ -70,18 +70,18 @@ include smb/tests/CMakeFiles/test_service_discovery.dir/progress.make
 include smb/tests/CMakeFiles/test_service_discovery.dir/flags.make
 
 smb/tests/CMakeFiles/test_service_discovery.dir/integration/test_service_discovery.c.o: smb/tests/CMakeFiles/test_service_discovery.dir/flags.make
-smb/tests/CMakeFiles/test_service_discovery.dir/integration/test_service_discovery.c.o: ../smb/tests/integration/test_service_discovery.c
+smb/tests/CMakeFiles/test_service_discovery.dir/integration/test_service_discovery.c.o: ../tests/smb/integration/test_service_discovery.c
 smb/tests/CMakeFiles/test_service_discovery.dir/integration/test_service_discovery.c.o: smb/tests/CMakeFiles/test_service_discovery.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object smb/tests/CMakeFiles/test_service_discovery.dir/integration/test_service_discovery.c.o"
-	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT smb/tests/CMakeFiles/test_service_discovery.dir/integration/test_service_discovery.c.o -MF CMakeFiles/test_service_discovery.dir/integration/test_service_discovery.c.o.d -o CMakeFiles/test_service_discovery.dir/integration/test_service_discovery.c.o -c /home/mozeat/zoo/smb/tests/integration/test_service_discovery.c
+	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT smb/tests/CMakeFiles/test_service_discovery.dir/integration/test_service_discovery.c.o -MF CMakeFiles/test_service_discovery.dir/integration/test_service_discovery.c.o.d -o CMakeFiles/test_service_discovery.dir/integration/test_service_discovery.c.o -c /home/mozeat/zoo/tests/smb/integration/test_service_discovery.c
 
 smb/tests/CMakeFiles/test_service_discovery.dir/integration/test_service_discovery.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/test_service_discovery.dir/integration/test_service_discovery.c.i"
-	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/smb/tests/integration/test_service_discovery.c > CMakeFiles/test_service_discovery.dir/integration/test_service_discovery.c.i
+	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/smb/integration/test_service_discovery.c > CMakeFiles/test_service_discovery.dir/integration/test_service_discovery.c.i
 
 smb/tests/CMakeFiles/test_service_discovery.dir/integration/test_service_discovery.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/test_service_discovery.dir/integration/test_service_discovery.c.s"
-	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/smb/tests/integration/test_service_discovery.c -o CMakeFiles/test_service_discovery.dir/integration/test_service_discovery.c.s
+	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/smb/integration/test_service_discovery.c -o CMakeFiles/test_service_discovery.dir/integration/test_service_discovery.c.s
 
 # Object files for target test_service_discovery
 test_service_discovery_OBJECTS = \
@@ -96,7 +96,13 @@ bin/test_service_discovery: lib/libzoo_smb.a
 bin/test_service_discovery: lib/libunity.a
 bin/test_service_discovery: lib/libtest_utils.a
 bin/test_service_discovery: lib/libzoo_smb.a
-bin/test_service_discovery: lib/libunity.a
+bin/test_service_discovery: thread_pool/libzoo_thread_pool.a
+bin/test_service_discovery: buffer/libzoo_buffer.a
+bin/test_service_discovery: socket/libzoo_socket.a
+bin/test_service_discovery: log/libzoo_log.a
+bin/test_service_discovery: memory_pool/libzoo_memory_pool.a
+bin/test_service_discovery: util/libzoo_util.a
+bin/test_service_discovery: lib/libzoo_platform.a
 bin/test_service_discovery: smb/tests/CMakeFiles/test_service_discovery.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable ../../bin/test_service_discovery"
 	cd /home/mozeat/zoo/build/smb/tests && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/test_service_discovery.dir/link.txt --verbose=$(VERBOSE)
@@ -110,6 +116,6 @@ smb/tests/CMakeFiles/test_service_discovery.dir/clean:
 .PHONY : smb/tests/CMakeFiles/test_service_discovery.dir/clean
 
 smb/tests/CMakeFiles/test_service_discovery.dir/depend:
-	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/smb/tests /home/mozeat/zoo/build /home/mozeat/zoo/build/smb/tests /home/mozeat/zoo/build/smb/tests/CMakeFiles/test_service_discovery.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/tests/smb /home/mozeat/zoo/build /home/mozeat/zoo/build/smb/tests /home/mozeat/zoo/build/smb/tests/CMakeFiles/test_service_discovery.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : smb/tests/CMakeFiles/test_service_discovery.dir/depend
 

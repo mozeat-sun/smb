@@ -1,3 +1,0 @@
-zoo_socket_unit_tests 0 0
----
-zoo_socket_unit_tests

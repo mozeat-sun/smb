@@ -69,44 +69,44 @@ include buffer/CMakeFiles/zoo_buffer_shared.dir/progress.make
 # Include the compile flags for this target's objects.
 include buffer/CMakeFiles/zoo_buffer_shared.dir/flags.make
 
-buffer/CMakeFiles/zoo_buffer_shared.dir/src/zoo_list.c.o: buffer/CMakeFiles/zoo_buffer_shared.dir/flags.make
-buffer/CMakeFiles/zoo_buffer_shared.dir/src/zoo_list.c.o: ../buffer/src/zoo_list.c
-buffer/CMakeFiles/zoo_buffer_shared.dir/src/zoo_list.c.o: buffer/CMakeFiles/zoo_buffer_shared.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object buffer/CMakeFiles/zoo_buffer_shared.dir/src/zoo_list.c.o"
-	cd /home/mozeat/zoo/build/buffer && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT buffer/CMakeFiles/zoo_buffer_shared.dir/src/zoo_list.c.o -MF CMakeFiles/zoo_buffer_shared.dir/src/zoo_list.c.o.d -o CMakeFiles/zoo_buffer_shared.dir/src/zoo_list.c.o -c /home/mozeat/zoo/buffer/src/zoo_list.c
+buffer/CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_list.c.o: buffer/CMakeFiles/zoo_buffer_shared.dir/flags.make
+buffer/CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_list.c.o: ../src/buffer/zoo_list.c
+buffer/CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_list.c.o: buffer/CMakeFiles/zoo_buffer_shared.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object buffer/CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_list.c.o"
+	cd /home/mozeat/zoo/build/buffer && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT buffer/CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_list.c.o -MF CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_list.c.o.d -o CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_list.c.o -c /home/mozeat/zoo/src/buffer/zoo_list.c
 
-buffer/CMakeFiles/zoo_buffer_shared.dir/src/zoo_list.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_buffer_shared.dir/src/zoo_list.c.i"
-	cd /home/mozeat/zoo/build/buffer && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/buffer/src/zoo_list.c > CMakeFiles/zoo_buffer_shared.dir/src/zoo_list.c.i
+buffer/CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_list.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_list.c.i"
+	cd /home/mozeat/zoo/build/buffer && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/src/buffer/zoo_list.c > CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_list.c.i
 
-buffer/CMakeFiles/zoo_buffer_shared.dir/src/zoo_list.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_buffer_shared.dir/src/zoo_list.c.s"
-	cd /home/mozeat/zoo/build/buffer && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/buffer/src/zoo_list.c -o CMakeFiles/zoo_buffer_shared.dir/src/zoo_list.c.s
+buffer/CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_list.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_list.c.s"
+	cd /home/mozeat/zoo/build/buffer && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/src/buffer/zoo_list.c -o CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_list.c.s
 
-buffer/CMakeFiles/zoo_buffer_shared.dir/src/zoo_queue.c.o: buffer/CMakeFiles/zoo_buffer_shared.dir/flags.make
-buffer/CMakeFiles/zoo_buffer_shared.dir/src/zoo_queue.c.o: ../buffer/src/zoo_queue.c
-buffer/CMakeFiles/zoo_buffer_shared.dir/src/zoo_queue.c.o: buffer/CMakeFiles/zoo_buffer_shared.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object buffer/CMakeFiles/zoo_buffer_shared.dir/src/zoo_queue.c.o"
-	cd /home/mozeat/zoo/build/buffer && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT buffer/CMakeFiles/zoo_buffer_shared.dir/src/zoo_queue.c.o -MF CMakeFiles/zoo_buffer_shared.dir/src/zoo_queue.c.o.d -o CMakeFiles/zoo_buffer_shared.dir/src/zoo_queue.c.o -c /home/mozeat/zoo/buffer/src/zoo_queue.c
+buffer/CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_queue.c.o: buffer/CMakeFiles/zoo_buffer_shared.dir/flags.make
+buffer/CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_queue.c.o: ../src/buffer/zoo_queue.c
+buffer/CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_queue.c.o: buffer/CMakeFiles/zoo_buffer_shared.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object buffer/CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_queue.c.o"
+	cd /home/mozeat/zoo/build/buffer && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT buffer/CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_queue.c.o -MF CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_queue.c.o.d -o CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_queue.c.o -c /home/mozeat/zoo/src/buffer/zoo_queue.c
 
-buffer/CMakeFiles/zoo_buffer_shared.dir/src/zoo_queue.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_buffer_shared.dir/src/zoo_queue.c.i"
-	cd /home/mozeat/zoo/build/buffer && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/buffer/src/zoo_queue.c > CMakeFiles/zoo_buffer_shared.dir/src/zoo_queue.c.i
+buffer/CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_queue.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_queue.c.i"
+	cd /home/mozeat/zoo/build/buffer && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/src/buffer/zoo_queue.c > CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_queue.c.i
 
-buffer/CMakeFiles/zoo_buffer_shared.dir/src/zoo_queue.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_buffer_shared.dir/src/zoo_queue.c.s"
-	cd /home/mozeat/zoo/build/buffer && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/buffer/src/zoo_queue.c -o CMakeFiles/zoo_buffer_shared.dir/src/zoo_queue.c.s
+buffer/CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_queue.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_queue.c.s"
+	cd /home/mozeat/zoo/build/buffer && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/src/buffer/zoo_queue.c -o CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_queue.c.s
 
 # Object files for target zoo_buffer_shared
 zoo_buffer_shared_OBJECTS = \
-"CMakeFiles/zoo_buffer_shared.dir/src/zoo_list.c.o" \
-"CMakeFiles/zoo_buffer_shared.dir/src/zoo_queue.c.o"
+"CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_list.c.o" \
+"CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_queue.c.o"
 
 # External object files for target zoo_buffer_shared
 zoo_buffer_shared_EXTERNAL_OBJECTS =
 
-buffer/libzoo_buffer.so.1.0.0: buffer/CMakeFiles/zoo_buffer_shared.dir/src/zoo_list.c.o
-buffer/libzoo_buffer.so.1.0.0: buffer/CMakeFiles/zoo_buffer_shared.dir/src/zoo_queue.c.o
+buffer/libzoo_buffer.so.1.0.0: buffer/CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_list.c.o
+buffer/libzoo_buffer.so.1.0.0: buffer/CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_queue.c.o
 buffer/libzoo_buffer.so.1.0.0: buffer/CMakeFiles/zoo_buffer_shared.dir/build.make
 buffer/libzoo_buffer.so.1.0.0: buffer/CMakeFiles/zoo_buffer_shared.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking C shared library libzoo_buffer.so"

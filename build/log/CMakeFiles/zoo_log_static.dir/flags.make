@@ -4,7 +4,7 @@
 # compile C with /usr/bin/cc
 C_DEFINES = -DZOO_HAS_POSIX=1 -DZOO_HAS_THREADING=1 -DZOO_IS_EMBEDDED=0 -DZOO_OS_LINUX -D__ZOO_OS_LINUX -D__ZOO_PLATFORM_X86_64
 
-C_INCLUDES = -I/home/mozeat/zoo/inc -I/home/mozeat/zoo/log/inc -I/home/mozeat/zoo/platform/inc -I/home/mozeat/zoo/util/inc
+C_INCLUDES = -I/home/mozeat/zoo/include -I/home/mozeat/zoo/include/log -I/home/mozeat/zoo/include/platform -I/home/mozeat/zoo/include/util
 
 C_FLAGS =  -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wformat=2 -Wstrict-prototypes -Wmissing-prototypes -Wundef -Wshadow -Wpointer-arith -Wcast-align -Wwrite-strings -fstack-protector-strong -fstack-clash-protection -O3 -DNDEBUG -flto -Wall -Wextra -Wpedantic -Werror -std=c11
 

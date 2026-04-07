@@ -4,7 +4,7 @@
 # compile C with /usr/bin/cc
 C_DEFINES = -DZOO_HAS_POSIX=1 -DZOO_OS_LINUX -Dzoo_platform_shared_EXPORTS
 
-C_INCLUDES = -I/home/mozeat/zoo/inc -I/home/mozeat/zoo/platform/inc
+C_INCLUDES = -I/home/mozeat/zoo/include -I/home/mozeat/zoo/platform/../include/platform
 
 C_FLAGS = -O3 -DNDEBUG -fPIC -Wall -Wextra -Wpedantic -Werror -std=c99
 

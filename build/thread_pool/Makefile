@@ -220,32 +220,32 @@ zoo_thread_pool_shared/fast:
 	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/build.make thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/build
 .PHONY : zoo_thread_pool_shared/fast
 
-src/zoo_thread_pool.o: src/zoo_thread_pool.c.o
-.PHONY : src/zoo_thread_pool.o
+__/src/thread_pool/zoo_thread_pool.o: __/src/thread_pool/zoo_thread_pool.c.o
+.PHONY : __/src/thread_pool/zoo_thread_pool.o
 
 # target to build an object file
-src/zoo_thread_pool.c.o:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f thread_pool/CMakeFiles/zoo_thread_pool_static.dir/build.make thread_pool/CMakeFiles/zoo_thread_pool_static.dir/src/zoo_thread_pool.c.o
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/build.make thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/src/zoo_thread_pool.c.o
-.PHONY : src/zoo_thread_pool.c.o
+__/src/thread_pool/zoo_thread_pool.c.o:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f thread_pool/CMakeFiles/zoo_thread_pool_static.dir/build.make thread_pool/CMakeFiles/zoo_thread_pool_static.dir/__/src/thread_pool/zoo_thread_pool.c.o
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/build.make thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/__/src/thread_pool/zoo_thread_pool.c.o
+.PHONY : __/src/thread_pool/zoo_thread_pool.c.o
 
-src/zoo_thread_pool.i: src/zoo_thread_pool.c.i
-.PHONY : src/zoo_thread_pool.i
+__/src/thread_pool/zoo_thread_pool.i: __/src/thread_pool/zoo_thread_pool.c.i
+.PHONY : __/src/thread_pool/zoo_thread_pool.i
 
 # target to preprocess a source file
-src/zoo_thread_pool.c.i:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f thread_pool/CMakeFiles/zoo_thread_pool_static.dir/build.make thread_pool/CMakeFiles/zoo_thread_pool_static.dir/src/zoo_thread_pool.c.i
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/build.make thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/src/zoo_thread_pool.c.i
-.PHONY : src/zoo_thread_pool.c.i
+__/src/thread_pool/zoo_thread_pool.c.i:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f thread_pool/CMakeFiles/zoo_thread_pool_static.dir/build.make thread_pool/CMakeFiles/zoo_thread_pool_static.dir/__/src/thread_pool/zoo_thread_pool.c.i
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/build.make thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/__/src/thread_pool/zoo_thread_pool.c.i
+.PHONY : __/src/thread_pool/zoo_thread_pool.c.i
 
-src/zoo_thread_pool.s: src/zoo_thread_pool.c.s
-.PHONY : src/zoo_thread_pool.s
+__/src/thread_pool/zoo_thread_pool.s: __/src/thread_pool/zoo_thread_pool.c.s
+.PHONY : __/src/thread_pool/zoo_thread_pool.s
 
 # target to generate assembly for a file
-src/zoo_thread_pool.c.s:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f thread_pool/CMakeFiles/zoo_thread_pool_static.dir/build.make thread_pool/CMakeFiles/zoo_thread_pool_static.dir/src/zoo_thread_pool.c.s
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/build.make thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/src/zoo_thread_pool.c.s
-.PHONY : src/zoo_thread_pool.c.s
+__/src/thread_pool/zoo_thread_pool.c.s:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f thread_pool/CMakeFiles/zoo_thread_pool_static.dir/build.make thread_pool/CMakeFiles/zoo_thread_pool_static.dir/__/src/thread_pool/zoo_thread_pool.c.s
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/build.make thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/__/src/thread_pool/zoo_thread_pool.c.s
+.PHONY : __/src/thread_pool/zoo_thread_pool.c.s
 
 # Help Target
 help:
@@ -264,9 +264,9 @@ help:
 	@echo "... test"
 	@echo "... zoo_thread_pool_shared"
 	@echo "... zoo_thread_pool_static"
-	@echo "... src/zoo_thread_pool.o"
-	@echo "... src/zoo_thread_pool.i"
-	@echo "... src/zoo_thread_pool.s"
+	@echo "... __/src/thread_pool/zoo_thread_pool.o"
+	@echo "... __/src/thread_pool/zoo_thread_pool.i"
+	@echo "... __/src/thread_pool/zoo_thread_pool.s"
 .PHONY : help
 
 

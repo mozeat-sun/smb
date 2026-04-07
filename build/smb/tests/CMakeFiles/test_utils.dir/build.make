@@ -70,18 +70,18 @@ include smb/tests/CMakeFiles/test_utils.dir/progress.make
 include smb/tests/CMakeFiles/test_utils.dir/flags.make
 
 smb/tests/CMakeFiles/test_utils.dir/common/test_utils.c.o: smb/tests/CMakeFiles/test_utils.dir/flags.make
-smb/tests/CMakeFiles/test_utils.dir/common/test_utils.c.o: ../smb/tests/common/test_utils.c
+smb/tests/CMakeFiles/test_utils.dir/common/test_utils.c.o: ../tests/smb/common/test_utils.c
 smb/tests/CMakeFiles/test_utils.dir/common/test_utils.c.o: smb/tests/CMakeFiles/test_utils.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object smb/tests/CMakeFiles/test_utils.dir/common/test_utils.c.o"
-	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT smb/tests/CMakeFiles/test_utils.dir/common/test_utils.c.o -MF CMakeFiles/test_utils.dir/common/test_utils.c.o.d -o CMakeFiles/test_utils.dir/common/test_utils.c.o -c /home/mozeat/zoo/smb/tests/common/test_utils.c
+	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT smb/tests/CMakeFiles/test_utils.dir/common/test_utils.c.o -MF CMakeFiles/test_utils.dir/common/test_utils.c.o.d -o CMakeFiles/test_utils.dir/common/test_utils.c.o -c /home/mozeat/zoo/tests/smb/common/test_utils.c
 
 smb/tests/CMakeFiles/test_utils.dir/common/test_utils.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/test_utils.dir/common/test_utils.c.i"
-	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/smb/tests/common/test_utils.c > CMakeFiles/test_utils.dir/common/test_utils.c.i
+	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/smb/common/test_utils.c > CMakeFiles/test_utils.dir/common/test_utils.c.i
 
 smb/tests/CMakeFiles/test_utils.dir/common/test_utils.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/test_utils.dir/common/test_utils.c.s"
-	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/smb/tests/common/test_utils.c -o CMakeFiles/test_utils.dir/common/test_utils.c.s
+	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/smb/common/test_utils.c -o CMakeFiles/test_utils.dir/common/test_utils.c.s
 
 # Object files for target test_utils
 test_utils_OBJECTS = \
@@ -106,6 +106,6 @@ smb/tests/CMakeFiles/test_utils.dir/clean:
 .PHONY : smb/tests/CMakeFiles/test_utils.dir/clean
 
 smb/tests/CMakeFiles/test_utils.dir/depend:
-	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/smb/tests /home/mozeat/zoo/build /home/mozeat/zoo/build/smb/tests /home/mozeat/zoo/build/smb/tests/CMakeFiles/test_utils.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/tests/smb /home/mozeat/zoo/build /home/mozeat/zoo/build/smb/tests /home/mozeat/zoo/build/smb/tests/CMakeFiles/test_utils.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : smb/tests/CMakeFiles/test_utils.dir/depend
 

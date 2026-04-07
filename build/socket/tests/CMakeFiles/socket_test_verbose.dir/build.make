@@ -82,6 +82,6 @@ socket/tests/CMakeFiles/socket_test_verbose.dir/clean:
 .PHONY : socket/tests/CMakeFiles/socket_test_verbose.dir/clean
 
 socket/tests/CMakeFiles/socket_test_verbose.dir/depend:
-	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/socket/tests /home/mozeat/zoo/build /home/mozeat/zoo/build/socket/tests /home/mozeat/zoo/build/socket/tests/CMakeFiles/socket_test_verbose.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/tests/socket /home/mozeat/zoo/build /home/mozeat/zoo/build/socket/tests /home/mozeat/zoo/build/socket/tests/CMakeFiles/socket_test_verbose.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : socket/tests/CMakeFiles/socket_test_verbose.dir/depend
 

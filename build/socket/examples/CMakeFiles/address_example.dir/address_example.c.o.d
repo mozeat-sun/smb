@@ -1,8 +1,8 @@
 socket/examples/CMakeFiles/address_example.dir/address_example.c.o: \
- /home/mozeat/zoo/socket/examples/address_example.c \
+ /home/mozeat/zoo/examples/socket/address_example.c \
  /usr/include/stdc-predef.h \
- /home/mozeat/zoo/socket/examples/../inc/zoo_socket.h \
- /home/mozeat/zoo/socket/../platform/inc/zoo_platform.h \
+ /home/mozeat/zoo/examples/socket/../../include/socket/zoo_socket.h \
+ /home/mozeat/zoo/socket/../include/platform/zoo_platform.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -98,8 +98,8 @@ socket/examples/CMakeFiles/address_example.dir/address_example.c.o: \
  /usr/include/x86_64-linux-gnu/sys/syslog.h \
  /usr/include/x86_64-linux-gnu/bits/syslog-path.h \
  /usr/include/x86_64-linux-gnu/bits/syslog.h \
- /home/mozeat/zoo/socket/../platform/inc/zoo_types.h \
+ /home/mozeat/zoo/socket/../include/platform/zoo_types.h \
  /usr/include/inttypes.h \
- /home/mozeat/zoo/socket/../platform/inc/zoo_platform.h \
+ /home/mozeat/zoo/socket/../include/platform/zoo_platform.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdatomic.h \
- /home/mozeat/zoo/socket/examples/../inc/../../platform/inc/zoo_error.h
+ /home/mozeat/zoo/socket/../include/platform/zoo_error.h

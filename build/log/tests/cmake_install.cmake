@@ -1,4 +1,4 @@
-# Install script for directory: /home/mozeat/zoo/log/tests
+# Install script for directory: /home/mozeat/zoo/tests/log
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

@@ -1,6 +1,7 @@
 platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_rtthread.c.o: \
- /home/mozeat/zoo/platform/tests/test_platform_rtthread.c \
- /usr/include/stdc-predef.h /home/mozeat/zoo/platform/inc/zoo.h \
+ /home/mozeat/zoo/tests/platform/test_platform_rtthread.c \
+ /usr/include/stdc-predef.h \
+ /home/mozeat/zoo/platform/../include/platform/zoo.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -18,8 +19,8 @@ platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_rtthread.c.o: \
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdbool.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stddef.h \
- /home/mozeat/zoo/platform/inc/zoo_platform.h /usr/include/stdio.h \
- /usr/lib/gcc/x86_64-linux-gnu/11/include/stdarg.h \
+ /home/mozeat/zoo/platform/../include/platform/zoo_platform.h \
+ /usr/include/stdio.h /usr/lib/gcc/x86_64-linux-gnu/11/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h \
@@ -97,11 +98,12 @@ platform/tests/CMakeFiles/zoo_platform_tests.dir/test_platform_rtthread.c.o: \
  /usr/include/x86_64-linux-gnu/sys/syslog.h \
  /usr/include/x86_64-linux-gnu/bits/syslog-path.h \
  /usr/include/x86_64-linux-gnu/bits/syslog.h \
- /home/mozeat/zoo/platform/inc/zoo_types.h /usr/include/inttypes.h \
+ /home/mozeat/zoo/platform/../include/platform/zoo_types.h \
+ /usr/include/inttypes.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdatomic.h \
- /home/mozeat/zoo/platform/inc/zoo_error.h \
- /home/mozeat/zoo/third_party/test/unity/src/unity.h \
- /home/mozeat/zoo/third_party/test/unity/src/unity_internals.h \
+ /home/mozeat/zoo/platform/../include/platform/zoo_error.h \
+ /home/mozeat/zoo/thirdparty/test/unity/src/unity.h \
+ /home/mozeat/zoo/thirdparty/test/unity/src/unity_internals.h \
  /usr/include/setjmp.h /usr/include/x86_64-linux-gnu/bits/setjmp2.h \
  /usr/include/math.h /usr/include/x86_64-linux-gnu/bits/math-vector.h \
  /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \

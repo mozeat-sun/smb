@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/zoo_buffer_shared.dir/src/zoo_list.c.o"
-  "CMakeFiles/zoo_buffer_shared.dir/src/zoo_list.c.o.d"
-  "CMakeFiles/zoo_buffer_shared.dir/src/zoo_queue.c.o"
-  "CMakeFiles/zoo_buffer_shared.dir/src/zoo_queue.c.o.d"
+  "CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_list.c.o"
+  "CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_list.c.o.d"
+  "CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_queue.c.o"
+  "CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_queue.c.o.d"
   "libzoo_buffer.pdb"
   "libzoo_buffer.so"
   "libzoo_buffer.so.1"

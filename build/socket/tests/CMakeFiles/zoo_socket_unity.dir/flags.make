@@ -4,7 +4,7 @@
 # compile C with /usr/bin/cc
 C_DEFINES = 
 
-C_INCLUDES = -I/home/mozeat/zoo/inc -I/home/mozeat/zoo/third_party/test/unity/src -I/home/mozeat/zoo/socket/tests -I/home/mozeat/zoo/socket/inc -I/home/mozeat/zoo/socket/../platform/inc -I/home/mozeat/zoo/socket/../util
+C_INCLUDES = -I/home/mozeat/zoo/include -I/home/mozeat/zoo/thirdparty/test/unity/src -I/home/mozeat/zoo/tests/socket -I/home/mozeat/zoo/include/socket -I/home/mozeat/zoo/socket/../include/platform -I/home/mozeat/zoo/socket/../include/util
 
 C_FLAGS =  -Wall -Wextra -Wpedantic -D_GNU_SOURCE -DUNITY_INCLUDE_DOUBLE -DUNITY_SUPPORT_64 -O3 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wpedantic -Werror -std=c11
 

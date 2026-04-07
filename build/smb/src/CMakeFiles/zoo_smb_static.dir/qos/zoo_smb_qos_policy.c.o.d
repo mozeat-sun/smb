@@ -1,7 +1,7 @@
 smb/src/CMakeFiles/zoo_smb_static.dir/qos/zoo_smb_qos_policy.c.o: \
- /home/mozeat/zoo/smb/src/qos/zoo_smb_qos_policy.c \
+ /home/mozeat/zoo/src/smb/qos/zoo_smb_qos_policy.c \
  /usr/include/stdc-predef.h \
- /home/mozeat/zoo/smb/src/../inc/qos/zoo_smb_qos_policy.h \
+ /home/mozeat/zoo/include/smb/qos/zoo_smb_qos_policy.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -18,11 +18,11 @@ smb/src/CMakeFiles/zoo_smb_static.dir/qos/zoo_smb_qos_policy.c.o: \
  /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdbool.h \
- /home/mozeat/zoo/smb/src/../inc/utility/zoo_smb_types.h \
- /home/mozeat/zoo/smb/src/../../platform/inc/zoo.h \
+ /home/mozeat/zoo/include/smb/utility/zoo_smb_types.h \
+ /home/mozeat/zoo/include/platform/zoo.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stddef.h \
- /home/mozeat/zoo/smb/src/../../platform/inc/zoo_platform.h \
- /usr/include/stdio.h /usr/lib/gcc/x86_64-linux-gnu/11/include/stdarg.h \
+ /home/mozeat/zoo/include/platform/zoo_platform.h /usr/include/stdio.h \
+ /usr/lib/gcc/x86_64-linux-gnu/11/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h \
@@ -100,15 +100,14 @@ smb/src/CMakeFiles/zoo_smb_static.dir/qos/zoo_smb_qos_policy.c.o: \
  /usr/include/x86_64-linux-gnu/sys/syslog.h \
  /usr/include/x86_64-linux-gnu/bits/syslog-path.h \
  /usr/include/x86_64-linux-gnu/bits/syslog.h \
- /home/mozeat/zoo/smb/src/../../platform/inc/zoo_types.h \
- /usr/include/inttypes.h \
+ /home/mozeat/zoo/include/platform/zoo_types.h /usr/include/inttypes.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdatomic.h \
- /home/mozeat/zoo/smb/src/../../platform/inc/zoo_error.h \
- /home/mozeat/zoo/smb/inc/../../log/inc/zoo_log.h \
- /home/mozeat/zoo/smb/inc/../../log/inc/../../platform/inc/zoo_types.h \
- /home/mozeat/zoo/smb/inc/../../memory_pool/inc/zoo_memory_pool.h \
- /home/mozeat/zoo/smb/src/../../platform/inc/zoo_error.h \
- /usr/include/string.h /usr/include/strings.h \
+ /home/mozeat/zoo/include/platform/zoo_error.h \
+ /home/mozeat/zoo/include/log/zoo_log.h \
+ /home/mozeat/zoo/include/platform/zoo_types.h \
+ /home/mozeat/zoo/include/memory_pool/zoo_memory_pool.h \
+ /home/mozeat/zoo/include/platform/zoo_error.h /usr/include/string.h \
+ /usr/include/strings.h \
  /usr/include/x86_64-linux-gnu/bits/strings_fortified.h \
  /usr/include/x86_64-linux-gnu/bits/string_fortified.h \
  /usr/include/stdlib.h /usr/include/x86_64-linux-gnu/bits/waitflags.h \

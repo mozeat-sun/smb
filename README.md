@@ -28,7 +28,7 @@ The repository is organized as one platform with multiple focused submodules. Mo
 ## Supporting Directories
 
 - `docs`: Repository-level specifications, architecture notes, and module design documents.
-- `third_party`: Vendored testing frameworks and related external assets.
+- `thirdparty`: Vendored testing frameworks and related external assets.
 - `cmake`: Shared build helpers used by the repository, kept secondary to the platform and module documentation.
 
 ## Strategic Roadmap

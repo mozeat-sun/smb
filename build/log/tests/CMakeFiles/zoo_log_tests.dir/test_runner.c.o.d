@@ -1,8 +1,8 @@
 log/tests/CMakeFiles/zoo_log_tests.dir/test_runner.c.o: \
- /home/mozeat/zoo/log/tests/test_runner.c /usr/include/stdc-predef.h \
- /home/mozeat/zoo/third_party/test/unity/src/unity.h \
- /home/mozeat/zoo/third_party/test/unity/src/unity_internals.h \
- /home/mozeat/zoo/third_party/test/unity/unity_config.h \
+ /home/mozeat/zoo/tests/log/test_runner.c /usr/include/stdc-predef.h \
+ /home/mozeat/zoo/thirdparty/test/unity/src/unity.h \
+ /home/mozeat/zoo/thirdparty/test/unity/src/unity_internals.h \
+ /home/mozeat/zoo/thirdparty/test/unity/unity_config.h \
  /usr/include/math.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \

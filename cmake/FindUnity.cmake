@@ -2,7 +2,7 @@
 # FindUnity
 # ---------
 #
-# Find Unity test framework in ZOO third_party directory
+# Find Unity test framework in ZOO thirdparty directory
 #
 # This module defines:
 #
@@ -24,11 +24,11 @@
 
 # Find the Unity directory relative to ZOO root
 get_filename_component(ZOO_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
-while(NOT EXISTS "${ZOO_ROOT_DIR}/third_party" AND NOT ${ZOO_ROOT_DIR} STREQUAL "/")
+while(NOT EXISTS "${ZOO_ROOT_DIR}/thirdparty" AND NOT ${ZOO_ROOT_DIR} STREQUAL "/")
     get_filename_component(ZOO_ROOT_DIR ${ZOO_ROOT_DIR} DIRECTORY)
 endwhile()
 
-set(Unity_ROOT_DIR "${ZOO_ROOT_DIR}/third_party/test/unity/src")
+set(Unity_ROOT_DIR "${ZOO_ROOT_DIR}/thirdparty/test/unity/src")
 
 # Check if Unity exists
 if(EXISTS "${Unity_ROOT_DIR}/unity.h" AND EXISTS "${Unity_ROOT_DIR}/unity.c")

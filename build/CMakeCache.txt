@@ -14,14 +14,17 @@
 # EXTERNAL cache entries
 ########################
 
+//Build the tests
+BUILD_TESTS:BOOL=ON
+
 //Path to a program.
 CMAKE_ADDR2LINE:FILEPATH=/usr/bin/addr2line
 
 //Path to a program.
 CMAKE_AR:FILEPATH=/usr/bin/ar
 
-//No help, variable specified on the command line.
-CMAKE_BUILD_TYPE:STRING=Debug
+//Choose the type of build
+CMAKE_BUILD_TYPE:STRING=Release
 
 //Enable/Disable color output during build.
 CMAKE_COLOR_MAKEFILE:BOOL=ON
@@ -96,11 +99,59 @@ CMAKE_EXE_LINKER_FLAGS_RELEASE:STRING=
 //Flags used by the linker during RELWITHDEBINFO builds.
 CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
-//No help, variable specified on the command line.
-CMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE
+//Enable/Disable output of compile commands during generation.
+CMAKE_EXPORT_COMPILE_COMMANDS:BOOL=
+
+//User executables (bin)
+CMAKE_INSTALL_BINDIR:PATH=bin
+
+//Read-only architecture-independent data (DATAROOTDIR)
+CMAKE_INSTALL_DATADIR:PATH=
+
+//Read-only architecture-independent data root (share)
+CMAKE_INSTALL_DATAROOTDIR:PATH=share
+
+//Documentation root (DATAROOTDIR/doc/PROJECT_NAME)
+CMAKE_INSTALL_DOCDIR:PATH=
+
+//C header files (include)
+CMAKE_INSTALL_INCLUDEDIR:PATH=include
+
+//Info documentation (DATAROOTDIR/info)
+CMAKE_INSTALL_INFODIR:PATH=
+
+//Object code libraries (lib)
+CMAKE_INSTALL_LIBDIR:PATH=lib
+
+//Program executables (libexec)
+CMAKE_INSTALL_LIBEXECDIR:PATH=libexec
+
+//Locale-dependent data (DATAROOTDIR/locale)
+CMAKE_INSTALL_LOCALEDIR:PATH=
+
+//Modifiable single-machine data (var)
+CMAKE_INSTALL_LOCALSTATEDIR:PATH=var
+
+//Man documentation (DATAROOTDIR/man)
+CMAKE_INSTALL_MANDIR:PATH=
+
+//C header files for non-gcc (/usr/include)
+CMAKE_INSTALL_OLDINCLUDEDIR:PATH=/usr/include
 
 //Install path prefix, prepended onto install directories.
 CMAKE_INSTALL_PREFIX:PATH=/usr/local
+
+//Run-time variable data (LOCALSTATEDIR/run)
+CMAKE_INSTALL_RUNSTATEDIR:PATH=
+
+//System admin executables (sbin)
+CMAKE_INSTALL_SBINDIR:PATH=sbin
+
+//Modifiable architecture-independent data (com)
+CMAKE_INSTALL_SHAREDSTATEDIR:PATH=com
+
+//Read-only single-machine data (etc)
+CMAKE_INSTALL_SYSCONFDIR:PATH=etc
 
 //Path to a program.
 CMAKE_LINKER:FILEPATH=/usr/bin/ld
@@ -138,13 +189,28 @@ CMAKE_OBJCOPY:FILEPATH=/usr/bin/objcopy
 CMAKE_OBJDUMP:FILEPATH=/usr/bin/objdump
 
 //Value Computed by CMake
-CMAKE_PROJECT_DESCRIPTION:STATIC=
+CMAKE_PROJECT_DESCRIPTION:STATIC=ZOO Cross-Platform Library Collection
 
 //Value Computed by CMake
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=Project
+CMAKE_PROJECT_NAME:STATIC=ZOO
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION:STATIC=1.0.0
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_MAJOR:STATIC=1
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_MINOR:STATIC=0
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_PATCH:STATIC=0
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_TWEAK:STATIC=
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
@@ -208,20 +274,266 @@ CMAKE_STRIP:FILEPATH=/usr/bin/strip
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
+//Enable to build Debian packages
+CPACK_BINARY_DEB:BOOL=OFF
+
+//Enable to build FreeBSD packages
+CPACK_BINARY_FREEBSD:BOOL=OFF
+
+//Enable to build IFW packages
+CPACK_BINARY_IFW:BOOL=OFF
+
+//Enable to build NSIS packages
+CPACK_BINARY_NSIS:BOOL=OFF
+
+//Enable to build RPM packages
+CPACK_BINARY_RPM:BOOL=OFF
+
+//Enable to build STGZ packages
+CPACK_BINARY_STGZ:BOOL=ON
+
+//Enable to build TBZ2 packages
+CPACK_BINARY_TBZ2:BOOL=OFF
+
+//Enable to build TGZ packages
+CPACK_BINARY_TGZ:BOOL=ON
+
+//Enable to build TXZ packages
+CPACK_BINARY_TXZ:BOOL=OFF
+
+//Enable to build TZ packages
+CPACK_BINARY_TZ:BOOL=ON
+
+//Enable to build RPM source packages
+CPACK_SOURCE_RPM:BOOL=OFF
+
+//Enable to build TBZ2 source packages
+CPACK_SOURCE_TBZ2:BOOL=ON
+
+//Enable to build TGZ source packages
+CPACK_SOURCE_TGZ:BOOL=ON
+
+//Enable to build TXZ source packages
+CPACK_SOURCE_TXZ:BOOL=ON
+
+//Enable to build TZ source packages
+CPACK_SOURCE_TZ:BOOL=ON
+
+//Enable to build ZIP source packages
+CPACK_SOURCE_ZIP:BOOL=OFF
+
+//Enable coverage reporting
+ENABLE_COVERAGE:BOOL=OFF
+
 //Path to a program.
 GCOV_EXECUTABLE:FILEPATH=/usr/bin/gcov
 
-//Value Computed by CMake
-Project_BINARY_DIR:STATIC=/home/mozeat/zoo/build
+//Path to a program.
+GENHTML_EXECUTABLE:FILEPATH=GENHTML_EXECUTABLE-NOTFOUND
 
-//Value Computed by CMake
-Project_IS_TOP_LEVEL:STATIC=ON
+//Path to a program.
+LCOV_EXECUTABLE:FILEPATH=LCOV_EXECUTABLE-NOTFOUND
 
-//Value Computed by CMake
-Project_SOURCE_DIR:STATIC=/home/mozeat/zoo/socket/tests
+//Path to a library.
+LIBRT_FOUND:FILEPATH=/usr/lib/x86_64-linux-gnu/librt.a
 
 //Path to a file.
 UNITY_INCLUDE_DIR:PATH=/home/mozeat/zoo/third_party/test/unity/src
+
+//Value Computed by CMake
+ZOO_BINARY_DIR:STATIC=/home/mozeat/zoo/build
+
+//Build all ZOO modules
+ZOO_BUILD_ALL:BOOL=ON
+
+//Build buffer module
+ZOO_BUILD_BUFFER:BOOL=ON
+
+//Build dispatcher module
+ZOO_BUILD_DISPATCHER:BOOL=ON
+
+//Build example programs
+ZOO_BUILD_EXAMPLES:BOOL=OFF
+
+//Build log module
+ZOO_BUILD_LOG:BOOL=ON
+
+//Build memory pool module
+ZOO_BUILD_MEMORY_POOL:BOOL=ON
+
+//Build platform module
+ZOO_BUILD_PLATFORM:BOOL=ON
+
+//Build SMB module
+ZOO_BUILD_SMB:BOOL=ON
+
+//Build socket module
+ZOO_BUILD_SOCKET:BOOL=ON
+
+//Build unit tests
+ZOO_BUILD_TESTS:BOOL=ON
+
+//Build thread pool module
+ZOO_BUILD_THREAD_POOL:BOOL=ON
+
+//Build timer module
+ZOO_BUILD_TIMER:BOOL=ON
+
+//Build util module
+ZOO_BUILD_UTIL:BOOL=ON
+
+//Value Computed by CMake
+ZOO_IS_TOP_LEVEL:STATIC=ON
+
+//ZOO framework root directory
+ZOO_ROOT:PATH=/home/mozeat/zoo/src/socket/../..
+
+//Enable SMB auto init
+ZOO_SMB_AUTO_INIT:BOOL=ON
+
+//Build ZOO Socket examples
+ZOO_SOCKET_BUILD_EXAMPLES:BOOL=ON
+
+//Build ZOO Socket tests
+ZOO_SOCKET_BUILD_TESTS:BOOL=ON
+
+//Value Computed by CMake
+ZOO_SOURCE_DIR:STATIC=/home/mozeat/zoo
+
+//Value Computed by CMake
+ZooBufferTests_BINARY_DIR:STATIC=/home/mozeat/zoo/build/src/buffer/tests
+
+//Value Computed by CMake
+ZooBufferTests_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+ZooBufferTests_SOURCE_DIR:STATIC=/home/mozeat/zoo/tests/buffer
+
+//Value Computed by CMake
+ZooBuffer_BINARY_DIR:STATIC=/home/mozeat/zoo/build/src/buffer
+
+//Value Computed by CMake
+ZooBuffer_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+ZooBuffer_SOURCE_DIR:STATIC=/home/mozeat/zoo/src/buffer
+
+//Value Computed by CMake
+ZooDispatcher_BINARY_DIR:STATIC=/home/mozeat/zoo/build/src/dispatcher
+
+//Value Computed by CMake
+ZooDispatcher_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+ZooDispatcher_SOURCE_DIR:STATIC=/home/mozeat/zoo/src/dispatcher
+
+//Value Computed by CMake
+ZooLogTests_BINARY_DIR:STATIC=/home/mozeat/zoo/build/src/log/tests
+
+//Value Computed by CMake
+ZooLogTests_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+ZooLogTests_SOURCE_DIR:STATIC=/home/mozeat/zoo/tests/log
+
+//Value Computed by CMake
+ZooLog_BINARY_DIR:STATIC=/home/mozeat/zoo/build/src/log
+
+//Value Computed by CMake
+ZooLog_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+ZooLog_SOURCE_DIR:STATIC=/home/mozeat/zoo/src/log
+
+//Value Computed by CMake
+ZooMemoryPool_BINARY_DIR:STATIC=/home/mozeat/zoo/build/src/memory_pool
+
+//Value Computed by CMake
+ZooMemoryPool_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+ZooMemoryPool_SOURCE_DIR:STATIC=/home/mozeat/zoo/src/memory_pool
+
+//Value Computed by CMake
+ZooPlatformTests_BINARY_DIR:STATIC=/home/mozeat/zoo/build/src/platform/tests
+
+//Value Computed by CMake
+ZooPlatformTests_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+ZooPlatformTests_SOURCE_DIR:STATIC=/home/mozeat/zoo/tests/platform
+
+//Value Computed by CMake
+ZooSMBTests_BINARY_DIR:STATIC=/home/mozeat/zoo/build/smb/tests
+
+//Value Computed by CMake
+ZooSMBTests_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+ZooSMBTests_SOURCE_DIR:STATIC=/home/mozeat/zoo/tests/smb
+
+//Value Computed by CMake
+ZooSMB_BINARY_DIR:STATIC=/home/mozeat/zoo/build/smb
+
+//Value Computed by CMake
+ZooSMB_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+ZooSMB_SOURCE_DIR:STATIC=/home/mozeat/zoo/smb
+
+//Value Computed by CMake
+ZooThreadPool_BINARY_DIR:STATIC=/home/mozeat/zoo/build/src/thread_pool
+
+//Value Computed by CMake
+ZooThreadPool_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+ZooThreadPool_SOURCE_DIR:STATIC=/home/mozeat/zoo/src/thread_pool
+
+//Value Computed by CMake
+ZooTimer_BINARY_DIR:STATIC=/home/mozeat/zoo/build/src/timer
+
+//Value Computed by CMake
+ZooTimer_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+ZooTimer_SOURCE_DIR:STATIC=/home/mozeat/zoo/src/timer
+
+//Value Computed by CMake
+ZooUtil_BINARY_DIR:STATIC=/home/mozeat/zoo/build/src/util
+
+//Value Computed by CMake
+ZooUtil_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+ZooUtil_SOURCE_DIR:STATIC=/home/mozeat/zoo/src/util
+
+//Value Computed by CMake
+zoo_platform_BINARY_DIR:STATIC=/home/mozeat/zoo/build/src/platform
+
+//Value Computed by CMake
+zoo_platform_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+zoo_platform_SOURCE_DIR:STATIC=/home/mozeat/zoo/src/platform
+
+//Value Computed by CMake
+zoo_socket_BINARY_DIR:STATIC=/home/mozeat/zoo/build/src/socket
+
+//Value Computed by CMake
+zoo_socket_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+zoo_socket_SOURCE_DIR:STATIC=/home/mozeat/zoo/src/socket
+
+//Value Computed by CMake
+zoo_timer_tests_BINARY_DIR:STATIC=/home/mozeat/zoo/build/src/timer/tests
+
+//Value Computed by CMake
+zoo_timer_tests_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+zoo_timer_tests_SOURCE_DIR:STATIC=/home/mozeat/zoo/tests/timer
 
 
 ########################
@@ -294,6 +606,8 @@ CMAKE_EXE_LINKER_FLAGS_MINSIZEREL-ADVANCED:INTERNAL=1
 CMAKE_EXE_LINKER_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO
 CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_EXPORT_COMPILE_COMMANDS
+CMAKE_EXPORT_COMPILE_COMMANDS-ADVANCED:INTERNAL=1
 //Name of external makefile project generator.
 CMAKE_EXTRA_GENERATOR:INTERNAL=
 //Name of generator.
@@ -304,11 +618,47 @@ CMAKE_GENERATOR_INSTANCE:INTERNAL=
 CMAKE_GENERATOR_PLATFORM:INTERNAL=
 //Name of generator toolset.
 CMAKE_GENERATOR_TOOLSET:INTERNAL=
+//Test CMAKE_HAVE_LIBC_PTHREAD
+CMAKE_HAVE_LIBC_PTHREAD:INTERNAL=1
+//Have include pthread.h
+CMAKE_HAVE_PTHREAD_H:INTERNAL=1
 //Source directory with the top level CMakeLists.txt file for this
 // project
-CMAKE_HOME_DIRECTORY:INTERNAL=/home/mozeat/zoo/socket/tests
+CMAKE_HOME_DIRECTORY:INTERNAL=/home/mozeat/zoo
+//ADVANCED property for variable: CMAKE_INSTALL_BINDIR
+CMAKE_INSTALL_BINDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_DATADIR
+CMAKE_INSTALL_DATADIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_DATAROOTDIR
+CMAKE_INSTALL_DATAROOTDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_DOCDIR
+CMAKE_INSTALL_DOCDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_INCLUDEDIR
+CMAKE_INSTALL_INCLUDEDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_INFODIR
+CMAKE_INSTALL_INFODIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_LIBDIR
+CMAKE_INSTALL_LIBDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_LIBEXECDIR
+CMAKE_INSTALL_LIBEXECDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_LOCALEDIR
+CMAKE_INSTALL_LOCALEDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_LOCALSTATEDIR
+CMAKE_INSTALL_LOCALSTATEDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_MANDIR
+CMAKE_INSTALL_MANDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_OLDINCLUDEDIR
+CMAKE_INSTALL_OLDINCLUDEDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_RUNSTATEDIR
+CMAKE_INSTALL_RUNSTATEDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_SBINDIR
+CMAKE_INSTALL_SBINDIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_SHAREDSTATEDIR
+CMAKE_INSTALL_SHAREDSTATEDIR-ADVANCED:INTERNAL=1
 //Install .so files without execute permission.
 CMAKE_INSTALL_SO_NO_EXE:INTERNAL=1
+//ADVANCED property for variable: CMAKE_INSTALL_SYSCONFDIR
+CMAKE_INSTALL_SYSCONFDIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_LINKER
 CMAKE_LINKER-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MAKE_PROGRAM
@@ -326,7 +676,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=1
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=21
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP
@@ -369,4 +719,52 @@ CMAKE_STRIP-ADVANCED:INTERNAL=1
 CMAKE_UNAME:INTERNAL=/usr/bin/uname
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CPACK_BINARY_DEB
+CPACK_BINARY_DEB-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CPACK_BINARY_FREEBSD
+CPACK_BINARY_FREEBSD-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CPACK_BINARY_IFW
+CPACK_BINARY_IFW-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CPACK_BINARY_NSIS
+CPACK_BINARY_NSIS-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CPACK_BINARY_RPM
+CPACK_BINARY_RPM-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CPACK_BINARY_STGZ
+CPACK_BINARY_STGZ-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CPACK_BINARY_TBZ2
+CPACK_BINARY_TBZ2-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CPACK_BINARY_TGZ
+CPACK_BINARY_TGZ-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CPACK_BINARY_TXZ
+CPACK_BINARY_TXZ-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CPACK_BINARY_TZ
+CPACK_BINARY_TZ-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CPACK_SOURCE_RPM
+CPACK_SOURCE_RPM-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CPACK_SOURCE_TBZ2
+CPACK_SOURCE_TBZ2-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CPACK_SOURCE_TGZ
+CPACK_SOURCE_TGZ-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CPACK_SOURCE_TXZ
+CPACK_SOURCE_TXZ-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CPACK_SOURCE_TZ
+CPACK_SOURCE_TZ-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CPACK_SOURCE_ZIP
+CPACK_SOURCE_ZIP-ADVANCED:INTERNAL=1
+//Details about finding Threads
+FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
+//Have include arpa/inet.h
+HAVE_ARPA_INET_H:INTERNAL=1
+//Have include lwip/sockets.h
+HAVE_LWIP_SOCKETS_H:INTERNAL=
+//Have include netinet/in.h
+HAVE_NETINET_IN_H:INTERNAL=1
+//Have function select
+HAVE_SELECT_FUNC:INTERNAL=1
+//Have function socket
+HAVE_SOCKET_FUNC:INTERNAL=1
+//Have include sys/socket.h
+HAVE_SYS_SOCKET_H:INTERNAL=1
+//CMAKE_INSTALL_PREFIX during last run
+_GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=/usr/local
 

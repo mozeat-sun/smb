@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/mozeat/zoo/platform/src/zoo_error.c" "platform/CMakeFiles/zoo_platform_static.dir/src/zoo_error.c.o" "gcc" "platform/CMakeFiles/zoo_platform_static.dir/src/zoo_error.c.o.d"
+  "/home/mozeat/zoo/src/platform/zoo_error.c" "platform/CMakeFiles/zoo_platform_static.dir/__/src/platform/zoo_error.c.o" "gcc" "platform/CMakeFiles/zoo_platform_static.dir/__/src/platform/zoo_error.c.o.d"
   )
 
 # Targets to which this target links.

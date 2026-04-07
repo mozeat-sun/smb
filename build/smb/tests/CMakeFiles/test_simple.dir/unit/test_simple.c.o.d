@@ -1,7 +1,7 @@
 smb/tests/CMakeFiles/test_simple.dir/unit/test_simple.c.o: \
- /home/mozeat/zoo/smb/tests/unit/test_simple.c /usr/include/stdc-predef.h \
- /home/mozeat/zoo/third_party/test/unity/src/unity.h \
- /home/mozeat/zoo/third_party/test/unity/src/unity_internals.h \
+ /home/mozeat/zoo/tests/smb/unit/test_simple.c /usr/include/stdc-predef.h \
+ /home/mozeat/zoo/thirdparty/test/unity/src/unity.h \
+ /home/mozeat/zoo/thirdparty/test/unity/src/unity_internals.h \
  /usr/include/setjmp.h /usr/include/features.h \
  /usr/include/features-time64.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \

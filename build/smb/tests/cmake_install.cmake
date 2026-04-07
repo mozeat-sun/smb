@@ -1,4 +1,4 @@
-# Install script for directory: /home/mozeat/zoo/smb/tests
+# Install script for directory: /home/mozeat/zoo/tests/smb
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

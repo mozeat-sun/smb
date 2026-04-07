@@ -57,7 +57,7 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/mozeat/zoo/socket/tests
+CMAKE_SOURCE_DIR = /home/mozeat/zoo
 
 # The top-level build directory on which CMake was run.
 CMAKE_BINARY_DIR = /home/mozeat/zoo/build
@@ -85,6 +85,16 @@ package_source:
 package_source/fast: package_source
 .PHONY : package_source/fast
 
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
+	/usr/bin/ctest --force-new-ctest-process $(ARGS)
+.PHONY : test
+
+# Special rule for the target test
+test/fast: test
+.PHONY : test/fast
+
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
@@ -104,6 +114,51 @@ rebuild_cache:
 # Special rule for the target rebuild_cache
 rebuild_cache/fast: rebuild_cache
 .PHONY : rebuild_cache/fast
+
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Tests\" \"Unspecified\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+.PHONY : list_install_components/fast
+
+# Special rule for the target install
+install: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install
+
+# Special rule for the target install
+install/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install/fast
+
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local/fast
+
+# Special rule for the target install/strip
+install/strip: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip
+
+# Special rule for the target install/strip
+install/strip/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -133,8 +188,386 @@ preinstall/fast:
 
 # clear depends
 depend:
+	$(CMAKE_COMMAND) -P /home/mozeat/zoo/build/CMakeFiles/VerifyGlobs.cmake
 	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
+
+#=============================================================================
+# Target rules for targets named zoo_platform_static
+
+# Build rule for target.
+zoo_platform_static: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_platform_static
+.PHONY : zoo_platform_static
+
+# fast build rule for target.
+zoo_platform_static/fast:
+	$(MAKE) $(MAKESILENT) -f src/platform/CMakeFiles/zoo_platform_static.dir/build.make src/platform/CMakeFiles/zoo_platform_static.dir/build
+.PHONY : zoo_platform_static/fast
+
+#=============================================================================
+# Target rules for targets named zoo_platform_shared
+
+# Build rule for target.
+zoo_platform_shared: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_platform_shared
+.PHONY : zoo_platform_shared
+
+# fast build rule for target.
+zoo_platform_shared/fast:
+	$(MAKE) $(MAKESILENT) -f src/platform/CMakeFiles/zoo_platform_shared.dir/build.make src/platform/CMakeFiles/zoo_platform_shared.dir/build
+.PHONY : zoo_platform_shared/fast
+
+#=============================================================================
+# Target rules for targets named zoo_platform_tests
+
+# Build rule for target.
+zoo_platform_tests: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_platform_tests
+.PHONY : zoo_platform_tests
+
+# fast build rule for target.
+zoo_platform_tests/fast:
+	$(MAKE) $(MAKESILENT) -f src/platform/tests/CMakeFiles/zoo_platform_tests.dir/build.make src/platform/tests/CMakeFiles/zoo_platform_tests.dir/build
+.PHONY : zoo_platform_tests/fast
+
+#=============================================================================
+# Target rules for targets named zoo_util_static
+
+# Build rule for target.
+zoo_util_static: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_util_static
+.PHONY : zoo_util_static
+
+# fast build rule for target.
+zoo_util_static/fast:
+	$(MAKE) $(MAKESILENT) -f src/util/CMakeFiles/zoo_util_static.dir/build.make src/util/CMakeFiles/zoo_util_static.dir/build
+.PHONY : zoo_util_static/fast
+
+#=============================================================================
+# Target rules for targets named zoo_util_shared
+
+# Build rule for target.
+zoo_util_shared: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_util_shared
+.PHONY : zoo_util_shared
+
+# fast build rule for target.
+zoo_util_shared/fast:
+	$(MAKE) $(MAKESILENT) -f src/util/CMakeFiles/zoo_util_shared.dir/build.make src/util/CMakeFiles/zoo_util_shared.dir/build
+.PHONY : zoo_util_shared/fast
+
+#=============================================================================
+# Target rules for targets named util_unity
+
+# Build rule for target.
+util_unity: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 util_unity
+.PHONY : util_unity
+
+# fast build rule for target.
+util_unity/fast:
+	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/util_unity.dir/build.make src/util/tests/CMakeFiles/util_unity.dir/build
+.PHONY : util_unity/fast
+
+#=============================================================================
+# Target rules for targets named test_timestamp_unity
+
+# Build rule for target.
+test_timestamp_unity: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_timestamp_unity
+.PHONY : test_timestamp_unity
+
+# fast build rule for target.
+test_timestamp_unity/fast:
+	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/test_timestamp_unity.dir/build.make src/util/tests/CMakeFiles/test_timestamp_unity.dir/build
+.PHONY : test_timestamp_unity/fast
+
+#=============================================================================
+# Target rules for targets named test_string_unity
+
+# Build rule for target.
+test_string_unity: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_string_unity
+.PHONY : test_string_unity
+
+# fast build rule for target.
+test_string_unity/fast:
+	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/test_string_unity.dir/build.make src/util/tests/CMakeFiles/test_string_unity.dir/build
+.PHONY : test_string_unity/fast
+
+#=============================================================================
+# Target rules for targets named test_memory_unity
+
+# Build rule for target.
+test_memory_unity: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_memory_unity
+.PHONY : test_memory_unity
+
+# fast build rule for target.
+test_memory_unity/fast:
+	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/test_memory_unity.dir/build.make src/util/tests/CMakeFiles/test_memory_unity.dir/build
+.PHONY : test_memory_unity/fast
+
+#=============================================================================
+# Target rules for targets named test_math_unity
+
+# Build rule for target.
+test_math_unity: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_math_unity
+.PHONY : test_math_unity
+
+# fast build rule for target.
+test_math_unity/fast:
+	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/test_math_unity.dir/build.make src/util/tests/CMakeFiles/test_math_unity.dir/build
+.PHONY : test_math_unity/fast
+
+#=============================================================================
+# Target rules for targets named run_unity_tests
+
+# Build rule for target.
+run_unity_tests: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 run_unity_tests
+.PHONY : run_unity_tests
+
+# fast build rule for target.
+run_unity_tests/fast:
+	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/run_unity_tests.dir/build.make src/util/tests/CMakeFiles/run_unity_tests.dir/build
+.PHONY : run_unity_tests/fast
+
+#=============================================================================
+# Target rules for targets named run_timestamp_tests
+
+# Build rule for target.
+run_timestamp_tests: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 run_timestamp_tests
+.PHONY : run_timestamp_tests
+
+# fast build rule for target.
+run_timestamp_tests/fast:
+	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/run_timestamp_tests.dir/build.make src/util/tests/CMakeFiles/run_timestamp_tests.dir/build
+.PHONY : run_timestamp_tests/fast
+
+#=============================================================================
+# Target rules for targets named run_string_tests
+
+# Build rule for target.
+run_string_tests: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 run_string_tests
+.PHONY : run_string_tests
+
+# fast build rule for target.
+run_string_tests/fast:
+	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/run_string_tests.dir/build.make src/util/tests/CMakeFiles/run_string_tests.dir/build
+.PHONY : run_string_tests/fast
+
+#=============================================================================
+# Target rules for targets named run_memory_tests
+
+# Build rule for target.
+run_memory_tests: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 run_memory_tests
+.PHONY : run_memory_tests
+
+# fast build rule for target.
+run_memory_tests/fast:
+	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/run_memory_tests.dir/build.make src/util/tests/CMakeFiles/run_memory_tests.dir/build
+.PHONY : run_memory_tests/fast
+
+#=============================================================================
+# Target rules for targets named run_math_tests
+
+# Build rule for target.
+run_math_tests: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 run_math_tests
+.PHONY : run_math_tests
+
+# fast build rule for target.
+run_math_tests/fast:
+	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/run_math_tests.dir/build.make src/util/tests/CMakeFiles/run_math_tests.dir/build
+.PHONY : run_math_tests/fast
+
+#=============================================================================
+# Target rules for targets named zoo_log_static
+
+# Build rule for target.
+zoo_log_static: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_log_static
+.PHONY : zoo_log_static
+
+# fast build rule for target.
+zoo_log_static/fast:
+	$(MAKE) $(MAKESILENT) -f src/log/CMakeFiles/zoo_log_static.dir/build.make src/log/CMakeFiles/zoo_log_static.dir/build
+.PHONY : zoo_log_static/fast
+
+#=============================================================================
+# Target rules for targets named zoo_log_shared
+
+# Build rule for target.
+zoo_log_shared: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_log_shared
+.PHONY : zoo_log_shared
+
+# fast build rule for target.
+zoo_log_shared/fast:
+	$(MAKE) $(MAKESILENT) -f src/log/CMakeFiles/zoo_log_shared.dir/build.make src/log/CMakeFiles/zoo_log_shared.dir/build
+.PHONY : zoo_log_shared/fast
+
+#=============================================================================
+# Target rules for targets named zoo_log_tests
+
+# Build rule for target.
+zoo_log_tests: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_log_tests
+.PHONY : zoo_log_tests
+
+# fast build rule for target.
+zoo_log_tests/fast:
+	$(MAKE) $(MAKESILENT) -f src/log/tests/CMakeFiles/zoo_log_tests.dir/build.make src/log/tests/CMakeFiles/zoo_log_tests.dir/build
+.PHONY : zoo_log_tests/fast
+
+#=============================================================================
+# Target rules for targets named log_quick_test
+
+# Build rule for target.
+log_quick_test: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 log_quick_test
+.PHONY : log_quick_test
+
+# fast build rule for target.
+log_quick_test/fast:
+	$(MAKE) $(MAKESILENT) -f src/log/tests/CMakeFiles/log_quick_test.dir/build.make src/log/tests/CMakeFiles/log_quick_test.dir/build
+.PHONY : log_quick_test/fast
+
+#=============================================================================
+# Target rules for targets named log_test_verbose
+
+# Build rule for target.
+log_test_verbose: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 log_test_verbose
+.PHONY : log_test_verbose
+
+# fast build rule for target.
+log_test_verbose/fast:
+	$(MAKE) $(MAKESILENT) -f src/log/tests/CMakeFiles/log_test_verbose.dir/build.make src/log/tests/CMakeFiles/log_test_verbose.dir/build
+.PHONY : log_test_verbose/fast
+
+#=============================================================================
+# Target rules for targets named zoo_memory_pool_static
+
+# Build rule for target.
+zoo_memory_pool_static: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_memory_pool_static
+.PHONY : zoo_memory_pool_static
+
+# fast build rule for target.
+zoo_memory_pool_static/fast:
+	$(MAKE) $(MAKESILENT) -f src/memory_pool/CMakeFiles/zoo_memory_pool_static.dir/build.make src/memory_pool/CMakeFiles/zoo_memory_pool_static.dir/build
+.PHONY : zoo_memory_pool_static/fast
+
+#=============================================================================
+# Target rules for targets named zoo_memory_pool_shared
+
+# Build rule for target.
+zoo_memory_pool_shared: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_memory_pool_shared
+.PHONY : zoo_memory_pool_shared
+
+# fast build rule for target.
+zoo_memory_pool_shared/fast:
+	$(MAKE) $(MAKESILENT) -f src/memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/build.make src/memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/build
+.PHONY : zoo_memory_pool_shared/fast
+
+#=============================================================================
+# Target rules for targets named zoo_memory_pool_tests
+
+# Build rule for target.
+zoo_memory_pool_tests: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_memory_pool_tests
+.PHONY : zoo_memory_pool_tests
+
+# fast build rule for target.
+zoo_memory_pool_tests/fast:
+	$(MAKE) $(MAKESILENT) -f src/memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/build.make src/memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/build
+.PHONY : zoo_memory_pool_tests/fast
+
+#=============================================================================
+# Target rules for targets named memory_pool_quick_test
+
+# Build rule for target.
+memory_pool_quick_test: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 memory_pool_quick_test
+.PHONY : memory_pool_quick_test
+
+# fast build rule for target.
+memory_pool_quick_test/fast:
+	$(MAKE) $(MAKESILENT) -f src/memory_pool/tests/CMakeFiles/memory_pool_quick_test.dir/build.make src/memory_pool/tests/CMakeFiles/memory_pool_quick_test.dir/build
+.PHONY : memory_pool_quick_test/fast
+
+#=============================================================================
+# Target rules for targets named memory_pool_test_verbose
+
+# Build rule for target.
+memory_pool_test_verbose: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 memory_pool_test_verbose
+.PHONY : memory_pool_test_verbose
+
+# fast build rule for target.
+memory_pool_test_verbose/fast:
+	$(MAKE) $(MAKESILENT) -f src/memory_pool/tests/CMakeFiles/memory_pool_test_verbose.dir/build.make src/memory_pool/tests/CMakeFiles/memory_pool_test_verbose.dir/build
+.PHONY : memory_pool_test_verbose/fast
+
+#=============================================================================
+# Target rules for targets named zoo_buffer_static
+
+# Build rule for target.
+zoo_buffer_static: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_buffer_static
+.PHONY : zoo_buffer_static
+
+# fast build rule for target.
+zoo_buffer_static/fast:
+	$(MAKE) $(MAKESILENT) -f src/buffer/CMakeFiles/zoo_buffer_static.dir/build.make src/buffer/CMakeFiles/zoo_buffer_static.dir/build
+.PHONY : zoo_buffer_static/fast
+
+#=============================================================================
+# Target rules for targets named zoo_buffer_shared
+
+# Build rule for target.
+zoo_buffer_shared: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_buffer_shared
+.PHONY : zoo_buffer_shared
+
+# fast build rule for target.
+zoo_buffer_shared/fast:
+	$(MAKE) $(MAKESILENT) -f src/buffer/CMakeFiles/zoo_buffer_shared.dir/build.make src/buffer/CMakeFiles/zoo_buffer_shared.dir/build
+.PHONY : zoo_buffer_shared/fast
+
+#=============================================================================
+# Target rules for targets named zoo_socket_static
+
+# Build rule for target.
+zoo_socket_static: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_socket_static
+.PHONY : zoo_socket_static
+
+# fast build rule for target.
+zoo_socket_static/fast:
+	$(MAKE) $(MAKESILENT) -f src/socket/CMakeFiles/zoo_socket_static.dir/build.make src/socket/CMakeFiles/zoo_socket_static.dir/build
+.PHONY : zoo_socket_static/fast
+
+#=============================================================================
+# Target rules for targets named zoo_socket_shared
+
+# Build rule for target.
+zoo_socket_shared: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_socket_shared
+.PHONY : zoo_socket_shared
+
+# fast build rule for target.
+zoo_socket_shared/fast:
+	$(MAKE) $(MAKESILENT) -f src/socket/CMakeFiles/zoo_socket_shared.dir/build.make src/socket/CMakeFiles/zoo_socket_shared.dir/build
+.PHONY : zoo_socket_shared/fast
 
 #=============================================================================
 # Target rules for targets named zoo_socket_unity
@@ -146,7 +579,7 @@ zoo_socket_unity: cmake_check_build_system
 
 # fast build rule for target.
 zoo_socket_unity/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_unity.dir/build.make CMakeFiles/zoo_socket_unity.dir/build
+	$(MAKE) $(MAKESILENT) -f src/socket/tests/CMakeFiles/zoo_socket_unity.dir/build.make src/socket/tests/CMakeFiles/zoo_socket_unity.dir/build
 .PHONY : zoo_socket_unity/fast
 
 #=============================================================================
@@ -159,7 +592,7 @@ zoo_socket_tests: cmake_check_build_system
 
 # fast build rule for target.
 zoo_socket_tests/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/build
+	$(MAKE) $(MAKESILENT) -f src/socket/tests/CMakeFiles/zoo_socket_tests.dir/build.make src/socket/tests/CMakeFiles/zoo_socket_tests.dir/build
 .PHONY : zoo_socket_tests/fast
 
 #=============================================================================
@@ -172,285 +605,229 @@ socket_test_verbose: cmake_check_build_system
 
 # fast build rule for target.
 socket_test_verbose/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/socket_test_verbose.dir/build.make CMakeFiles/socket_test_verbose.dir/build
+	$(MAKE) $(MAKESILENT) -f src/socket/tests/CMakeFiles/socket_test_verbose.dir/build.make src/socket/tests/CMakeFiles/socket_test_verbose.dir/build
 .PHONY : socket_test_verbose/fast
 
 #=============================================================================
-# Target rules for targets named socket_coverage
+# Target rules for targets named tcp_client_example
 
 # Build rule for target.
-socket_coverage: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 socket_coverage
-.PHONY : socket_coverage
+tcp_client_example: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tcp_client_example
+.PHONY : tcp_client_example
 
 # fast build rule for target.
-socket_coverage/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/socket_coverage.dir/build.make CMakeFiles/socket_coverage.dir/build
-.PHONY : socket_coverage/fast
-
-home/mozeat/zoo/third_party/test/unity/src/unity.o: home/mozeat/zoo/third_party/test/unity/src/unity.c.o
-.PHONY : home/mozeat/zoo/third_party/test/unity/src/unity.o
-
-# target to build an object file
-home/mozeat/zoo/third_party/test/unity/src/unity.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_unity.dir/build.make CMakeFiles/zoo_socket_unity.dir/home/mozeat/zoo/third_party/test/unity/src/unity.c.o
-.PHONY : home/mozeat/zoo/third_party/test/unity/src/unity.c.o
-
-home/mozeat/zoo/third_party/test/unity/src/unity.i: home/mozeat/zoo/third_party/test/unity/src/unity.c.i
-.PHONY : home/mozeat/zoo/third_party/test/unity/src/unity.i
-
-# target to preprocess a source file
-home/mozeat/zoo/third_party/test/unity/src/unity.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_unity.dir/build.make CMakeFiles/zoo_socket_unity.dir/home/mozeat/zoo/third_party/test/unity/src/unity.c.i
-.PHONY : home/mozeat/zoo/third_party/test/unity/src/unity.c.i
-
-home/mozeat/zoo/third_party/test/unity/src/unity.s: home/mozeat/zoo/third_party/test/unity/src/unity.c.s
-.PHONY : home/mozeat/zoo/third_party/test/unity/src/unity.s
-
-# target to generate assembly for a file
-home/mozeat/zoo/third_party/test/unity/src/unity.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_unity.dir/build.make CMakeFiles/zoo_socket_unity.dir/home/mozeat/zoo/third_party/test/unity/src/unity.c.s
-.PHONY : home/mozeat/zoo/third_party/test/unity/src/unity.c.s
-
-test_runner.o: test_runner.c.o
-.PHONY : test_runner.o
-
-# target to build an object file
-test_runner.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_runner.c.o
-.PHONY : test_runner.c.o
-
-test_runner.i: test_runner.c.i
-.PHONY : test_runner.i
-
-# target to preprocess a source file
-test_runner.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_runner.c.i
-.PHONY : test_runner.c.i
-
-test_runner.s: test_runner.c.s
-.PHONY : test_runner.s
-
-# target to generate assembly for a file
-test_runner.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_runner.c.s
-.PHONY : test_runner.c.s
-
-test_zoo_socket_address.o: test_zoo_socket_address.c.o
-.PHONY : test_zoo_socket_address.o
-
-# target to build an object file
-test_zoo_socket_address.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_address.c.o
-.PHONY : test_zoo_socket_address.c.o
-
-test_zoo_socket_address.i: test_zoo_socket_address.c.i
-.PHONY : test_zoo_socket_address.i
-
-# target to preprocess a source file
-test_zoo_socket_address.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_address.c.i
-.PHONY : test_zoo_socket_address.c.i
-
-test_zoo_socket_address.s: test_zoo_socket_address.c.s
-.PHONY : test_zoo_socket_address.s
-
-# target to generate assembly for a file
-test_zoo_socket_address.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_address.c.s
-.PHONY : test_zoo_socket_address.c.s
-
-test_zoo_socket_bind_listen.o: test_zoo_socket_bind_listen.c.o
-.PHONY : test_zoo_socket_bind_listen.o
-
-# target to build an object file
-test_zoo_socket_bind_listen.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_bind_listen.c.o
-.PHONY : test_zoo_socket_bind_listen.c.o
-
-test_zoo_socket_bind_listen.i: test_zoo_socket_bind_listen.c.i
-.PHONY : test_zoo_socket_bind_listen.i
-
-# target to preprocess a source file
-test_zoo_socket_bind_listen.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_bind_listen.c.i
-.PHONY : test_zoo_socket_bind_listen.c.i
-
-test_zoo_socket_bind_listen.s: test_zoo_socket_bind_listen.c.s
-.PHONY : test_zoo_socket_bind_listen.s
-
-# target to generate assembly for a file
-test_zoo_socket_bind_listen.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_bind_listen.c.s
-.PHONY : test_zoo_socket_bind_listen.c.s
-
-test_zoo_socket_connect.o: test_zoo_socket_connect.c.o
-.PHONY : test_zoo_socket_connect.o
-
-# target to build an object file
-test_zoo_socket_connect.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_connect.c.o
-.PHONY : test_zoo_socket_connect.c.o
-
-test_zoo_socket_connect.i: test_zoo_socket_connect.c.i
-.PHONY : test_zoo_socket_connect.i
-
-# target to preprocess a source file
-test_zoo_socket_connect.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_connect.c.i
-.PHONY : test_zoo_socket_connect.c.i
-
-test_zoo_socket_connect.s: test_zoo_socket_connect.c.s
-.PHONY : test_zoo_socket_connect.s
-
-# target to generate assembly for a file
-test_zoo_socket_connect.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_connect.c.s
-.PHONY : test_zoo_socket_connect.c.s
-
-test_zoo_socket_create.o: test_zoo_socket_create.c.o
-.PHONY : test_zoo_socket_create.o
-
-# target to build an object file
-test_zoo_socket_create.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_create.c.o
-.PHONY : test_zoo_socket_create.c.o
-
-test_zoo_socket_create.i: test_zoo_socket_create.c.i
-.PHONY : test_zoo_socket_create.i
-
-# target to preprocess a source file
-test_zoo_socket_create.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_create.c.i
-.PHONY : test_zoo_socket_create.c.i
-
-test_zoo_socket_create.s: test_zoo_socket_create.c.s
-.PHONY : test_zoo_socket_create.s
-
-# target to generate assembly for a file
-test_zoo_socket_create.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_create.c.s
-.PHONY : test_zoo_socket_create.c.s
-
-test_zoo_socket_error.o: test_zoo_socket_error.c.o
-.PHONY : test_zoo_socket_error.o
-
-# target to build an object file
-test_zoo_socket_error.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_error.c.o
-.PHONY : test_zoo_socket_error.c.o
-
-test_zoo_socket_error.i: test_zoo_socket_error.c.i
-.PHONY : test_zoo_socket_error.i
-
-# target to preprocess a source file
-test_zoo_socket_error.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_error.c.i
-.PHONY : test_zoo_socket_error.c.i
-
-test_zoo_socket_error.s: test_zoo_socket_error.c.s
-.PHONY : test_zoo_socket_error.s
-
-# target to generate assembly for a file
-test_zoo_socket_error.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_error.c.s
-.PHONY : test_zoo_socket_error.c.s
-
-test_zoo_socket_init.o: test_zoo_socket_init.c.o
-.PHONY : test_zoo_socket_init.o
-
-# target to build an object file
-test_zoo_socket_init.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_init.c.o
-.PHONY : test_zoo_socket_init.c.o
-
-test_zoo_socket_init.i: test_zoo_socket_init.c.i
-.PHONY : test_zoo_socket_init.i
-
-# target to preprocess a source file
-test_zoo_socket_init.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_init.c.i
-.PHONY : test_zoo_socket_init.c.i
-
-test_zoo_socket_init.s: test_zoo_socket_init.c.s
-.PHONY : test_zoo_socket_init.s
-
-# target to generate assembly for a file
-test_zoo_socket_init.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_init.c.s
-.PHONY : test_zoo_socket_init.c.s
-
-test_zoo_socket_options.o: test_zoo_socket_options.c.o
-.PHONY : test_zoo_socket_options.o
-
-# target to build an object file
-test_zoo_socket_options.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_options.c.o
-.PHONY : test_zoo_socket_options.c.o
-
-test_zoo_socket_options.i: test_zoo_socket_options.c.i
-.PHONY : test_zoo_socket_options.i
-
-# target to preprocess a source file
-test_zoo_socket_options.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_options.c.i
-.PHONY : test_zoo_socket_options.c.i
-
-test_zoo_socket_options.s: test_zoo_socket_options.c.s
-.PHONY : test_zoo_socket_options.s
-
-# target to generate assembly for a file
-test_zoo_socket_options.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_options.c.s
-.PHONY : test_zoo_socket_options.c.s
-
-test_zoo_socket_select.o: test_zoo_socket_select.c.o
-.PHONY : test_zoo_socket_select.o
-
-# target to build an object file
-test_zoo_socket_select.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_select.c.o
-.PHONY : test_zoo_socket_select.c.o
-
-test_zoo_socket_select.i: test_zoo_socket_select.c.i
-.PHONY : test_zoo_socket_select.i
-
-# target to preprocess a source file
-test_zoo_socket_select.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_select.c.i
-.PHONY : test_zoo_socket_select.c.i
-
-test_zoo_socket_select.s: test_zoo_socket_select.c.s
-.PHONY : test_zoo_socket_select.s
-
-# target to generate assembly for a file
-test_zoo_socket_select.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_select.c.s
-.PHONY : test_zoo_socket_select.c.s
-
-test_zoo_socket_send_recv.o: test_zoo_socket_send_recv.c.o
-.PHONY : test_zoo_socket_send_recv.o
-
-# target to build an object file
-test_zoo_socket_send_recv.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_send_recv.c.o
-.PHONY : test_zoo_socket_send_recv.c.o
-
-test_zoo_socket_send_recv.i: test_zoo_socket_send_recv.c.i
-.PHONY : test_zoo_socket_send_recv.i
-
-# target to preprocess a source file
-test_zoo_socket_send_recv.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_send_recv.c.i
-.PHONY : test_zoo_socket_send_recv.c.i
-
-test_zoo_socket_send_recv.s: test_zoo_socket_send_recv.c.s
-.PHONY : test_zoo_socket_send_recv.s
-
-# target to generate assembly for a file
-test_zoo_socket_send_recv.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_socket_tests.dir/build.make CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_send_recv.c.s
-.PHONY : test_zoo_socket_send_recv.c.s
+tcp_client_example/fast:
+	$(MAKE) $(MAKESILENT) -f src/socket/examples/CMakeFiles/tcp_client_example.dir/build.make src/socket/examples/CMakeFiles/tcp_client_example.dir/build
+.PHONY : tcp_client_example/fast
+
+#=============================================================================
+# Target rules for targets named tcp_server_example
+
+# Build rule for target.
+tcp_server_example: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tcp_server_example
+.PHONY : tcp_server_example
+
+# fast build rule for target.
+tcp_server_example/fast:
+	$(MAKE) $(MAKESILENT) -f src/socket/examples/CMakeFiles/tcp_server_example.dir/build.make src/socket/examples/CMakeFiles/tcp_server_example.dir/build
+.PHONY : tcp_server_example/fast
+
+#=============================================================================
+# Target rules for targets named udp_example
+
+# Build rule for target.
+udp_example: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 udp_example
+.PHONY : udp_example
+
+# fast build rule for target.
+udp_example/fast:
+	$(MAKE) $(MAKESILENT) -f src/socket/examples/CMakeFiles/udp_example.dir/build.make src/socket/examples/CMakeFiles/udp_example.dir/build
+.PHONY : udp_example/fast
+
+#=============================================================================
+# Target rules for targets named address_example
+
+# Build rule for target.
+address_example: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 address_example
+.PHONY : address_example
+
+# fast build rule for target.
+address_example/fast:
+	$(MAKE) $(MAKESILENT) -f src/socket/examples/CMakeFiles/address_example.dir/build.make src/socket/examples/CMakeFiles/address_example.dir/build
+.PHONY : address_example/fast
+
+#=============================================================================
+# Target rules for targets named zoo_thread_pool_static
+
+# Build rule for target.
+zoo_thread_pool_static: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_thread_pool_static
+.PHONY : zoo_thread_pool_static
+
+# fast build rule for target.
+zoo_thread_pool_static/fast:
+	$(MAKE) $(MAKESILENT) -f src/thread_pool/CMakeFiles/zoo_thread_pool_static.dir/build.make src/thread_pool/CMakeFiles/zoo_thread_pool_static.dir/build
+.PHONY : zoo_thread_pool_static/fast
+
+#=============================================================================
+# Target rules for targets named zoo_thread_pool_shared
+
+# Build rule for target.
+zoo_thread_pool_shared: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_thread_pool_shared
+.PHONY : zoo_thread_pool_shared
+
+# fast build rule for target.
+zoo_thread_pool_shared/fast:
+	$(MAKE) $(MAKESILENT) -f src/thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/build.make src/thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/build
+.PHONY : zoo_thread_pool_shared/fast
+
+#=============================================================================
+# Target rules for targets named zoo_dispatcher_static
+
+# Build rule for target.
+zoo_dispatcher_static: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_dispatcher_static
+.PHONY : zoo_dispatcher_static
+
+# fast build rule for target.
+zoo_dispatcher_static/fast:
+	$(MAKE) $(MAKESILENT) -f src/dispatcher/CMakeFiles/zoo_dispatcher_static.dir/build.make src/dispatcher/CMakeFiles/zoo_dispatcher_static.dir/build
+.PHONY : zoo_dispatcher_static/fast
+
+#=============================================================================
+# Target rules for targets named zoo_dispatcher_shared
+
+# Build rule for target.
+zoo_dispatcher_shared: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_dispatcher_shared
+.PHONY : zoo_dispatcher_shared
+
+# fast build rule for target.
+zoo_dispatcher_shared/fast:
+	$(MAKE) $(MAKESILENT) -f src/dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/build.make src/dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/build
+.PHONY : zoo_dispatcher_shared/fast
+
+#=============================================================================
+# Target rules for targets named zoo_dispatcher_tests
+
+# Build rule for target.
+zoo_dispatcher_tests: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_dispatcher_tests
+.PHONY : zoo_dispatcher_tests
+
+# fast build rule for target.
+zoo_dispatcher_tests/fast:
+	$(MAKE) $(MAKESILENT) -f src/dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir/build.make src/dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir/build
+.PHONY : zoo_dispatcher_tests/fast
+
+#=============================================================================
+# Target rules for targets named zoo_dispatcher_performance_tests_bin
+
+# Build rule for target.
+zoo_dispatcher_performance_tests_bin: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_dispatcher_performance_tests_bin
+.PHONY : zoo_dispatcher_performance_tests_bin
+
+# fast build rule for target.
+zoo_dispatcher_performance_tests_bin/fast:
+	$(MAKE) $(MAKESILENT) -f src/dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/build.make src/dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/build
+.PHONY : zoo_dispatcher_performance_tests_bin/fast
+
+#=============================================================================
+# Target rules for targets named zoo_timer_static
+
+# Build rule for target.
+zoo_timer_static: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_timer_static
+.PHONY : zoo_timer_static
+
+# fast build rule for target.
+zoo_timer_static/fast:
+	$(MAKE) $(MAKESILENT) -f src/timer/CMakeFiles/zoo_timer_static.dir/build.make src/timer/CMakeFiles/zoo_timer_static.dir/build
+.PHONY : zoo_timer_static/fast
+
+#=============================================================================
+# Target rules for targets named zoo_timer_shared
+
+# Build rule for target.
+zoo_timer_shared: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_timer_shared
+.PHONY : zoo_timer_shared
+
+# fast build rule for target.
+zoo_timer_shared/fast:
+	$(MAKE) $(MAKESILENT) -f src/timer/CMakeFiles/zoo_timer_shared.dir/build.make src/timer/CMakeFiles/zoo_timer_shared.dir/build
+.PHONY : zoo_timer_shared/fast
+
+#=============================================================================
+# Target rules for targets named zoo_timer_tests
+
+# Build rule for target.
+zoo_timer_tests: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_timer_tests
+.PHONY : zoo_timer_tests
+
+# fast build rule for target.
+zoo_timer_tests/fast:
+	$(MAKE) $(MAKESILENT) -f src/timer/tests/CMakeFiles/zoo_timer_tests.dir/build.make src/timer/tests/CMakeFiles/zoo_timer_tests.dir/build
+.PHONY : zoo_timer_tests/fast
+
+#=============================================================================
+# Target rules for targets named timer_test_clean
+
+# Build rule for target.
+timer_test_clean: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 timer_test_clean
+.PHONY : timer_test_clean
+
+# fast build rule for target.
+timer_test_clean/fast:
+	$(MAKE) $(MAKESILENT) -f src/timer/tests/CMakeFiles/timer_test_clean.dir/build.make src/timer/tests/CMakeFiles/timer_test_clean.dir/build
+.PHONY : timer_test_clean/fast
+
+#=============================================================================
+# Target rules for targets named timer_test_verbose
+
+# Build rule for target.
+timer_test_verbose: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 timer_test_verbose
+.PHONY : timer_test_verbose
+
+# fast build rule for target.
+timer_test_verbose/fast:
+	$(MAKE) $(MAKESILENT) -f src/timer/tests/CMakeFiles/timer_test_verbose.dir/build.make src/timer/tests/CMakeFiles/timer_test_verbose.dir/build
+.PHONY : timer_test_verbose/fast
+
+#=============================================================================
+# Target rules for targets named zoo_smb_static
+
+# Build rule for target.
+zoo_smb_static: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_smb_static
+.PHONY : zoo_smb_static
+
+# fast build rule for target.
+zoo_smb_static/fast:
+	$(MAKE) $(MAKESILENT) -f src/smb/CMakeFiles/zoo_smb_static.dir/build.make src/smb/CMakeFiles/zoo_smb_static.dir/build
+.PHONY : zoo_smb_static/fast
+
+#=============================================================================
+# Target rules for targets named zoo_smb_shared
+
+# Build rule for target.
+zoo_smb_shared: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_smb_shared
+.PHONY : zoo_smb_shared
+
+# fast build rule for target.
+zoo_smb_shared/fast:
+	$(MAKE) $(MAKESILENT) -f src/smb/CMakeFiles/zoo_smb_shared.dir/build.make src/smb/CMakeFiles/zoo_smb_shared.dir/build
+.PHONY : zoo_smb_shared/fast
 
 # Help Target
 help:
@@ -459,46 +836,63 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
+	@echo "... install"
+	@echo "... install/local"
+	@echo "... install/strip"
+	@echo "... list_install_components"
 	@echo "... package"
 	@echo "... package_source"
 	@echo "... rebuild_cache"
-	@echo "... socket_coverage"
+	@echo "... test"
+	@echo "... log_quick_test"
+	@echo "... log_test_verbose"
+	@echo "... memory_pool_quick_test"
+	@echo "... memory_pool_test_verbose"
+	@echo "... run_math_tests"
+	@echo "... run_memory_tests"
+	@echo "... run_string_tests"
+	@echo "... run_timestamp_tests"
+	@echo "... run_unity_tests"
 	@echo "... socket_test_verbose"
+	@echo "... timer_test_clean"
+	@echo "... timer_test_verbose"
+	@echo "... address_example"
+	@echo "... tcp_client_example"
+	@echo "... tcp_server_example"
+	@echo "... test_math_unity"
+	@echo "... test_memory_unity"
+	@echo "... test_string_unity"
+	@echo "... test_timestamp_unity"
+	@echo "... udp_example"
+	@echo "... util_unity"
+	@echo "... zoo_buffer_shared"
+	@echo "... zoo_buffer_static"
+	@echo "... zoo_dispatcher_performance_tests_bin"
+	@echo "... zoo_dispatcher_shared"
+	@echo "... zoo_dispatcher_static"
+	@echo "... zoo_dispatcher_tests"
+	@echo "... zoo_log_shared"
+	@echo "... zoo_log_static"
+	@echo "... zoo_log_tests"
+	@echo "... zoo_memory_pool_shared"
+	@echo "... zoo_memory_pool_static"
+	@echo "... zoo_memory_pool_tests"
+	@echo "... zoo_platform_shared"
+	@echo "... zoo_platform_static"
+	@echo "... zoo_platform_tests"
+	@echo "... zoo_smb_shared"
+	@echo "... zoo_smb_static"
+	@echo "... zoo_socket_shared"
+	@echo "... zoo_socket_static"
 	@echo "... zoo_socket_tests"
 	@echo "... zoo_socket_unity"
-	@echo "... home/mozeat/zoo/third_party/test/unity/src/unity.o"
-	@echo "... home/mozeat/zoo/third_party/test/unity/src/unity.i"
-	@echo "... home/mozeat/zoo/third_party/test/unity/src/unity.s"
-	@echo "... test_runner.o"
-	@echo "... test_runner.i"
-	@echo "... test_runner.s"
-	@echo "... test_zoo_socket_address.o"
-	@echo "... test_zoo_socket_address.i"
-	@echo "... test_zoo_socket_address.s"
-	@echo "... test_zoo_socket_bind_listen.o"
-	@echo "... test_zoo_socket_bind_listen.i"
-	@echo "... test_zoo_socket_bind_listen.s"
-	@echo "... test_zoo_socket_connect.o"
-	@echo "... test_zoo_socket_connect.i"
-	@echo "... test_zoo_socket_connect.s"
-	@echo "... test_zoo_socket_create.o"
-	@echo "... test_zoo_socket_create.i"
-	@echo "... test_zoo_socket_create.s"
-	@echo "... test_zoo_socket_error.o"
-	@echo "... test_zoo_socket_error.i"
-	@echo "... test_zoo_socket_error.s"
-	@echo "... test_zoo_socket_init.o"
-	@echo "... test_zoo_socket_init.i"
-	@echo "... test_zoo_socket_init.s"
-	@echo "... test_zoo_socket_options.o"
-	@echo "... test_zoo_socket_options.i"
-	@echo "... test_zoo_socket_options.s"
-	@echo "... test_zoo_socket_select.o"
-	@echo "... test_zoo_socket_select.i"
-	@echo "... test_zoo_socket_select.s"
-	@echo "... test_zoo_socket_send_recv.o"
-	@echo "... test_zoo_socket_send_recv.i"
-	@echo "... test_zoo_socket_send_recv.s"
+	@echo "... zoo_thread_pool_shared"
+	@echo "... zoo_thread_pool_static"
+	@echo "... zoo_timer_shared"
+	@echo "... zoo_timer_static"
+	@echo "... zoo_timer_tests"
+	@echo "... zoo_util_shared"
+	@echo "... zoo_util_static"
 .PHONY : help
 
 
@@ -510,6 +904,7 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
+	$(CMAKE_COMMAND) -P /home/mozeat/zoo/build/CMakeFiles/VerifyGlobs.cmake
 	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

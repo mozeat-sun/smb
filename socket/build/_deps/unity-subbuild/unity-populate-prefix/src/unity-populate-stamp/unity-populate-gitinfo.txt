@@ -1,3 +1,0 @@
-repository='https://github.com/ThrowTheSwitch/Unity.git'
-module=''
-tag='origin'

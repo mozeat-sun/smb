@@ -1,2 +1,2 @@
-/usr/bin/ar qc libutil_unity.a CMakeFiles/util_unity.dir/__/__/third_party/test/unity/src/unity.c.o
+/usr/bin/ar qc libutil_unity.a CMakeFiles/util_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o
 /usr/bin/ranlib libutil_unity.a

@@ -1,6 +1,8 @@
 
 # 忽略 build 目录及其所有内容
 build/
+bin/
+lib/
 buffer/build
 dispatcher/build
 log/build

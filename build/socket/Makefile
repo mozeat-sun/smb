@@ -220,59 +220,59 @@ zoo_socket_shared/fast:
 	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/CMakeFiles/zoo_socket_shared.dir/build.make socket/CMakeFiles/zoo_socket_shared.dir/build
 .PHONY : zoo_socket_shared/fast
 
-src/zoo_select.o: src/zoo_select.c.o
-.PHONY : src/zoo_select.o
+__/src/socket/zoo_select.o: __/src/socket/zoo_select.c.o
+.PHONY : __/src/socket/zoo_select.o
 
 # target to build an object file
-src/zoo_select.c.o:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/CMakeFiles/zoo_socket_static.dir/build.make socket/CMakeFiles/zoo_socket_static.dir/src/zoo_select.c.o
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/CMakeFiles/zoo_socket_shared.dir/build.make socket/CMakeFiles/zoo_socket_shared.dir/src/zoo_select.c.o
-.PHONY : src/zoo_select.c.o
+__/src/socket/zoo_select.c.o:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/CMakeFiles/zoo_socket_static.dir/build.make socket/CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_select.c.o
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/CMakeFiles/zoo_socket_shared.dir/build.make socket/CMakeFiles/zoo_socket_shared.dir/__/src/socket/zoo_select.c.o
+.PHONY : __/src/socket/zoo_select.c.o
 
-src/zoo_select.i: src/zoo_select.c.i
-.PHONY : src/zoo_select.i
+__/src/socket/zoo_select.i: __/src/socket/zoo_select.c.i
+.PHONY : __/src/socket/zoo_select.i
 
 # target to preprocess a source file
-src/zoo_select.c.i:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/CMakeFiles/zoo_socket_static.dir/build.make socket/CMakeFiles/zoo_socket_static.dir/src/zoo_select.c.i
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/CMakeFiles/zoo_socket_shared.dir/build.make socket/CMakeFiles/zoo_socket_shared.dir/src/zoo_select.c.i
-.PHONY : src/zoo_select.c.i
+__/src/socket/zoo_select.c.i:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/CMakeFiles/zoo_socket_static.dir/build.make socket/CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_select.c.i
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/CMakeFiles/zoo_socket_shared.dir/build.make socket/CMakeFiles/zoo_socket_shared.dir/__/src/socket/zoo_select.c.i
+.PHONY : __/src/socket/zoo_select.c.i
 
-src/zoo_select.s: src/zoo_select.c.s
-.PHONY : src/zoo_select.s
+__/src/socket/zoo_select.s: __/src/socket/zoo_select.c.s
+.PHONY : __/src/socket/zoo_select.s
 
 # target to generate assembly for a file
-src/zoo_select.c.s:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/CMakeFiles/zoo_socket_static.dir/build.make socket/CMakeFiles/zoo_socket_static.dir/src/zoo_select.c.s
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/CMakeFiles/zoo_socket_shared.dir/build.make socket/CMakeFiles/zoo_socket_shared.dir/src/zoo_select.c.s
-.PHONY : src/zoo_select.c.s
+__/src/socket/zoo_select.c.s:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/CMakeFiles/zoo_socket_static.dir/build.make socket/CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_select.c.s
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/CMakeFiles/zoo_socket_shared.dir/build.make socket/CMakeFiles/zoo_socket_shared.dir/__/src/socket/zoo_select.c.s
+.PHONY : __/src/socket/zoo_select.c.s
 
-src/zoo_socket.o: src/zoo_socket.c.o
-.PHONY : src/zoo_socket.o
+__/src/socket/zoo_socket.o: __/src/socket/zoo_socket.c.o
+.PHONY : __/src/socket/zoo_socket.o
 
 # target to build an object file
-src/zoo_socket.c.o:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/CMakeFiles/zoo_socket_static.dir/build.make socket/CMakeFiles/zoo_socket_static.dir/src/zoo_socket.c.o
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/CMakeFiles/zoo_socket_shared.dir/build.make socket/CMakeFiles/zoo_socket_shared.dir/src/zoo_socket.c.o
-.PHONY : src/zoo_socket.c.o
+__/src/socket/zoo_socket.c.o:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/CMakeFiles/zoo_socket_static.dir/build.make socket/CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_socket.c.o
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/CMakeFiles/zoo_socket_shared.dir/build.make socket/CMakeFiles/zoo_socket_shared.dir/__/src/socket/zoo_socket.c.o
+.PHONY : __/src/socket/zoo_socket.c.o
 
-src/zoo_socket.i: src/zoo_socket.c.i
-.PHONY : src/zoo_socket.i
+__/src/socket/zoo_socket.i: __/src/socket/zoo_socket.c.i
+.PHONY : __/src/socket/zoo_socket.i
 
 # target to preprocess a source file
-src/zoo_socket.c.i:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/CMakeFiles/zoo_socket_static.dir/build.make socket/CMakeFiles/zoo_socket_static.dir/src/zoo_socket.c.i
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/CMakeFiles/zoo_socket_shared.dir/build.make socket/CMakeFiles/zoo_socket_shared.dir/src/zoo_socket.c.i
-.PHONY : src/zoo_socket.c.i
+__/src/socket/zoo_socket.c.i:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/CMakeFiles/zoo_socket_static.dir/build.make socket/CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_socket.c.i
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/CMakeFiles/zoo_socket_shared.dir/build.make socket/CMakeFiles/zoo_socket_shared.dir/__/src/socket/zoo_socket.c.i
+.PHONY : __/src/socket/zoo_socket.c.i
 
-src/zoo_socket.s: src/zoo_socket.c.s
-.PHONY : src/zoo_socket.s
+__/src/socket/zoo_socket.s: __/src/socket/zoo_socket.c.s
+.PHONY : __/src/socket/zoo_socket.s
 
 # target to generate assembly for a file
-src/zoo_socket.c.s:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/CMakeFiles/zoo_socket_static.dir/build.make socket/CMakeFiles/zoo_socket_static.dir/src/zoo_socket.c.s
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/CMakeFiles/zoo_socket_shared.dir/build.make socket/CMakeFiles/zoo_socket_shared.dir/src/zoo_socket.c.s
-.PHONY : src/zoo_socket.c.s
+__/src/socket/zoo_socket.c.s:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/CMakeFiles/zoo_socket_static.dir/build.make socket/CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_socket.c.s
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/CMakeFiles/zoo_socket_shared.dir/build.make socket/CMakeFiles/zoo_socket_shared.dir/__/src/socket/zoo_socket.c.s
+.PHONY : __/src/socket/zoo_socket.c.s
 
 # Help Target
 help:
@@ -291,12 +291,12 @@ help:
 	@echo "... test"
 	@echo "... zoo_socket_shared"
 	@echo "... zoo_socket_static"
-	@echo "... src/zoo_select.o"
-	@echo "... src/zoo_select.i"
-	@echo "... src/zoo_select.s"
-	@echo "... src/zoo_socket.o"
-	@echo "... src/zoo_socket.i"
-	@echo "... src/zoo_socket.s"
+	@echo "... __/src/socket/zoo_select.o"
+	@echo "... __/src/socket/zoo_select.i"
+	@echo "... __/src/socket/zoo_select.s"
+	@echo "... __/src/socket/zoo_socket.o"
+	@echo "... __/src/socket/zoo_socket.i"
+	@echo "... __/src/socket/zoo_socket.s"
 .PHONY : help
 
 

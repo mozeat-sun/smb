@@ -1,5 +1,0 @@
-cmake_minimum_required(VERSION 3.10)
-
-add_executable(test_new_apis ../test_new_apis.c)
-target_link_libraries(test_new_apis zoo_socket_static)
-target_include_directories(test_new_apis PRIVATE ../inc)

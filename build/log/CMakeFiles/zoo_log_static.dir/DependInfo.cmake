@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/mozeat/zoo/log/src/zoo_log.c" "log/CMakeFiles/zoo_log_static.dir/src/zoo_log.c.o" "gcc" "log/CMakeFiles/zoo_log_static.dir/src/zoo_log.c.o.d"
+  "/home/mozeat/zoo/src/log/zoo_log.c" "log/CMakeFiles/zoo_log_static.dir/__/src/log/zoo_log.c.o" "gcc" "log/CMakeFiles/zoo_log_static.dir/__/src/log/zoo_log.c.o.d"
   )
 
 # Targets to which this target links.

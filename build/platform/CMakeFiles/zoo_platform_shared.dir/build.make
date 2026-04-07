@@ -69,28 +69,28 @@ include platform/CMakeFiles/zoo_platform_shared.dir/progress.make
 # Include the compile flags for this target's objects.
 include platform/CMakeFiles/zoo_platform_shared.dir/flags.make
 
-platform/CMakeFiles/zoo_platform_shared.dir/src/zoo_error.c.o: platform/CMakeFiles/zoo_platform_shared.dir/flags.make
-platform/CMakeFiles/zoo_platform_shared.dir/src/zoo_error.c.o: ../platform/src/zoo_error.c
-platform/CMakeFiles/zoo_platform_shared.dir/src/zoo_error.c.o: platform/CMakeFiles/zoo_platform_shared.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object platform/CMakeFiles/zoo_platform_shared.dir/src/zoo_error.c.o"
-	cd /home/mozeat/zoo/build/platform && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT platform/CMakeFiles/zoo_platform_shared.dir/src/zoo_error.c.o -MF CMakeFiles/zoo_platform_shared.dir/src/zoo_error.c.o.d -o CMakeFiles/zoo_platform_shared.dir/src/zoo_error.c.o -c /home/mozeat/zoo/platform/src/zoo_error.c
+platform/CMakeFiles/zoo_platform_shared.dir/__/src/platform/zoo_error.c.o: platform/CMakeFiles/zoo_platform_shared.dir/flags.make
+platform/CMakeFiles/zoo_platform_shared.dir/__/src/platform/zoo_error.c.o: ../src/platform/zoo_error.c
+platform/CMakeFiles/zoo_platform_shared.dir/__/src/platform/zoo_error.c.o: platform/CMakeFiles/zoo_platform_shared.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object platform/CMakeFiles/zoo_platform_shared.dir/__/src/platform/zoo_error.c.o"
+	cd /home/mozeat/zoo/build/platform && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT platform/CMakeFiles/zoo_platform_shared.dir/__/src/platform/zoo_error.c.o -MF CMakeFiles/zoo_platform_shared.dir/__/src/platform/zoo_error.c.o.d -o CMakeFiles/zoo_platform_shared.dir/__/src/platform/zoo_error.c.o -c /home/mozeat/zoo/src/platform/zoo_error.c
 
-platform/CMakeFiles/zoo_platform_shared.dir/src/zoo_error.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_platform_shared.dir/src/zoo_error.c.i"
-	cd /home/mozeat/zoo/build/platform && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/platform/src/zoo_error.c > CMakeFiles/zoo_platform_shared.dir/src/zoo_error.c.i
+platform/CMakeFiles/zoo_platform_shared.dir/__/src/platform/zoo_error.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_platform_shared.dir/__/src/platform/zoo_error.c.i"
+	cd /home/mozeat/zoo/build/platform && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/src/platform/zoo_error.c > CMakeFiles/zoo_platform_shared.dir/__/src/platform/zoo_error.c.i
 
-platform/CMakeFiles/zoo_platform_shared.dir/src/zoo_error.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_platform_shared.dir/src/zoo_error.c.s"
-	cd /home/mozeat/zoo/build/platform && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/platform/src/zoo_error.c -o CMakeFiles/zoo_platform_shared.dir/src/zoo_error.c.s
+platform/CMakeFiles/zoo_platform_shared.dir/__/src/platform/zoo_error.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_platform_shared.dir/__/src/platform/zoo_error.c.s"
+	cd /home/mozeat/zoo/build/platform && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/src/platform/zoo_error.c -o CMakeFiles/zoo_platform_shared.dir/__/src/platform/zoo_error.c.s
 
 # Object files for target zoo_platform_shared
 zoo_platform_shared_OBJECTS = \
-"CMakeFiles/zoo_platform_shared.dir/src/zoo_error.c.o"
+"CMakeFiles/zoo_platform_shared.dir/__/src/platform/zoo_error.c.o"
 
 # External object files for target zoo_platform_shared
 zoo_platform_shared_EXTERNAL_OBJECTS =
 
-lib/libzoo_platform.so.1.2.2: platform/CMakeFiles/zoo_platform_shared.dir/src/zoo_error.c.o
+lib/libzoo_platform.so.1.2.2: platform/CMakeFiles/zoo_platform_shared.dir/__/src/platform/zoo_error.c.o
 lib/libzoo_platform.so.1.2.2: platform/CMakeFiles/zoo_platform_shared.dir/build.make
 lib/libzoo_platform.so.1.2.2: platform/CMakeFiles/zoo_platform_shared.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C shared library ../lib/libzoo_platform.so"

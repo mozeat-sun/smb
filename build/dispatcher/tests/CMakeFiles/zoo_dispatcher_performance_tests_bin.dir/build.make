@@ -70,18 +70,18 @@ include dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/pro
 include dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/flags.make
 
 dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/test_zoo_dispatcher_performance.c.o: dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/flags.make
-dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/test_zoo_dispatcher_performance.c.o: ../dispatcher/tests/test_zoo_dispatcher_performance.c
+dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/test_zoo_dispatcher_performance.c.o: ../tests/dispatcher/test_zoo_dispatcher_performance.c
 dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/test_zoo_dispatcher_performance.c.o: dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/test_zoo_dispatcher_performance.c.o"
-	cd /home/mozeat/zoo/build/dispatcher/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/test_zoo_dispatcher_performance.c.o -MF CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/test_zoo_dispatcher_performance.c.o.d -o CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/test_zoo_dispatcher_performance.c.o -c /home/mozeat/zoo/dispatcher/tests/test_zoo_dispatcher_performance.c
+	cd /home/mozeat/zoo/build/dispatcher/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/test_zoo_dispatcher_performance.c.o -MF CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/test_zoo_dispatcher_performance.c.o.d -o CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/test_zoo_dispatcher_performance.c.o -c /home/mozeat/zoo/tests/dispatcher/test_zoo_dispatcher_performance.c
 
 dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/test_zoo_dispatcher_performance.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/test_zoo_dispatcher_performance.c.i"
-	cd /home/mozeat/zoo/build/dispatcher/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/dispatcher/tests/test_zoo_dispatcher_performance.c > CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/test_zoo_dispatcher_performance.c.i
+	cd /home/mozeat/zoo/build/dispatcher/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/dispatcher/test_zoo_dispatcher_performance.c > CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/test_zoo_dispatcher_performance.c.i
 
 dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/test_zoo_dispatcher_performance.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/test_zoo_dispatcher_performance.c.s"
-	cd /home/mozeat/zoo/build/dispatcher/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/dispatcher/tests/test_zoo_dispatcher_performance.c -o CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/test_zoo_dispatcher_performance.c.s
+	cd /home/mozeat/zoo/build/dispatcher/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/dispatcher/test_zoo_dispatcher_performance.c -o CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/test_zoo_dispatcher_performance.c.s
 
 # Object files for target zoo_dispatcher_performance_tests_bin
 zoo_dispatcher_performance_tests_bin_OBJECTS = \
@@ -109,6 +109,6 @@ dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/clean:
 .PHONY : dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/clean
 
 dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/depend:
-	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/dispatcher/tests /home/mozeat/zoo/build /home/mozeat/zoo/build/dispatcher/tests /home/mozeat/zoo/build/dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/tests/dispatcher /home/mozeat/zoo/build /home/mozeat/zoo/build/dispatcher/tests /home/mozeat/zoo/build/dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/depend
 

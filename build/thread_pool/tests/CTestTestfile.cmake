@@ -1,5 +1,5 @@
 # CMake generated Testfile for 
-# Source directory: /home/mozeat/zoo/thread_pool/tests
+# Source directory: /home/mozeat/zoo/tests/thread_pool
 # Build directory: /home/mozeat/zoo/build/thread_pool/tests
 # 
 # This file includes the relevant testing commands required for 

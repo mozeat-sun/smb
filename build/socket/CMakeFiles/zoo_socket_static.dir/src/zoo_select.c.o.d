@@ -102,7 +102,7 @@ socket/CMakeFiles/zoo_socket_static.dir/src/zoo_select.c.o: \
  /usr/include/inttypes.h \
  /home/mozeat/zoo/socket/../platform/inc/zoo_platform.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdatomic.h \
- /home/mozeat/zoo/socket/inc/../../platform/inc/zoo_error.h \
+ /home/mozeat/zoo/socket/../platform/inc/zoo_error.h \
  /home/mozeat/zoo/socket/src/../../platform/inc/zoo_error.h \
  /usr/include/string.h /usr/include/strings.h \
  /usr/include/x86_64-linux-gnu/bits/strings_fortified.h \

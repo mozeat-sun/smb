@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/mozeat/zoo/socket/examples/udp_example.c" "socket/examples/CMakeFiles/udp_example.dir/udp_example.c.o" "gcc" "socket/examples/CMakeFiles/udp_example.dir/udp_example.c.o.d"
+  "/home/mozeat/zoo/examples/socket/udp_example.c" "socket/examples/CMakeFiles/udp_example.dir/udp_example.c.o" "gcc" "socket/examples/CMakeFiles/udp_example.dir/udp_example.c.o.d"
   )
 
 # Targets to which this target links.

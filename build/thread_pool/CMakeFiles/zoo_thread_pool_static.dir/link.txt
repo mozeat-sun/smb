@@ -1,2 +1,2 @@
-/usr/bin/ar qc libzoo_thread_pool.a CMakeFiles/zoo_thread_pool_static.dir/src/zoo_thread_pool.c.o
+/usr/bin/ar qc libzoo_thread_pool.a CMakeFiles/zoo_thread_pool_static.dir/__/src/thread_pool/zoo_thread_pool.c.o
 /usr/bin/ranlib libzoo_thread_pool.a

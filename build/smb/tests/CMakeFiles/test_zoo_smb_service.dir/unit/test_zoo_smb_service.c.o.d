@@ -1,8 +1,8 @@
 smb/tests/CMakeFiles/test_zoo_smb_service.dir/unit/test_zoo_smb_service.c.o: \
- /home/mozeat/zoo/smb/tests/unit/test_zoo_smb_service.c \
+ /home/mozeat/zoo/tests/smb/unit/test_zoo_smb_service.c \
  /usr/include/stdc-predef.h \
- /home/mozeat/zoo/third_party/test/unity/src/unity.h \
- /home/mozeat/zoo/third_party/test/unity/src/unity_internals.h \
+ /home/mozeat/zoo/thirdparty/test/unity/src/unity.h \
+ /home/mozeat/zoo/thirdparty/test/unity/src/unity_internals.h \
  /usr/include/setjmp.h /usr/include/features.h \
  /usr/include/features-time64.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -55,8 +55,8 @@ smb/tests/CMakeFiles/test_zoo_smb_service.dir/unit/test_zoo_smb_service.c.o: \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/stdio2.h \
- /home/mozeat/zoo/smb/tests/common/test_utils.h \
- /home/mozeat/zoo/smb/inc/utility/zoo_smb_error.h \
+ /home/mozeat/zoo/tests/smb/common/test_utils.h \
+ /home/mozeat/zoo/include/smb/utility/zoo_smb_error.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdbool.h /usr/include/time.h \
  /usr/include/x86_64-linux-gnu/bits/time.h \
  /usr/include/x86_64-linux-gnu/bits/timex.h \
@@ -72,10 +72,9 @@ smb/tests/CMakeFiles/test_zoo_smb_service.dir/unit/test_zoo_smb_service.c.o: \
  /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
- /home/mozeat/zoo/smb/inc/../../platform/inc/zoo.h \
- /home/mozeat/zoo/smb/inc/../../platform/inc/zoo_platform.h \
- /usr/include/pthread.h /usr/include/sched.h \
- /usr/include/x86_64-linux-gnu/bits/sched.h \
+ /home/mozeat/zoo/include/platform/zoo.h \
+ /home/mozeat/zoo/include/platform/zoo_platform.h /usr/include/pthread.h \
+ /usr/include/sched.h /usr/include/x86_64-linux-gnu/bits/sched.h \
  /usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h \
  /usr/include/x86_64-linux-gnu/bits/cpu-set.h \
  /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h \
@@ -121,17 +120,15 @@ smb/tests/CMakeFiles/test_zoo_smb_service.dir/unit/test_zoo_smb_service.c.o: \
  /usr/include/x86_64-linux-gnu/sys/syslog.h \
  /usr/include/x86_64-linux-gnu/bits/syslog-path.h \
  /usr/include/x86_64-linux-gnu/bits/syslog.h \
- /home/mozeat/zoo/smb/inc/../../platform/inc/zoo_types.h \
- /usr/include/inttypes.h \
+ /home/mozeat/zoo/include/platform/zoo_types.h /usr/include/inttypes.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdatomic.h \
- /home/mozeat/zoo/smb/inc/../../platform/inc/zoo_error.h \
- /home/mozeat/zoo/platform/inc/zoo_error.h \
- /home/mozeat/zoo/smb/inc/core/zoo_smb_message.h \
- /home/mozeat/zoo/smb/inc/../../log/inc/zoo_log.h \
- /home/mozeat/zoo/smb/inc/../../log/inc/../../platform/inc/zoo_types.h \
- /home/mozeat/zoo/platform/inc/zoo.h \
- /home/mozeat/zoo/smb/inc/utility/zoo_smb_types.h /usr/include/stdlib.h \
- /usr/include/x86_64-linux-gnu/bits/waitflags.h \
+ /home/mozeat/zoo/include/platform/zoo_error.h \
+ /home/mozeat/zoo/include/platform/zoo_error.h \
+ /home/mozeat/zoo/include/smb/core/zoo_smb_message.h \
+ /home/mozeat/zoo/include/log/zoo_log.h \
+ /home/mozeat/zoo/include/platform/zoo_types.h \
+ /home/mozeat/zoo/include/smb/utility/zoo_smb_types.h \
+ /usr/include/stdlib.h /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h /usr/include/alloca.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
@@ -151,5 +148,5 @@ smb/tests/CMakeFiles/test_zoo_smb_service.dir/unit/test_zoo_smb_service.c.o: \
  /usr/include/x86_64-linux-gnu/bits/types/struct_osockaddr.h \
  /usr/include/x86_64-linux-gnu/bits/socket2.h \
  /usr/include/x86_64-linux-gnu/bits/in.h \
- /home/mozeat/zoo/smb/inc/../../buffer/inc/zoo_list.h \
- /home/mozeat/zoo/smb/inc/core/zoo_smb_service.h
+ /home/mozeat/zoo/include/buffer/zoo_list.h \
+ /home/mozeat/zoo/include/smb/core/zoo_smb_service.h

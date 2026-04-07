@@ -4,7 +4,7 @@
 # compile C with /usr/bin/cc
 C_DEFINES = 
 
-C_INCLUDES = -I/home/mozeat/zoo/inc -I/home/mozeat/zoo/smb/inc -I/home/mozeat/zoo/third_party/test/unity/src
+C_INCLUDES = -I/home/mozeat/zoo/include -I/home/mozeat/zoo/include/smb -I/home/mozeat/zoo/thirdparty/test/unity/src
 
 C_FLAGS = -O3 -DNDEBUG -Wall -Wextra -Wpedantic -Werror -std=c11
 

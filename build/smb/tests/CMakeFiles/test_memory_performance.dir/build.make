@@ -70,18 +70,18 @@ include smb/tests/CMakeFiles/test_memory_performance.dir/progress.make
 include smb/tests/CMakeFiles/test_memory_performance.dir/flags.make
 
 smb/tests/CMakeFiles/test_memory_performance.dir/performance/test_memory_performance.c.o: smb/tests/CMakeFiles/test_memory_performance.dir/flags.make
-smb/tests/CMakeFiles/test_memory_performance.dir/performance/test_memory_performance.c.o: ../smb/tests/performance/test_memory_performance.c
+smb/tests/CMakeFiles/test_memory_performance.dir/performance/test_memory_performance.c.o: ../tests/smb/performance/test_memory_performance.c
 smb/tests/CMakeFiles/test_memory_performance.dir/performance/test_memory_performance.c.o: smb/tests/CMakeFiles/test_memory_performance.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object smb/tests/CMakeFiles/test_memory_performance.dir/performance/test_memory_performance.c.o"
-	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT smb/tests/CMakeFiles/test_memory_performance.dir/performance/test_memory_performance.c.o -MF CMakeFiles/test_memory_performance.dir/performance/test_memory_performance.c.o.d -o CMakeFiles/test_memory_performance.dir/performance/test_memory_performance.c.o -c /home/mozeat/zoo/smb/tests/performance/test_memory_performance.c
+	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT smb/tests/CMakeFiles/test_memory_performance.dir/performance/test_memory_performance.c.o -MF CMakeFiles/test_memory_performance.dir/performance/test_memory_performance.c.o.d -o CMakeFiles/test_memory_performance.dir/performance/test_memory_performance.c.o -c /home/mozeat/zoo/tests/smb/performance/test_memory_performance.c
 
 smb/tests/CMakeFiles/test_memory_performance.dir/performance/test_memory_performance.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/test_memory_performance.dir/performance/test_memory_performance.c.i"
-	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/smb/tests/performance/test_memory_performance.c > CMakeFiles/test_memory_performance.dir/performance/test_memory_performance.c.i
+	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/smb/performance/test_memory_performance.c > CMakeFiles/test_memory_performance.dir/performance/test_memory_performance.c.i
 
 smb/tests/CMakeFiles/test_memory_performance.dir/performance/test_memory_performance.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/test_memory_performance.dir/performance/test_memory_performance.c.s"
-	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/smb/tests/performance/test_memory_performance.c -o CMakeFiles/test_memory_performance.dir/performance/test_memory_performance.c.s
+	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/smb/performance/test_memory_performance.c -o CMakeFiles/test_memory_performance.dir/performance/test_memory_performance.c.s
 
 # Object files for target test_memory_performance
 test_memory_performance_OBJECTS = \
@@ -96,7 +96,13 @@ bin/test_memory_performance: lib/libzoo_smb.a
 bin/test_memory_performance: lib/libunity.a
 bin/test_memory_performance: lib/libtest_utils.a
 bin/test_memory_performance: lib/libzoo_smb.a
-bin/test_memory_performance: lib/libunity.a
+bin/test_memory_performance: thread_pool/libzoo_thread_pool.a
+bin/test_memory_performance: buffer/libzoo_buffer.a
+bin/test_memory_performance: socket/libzoo_socket.a
+bin/test_memory_performance: log/libzoo_log.a
+bin/test_memory_performance: memory_pool/libzoo_memory_pool.a
+bin/test_memory_performance: util/libzoo_util.a
+bin/test_memory_performance: lib/libzoo_platform.a
 bin/test_memory_performance: smb/tests/CMakeFiles/test_memory_performance.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable ../../bin/test_memory_performance"
 	cd /home/mozeat/zoo/build/smb/tests && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/test_memory_performance.dir/link.txt --verbose=$(VERBOSE)
@@ -110,6 +116,6 @@ smb/tests/CMakeFiles/test_memory_performance.dir/clean:
 .PHONY : smb/tests/CMakeFiles/test_memory_performance.dir/clean
 
 smb/tests/CMakeFiles/test_memory_performance.dir/depend:
-	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/smb/tests /home/mozeat/zoo/build /home/mozeat/zoo/build/smb/tests /home/mozeat/zoo/build/smb/tests/CMakeFiles/test_memory_performance.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/tests/smb /home/mozeat/zoo/build /home/mozeat/zoo/build/smb/tests /home/mozeat/zoo/build/smb/tests/CMakeFiles/test_memory_performance.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : smb/tests/CMakeFiles/test_memory_performance.dir/depend
 

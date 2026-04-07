@@ -70,18 +70,18 @@ include socket/examples/CMakeFiles/tcp_client_example.dir/progress.make
 include socket/examples/CMakeFiles/tcp_client_example.dir/flags.make
 
 socket/examples/CMakeFiles/tcp_client_example.dir/tcp_client.c.o: socket/examples/CMakeFiles/tcp_client_example.dir/flags.make
-socket/examples/CMakeFiles/tcp_client_example.dir/tcp_client.c.o: ../socket/examples/tcp_client.c
+socket/examples/CMakeFiles/tcp_client_example.dir/tcp_client.c.o: ../examples/socket/tcp_client.c
 socket/examples/CMakeFiles/tcp_client_example.dir/tcp_client.c.o: socket/examples/CMakeFiles/tcp_client_example.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object socket/examples/CMakeFiles/tcp_client_example.dir/tcp_client.c.o"
-	cd /home/mozeat/zoo/build/socket/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/examples/CMakeFiles/tcp_client_example.dir/tcp_client.c.o -MF CMakeFiles/tcp_client_example.dir/tcp_client.c.o.d -o CMakeFiles/tcp_client_example.dir/tcp_client.c.o -c /home/mozeat/zoo/socket/examples/tcp_client.c
+	cd /home/mozeat/zoo/build/socket/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/examples/CMakeFiles/tcp_client_example.dir/tcp_client.c.o -MF CMakeFiles/tcp_client_example.dir/tcp_client.c.o.d -o CMakeFiles/tcp_client_example.dir/tcp_client.c.o -c /home/mozeat/zoo/examples/socket/tcp_client.c
 
 socket/examples/CMakeFiles/tcp_client_example.dir/tcp_client.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/tcp_client_example.dir/tcp_client.c.i"
-	cd /home/mozeat/zoo/build/socket/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/socket/examples/tcp_client.c > CMakeFiles/tcp_client_example.dir/tcp_client.c.i
+	cd /home/mozeat/zoo/build/socket/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/examples/socket/tcp_client.c > CMakeFiles/tcp_client_example.dir/tcp_client.c.i
 
 socket/examples/CMakeFiles/tcp_client_example.dir/tcp_client.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/tcp_client_example.dir/tcp_client.c.s"
-	cd /home/mozeat/zoo/build/socket/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/socket/examples/tcp_client.c -o CMakeFiles/tcp_client_example.dir/tcp_client.c.s
+	cd /home/mozeat/zoo/build/socket/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/examples/socket/tcp_client.c -o CMakeFiles/tcp_client_example.dir/tcp_client.c.s
 
 # Object files for target tcp_client_example
 tcp_client_example_OBJECTS = \
@@ -106,6 +106,6 @@ socket/examples/CMakeFiles/tcp_client_example.dir/clean:
 .PHONY : socket/examples/CMakeFiles/tcp_client_example.dir/clean
 
 socket/examples/CMakeFiles/tcp_client_example.dir/depend:
-	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/socket/examples /home/mozeat/zoo/build /home/mozeat/zoo/build/socket/examples /home/mozeat/zoo/build/socket/examples/CMakeFiles/tcp_client_example.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/examples/socket /home/mozeat/zoo/build /home/mozeat/zoo/build/socket/examples /home/mozeat/zoo/build/socket/examples/CMakeFiles/tcp_client_example.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : socket/examples/CMakeFiles/tcp_client_example.dir/depend
 

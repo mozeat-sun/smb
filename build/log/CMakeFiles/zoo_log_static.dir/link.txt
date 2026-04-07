@@ -1,2 +1,2 @@
-/usr/bin/ar qc libzoo_log.a CMakeFiles/zoo_log_static.dir/src/zoo_log.c.o
+/usr/bin/ar qc libzoo_log.a CMakeFiles/zoo_log_static.dir/__/src/log/zoo_log.c.o
 /usr/bin/ranlib libzoo_log.a

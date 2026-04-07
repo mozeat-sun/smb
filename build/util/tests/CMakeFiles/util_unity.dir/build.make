@@ -69,28 +69,28 @@ include util/tests/CMakeFiles/util_unity.dir/progress.make
 # Include the compile flags for this target's objects.
 include util/tests/CMakeFiles/util_unity.dir/flags.make
 
-util/tests/CMakeFiles/util_unity.dir/__/__/third_party/test/unity/src/unity.c.o: util/tests/CMakeFiles/util_unity.dir/flags.make
-util/tests/CMakeFiles/util_unity.dir/__/__/third_party/test/unity/src/unity.c.o: ../third_party/test/unity/src/unity.c
-util/tests/CMakeFiles/util_unity.dir/__/__/third_party/test/unity/src/unity.c.o: util/tests/CMakeFiles/util_unity.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object util/tests/CMakeFiles/util_unity.dir/__/__/third_party/test/unity/src/unity.c.o"
-	cd /home/mozeat/zoo/build/util/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT util/tests/CMakeFiles/util_unity.dir/__/__/third_party/test/unity/src/unity.c.o -MF CMakeFiles/util_unity.dir/__/__/third_party/test/unity/src/unity.c.o.d -o CMakeFiles/util_unity.dir/__/__/third_party/test/unity/src/unity.c.o -c /home/mozeat/zoo/third_party/test/unity/src/unity.c
+util/tests/CMakeFiles/util_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o: util/tests/CMakeFiles/util_unity.dir/flags.make
+util/tests/CMakeFiles/util_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o: ../thirdparty/test/unity/src/unity.c
+util/tests/CMakeFiles/util_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o: util/tests/CMakeFiles/util_unity.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object util/tests/CMakeFiles/util_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o"
+	cd /home/mozeat/zoo/build/util/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT util/tests/CMakeFiles/util_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o -MF CMakeFiles/util_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o.d -o CMakeFiles/util_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o -c /home/mozeat/zoo/thirdparty/test/unity/src/unity.c
 
-util/tests/CMakeFiles/util_unity.dir/__/__/third_party/test/unity/src/unity.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/util_unity.dir/__/__/third_party/test/unity/src/unity.c.i"
-	cd /home/mozeat/zoo/build/util/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/third_party/test/unity/src/unity.c > CMakeFiles/util_unity.dir/__/__/third_party/test/unity/src/unity.c.i
+util/tests/CMakeFiles/util_unity.dir/__/__/thirdparty/test/unity/src/unity.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/util_unity.dir/__/__/thirdparty/test/unity/src/unity.c.i"
+	cd /home/mozeat/zoo/build/util/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/thirdparty/test/unity/src/unity.c > CMakeFiles/util_unity.dir/__/__/thirdparty/test/unity/src/unity.c.i
 
-util/tests/CMakeFiles/util_unity.dir/__/__/third_party/test/unity/src/unity.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/util_unity.dir/__/__/third_party/test/unity/src/unity.c.s"
-	cd /home/mozeat/zoo/build/util/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/third_party/test/unity/src/unity.c -o CMakeFiles/util_unity.dir/__/__/third_party/test/unity/src/unity.c.s
+util/tests/CMakeFiles/util_unity.dir/__/__/thirdparty/test/unity/src/unity.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/util_unity.dir/__/__/thirdparty/test/unity/src/unity.c.s"
+	cd /home/mozeat/zoo/build/util/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/thirdparty/test/unity/src/unity.c -o CMakeFiles/util_unity.dir/__/__/thirdparty/test/unity/src/unity.c.s
 
 # Object files for target util_unity
 util_unity_OBJECTS = \
-"CMakeFiles/util_unity.dir/__/__/third_party/test/unity/src/unity.c.o"
+"CMakeFiles/util_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o"
 
 # External object files for target util_unity
 util_unity_EXTERNAL_OBJECTS =
 
-util/tests/libutil_unity.a: util/tests/CMakeFiles/util_unity.dir/__/__/third_party/test/unity/src/unity.c.o
+util/tests/libutil_unity.a: util/tests/CMakeFiles/util_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o
 util/tests/libutil_unity.a: util/tests/CMakeFiles/util_unity.dir/build.make
 util/tests/libutil_unity.a: util/tests/CMakeFiles/util_unity.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C static library libutil_unity.a"
@@ -106,6 +106,6 @@ util/tests/CMakeFiles/util_unity.dir/clean:
 .PHONY : util/tests/CMakeFiles/util_unity.dir/clean
 
 util/tests/CMakeFiles/util_unity.dir/depend:
-	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/util/tests /home/mozeat/zoo/build /home/mozeat/zoo/build/util/tests /home/mozeat/zoo/build/util/tests/CMakeFiles/util_unity.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/tests/util /home/mozeat/zoo/build /home/mozeat/zoo/build/util/tests /home/mozeat/zoo/build/util/tests/CMakeFiles/util_unity.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : util/tests/CMakeFiles/util_unity.dir/depend
 

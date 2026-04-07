@@ -234,29 +234,29 @@ socket_test_verbose/fast:
 	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/tests/CMakeFiles/socket_test_verbose.dir/build.make socket/tests/CMakeFiles/socket_test_verbose.dir/build
 .PHONY : socket_test_verbose/fast
 
-__/__/third_party/test/unity/src/unity.o: __/__/third_party/test/unity/src/unity.c.o
-.PHONY : __/__/third_party/test/unity/src/unity.o
+__/__/thirdparty/test/unity/src/unity.o: __/__/thirdparty/test/unity/src/unity.c.o
+.PHONY : __/__/thirdparty/test/unity/src/unity.o
 
 # target to build an object file
-__/__/third_party/test/unity/src/unity.c.o:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/tests/CMakeFiles/zoo_socket_unity.dir/build.make socket/tests/CMakeFiles/zoo_socket_unity.dir/__/__/third_party/test/unity/src/unity.c.o
-.PHONY : __/__/third_party/test/unity/src/unity.c.o
+__/__/thirdparty/test/unity/src/unity.c.o:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/tests/CMakeFiles/zoo_socket_unity.dir/build.make socket/tests/CMakeFiles/zoo_socket_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o
+.PHONY : __/__/thirdparty/test/unity/src/unity.c.o
 
-__/__/third_party/test/unity/src/unity.i: __/__/third_party/test/unity/src/unity.c.i
-.PHONY : __/__/third_party/test/unity/src/unity.i
+__/__/thirdparty/test/unity/src/unity.i: __/__/thirdparty/test/unity/src/unity.c.i
+.PHONY : __/__/thirdparty/test/unity/src/unity.i
 
 # target to preprocess a source file
-__/__/third_party/test/unity/src/unity.c.i:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/tests/CMakeFiles/zoo_socket_unity.dir/build.make socket/tests/CMakeFiles/zoo_socket_unity.dir/__/__/third_party/test/unity/src/unity.c.i
-.PHONY : __/__/third_party/test/unity/src/unity.c.i
+__/__/thirdparty/test/unity/src/unity.c.i:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/tests/CMakeFiles/zoo_socket_unity.dir/build.make socket/tests/CMakeFiles/zoo_socket_unity.dir/__/__/thirdparty/test/unity/src/unity.c.i
+.PHONY : __/__/thirdparty/test/unity/src/unity.c.i
 
-__/__/third_party/test/unity/src/unity.s: __/__/third_party/test/unity/src/unity.c.s
-.PHONY : __/__/third_party/test/unity/src/unity.s
+__/__/thirdparty/test/unity/src/unity.s: __/__/thirdparty/test/unity/src/unity.c.s
+.PHONY : __/__/thirdparty/test/unity/src/unity.s
 
 # target to generate assembly for a file
-__/__/third_party/test/unity/src/unity.c.s:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/tests/CMakeFiles/zoo_socket_unity.dir/build.make socket/tests/CMakeFiles/zoo_socket_unity.dir/__/__/third_party/test/unity/src/unity.c.s
-.PHONY : __/__/third_party/test/unity/src/unity.c.s
+__/__/thirdparty/test/unity/src/unity.c.s:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f socket/tests/CMakeFiles/zoo_socket_unity.dir/build.make socket/tests/CMakeFiles/zoo_socket_unity.dir/__/__/thirdparty/test/unity/src/unity.c.s
+.PHONY : __/__/thirdparty/test/unity/src/unity.c.s
 
 test_runner.o: test_runner.c.o
 .PHONY : test_runner.o
@@ -516,9 +516,9 @@ help:
 	@echo "... socket_test_verbose"
 	@echo "... zoo_socket_tests"
 	@echo "... zoo_socket_unity"
-	@echo "... __/__/third_party/test/unity/src/unity.o"
-	@echo "... __/__/third_party/test/unity/src/unity.i"
-	@echo "... __/__/third_party/test/unity/src/unity.s"
+	@echo "... __/__/thirdparty/test/unity/src/unity.o"
+	@echo "... __/__/thirdparty/test/unity/src/unity.i"
+	@echo "... __/__/thirdparty/test/unity/src/unity.s"
 	@echo "... test_runner.o"
 	@echo "... test_runner.i"
 	@echo "... test_runner.s"

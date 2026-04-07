@@ -70,18 +70,18 @@ include socket/examples/CMakeFiles/udp_example.dir/progress.make
 include socket/examples/CMakeFiles/udp_example.dir/flags.make
 
 socket/examples/CMakeFiles/udp_example.dir/udp_example.c.o: socket/examples/CMakeFiles/udp_example.dir/flags.make
-socket/examples/CMakeFiles/udp_example.dir/udp_example.c.o: ../socket/examples/udp_example.c
+socket/examples/CMakeFiles/udp_example.dir/udp_example.c.o: ../examples/socket/udp_example.c
 socket/examples/CMakeFiles/udp_example.dir/udp_example.c.o: socket/examples/CMakeFiles/udp_example.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object socket/examples/CMakeFiles/udp_example.dir/udp_example.c.o"
-	cd /home/mozeat/zoo/build/socket/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/examples/CMakeFiles/udp_example.dir/udp_example.c.o -MF CMakeFiles/udp_example.dir/udp_example.c.o.d -o CMakeFiles/udp_example.dir/udp_example.c.o -c /home/mozeat/zoo/socket/examples/udp_example.c
+	cd /home/mozeat/zoo/build/socket/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/examples/CMakeFiles/udp_example.dir/udp_example.c.o -MF CMakeFiles/udp_example.dir/udp_example.c.o.d -o CMakeFiles/udp_example.dir/udp_example.c.o -c /home/mozeat/zoo/examples/socket/udp_example.c
 
 socket/examples/CMakeFiles/udp_example.dir/udp_example.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/udp_example.dir/udp_example.c.i"
-	cd /home/mozeat/zoo/build/socket/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/socket/examples/udp_example.c > CMakeFiles/udp_example.dir/udp_example.c.i
+	cd /home/mozeat/zoo/build/socket/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/examples/socket/udp_example.c > CMakeFiles/udp_example.dir/udp_example.c.i
 
 socket/examples/CMakeFiles/udp_example.dir/udp_example.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/udp_example.dir/udp_example.c.s"
-	cd /home/mozeat/zoo/build/socket/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/socket/examples/udp_example.c -o CMakeFiles/udp_example.dir/udp_example.c.s
+	cd /home/mozeat/zoo/build/socket/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/examples/socket/udp_example.c -o CMakeFiles/udp_example.dir/udp_example.c.s
 
 # Object files for target udp_example
 udp_example_OBJECTS = \
@@ -106,6 +106,6 @@ socket/examples/CMakeFiles/udp_example.dir/clean:
 .PHONY : socket/examples/CMakeFiles/udp_example.dir/clean
 
 socket/examples/CMakeFiles/udp_example.dir/depend:
-	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/socket/examples /home/mozeat/zoo/build /home/mozeat/zoo/build/socket/examples /home/mozeat/zoo/build/socket/examples/CMakeFiles/udp_example.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/examples/socket /home/mozeat/zoo/build /home/mozeat/zoo/build/socket/examples /home/mozeat/zoo/build/socket/examples/CMakeFiles/udp_example.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : socket/examples/CMakeFiles/udp_example.dir/depend
 

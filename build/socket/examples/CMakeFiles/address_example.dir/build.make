@@ -70,18 +70,18 @@ include socket/examples/CMakeFiles/address_example.dir/progress.make
 include socket/examples/CMakeFiles/address_example.dir/flags.make
 
 socket/examples/CMakeFiles/address_example.dir/address_example.c.o: socket/examples/CMakeFiles/address_example.dir/flags.make
-socket/examples/CMakeFiles/address_example.dir/address_example.c.o: ../socket/examples/address_example.c
+socket/examples/CMakeFiles/address_example.dir/address_example.c.o: ../examples/socket/address_example.c
 socket/examples/CMakeFiles/address_example.dir/address_example.c.o: socket/examples/CMakeFiles/address_example.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object socket/examples/CMakeFiles/address_example.dir/address_example.c.o"
-	cd /home/mozeat/zoo/build/socket/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/examples/CMakeFiles/address_example.dir/address_example.c.o -MF CMakeFiles/address_example.dir/address_example.c.o.d -o CMakeFiles/address_example.dir/address_example.c.o -c /home/mozeat/zoo/socket/examples/address_example.c
+	cd /home/mozeat/zoo/build/socket/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/examples/CMakeFiles/address_example.dir/address_example.c.o -MF CMakeFiles/address_example.dir/address_example.c.o.d -o CMakeFiles/address_example.dir/address_example.c.o -c /home/mozeat/zoo/examples/socket/address_example.c
 
 socket/examples/CMakeFiles/address_example.dir/address_example.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/address_example.dir/address_example.c.i"
-	cd /home/mozeat/zoo/build/socket/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/socket/examples/address_example.c > CMakeFiles/address_example.dir/address_example.c.i
+	cd /home/mozeat/zoo/build/socket/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/examples/socket/address_example.c > CMakeFiles/address_example.dir/address_example.c.i
 
 socket/examples/CMakeFiles/address_example.dir/address_example.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/address_example.dir/address_example.c.s"
-	cd /home/mozeat/zoo/build/socket/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/socket/examples/address_example.c -o CMakeFiles/address_example.dir/address_example.c.s
+	cd /home/mozeat/zoo/build/socket/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/examples/socket/address_example.c -o CMakeFiles/address_example.dir/address_example.c.s
 
 # Object files for target address_example
 address_example_OBJECTS = \
@@ -106,6 +106,6 @@ socket/examples/CMakeFiles/address_example.dir/clean:
 .PHONY : socket/examples/CMakeFiles/address_example.dir/clean
 
 socket/examples/CMakeFiles/address_example.dir/depend:
-	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/socket/examples /home/mozeat/zoo/build /home/mozeat/zoo/build/socket/examples /home/mozeat/zoo/build/socket/examples/CMakeFiles/address_example.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/examples/socket /home/mozeat/zoo/build /home/mozeat/zoo/build/socket/examples /home/mozeat/zoo/build/socket/examples/CMakeFiles/address_example.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : socket/examples/CMakeFiles/address_example.dir/depend
 

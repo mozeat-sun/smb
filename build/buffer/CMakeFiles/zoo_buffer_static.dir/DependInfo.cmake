@@ -8,8 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/mozeat/zoo/buffer/src/zoo_list.c" "buffer/CMakeFiles/zoo_buffer_static.dir/src/zoo_list.c.o" "gcc" "buffer/CMakeFiles/zoo_buffer_static.dir/src/zoo_list.c.o.d"
-  "/home/mozeat/zoo/buffer/src/zoo_queue.c" "buffer/CMakeFiles/zoo_buffer_static.dir/src/zoo_queue.c.o" "gcc" "buffer/CMakeFiles/zoo_buffer_static.dir/src/zoo_queue.c.o.d"
+  "/home/mozeat/zoo/src/buffer/zoo_list.c" "buffer/CMakeFiles/zoo_buffer_static.dir/__/src/buffer/zoo_list.c.o" "gcc" "buffer/CMakeFiles/zoo_buffer_static.dir/__/src/buffer/zoo_list.c.o.d"
+  "/home/mozeat/zoo/src/buffer/zoo_queue.c" "buffer/CMakeFiles/zoo_buffer_static.dir/__/src/buffer/zoo_queue.c.o" "gcc" "buffer/CMakeFiles/zoo_buffer_static.dir/__/src/buffer/zoo_queue.c.o.d"
   )
 
 # Targets to which this target links.

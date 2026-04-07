@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/util_unity.dir/__/__/third_party/test/unity/src/unity.c.o"
-  "CMakeFiles/util_unity.dir/__/__/third_party/test/unity/src/unity.c.o.d"
+  "CMakeFiles/util_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o"
+  "CMakeFiles/util_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o.d"
   "libutil_unity.a"
   "libutil_unity.pdb"
 )

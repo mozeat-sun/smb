@@ -70,18 +70,18 @@ include smb/tests/CMakeFiles/test_zoo_smb_qos_ctx.dir/progress.make
 include smb/tests/CMakeFiles/test_zoo_smb_qos_ctx.dir/flags.make
 
 smb/tests/CMakeFiles/test_zoo_smb_qos_ctx.dir/unit/test_zoo_smb_qos_ctx.c.o: smb/tests/CMakeFiles/test_zoo_smb_qos_ctx.dir/flags.make
-smb/tests/CMakeFiles/test_zoo_smb_qos_ctx.dir/unit/test_zoo_smb_qos_ctx.c.o: ../smb/tests/unit/test_zoo_smb_qos_ctx.c
+smb/tests/CMakeFiles/test_zoo_smb_qos_ctx.dir/unit/test_zoo_smb_qos_ctx.c.o: ../tests/smb/unit/test_zoo_smb_qos_ctx.c
 smb/tests/CMakeFiles/test_zoo_smb_qos_ctx.dir/unit/test_zoo_smb_qos_ctx.c.o: smb/tests/CMakeFiles/test_zoo_smb_qos_ctx.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object smb/tests/CMakeFiles/test_zoo_smb_qos_ctx.dir/unit/test_zoo_smb_qos_ctx.c.o"
-	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT smb/tests/CMakeFiles/test_zoo_smb_qos_ctx.dir/unit/test_zoo_smb_qos_ctx.c.o -MF CMakeFiles/test_zoo_smb_qos_ctx.dir/unit/test_zoo_smb_qos_ctx.c.o.d -o CMakeFiles/test_zoo_smb_qos_ctx.dir/unit/test_zoo_smb_qos_ctx.c.o -c /home/mozeat/zoo/smb/tests/unit/test_zoo_smb_qos_ctx.c
+	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT smb/tests/CMakeFiles/test_zoo_smb_qos_ctx.dir/unit/test_zoo_smb_qos_ctx.c.o -MF CMakeFiles/test_zoo_smb_qos_ctx.dir/unit/test_zoo_smb_qos_ctx.c.o.d -o CMakeFiles/test_zoo_smb_qos_ctx.dir/unit/test_zoo_smb_qos_ctx.c.o -c /home/mozeat/zoo/tests/smb/unit/test_zoo_smb_qos_ctx.c
 
 smb/tests/CMakeFiles/test_zoo_smb_qos_ctx.dir/unit/test_zoo_smb_qos_ctx.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/test_zoo_smb_qos_ctx.dir/unit/test_zoo_smb_qos_ctx.c.i"
-	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/smb/tests/unit/test_zoo_smb_qos_ctx.c > CMakeFiles/test_zoo_smb_qos_ctx.dir/unit/test_zoo_smb_qos_ctx.c.i
+	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/smb/unit/test_zoo_smb_qos_ctx.c > CMakeFiles/test_zoo_smb_qos_ctx.dir/unit/test_zoo_smb_qos_ctx.c.i
 
 smb/tests/CMakeFiles/test_zoo_smb_qos_ctx.dir/unit/test_zoo_smb_qos_ctx.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/test_zoo_smb_qos_ctx.dir/unit/test_zoo_smb_qos_ctx.c.s"
-	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/smb/tests/unit/test_zoo_smb_qos_ctx.c -o CMakeFiles/test_zoo_smb_qos_ctx.dir/unit/test_zoo_smb_qos_ctx.c.s
+	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/smb/unit/test_zoo_smb_qos_ctx.c -o CMakeFiles/test_zoo_smb_qos_ctx.dir/unit/test_zoo_smb_qos_ctx.c.s
 
 # Object files for target test_zoo_smb_qos_ctx
 test_zoo_smb_qos_ctx_OBJECTS = \
@@ -96,7 +96,13 @@ bin/test_zoo_smb_qos_ctx: lib/libzoo_smb.a
 bin/test_zoo_smb_qos_ctx: lib/libunity.a
 bin/test_zoo_smb_qos_ctx: lib/libtest_utils.a
 bin/test_zoo_smb_qos_ctx: lib/libzoo_smb.a
-bin/test_zoo_smb_qos_ctx: lib/libunity.a
+bin/test_zoo_smb_qos_ctx: thread_pool/libzoo_thread_pool.a
+bin/test_zoo_smb_qos_ctx: buffer/libzoo_buffer.a
+bin/test_zoo_smb_qos_ctx: socket/libzoo_socket.a
+bin/test_zoo_smb_qos_ctx: log/libzoo_log.a
+bin/test_zoo_smb_qos_ctx: memory_pool/libzoo_memory_pool.a
+bin/test_zoo_smb_qos_ctx: util/libzoo_util.a
+bin/test_zoo_smb_qos_ctx: lib/libzoo_platform.a
 bin/test_zoo_smb_qos_ctx: smb/tests/CMakeFiles/test_zoo_smb_qos_ctx.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable ../../bin/test_zoo_smb_qos_ctx"
 	cd /home/mozeat/zoo/build/smb/tests && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/test_zoo_smb_qos_ctx.dir/link.txt --verbose=$(VERBOSE)
@@ -110,6 +116,6 @@ smb/tests/CMakeFiles/test_zoo_smb_qos_ctx.dir/clean:
 .PHONY : smb/tests/CMakeFiles/test_zoo_smb_qos_ctx.dir/clean
 
 smb/tests/CMakeFiles/test_zoo_smb_qos_ctx.dir/depend:
-	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/smb/tests /home/mozeat/zoo/build /home/mozeat/zoo/build/smb/tests /home/mozeat/zoo/build/smb/tests/CMakeFiles/test_zoo_smb_qos_ctx.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/tests/smb /home/mozeat/zoo/build /home/mozeat/zoo/build/smb/tests /home/mozeat/zoo/build/smb/tests/CMakeFiles/test_zoo_smb_qos_ctx.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : smb/tests/CMakeFiles/test_zoo_smb_qos_ctx.dir/depend
 

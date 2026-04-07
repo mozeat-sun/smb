@@ -1,8 +1,8 @@
 dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/test_zoo_dispatcher_performance.c.o: \
- /home/mozeat/zoo/dispatcher/tests/test_zoo_dispatcher_performance.c \
+ /home/mozeat/zoo/tests/dispatcher/test_zoo_dispatcher_performance.c \
  /usr/include/stdc-predef.h \
- /home/mozeat/zoo/dispatcher/tests/../inc/zoo_dispatcher.h \
- /home/mozeat/zoo/dispatcher/tests/../inc/../../platform/inc/zoo.h \
+ /home/mozeat/zoo/include/dispatcher/zoo_dispatcher.h \
+ /home/mozeat/zoo/include/platform/zoo.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -20,8 +20,8 @@ dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/test_zoo_di
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdbool.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stddef.h \
- /home/mozeat/zoo/dispatcher/tests/../inc/../../platform/inc/zoo_platform.h \
- /usr/include/stdio.h /usr/lib/gcc/x86_64-linux-gnu/11/include/stdarg.h \
+ /home/mozeat/zoo/include/platform/zoo_platform.h /usr/include/stdio.h \
+ /usr/lib/gcc/x86_64-linux-gnu/11/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h \
@@ -99,19 +99,15 @@ dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/test_zoo_di
  /usr/include/x86_64-linux-gnu/sys/syslog.h \
  /usr/include/x86_64-linux-gnu/bits/syslog-path.h \
  /usr/include/x86_64-linux-gnu/bits/syslog.h \
- /home/mozeat/zoo/dispatcher/tests/../inc/../../platform/inc/zoo_types.h \
- /usr/include/inttypes.h \
+ /home/mozeat/zoo/include/platform/zoo_types.h /usr/include/inttypes.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdatomic.h \
- /home/mozeat/zoo/dispatcher/tests/../inc/../../platform/inc/zoo_error.h \
- /home/mozeat/zoo/dispatcher/tests/../inc/../../platform/inc/zoo_platform.h \
- /home/mozeat/zoo/dispatcher/tests/../inc/../../buffer/inc/zoo_queue.h \
- /home/mozeat/zoo/platform/inc/zoo.h \
- /home/mozeat/zoo/platform/inc/zoo_error.h \
- /home/mozeat/zoo/dispatcher/tests/../inc/../../platform/inc/zoo_error.h \
- /home/mozeat/zoo/dispatcher/tests/../../memory_pool/inc/zoo_memory_pool.h \
- /home/mozeat/zoo/dispatcher/tests/../../buffer/inc/zoo_queue.h \
- /home/mozeat/zoo/dispatcher/tests/../../util/inc/zoo_math.h \
- /usr/include/math.h /usr/include/x86_64-linux-gnu/bits/math-vector.h \
+ /home/mozeat/zoo/include/platform/zoo_error.h \
+ /home/mozeat/zoo/include/platform/zoo_platform.h \
+ /home/mozeat/zoo/include/buffer/zoo_queue.h \
+ /home/mozeat/zoo/include/platform/zoo_error.h \
+ /home/mozeat/zoo/include/memory_pool/zoo_memory_pool.h \
+ /home/mozeat/zoo/include/util/zoo_math.h /usr/include/math.h \
+ /usr/include/x86_64-linux-gnu/bits/math-vector.h \
  /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
  /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
  /usr/include/x86_64-linux-gnu/bits/fp-logb.h \
@@ -128,8 +124,8 @@ dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/test_zoo_di
  /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
  /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
  /usr/include/x86_64-linux-gnu/bits/uio_lim.h \
- /home/mozeat/zoo/dispatcher/tests/../../util/inc/zoo_string.h \
- /usr/include/string.h /usr/include/strings.h \
+ /home/mozeat/zoo/include/util/zoo_string.h /usr/include/string.h \
+ /usr/include/strings.h \
  /usr/include/x86_64-linux-gnu/bits/strings_fortified.h \
  /usr/include/x86_64-linux-gnu/bits/string_fortified.h \
  /usr/include/stdlib.h /usr/include/x86_64-linux-gnu/bits/waitflags.h \
@@ -137,10 +133,8 @@ dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/test_zoo_di
  /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib.h \
- /home/mozeat/zoo/dispatcher/tests/../../platform/inc/zoo.h \
- /home/mozeat/zoo/dispatcher/tests/../../platform/inc/zoo_platform.h \
- /home/mozeat/zoo/dispatcher/tests/../../log/inc/zoo_log.h \
- /home/mozeat/zoo/dispatcher/tests/../../log/inc/../../platform/inc/zoo_types.h \
+ /home/mozeat/zoo/include/log/zoo_log.h \
+ /home/mozeat/zoo/include/platform/zoo_types.h \
  /usr/include/x86_64-linux-gnu/sys/time.h /usr/include/signal.h \
  /usr/include/x86_64-linux-gnu/bits/signum-generic.h \
  /usr/include/x86_64-linux-gnu/bits/signum-arch.h \

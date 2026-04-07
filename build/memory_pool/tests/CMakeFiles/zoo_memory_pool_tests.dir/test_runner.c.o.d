@@ -1,9 +1,9 @@
 memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_runner.c.o: \
- /home/mozeat/zoo/memory_pool/tests/test_runner.c \
+ /home/mozeat/zoo/tests/memory_pool/test_runner.c \
  /usr/include/stdc-predef.h \
- /home/mozeat/zoo/third_party/test/unity/src/unity.h \
- /home/mozeat/zoo/third_party/test/unity/src/unity_internals.h \
- /home/mozeat/zoo/third_party/test/unity/unity_config.h \
+ /home/mozeat/zoo/thirdparty/test/unity/src/unity.h \
+ /home/mozeat/zoo/thirdparty/test/unity/src/unity_internals.h \
+ /home/mozeat/zoo/thirdparty/test/unity/unity_config.h \
  /usr/include/math.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -52,8 +52,8 @@ memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_runner.c.o: \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/stdio2.h \
- /home/mozeat/zoo/third_party/test/CMock/src/cmock.h \
- /home/mozeat/zoo/third_party/test/CMock/src/cmock_internals.h \
+ /home/mozeat/zoo/thirdparty/test/CMock/src/cmock.h \
+ /home/mozeat/zoo/thirdparty/test/CMock/src/cmock_internals.h \
  /usr/include/stdlib.h /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \

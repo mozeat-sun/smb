@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/zoo_memory_pool_static.dir/src/zoo_memory_pool.c.o"
-  "CMakeFiles/zoo_memory_pool_static.dir/src/zoo_memory_pool.c.o.d"
+  "CMakeFiles/zoo_memory_pool_static.dir/__/src/memory_pool/zoo_memory_pool.c.o"
+  "CMakeFiles/zoo_memory_pool_static.dir/__/src/memory_pool/zoo_memory_pool.c.o.d"
   "libzoo_memory_pool.a"
   "libzoo_memory_pool.pdb"
 )

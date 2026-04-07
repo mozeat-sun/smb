@@ -8,10 +8,10 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/mozeat/zoo/third_party/test/CMock/src/cmock.c" "memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/CMock/src/cmock.c.o" "gcc" "memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/CMock/src/cmock.c.o.d"
-  "/home/mozeat/zoo/third_party/test/unity/src/unity.c" "memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/unity/src/unity.c.o" "gcc" "memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/unity/src/unity.c.o.d"
-  "/home/mozeat/zoo/memory_pool/tests/test_runner.c" "memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_runner.c.o" "gcc" "memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_runner.c.o.d"
-  "/home/mozeat/zoo/memory_pool/tests/test_zoo_memory_pool.c" "memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.o" "gcc" "memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.o.d"
+  "/home/mozeat/zoo/thirdparty/test/CMock/src/cmock.c" "memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.o" "gcc" "memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.o.d"
+  "/home/mozeat/zoo/thirdparty/test/unity/src/unity.c" "memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o" "gcc" "memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o.d"
+  "/home/mozeat/zoo/tests/memory_pool/test_runner.c" "memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_runner.c.o" "gcc" "memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_runner.c.o.d"
+  "/home/mozeat/zoo/tests/memory_pool/test_zoo_memory_pool.c" "memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.o" "gcc" "memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.o.d"
   )
 
 # Targets to which this target links.

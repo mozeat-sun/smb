@@ -83,6 +83,6 @@ util/tests/CMakeFiles/run_math_tests.dir/clean:
 .PHONY : util/tests/CMakeFiles/run_math_tests.dir/clean
 
 util/tests/CMakeFiles/run_math_tests.dir/depend:
-	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/util/tests /home/mozeat/zoo/build /home/mozeat/zoo/build/util/tests /home/mozeat/zoo/build/util/tests/CMakeFiles/run_math_tests.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/tests/util /home/mozeat/zoo/build /home/mozeat/zoo/build/util/tests /home/mozeat/zoo/build/util/tests/CMakeFiles/run_math_tests.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : util/tests/CMakeFiles/run_math_tests.dir/depend
 

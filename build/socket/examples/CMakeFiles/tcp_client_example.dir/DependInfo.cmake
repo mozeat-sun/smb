@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/mozeat/zoo/socket/examples/tcp_client.c" "socket/examples/CMakeFiles/tcp_client_example.dir/tcp_client.c.o" "gcc" "socket/examples/CMakeFiles/tcp_client_example.dir/tcp_client.c.o.d"
+  "/home/mozeat/zoo/examples/socket/tcp_client.c" "socket/examples/CMakeFiles/tcp_client_example.dir/tcp_client.c.o" "gcc" "socket/examples/CMakeFiles/tcp_client_example.dir/tcp_client.c.o.d"
   )
 
 # Targets to which this target links.

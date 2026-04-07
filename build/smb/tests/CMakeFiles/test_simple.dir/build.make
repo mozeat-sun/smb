@@ -70,18 +70,18 @@ include smb/tests/CMakeFiles/test_simple.dir/progress.make
 include smb/tests/CMakeFiles/test_simple.dir/flags.make
 
 smb/tests/CMakeFiles/test_simple.dir/unit/test_simple.c.o: smb/tests/CMakeFiles/test_simple.dir/flags.make
-smb/tests/CMakeFiles/test_simple.dir/unit/test_simple.c.o: ../smb/tests/unit/test_simple.c
+smb/tests/CMakeFiles/test_simple.dir/unit/test_simple.c.o: ../tests/smb/unit/test_simple.c
 smb/tests/CMakeFiles/test_simple.dir/unit/test_simple.c.o: smb/tests/CMakeFiles/test_simple.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object smb/tests/CMakeFiles/test_simple.dir/unit/test_simple.c.o"
-	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT smb/tests/CMakeFiles/test_simple.dir/unit/test_simple.c.o -MF CMakeFiles/test_simple.dir/unit/test_simple.c.o.d -o CMakeFiles/test_simple.dir/unit/test_simple.c.o -c /home/mozeat/zoo/smb/tests/unit/test_simple.c
+	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT smb/tests/CMakeFiles/test_simple.dir/unit/test_simple.c.o -MF CMakeFiles/test_simple.dir/unit/test_simple.c.o.d -o CMakeFiles/test_simple.dir/unit/test_simple.c.o -c /home/mozeat/zoo/tests/smb/unit/test_simple.c
 
 smb/tests/CMakeFiles/test_simple.dir/unit/test_simple.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/test_simple.dir/unit/test_simple.c.i"
-	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/smb/tests/unit/test_simple.c > CMakeFiles/test_simple.dir/unit/test_simple.c.i
+	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/smb/unit/test_simple.c > CMakeFiles/test_simple.dir/unit/test_simple.c.i
 
 smb/tests/CMakeFiles/test_simple.dir/unit/test_simple.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/test_simple.dir/unit/test_simple.c.s"
-	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/smb/tests/unit/test_simple.c -o CMakeFiles/test_simple.dir/unit/test_simple.c.s
+	cd /home/mozeat/zoo/build/smb/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/smb/unit/test_simple.c -o CMakeFiles/test_simple.dir/unit/test_simple.c.s
 
 # Object files for target test_simple
 test_simple_OBJECTS = \
@@ -96,7 +96,13 @@ bin/test_simple: lib/libzoo_smb.a
 bin/test_simple: lib/libunity.a
 bin/test_simple: lib/libtest_utils.a
 bin/test_simple: lib/libzoo_smb.a
-bin/test_simple: lib/libunity.a
+bin/test_simple: thread_pool/libzoo_thread_pool.a
+bin/test_simple: buffer/libzoo_buffer.a
+bin/test_simple: socket/libzoo_socket.a
+bin/test_simple: log/libzoo_log.a
+bin/test_simple: memory_pool/libzoo_memory_pool.a
+bin/test_simple: util/libzoo_util.a
+bin/test_simple: lib/libzoo_platform.a
 bin/test_simple: smb/tests/CMakeFiles/test_simple.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable ../../bin/test_simple"
 	cd /home/mozeat/zoo/build/smb/tests && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/test_simple.dir/link.txt --verbose=$(VERBOSE)
@@ -110,6 +116,6 @@ smb/tests/CMakeFiles/test_simple.dir/clean:
 .PHONY : smb/tests/CMakeFiles/test_simple.dir/clean
 
 smb/tests/CMakeFiles/test_simple.dir/depend:
-	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/smb/tests /home/mozeat/zoo/build /home/mozeat/zoo/build/smb/tests /home/mozeat/zoo/build/smb/tests/CMakeFiles/test_simple.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/tests/smb /home/mozeat/zoo/build /home/mozeat/zoo/build/smb/tests /home/mozeat/zoo/build/smb/tests/CMakeFiles/test_simple.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : smb/tests/CMakeFiles/test_simple.dir/depend
 

@@ -70,59 +70,59 @@ include log/tests/CMakeFiles/zoo_log_tests.dir/progress.make
 include log/tests/CMakeFiles/zoo_log_tests.dir/flags.make
 
 log/tests/CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.o: log/tests/CMakeFiles/zoo_log_tests.dir/flags.make
-log/tests/CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.o: ../log/tests/test_zoo_log.c
+log/tests/CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.o: ../tests/log/test_zoo_log.c
 log/tests/CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.o: log/tests/CMakeFiles/zoo_log_tests.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object log/tests/CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.o"
-	cd /home/mozeat/zoo/build/log/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT log/tests/CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.o -MF CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.o.d -o CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.o -c /home/mozeat/zoo/log/tests/test_zoo_log.c
+	cd /home/mozeat/zoo/build/log/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT log/tests/CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.o -MF CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.o.d -o CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.o -c /home/mozeat/zoo/tests/log/test_zoo_log.c
 
 log/tests/CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.i"
-	cd /home/mozeat/zoo/build/log/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/log/tests/test_zoo_log.c > CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.i
+	cd /home/mozeat/zoo/build/log/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/log/test_zoo_log.c > CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.i
 
 log/tests/CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.s"
-	cd /home/mozeat/zoo/build/log/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/log/tests/test_zoo_log.c -o CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.s
+	cd /home/mozeat/zoo/build/log/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/log/test_zoo_log.c -o CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.s
 
 log/tests/CMakeFiles/zoo_log_tests.dir/test_runner.c.o: log/tests/CMakeFiles/zoo_log_tests.dir/flags.make
-log/tests/CMakeFiles/zoo_log_tests.dir/test_runner.c.o: ../log/tests/test_runner.c
+log/tests/CMakeFiles/zoo_log_tests.dir/test_runner.c.o: ../tests/log/test_runner.c
 log/tests/CMakeFiles/zoo_log_tests.dir/test_runner.c.o: log/tests/CMakeFiles/zoo_log_tests.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object log/tests/CMakeFiles/zoo_log_tests.dir/test_runner.c.o"
-	cd /home/mozeat/zoo/build/log/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT log/tests/CMakeFiles/zoo_log_tests.dir/test_runner.c.o -MF CMakeFiles/zoo_log_tests.dir/test_runner.c.o.d -o CMakeFiles/zoo_log_tests.dir/test_runner.c.o -c /home/mozeat/zoo/log/tests/test_runner.c
+	cd /home/mozeat/zoo/build/log/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT log/tests/CMakeFiles/zoo_log_tests.dir/test_runner.c.o -MF CMakeFiles/zoo_log_tests.dir/test_runner.c.o.d -o CMakeFiles/zoo_log_tests.dir/test_runner.c.o -c /home/mozeat/zoo/tests/log/test_runner.c
 
 log/tests/CMakeFiles/zoo_log_tests.dir/test_runner.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_log_tests.dir/test_runner.c.i"
-	cd /home/mozeat/zoo/build/log/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/log/tests/test_runner.c > CMakeFiles/zoo_log_tests.dir/test_runner.c.i
+	cd /home/mozeat/zoo/build/log/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/log/test_runner.c > CMakeFiles/zoo_log_tests.dir/test_runner.c.i
 
 log/tests/CMakeFiles/zoo_log_tests.dir/test_runner.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_log_tests.dir/test_runner.c.s"
-	cd /home/mozeat/zoo/build/log/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/log/tests/test_runner.c -o CMakeFiles/zoo_log_tests.dir/test_runner.c.s
+	cd /home/mozeat/zoo/build/log/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/log/test_runner.c -o CMakeFiles/zoo_log_tests.dir/test_runner.c.s
 
-log/tests/CMakeFiles/zoo_log_tests.dir/__/__/third_party/test/unity/src/unity.c.o: log/tests/CMakeFiles/zoo_log_tests.dir/flags.make
-log/tests/CMakeFiles/zoo_log_tests.dir/__/__/third_party/test/unity/src/unity.c.o: ../third_party/test/unity/src/unity.c
-log/tests/CMakeFiles/zoo_log_tests.dir/__/__/third_party/test/unity/src/unity.c.o: log/tests/CMakeFiles/zoo_log_tests.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object log/tests/CMakeFiles/zoo_log_tests.dir/__/__/third_party/test/unity/src/unity.c.o"
-	cd /home/mozeat/zoo/build/log/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT log/tests/CMakeFiles/zoo_log_tests.dir/__/__/third_party/test/unity/src/unity.c.o -MF CMakeFiles/zoo_log_tests.dir/__/__/third_party/test/unity/src/unity.c.o.d -o CMakeFiles/zoo_log_tests.dir/__/__/third_party/test/unity/src/unity.c.o -c /home/mozeat/zoo/third_party/test/unity/src/unity.c
+log/tests/CMakeFiles/zoo_log_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o: log/tests/CMakeFiles/zoo_log_tests.dir/flags.make
+log/tests/CMakeFiles/zoo_log_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o: ../thirdparty/test/unity/src/unity.c
+log/tests/CMakeFiles/zoo_log_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o: log/tests/CMakeFiles/zoo_log_tests.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object log/tests/CMakeFiles/zoo_log_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o"
+	cd /home/mozeat/zoo/build/log/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT log/tests/CMakeFiles/zoo_log_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o -MF CMakeFiles/zoo_log_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o.d -o CMakeFiles/zoo_log_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o -c /home/mozeat/zoo/thirdparty/test/unity/src/unity.c
 
-log/tests/CMakeFiles/zoo_log_tests.dir/__/__/third_party/test/unity/src/unity.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_log_tests.dir/__/__/third_party/test/unity/src/unity.c.i"
-	cd /home/mozeat/zoo/build/log/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/third_party/test/unity/src/unity.c > CMakeFiles/zoo_log_tests.dir/__/__/third_party/test/unity/src/unity.c.i
+log/tests/CMakeFiles/zoo_log_tests.dir/__/__/thirdparty/test/unity/src/unity.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_log_tests.dir/__/__/thirdparty/test/unity/src/unity.c.i"
+	cd /home/mozeat/zoo/build/log/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/thirdparty/test/unity/src/unity.c > CMakeFiles/zoo_log_tests.dir/__/__/thirdparty/test/unity/src/unity.c.i
 
-log/tests/CMakeFiles/zoo_log_tests.dir/__/__/third_party/test/unity/src/unity.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_log_tests.dir/__/__/third_party/test/unity/src/unity.c.s"
-	cd /home/mozeat/zoo/build/log/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/third_party/test/unity/src/unity.c -o CMakeFiles/zoo_log_tests.dir/__/__/third_party/test/unity/src/unity.c.s
+log/tests/CMakeFiles/zoo_log_tests.dir/__/__/thirdparty/test/unity/src/unity.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_log_tests.dir/__/__/thirdparty/test/unity/src/unity.c.s"
+	cd /home/mozeat/zoo/build/log/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/thirdparty/test/unity/src/unity.c -o CMakeFiles/zoo_log_tests.dir/__/__/thirdparty/test/unity/src/unity.c.s
 
 # Object files for target zoo_log_tests
 zoo_log_tests_OBJECTS = \
 "CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.o" \
 "CMakeFiles/zoo_log_tests.dir/test_runner.c.o" \
-"CMakeFiles/zoo_log_tests.dir/__/__/third_party/test/unity/src/unity.c.o"
+"CMakeFiles/zoo_log_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o"
 
 # External object files for target zoo_log_tests
 zoo_log_tests_EXTERNAL_OBJECTS =
 
 log/tests/zoo_log_tests: log/tests/CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.o
 log/tests/zoo_log_tests: log/tests/CMakeFiles/zoo_log_tests.dir/test_runner.c.o
-log/tests/zoo_log_tests: log/tests/CMakeFiles/zoo_log_tests.dir/__/__/third_party/test/unity/src/unity.c.o
+log/tests/zoo_log_tests: log/tests/CMakeFiles/zoo_log_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o
 log/tests/zoo_log_tests: log/tests/CMakeFiles/zoo_log_tests.dir/build.make
 log/tests/zoo_log_tests: log/libzoo_log.a
 log/tests/zoo_log_tests: log/tests/CMakeFiles/zoo_log_tests.dir/link.txt
@@ -138,6 +138,6 @@ log/tests/CMakeFiles/zoo_log_tests.dir/clean:
 .PHONY : log/tests/CMakeFiles/zoo_log_tests.dir/clean
 
 log/tests/CMakeFiles/zoo_log_tests.dir/depend:
-	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/log/tests /home/mozeat/zoo/build /home/mozeat/zoo/build/log/tests /home/mozeat/zoo/build/log/tests/CMakeFiles/zoo_log_tests.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/tests/log /home/mozeat/zoo/build /home/mozeat/zoo/build/log/tests /home/mozeat/zoo/build/log/tests/CMakeFiles/zoo_log_tests.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : log/tests/CMakeFiles/zoo_log_tests.dir/depend
 

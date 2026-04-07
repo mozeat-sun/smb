@@ -69,28 +69,28 @@ include dispatcher/CMakeFiles/zoo_dispatcher_static.dir/progress.make
 # Include the compile flags for this target's objects.
 include dispatcher/CMakeFiles/zoo_dispatcher_static.dir/flags.make
 
-dispatcher/CMakeFiles/zoo_dispatcher_static.dir/src/zoo_dispatcher.c.o: dispatcher/CMakeFiles/zoo_dispatcher_static.dir/flags.make
-dispatcher/CMakeFiles/zoo_dispatcher_static.dir/src/zoo_dispatcher.c.o: ../dispatcher/src/zoo_dispatcher.c
-dispatcher/CMakeFiles/zoo_dispatcher_static.dir/src/zoo_dispatcher.c.o: dispatcher/CMakeFiles/zoo_dispatcher_static.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object dispatcher/CMakeFiles/zoo_dispatcher_static.dir/src/zoo_dispatcher.c.o"
-	cd /home/mozeat/zoo/build/dispatcher && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT dispatcher/CMakeFiles/zoo_dispatcher_static.dir/src/zoo_dispatcher.c.o -MF CMakeFiles/zoo_dispatcher_static.dir/src/zoo_dispatcher.c.o.d -o CMakeFiles/zoo_dispatcher_static.dir/src/zoo_dispatcher.c.o -c /home/mozeat/zoo/dispatcher/src/zoo_dispatcher.c
+dispatcher/CMakeFiles/zoo_dispatcher_static.dir/__/src/dispatcher/zoo_dispatcher.c.o: dispatcher/CMakeFiles/zoo_dispatcher_static.dir/flags.make
+dispatcher/CMakeFiles/zoo_dispatcher_static.dir/__/src/dispatcher/zoo_dispatcher.c.o: ../src/dispatcher/zoo_dispatcher.c
+dispatcher/CMakeFiles/zoo_dispatcher_static.dir/__/src/dispatcher/zoo_dispatcher.c.o: dispatcher/CMakeFiles/zoo_dispatcher_static.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object dispatcher/CMakeFiles/zoo_dispatcher_static.dir/__/src/dispatcher/zoo_dispatcher.c.o"
+	cd /home/mozeat/zoo/build/dispatcher && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT dispatcher/CMakeFiles/zoo_dispatcher_static.dir/__/src/dispatcher/zoo_dispatcher.c.o -MF CMakeFiles/zoo_dispatcher_static.dir/__/src/dispatcher/zoo_dispatcher.c.o.d -o CMakeFiles/zoo_dispatcher_static.dir/__/src/dispatcher/zoo_dispatcher.c.o -c /home/mozeat/zoo/src/dispatcher/zoo_dispatcher.c
 
-dispatcher/CMakeFiles/zoo_dispatcher_static.dir/src/zoo_dispatcher.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_dispatcher_static.dir/src/zoo_dispatcher.c.i"
-	cd /home/mozeat/zoo/build/dispatcher && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/dispatcher/src/zoo_dispatcher.c > CMakeFiles/zoo_dispatcher_static.dir/src/zoo_dispatcher.c.i
+dispatcher/CMakeFiles/zoo_dispatcher_static.dir/__/src/dispatcher/zoo_dispatcher.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_dispatcher_static.dir/__/src/dispatcher/zoo_dispatcher.c.i"
+	cd /home/mozeat/zoo/build/dispatcher && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/src/dispatcher/zoo_dispatcher.c > CMakeFiles/zoo_dispatcher_static.dir/__/src/dispatcher/zoo_dispatcher.c.i
 
-dispatcher/CMakeFiles/zoo_dispatcher_static.dir/src/zoo_dispatcher.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_dispatcher_static.dir/src/zoo_dispatcher.c.s"
-	cd /home/mozeat/zoo/build/dispatcher && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/dispatcher/src/zoo_dispatcher.c -o CMakeFiles/zoo_dispatcher_static.dir/src/zoo_dispatcher.c.s
+dispatcher/CMakeFiles/zoo_dispatcher_static.dir/__/src/dispatcher/zoo_dispatcher.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_dispatcher_static.dir/__/src/dispatcher/zoo_dispatcher.c.s"
+	cd /home/mozeat/zoo/build/dispatcher && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/src/dispatcher/zoo_dispatcher.c -o CMakeFiles/zoo_dispatcher_static.dir/__/src/dispatcher/zoo_dispatcher.c.s
 
 # Object files for target zoo_dispatcher_static
 zoo_dispatcher_static_OBJECTS = \
-"CMakeFiles/zoo_dispatcher_static.dir/src/zoo_dispatcher.c.o"
+"CMakeFiles/zoo_dispatcher_static.dir/__/src/dispatcher/zoo_dispatcher.c.o"
 
 # External object files for target zoo_dispatcher_static
 zoo_dispatcher_static_EXTERNAL_OBJECTS =
 
-dispatcher/libzoo_dispatcher.a: dispatcher/CMakeFiles/zoo_dispatcher_static.dir/src/zoo_dispatcher.c.o
+dispatcher/libzoo_dispatcher.a: dispatcher/CMakeFiles/zoo_dispatcher_static.dir/__/src/dispatcher/zoo_dispatcher.c.o
 dispatcher/libzoo_dispatcher.a: dispatcher/CMakeFiles/zoo_dispatcher_static.dir/build.make
 dispatcher/libzoo_dispatcher.a: dispatcher/CMakeFiles/zoo_dispatcher_static.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C static library libzoo_dispatcher.a"

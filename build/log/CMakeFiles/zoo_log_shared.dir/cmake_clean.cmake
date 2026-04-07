@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/zoo_log_shared.dir/src/zoo_log.c.o"
-  "CMakeFiles/zoo_log_shared.dir/src/zoo_log.c.o.d"
+  "CMakeFiles/zoo_log_shared.dir/__/src/log/zoo_log.c.o"
+  "CMakeFiles/zoo_log_shared.dir/__/src/log/zoo_log.c.o.d"
   "libzoo_log.pdb"
   "libzoo_log.so"
   "libzoo_log.so.1"

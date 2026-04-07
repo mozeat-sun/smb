@@ -332,41 +332,41 @@ run_math_tests/fast:
 	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/run_math_tests.dir/build.make util/tests/CMakeFiles/run_math_tests.dir/build
 .PHONY : run_math_tests/fast
 
-__/__/third_party/test/unity/src/unity.o: __/__/third_party/test/unity/src/unity.c.o
-.PHONY : __/__/third_party/test/unity/src/unity.o
+__/__/thirdparty/test/unity/src/unity.o: __/__/thirdparty/test/unity/src/unity.c.o
+.PHONY : __/__/thirdparty/test/unity/src/unity.o
 
 # target to build an object file
-__/__/third_party/test/unity/src/unity.c.o:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/util_unity.dir/build.make util/tests/CMakeFiles/util_unity.dir/__/__/third_party/test/unity/src/unity.c.o
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/test_timestamp_unity.dir/build.make util/tests/CMakeFiles/test_timestamp_unity.dir/__/__/third_party/test/unity/src/unity.c.o
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/test_string_unity.dir/build.make util/tests/CMakeFiles/test_string_unity.dir/__/__/third_party/test/unity/src/unity.c.o
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/test_memory_unity.dir/build.make util/tests/CMakeFiles/test_memory_unity.dir/__/__/third_party/test/unity/src/unity.c.o
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/test_math_unity.dir/build.make util/tests/CMakeFiles/test_math_unity.dir/__/__/third_party/test/unity/src/unity.c.o
-.PHONY : __/__/third_party/test/unity/src/unity.c.o
+__/__/thirdparty/test/unity/src/unity.c.o:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/util_unity.dir/build.make util/tests/CMakeFiles/util_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/test_timestamp_unity.dir/build.make util/tests/CMakeFiles/test_timestamp_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/test_string_unity.dir/build.make util/tests/CMakeFiles/test_string_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/test_memory_unity.dir/build.make util/tests/CMakeFiles/test_memory_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/test_math_unity.dir/build.make util/tests/CMakeFiles/test_math_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o
+.PHONY : __/__/thirdparty/test/unity/src/unity.c.o
 
-__/__/third_party/test/unity/src/unity.i: __/__/third_party/test/unity/src/unity.c.i
-.PHONY : __/__/third_party/test/unity/src/unity.i
+__/__/thirdparty/test/unity/src/unity.i: __/__/thirdparty/test/unity/src/unity.c.i
+.PHONY : __/__/thirdparty/test/unity/src/unity.i
 
 # target to preprocess a source file
-__/__/third_party/test/unity/src/unity.c.i:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/util_unity.dir/build.make util/tests/CMakeFiles/util_unity.dir/__/__/third_party/test/unity/src/unity.c.i
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/test_timestamp_unity.dir/build.make util/tests/CMakeFiles/test_timestamp_unity.dir/__/__/third_party/test/unity/src/unity.c.i
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/test_string_unity.dir/build.make util/tests/CMakeFiles/test_string_unity.dir/__/__/third_party/test/unity/src/unity.c.i
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/test_memory_unity.dir/build.make util/tests/CMakeFiles/test_memory_unity.dir/__/__/third_party/test/unity/src/unity.c.i
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/test_math_unity.dir/build.make util/tests/CMakeFiles/test_math_unity.dir/__/__/third_party/test/unity/src/unity.c.i
-.PHONY : __/__/third_party/test/unity/src/unity.c.i
+__/__/thirdparty/test/unity/src/unity.c.i:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/util_unity.dir/build.make util/tests/CMakeFiles/util_unity.dir/__/__/thirdparty/test/unity/src/unity.c.i
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/test_timestamp_unity.dir/build.make util/tests/CMakeFiles/test_timestamp_unity.dir/__/__/thirdparty/test/unity/src/unity.c.i
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/test_string_unity.dir/build.make util/tests/CMakeFiles/test_string_unity.dir/__/__/thirdparty/test/unity/src/unity.c.i
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/test_memory_unity.dir/build.make util/tests/CMakeFiles/test_memory_unity.dir/__/__/thirdparty/test/unity/src/unity.c.i
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/test_math_unity.dir/build.make util/tests/CMakeFiles/test_math_unity.dir/__/__/thirdparty/test/unity/src/unity.c.i
+.PHONY : __/__/thirdparty/test/unity/src/unity.c.i
 
-__/__/third_party/test/unity/src/unity.s: __/__/third_party/test/unity/src/unity.c.s
-.PHONY : __/__/third_party/test/unity/src/unity.s
+__/__/thirdparty/test/unity/src/unity.s: __/__/thirdparty/test/unity/src/unity.c.s
+.PHONY : __/__/thirdparty/test/unity/src/unity.s
 
 # target to generate assembly for a file
-__/__/third_party/test/unity/src/unity.c.s:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/util_unity.dir/build.make util/tests/CMakeFiles/util_unity.dir/__/__/third_party/test/unity/src/unity.c.s
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/test_timestamp_unity.dir/build.make util/tests/CMakeFiles/test_timestamp_unity.dir/__/__/third_party/test/unity/src/unity.c.s
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/test_string_unity.dir/build.make util/tests/CMakeFiles/test_string_unity.dir/__/__/third_party/test/unity/src/unity.c.s
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/test_memory_unity.dir/build.make util/tests/CMakeFiles/test_memory_unity.dir/__/__/third_party/test/unity/src/unity.c.s
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/test_math_unity.dir/build.make util/tests/CMakeFiles/test_math_unity.dir/__/__/third_party/test/unity/src/unity.c.s
-.PHONY : __/__/third_party/test/unity/src/unity.c.s
+__/__/thirdparty/test/unity/src/unity.c.s:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/util_unity.dir/build.make util/tests/CMakeFiles/util_unity.dir/__/__/thirdparty/test/unity/src/unity.c.s
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/test_timestamp_unity.dir/build.make util/tests/CMakeFiles/test_timestamp_unity.dir/__/__/thirdparty/test/unity/src/unity.c.s
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/test_string_unity.dir/build.make util/tests/CMakeFiles/test_string_unity.dir/__/__/thirdparty/test/unity/src/unity.c.s
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/test_memory_unity.dir/build.make util/tests/CMakeFiles/test_memory_unity.dir/__/__/thirdparty/test/unity/src/unity.c.s
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/tests/CMakeFiles/test_math_unity.dir/build.make util/tests/CMakeFiles/test_math_unity.dir/__/__/thirdparty/test/unity/src/unity.c.s
+.PHONY : __/__/thirdparty/test/unity/src/unity.c.s
 
 test_zoo_util_math_unity.o: test_zoo_util_math_unity.c.o
 .PHONY : test_zoo_util_math_unity.o
@@ -489,9 +489,9 @@ help:
 	@echo "... test_string_unity"
 	@echo "... test_timestamp_unity"
 	@echo "... util_unity"
-	@echo "... __/__/third_party/test/unity/src/unity.o"
-	@echo "... __/__/third_party/test/unity/src/unity.i"
-	@echo "... __/__/third_party/test/unity/src/unity.s"
+	@echo "... __/__/thirdparty/test/unity/src/unity.o"
+	@echo "... __/__/thirdparty/test/unity/src/unity.i"
+	@echo "... __/__/thirdparty/test/unity/src/unity.s"
 	@echo "... test_zoo_util_math_unity.o"
 	@echo "... test_zoo_util_math_unity.i"
 	@echo "... test_zoo_util_math_unity.s"

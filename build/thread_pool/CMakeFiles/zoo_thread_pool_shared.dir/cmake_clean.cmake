@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/zoo_thread_pool_shared.dir/src/zoo_thread_pool.c.o"
-  "CMakeFiles/zoo_thread_pool_shared.dir/src/zoo_thread_pool.c.o.d"
+  "CMakeFiles/zoo_thread_pool_shared.dir/__/src/thread_pool/zoo_thread_pool.c.o"
+  "CMakeFiles/zoo_thread_pool_shared.dir/__/src/thread_pool/zoo_thread_pool.c.o.d"
   "libzoo_thread_pool.pdb"
   "libzoo_thread_pool.so"
   "libzoo_thread_pool.so.1"

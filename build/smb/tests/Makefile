@@ -500,29 +500,29 @@ test_transport_performance/fast:
 	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f smb/tests/CMakeFiles/test_transport_performance.dir/build.make smb/tests/CMakeFiles/test_transport_performance.dir/build
 .PHONY : test_transport_performance/fast
 
-__/__/third_party/test/unity/src/unity.o: __/__/third_party/test/unity/src/unity.c.o
-.PHONY : __/__/third_party/test/unity/src/unity.o
+__/__/thirdparty/test/unity/src/unity.o: __/__/thirdparty/test/unity/src/unity.c.o
+.PHONY : __/__/thirdparty/test/unity/src/unity.o
 
 # target to build an object file
-__/__/third_party/test/unity/src/unity.c.o:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f smb/tests/CMakeFiles/unity.dir/build.make smb/tests/CMakeFiles/unity.dir/__/__/third_party/test/unity/src/unity.c.o
-.PHONY : __/__/third_party/test/unity/src/unity.c.o
+__/__/thirdparty/test/unity/src/unity.c.o:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f smb/tests/CMakeFiles/unity.dir/build.make smb/tests/CMakeFiles/unity.dir/__/__/thirdparty/test/unity/src/unity.c.o
+.PHONY : __/__/thirdparty/test/unity/src/unity.c.o
 
-__/__/third_party/test/unity/src/unity.i: __/__/third_party/test/unity/src/unity.c.i
-.PHONY : __/__/third_party/test/unity/src/unity.i
+__/__/thirdparty/test/unity/src/unity.i: __/__/thirdparty/test/unity/src/unity.c.i
+.PHONY : __/__/thirdparty/test/unity/src/unity.i
 
 # target to preprocess a source file
-__/__/third_party/test/unity/src/unity.c.i:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f smb/tests/CMakeFiles/unity.dir/build.make smb/tests/CMakeFiles/unity.dir/__/__/third_party/test/unity/src/unity.c.i
-.PHONY : __/__/third_party/test/unity/src/unity.c.i
+__/__/thirdparty/test/unity/src/unity.c.i:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f smb/tests/CMakeFiles/unity.dir/build.make smb/tests/CMakeFiles/unity.dir/__/__/thirdparty/test/unity/src/unity.c.i
+.PHONY : __/__/thirdparty/test/unity/src/unity.c.i
 
-__/__/third_party/test/unity/src/unity.s: __/__/third_party/test/unity/src/unity.c.s
-.PHONY : __/__/third_party/test/unity/src/unity.s
+__/__/thirdparty/test/unity/src/unity.s: __/__/thirdparty/test/unity/src/unity.c.s
+.PHONY : __/__/thirdparty/test/unity/src/unity.s
 
 # target to generate assembly for a file
-__/__/third_party/test/unity/src/unity.c.s:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f smb/tests/CMakeFiles/unity.dir/build.make smb/tests/CMakeFiles/unity.dir/__/__/third_party/test/unity/src/unity.c.s
-.PHONY : __/__/third_party/test/unity/src/unity.c.s
+__/__/thirdparty/test/unity/src/unity.c.s:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f smb/tests/CMakeFiles/unity.dir/build.make smb/tests/CMakeFiles/unity.dir/__/__/thirdparty/test/unity/src/unity.c.s
+.PHONY : __/__/thirdparty/test/unity/src/unity.c.s
 
 common/test_utils.o: common/test_utils.c.o
 .PHONY : common/test_utils.o
@@ -1065,9 +1065,9 @@ help:
 	@echo "... test_zoo_smb_transport_tcp"
 	@echo "... test_zoo_smb_transport_udp"
 	@echo "... unity"
-	@echo "... __/__/third_party/test/unity/src/unity.o"
-	@echo "... __/__/third_party/test/unity/src/unity.i"
-	@echo "... __/__/third_party/test/unity/src/unity.s"
+	@echo "... __/__/thirdparty/test/unity/src/unity.o"
+	@echo "... __/__/thirdparty/test/unity/src/unity.i"
+	@echo "... __/__/thirdparty/test/unity/src/unity.s"
 	@echo "... common/test_utils.o"
 	@echo "... common/test_utils.i"
 	@echo "... common/test_utils.s"

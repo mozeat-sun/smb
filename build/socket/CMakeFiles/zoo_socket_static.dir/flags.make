@@ -4,7 +4,7 @@
 # compile C with /usr/bin/cc
 C_DEFINES = -DZOO_HAS_POSIX=1
 
-C_INCLUDES = -I/home/mozeat/zoo/inc -I/home/mozeat/zoo/socket/inc -I/home/mozeat/zoo/socket/../platform/inc -I/home/mozeat/zoo/socket/../util
+C_INCLUDES = -I/home/mozeat/zoo/include -I/home/mozeat/zoo/socket/../include/socket -I/home/mozeat/zoo/socket/../include/platform -I/home/mozeat/zoo/socket/../include/util
 
 C_FLAGS =  -Wall -Wextra -Wpedantic -D_GNU_SOURCE -O3 -DNDEBUG -O2 -DNDEBUG -Wall -Wextra -Wpedantic -Werror -Wno-unused-value -std=c11
 

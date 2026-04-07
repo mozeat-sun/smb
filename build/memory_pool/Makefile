@@ -220,32 +220,32 @@ zoo_memory_pool_shared/fast:
 	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/build.make memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/build
 .PHONY : zoo_memory_pool_shared/fast
 
-src/zoo_memory_pool.o: src/zoo_memory_pool.c.o
-.PHONY : src/zoo_memory_pool.o
+__/src/memory_pool/zoo_memory_pool.o: __/src/memory_pool/zoo_memory_pool.c.o
+.PHONY : __/src/memory_pool/zoo_memory_pool.o
 
 # target to build an object file
-src/zoo_memory_pool.c.o:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f memory_pool/CMakeFiles/zoo_memory_pool_static.dir/build.make memory_pool/CMakeFiles/zoo_memory_pool_static.dir/src/zoo_memory_pool.c.o
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/build.make memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/src/zoo_memory_pool.c.o
-.PHONY : src/zoo_memory_pool.c.o
+__/src/memory_pool/zoo_memory_pool.c.o:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f memory_pool/CMakeFiles/zoo_memory_pool_static.dir/build.make memory_pool/CMakeFiles/zoo_memory_pool_static.dir/__/src/memory_pool/zoo_memory_pool.c.o
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/build.make memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/__/src/memory_pool/zoo_memory_pool.c.o
+.PHONY : __/src/memory_pool/zoo_memory_pool.c.o
 
-src/zoo_memory_pool.i: src/zoo_memory_pool.c.i
-.PHONY : src/zoo_memory_pool.i
+__/src/memory_pool/zoo_memory_pool.i: __/src/memory_pool/zoo_memory_pool.c.i
+.PHONY : __/src/memory_pool/zoo_memory_pool.i
 
 # target to preprocess a source file
-src/zoo_memory_pool.c.i:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f memory_pool/CMakeFiles/zoo_memory_pool_static.dir/build.make memory_pool/CMakeFiles/zoo_memory_pool_static.dir/src/zoo_memory_pool.c.i
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/build.make memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/src/zoo_memory_pool.c.i
-.PHONY : src/zoo_memory_pool.c.i
+__/src/memory_pool/zoo_memory_pool.c.i:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f memory_pool/CMakeFiles/zoo_memory_pool_static.dir/build.make memory_pool/CMakeFiles/zoo_memory_pool_static.dir/__/src/memory_pool/zoo_memory_pool.c.i
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/build.make memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/__/src/memory_pool/zoo_memory_pool.c.i
+.PHONY : __/src/memory_pool/zoo_memory_pool.c.i
 
-src/zoo_memory_pool.s: src/zoo_memory_pool.c.s
-.PHONY : src/zoo_memory_pool.s
+__/src/memory_pool/zoo_memory_pool.s: __/src/memory_pool/zoo_memory_pool.c.s
+.PHONY : __/src/memory_pool/zoo_memory_pool.s
 
 # target to generate assembly for a file
-src/zoo_memory_pool.c.s:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f memory_pool/CMakeFiles/zoo_memory_pool_static.dir/build.make memory_pool/CMakeFiles/zoo_memory_pool_static.dir/src/zoo_memory_pool.c.s
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/build.make memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/src/zoo_memory_pool.c.s
-.PHONY : src/zoo_memory_pool.c.s
+__/src/memory_pool/zoo_memory_pool.c.s:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f memory_pool/CMakeFiles/zoo_memory_pool_static.dir/build.make memory_pool/CMakeFiles/zoo_memory_pool_static.dir/__/src/memory_pool/zoo_memory_pool.c.s
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/build.make memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/__/src/memory_pool/zoo_memory_pool.c.s
+.PHONY : __/src/memory_pool/zoo_memory_pool.c.s
 
 # Help Target
 help:
@@ -264,9 +264,9 @@ help:
 	@echo "... test"
 	@echo "... zoo_memory_pool_shared"
 	@echo "... zoo_memory_pool_static"
-	@echo "... src/zoo_memory_pool.o"
-	@echo "... src/zoo_memory_pool.i"
-	@echo "... src/zoo_memory_pool.s"
+	@echo "... __/src/memory_pool/zoo_memory_pool.o"
+	@echo "... __/src/memory_pool/zoo_memory_pool.i"
+	@echo "... __/src/memory_pool/zoo_memory_pool.s"
 .PHONY : help
 
 

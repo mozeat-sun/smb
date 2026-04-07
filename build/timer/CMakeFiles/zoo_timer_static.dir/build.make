@@ -69,28 +69,28 @@ include timer/CMakeFiles/zoo_timer_static.dir/progress.make
 # Include the compile flags for this target's objects.
 include timer/CMakeFiles/zoo_timer_static.dir/flags.make
 
-timer/CMakeFiles/zoo_timer_static.dir/src/zoo_timer.c.o: timer/CMakeFiles/zoo_timer_static.dir/flags.make
-timer/CMakeFiles/zoo_timer_static.dir/src/zoo_timer.c.o: ../timer/src/zoo_timer.c
-timer/CMakeFiles/zoo_timer_static.dir/src/zoo_timer.c.o: timer/CMakeFiles/zoo_timer_static.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object timer/CMakeFiles/zoo_timer_static.dir/src/zoo_timer.c.o"
-	cd /home/mozeat/zoo/build/timer && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT timer/CMakeFiles/zoo_timer_static.dir/src/zoo_timer.c.o -MF CMakeFiles/zoo_timer_static.dir/src/zoo_timer.c.o.d -o CMakeFiles/zoo_timer_static.dir/src/zoo_timer.c.o -c /home/mozeat/zoo/timer/src/zoo_timer.c
+timer/CMakeFiles/zoo_timer_static.dir/__/src/timer/zoo_timer.c.o: timer/CMakeFiles/zoo_timer_static.dir/flags.make
+timer/CMakeFiles/zoo_timer_static.dir/__/src/timer/zoo_timer.c.o: ../src/timer/zoo_timer.c
+timer/CMakeFiles/zoo_timer_static.dir/__/src/timer/zoo_timer.c.o: timer/CMakeFiles/zoo_timer_static.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object timer/CMakeFiles/zoo_timer_static.dir/__/src/timer/zoo_timer.c.o"
+	cd /home/mozeat/zoo/build/timer && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT timer/CMakeFiles/zoo_timer_static.dir/__/src/timer/zoo_timer.c.o -MF CMakeFiles/zoo_timer_static.dir/__/src/timer/zoo_timer.c.o.d -o CMakeFiles/zoo_timer_static.dir/__/src/timer/zoo_timer.c.o -c /home/mozeat/zoo/src/timer/zoo_timer.c
 
-timer/CMakeFiles/zoo_timer_static.dir/src/zoo_timer.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_timer_static.dir/src/zoo_timer.c.i"
-	cd /home/mozeat/zoo/build/timer && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/timer/src/zoo_timer.c > CMakeFiles/zoo_timer_static.dir/src/zoo_timer.c.i
+timer/CMakeFiles/zoo_timer_static.dir/__/src/timer/zoo_timer.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_timer_static.dir/__/src/timer/zoo_timer.c.i"
+	cd /home/mozeat/zoo/build/timer && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/src/timer/zoo_timer.c > CMakeFiles/zoo_timer_static.dir/__/src/timer/zoo_timer.c.i
 
-timer/CMakeFiles/zoo_timer_static.dir/src/zoo_timer.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_timer_static.dir/src/zoo_timer.c.s"
-	cd /home/mozeat/zoo/build/timer && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/timer/src/zoo_timer.c -o CMakeFiles/zoo_timer_static.dir/src/zoo_timer.c.s
+timer/CMakeFiles/zoo_timer_static.dir/__/src/timer/zoo_timer.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_timer_static.dir/__/src/timer/zoo_timer.c.s"
+	cd /home/mozeat/zoo/build/timer && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/src/timer/zoo_timer.c -o CMakeFiles/zoo_timer_static.dir/__/src/timer/zoo_timer.c.s
 
 # Object files for target zoo_timer_static
 zoo_timer_static_OBJECTS = \
-"CMakeFiles/zoo_timer_static.dir/src/zoo_timer.c.o"
+"CMakeFiles/zoo_timer_static.dir/__/src/timer/zoo_timer.c.o"
 
 # External object files for target zoo_timer_static
 zoo_timer_static_EXTERNAL_OBJECTS =
 
-timer/libzoo_timer.a: timer/CMakeFiles/zoo_timer_static.dir/src/zoo_timer.c.o
+timer/libzoo_timer.a: timer/CMakeFiles/zoo_timer_static.dir/__/src/timer/zoo_timer.c.o
 timer/libzoo_timer.a: timer/CMakeFiles/zoo_timer_static.dir/build.make
 timer/libzoo_timer.a: timer/CMakeFiles/zoo_timer_static.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C static library libzoo_timer.a"

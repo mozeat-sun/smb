@@ -8,8 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/mozeat/zoo/third_party/test/unity/src/unity.c" "util/tests/CMakeFiles/test_math_unity.dir/__/__/third_party/test/unity/src/unity.c.o" "gcc" "util/tests/CMakeFiles/test_math_unity.dir/__/__/third_party/test/unity/src/unity.c.o.d"
-  "/home/mozeat/zoo/util/tests/test_zoo_util_math_unity.c" "util/tests/CMakeFiles/test_math_unity.dir/test_zoo_util_math_unity.c.o" "gcc" "util/tests/CMakeFiles/test_math_unity.dir/test_zoo_util_math_unity.c.o.d"
+  "/home/mozeat/zoo/thirdparty/test/unity/src/unity.c" "util/tests/CMakeFiles/test_math_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o" "gcc" "util/tests/CMakeFiles/test_math_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o.d"
+  "/home/mozeat/zoo/tests/util/test_zoo_util_math_unity.c" "util/tests/CMakeFiles/test_math_unity.dir/test_zoo_util_math_unity.c.o" "gcc" "util/tests/CMakeFiles/test_math_unity.dir/test_zoo_util_math_unity.c.o.d"
   )
 
 # Targets to which this target links.

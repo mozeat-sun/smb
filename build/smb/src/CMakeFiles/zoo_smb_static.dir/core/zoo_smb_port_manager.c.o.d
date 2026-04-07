@@ -1,7 +1,7 @@
 smb/src/CMakeFiles/zoo_smb_static.dir/core/zoo_smb_port_manager.c.o: \
- /home/mozeat/zoo/smb/src/core/zoo_smb_port_manager.c \
+ /home/mozeat/zoo/src/smb/core/zoo_smb_port_manager.c \
  /usr/include/stdc-predef.h \
- /home/mozeat/zoo/smb/src/../inc/core/zoo_smb_port_manager.h \
+ /home/mozeat/zoo/include/smb/core/zoo_smb_port_manager.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -17,12 +17,11 @@ smb/src/CMakeFiles/zoo_smb_static.dir/core/zoo_smb_port_manager.c.o: \
  /usr/include/x86_64-linux-gnu/bits/wchar.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
- /home/mozeat/zoo/smb/inc/../../log/inc/zoo_log.h \
- /home/mozeat/zoo/smb/inc/../../log/inc/../../platform/inc/zoo_types.h \
+ /home/mozeat/zoo/include/log/zoo_log.h \
+ /home/mozeat/zoo/include/platform/zoo_types.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdbool.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stddef.h \
- /usr/include/inttypes.h \
- /home/mozeat/zoo/smb/inc/../../log/inc/../../platform/inc/zoo_platform.h \
+ /usr/include/inttypes.h /home/mozeat/zoo/include/platform/zoo_platform.h \
  /usr/include/stdio.h /usr/lib/gcc/x86_64-linux-gnu/11/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h \
@@ -102,11 +101,10 @@ smb/src/CMakeFiles/zoo_smb_static.dir/core/zoo_smb_port_manager.c.o: \
  /usr/include/x86_64-linux-gnu/bits/syslog-path.h \
  /usr/include/x86_64-linux-gnu/bits/syslog.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdatomic.h \
- /home/mozeat/zoo/smb/src/../../platform/inc/zoo.h \
- /home/mozeat/zoo/smb/src/../../platform/inc/zoo_platform.h \
- /home/mozeat/zoo/smb/src/../../platform/inc/zoo_types.h \
- /home/mozeat/zoo/smb/src/../../platform/inc/zoo_error.h \
- /usr/include/stdlib.h /usr/include/x86_64-linux-gnu/bits/waitflags.h \
+ /home/mozeat/zoo/include/platform/zoo.h \
+ /home/mozeat/zoo/include/platform/zoo_types.h \
+ /home/mozeat/zoo/include/platform/zoo_error.h /usr/include/stdlib.h \
+ /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h /usr/include/alloca.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \

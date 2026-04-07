@@ -69,28 +69,28 @@ include thread_pool/CMakeFiles/zoo_thread_pool_static.dir/progress.make
 # Include the compile flags for this target's objects.
 include thread_pool/CMakeFiles/zoo_thread_pool_static.dir/flags.make
 
-thread_pool/CMakeFiles/zoo_thread_pool_static.dir/src/zoo_thread_pool.c.o: thread_pool/CMakeFiles/zoo_thread_pool_static.dir/flags.make
-thread_pool/CMakeFiles/zoo_thread_pool_static.dir/src/zoo_thread_pool.c.o: ../thread_pool/src/zoo_thread_pool.c
-thread_pool/CMakeFiles/zoo_thread_pool_static.dir/src/zoo_thread_pool.c.o: thread_pool/CMakeFiles/zoo_thread_pool_static.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object thread_pool/CMakeFiles/zoo_thread_pool_static.dir/src/zoo_thread_pool.c.o"
-	cd /home/mozeat/zoo/build/thread_pool && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT thread_pool/CMakeFiles/zoo_thread_pool_static.dir/src/zoo_thread_pool.c.o -MF CMakeFiles/zoo_thread_pool_static.dir/src/zoo_thread_pool.c.o.d -o CMakeFiles/zoo_thread_pool_static.dir/src/zoo_thread_pool.c.o -c /home/mozeat/zoo/thread_pool/src/zoo_thread_pool.c
+thread_pool/CMakeFiles/zoo_thread_pool_static.dir/__/src/thread_pool/zoo_thread_pool.c.o: thread_pool/CMakeFiles/zoo_thread_pool_static.dir/flags.make
+thread_pool/CMakeFiles/zoo_thread_pool_static.dir/__/src/thread_pool/zoo_thread_pool.c.o: ../src/thread_pool/zoo_thread_pool.c
+thread_pool/CMakeFiles/zoo_thread_pool_static.dir/__/src/thread_pool/zoo_thread_pool.c.o: thread_pool/CMakeFiles/zoo_thread_pool_static.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object thread_pool/CMakeFiles/zoo_thread_pool_static.dir/__/src/thread_pool/zoo_thread_pool.c.o"
+	cd /home/mozeat/zoo/build/thread_pool && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT thread_pool/CMakeFiles/zoo_thread_pool_static.dir/__/src/thread_pool/zoo_thread_pool.c.o -MF CMakeFiles/zoo_thread_pool_static.dir/__/src/thread_pool/zoo_thread_pool.c.o.d -o CMakeFiles/zoo_thread_pool_static.dir/__/src/thread_pool/zoo_thread_pool.c.o -c /home/mozeat/zoo/src/thread_pool/zoo_thread_pool.c
 
-thread_pool/CMakeFiles/zoo_thread_pool_static.dir/src/zoo_thread_pool.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_thread_pool_static.dir/src/zoo_thread_pool.c.i"
-	cd /home/mozeat/zoo/build/thread_pool && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/thread_pool/src/zoo_thread_pool.c > CMakeFiles/zoo_thread_pool_static.dir/src/zoo_thread_pool.c.i
+thread_pool/CMakeFiles/zoo_thread_pool_static.dir/__/src/thread_pool/zoo_thread_pool.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_thread_pool_static.dir/__/src/thread_pool/zoo_thread_pool.c.i"
+	cd /home/mozeat/zoo/build/thread_pool && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/src/thread_pool/zoo_thread_pool.c > CMakeFiles/zoo_thread_pool_static.dir/__/src/thread_pool/zoo_thread_pool.c.i
 
-thread_pool/CMakeFiles/zoo_thread_pool_static.dir/src/zoo_thread_pool.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_thread_pool_static.dir/src/zoo_thread_pool.c.s"
-	cd /home/mozeat/zoo/build/thread_pool && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/thread_pool/src/zoo_thread_pool.c -o CMakeFiles/zoo_thread_pool_static.dir/src/zoo_thread_pool.c.s
+thread_pool/CMakeFiles/zoo_thread_pool_static.dir/__/src/thread_pool/zoo_thread_pool.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_thread_pool_static.dir/__/src/thread_pool/zoo_thread_pool.c.s"
+	cd /home/mozeat/zoo/build/thread_pool && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/src/thread_pool/zoo_thread_pool.c -o CMakeFiles/zoo_thread_pool_static.dir/__/src/thread_pool/zoo_thread_pool.c.s
 
 # Object files for target zoo_thread_pool_static
 zoo_thread_pool_static_OBJECTS = \
-"CMakeFiles/zoo_thread_pool_static.dir/src/zoo_thread_pool.c.o"
+"CMakeFiles/zoo_thread_pool_static.dir/__/src/thread_pool/zoo_thread_pool.c.o"
 
 # External object files for target zoo_thread_pool_static
 zoo_thread_pool_static_EXTERNAL_OBJECTS =
 
-thread_pool/libzoo_thread_pool.a: thread_pool/CMakeFiles/zoo_thread_pool_static.dir/src/zoo_thread_pool.c.o
+thread_pool/libzoo_thread_pool.a: thread_pool/CMakeFiles/zoo_thread_pool_static.dir/__/src/thread_pool/zoo_thread_pool.c.o
 thread_pool/libzoo_thread_pool.a: thread_pool/CMakeFiles/zoo_thread_pool_static.dir/build.make
 thread_pool/libzoo_thread_pool.a: thread_pool/CMakeFiles/zoo_thread_pool_static.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C static library libzoo_thread_pool.a"

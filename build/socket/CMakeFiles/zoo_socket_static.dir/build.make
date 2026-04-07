@@ -69,44 +69,44 @@ include socket/CMakeFiles/zoo_socket_static.dir/progress.make
 # Include the compile flags for this target's objects.
 include socket/CMakeFiles/zoo_socket_static.dir/flags.make
 
-socket/CMakeFiles/zoo_socket_static.dir/src/zoo_socket.c.o: socket/CMakeFiles/zoo_socket_static.dir/flags.make
-socket/CMakeFiles/zoo_socket_static.dir/src/zoo_socket.c.o: ../socket/src/zoo_socket.c
-socket/CMakeFiles/zoo_socket_static.dir/src/zoo_socket.c.o: socket/CMakeFiles/zoo_socket_static.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object socket/CMakeFiles/zoo_socket_static.dir/src/zoo_socket.c.o"
-	cd /home/mozeat/zoo/build/socket && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/CMakeFiles/zoo_socket_static.dir/src/zoo_socket.c.o -MF CMakeFiles/zoo_socket_static.dir/src/zoo_socket.c.o.d -o CMakeFiles/zoo_socket_static.dir/src/zoo_socket.c.o -c /home/mozeat/zoo/socket/src/zoo_socket.c
+socket/CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_socket.c.o: socket/CMakeFiles/zoo_socket_static.dir/flags.make
+socket/CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_socket.c.o: ../src/socket/zoo_socket.c
+socket/CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_socket.c.o: socket/CMakeFiles/zoo_socket_static.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object socket/CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_socket.c.o"
+	cd /home/mozeat/zoo/build/socket && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_socket.c.o -MF CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_socket.c.o.d -o CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_socket.c.o -c /home/mozeat/zoo/src/socket/zoo_socket.c
 
-socket/CMakeFiles/zoo_socket_static.dir/src/zoo_socket.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_socket_static.dir/src/zoo_socket.c.i"
-	cd /home/mozeat/zoo/build/socket && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/socket/src/zoo_socket.c > CMakeFiles/zoo_socket_static.dir/src/zoo_socket.c.i
+socket/CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_socket.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_socket.c.i"
+	cd /home/mozeat/zoo/build/socket && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/src/socket/zoo_socket.c > CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_socket.c.i
 
-socket/CMakeFiles/zoo_socket_static.dir/src/zoo_socket.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_socket_static.dir/src/zoo_socket.c.s"
-	cd /home/mozeat/zoo/build/socket && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/socket/src/zoo_socket.c -o CMakeFiles/zoo_socket_static.dir/src/zoo_socket.c.s
+socket/CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_socket.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_socket.c.s"
+	cd /home/mozeat/zoo/build/socket && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/src/socket/zoo_socket.c -o CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_socket.c.s
 
-socket/CMakeFiles/zoo_socket_static.dir/src/zoo_select.c.o: socket/CMakeFiles/zoo_socket_static.dir/flags.make
-socket/CMakeFiles/zoo_socket_static.dir/src/zoo_select.c.o: ../socket/src/zoo_select.c
-socket/CMakeFiles/zoo_socket_static.dir/src/zoo_select.c.o: socket/CMakeFiles/zoo_socket_static.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object socket/CMakeFiles/zoo_socket_static.dir/src/zoo_select.c.o"
-	cd /home/mozeat/zoo/build/socket && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/CMakeFiles/zoo_socket_static.dir/src/zoo_select.c.o -MF CMakeFiles/zoo_socket_static.dir/src/zoo_select.c.o.d -o CMakeFiles/zoo_socket_static.dir/src/zoo_select.c.o -c /home/mozeat/zoo/socket/src/zoo_select.c
+socket/CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_select.c.o: socket/CMakeFiles/zoo_socket_static.dir/flags.make
+socket/CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_select.c.o: ../src/socket/zoo_select.c
+socket/CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_select.c.o: socket/CMakeFiles/zoo_socket_static.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object socket/CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_select.c.o"
+	cd /home/mozeat/zoo/build/socket && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_select.c.o -MF CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_select.c.o.d -o CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_select.c.o -c /home/mozeat/zoo/src/socket/zoo_select.c
 
-socket/CMakeFiles/zoo_socket_static.dir/src/zoo_select.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_socket_static.dir/src/zoo_select.c.i"
-	cd /home/mozeat/zoo/build/socket && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/socket/src/zoo_select.c > CMakeFiles/zoo_socket_static.dir/src/zoo_select.c.i
+socket/CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_select.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_select.c.i"
+	cd /home/mozeat/zoo/build/socket && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/src/socket/zoo_select.c > CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_select.c.i
 
-socket/CMakeFiles/zoo_socket_static.dir/src/zoo_select.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_socket_static.dir/src/zoo_select.c.s"
-	cd /home/mozeat/zoo/build/socket && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/socket/src/zoo_select.c -o CMakeFiles/zoo_socket_static.dir/src/zoo_select.c.s
+socket/CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_select.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_select.c.s"
+	cd /home/mozeat/zoo/build/socket && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/src/socket/zoo_select.c -o CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_select.c.s
 
 # Object files for target zoo_socket_static
 zoo_socket_static_OBJECTS = \
-"CMakeFiles/zoo_socket_static.dir/src/zoo_socket.c.o" \
-"CMakeFiles/zoo_socket_static.dir/src/zoo_select.c.o"
+"CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_socket.c.o" \
+"CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_select.c.o"
 
 # External object files for target zoo_socket_static
 zoo_socket_static_EXTERNAL_OBJECTS =
 
-socket/libzoo_socket.a: socket/CMakeFiles/zoo_socket_static.dir/src/zoo_socket.c.o
-socket/libzoo_socket.a: socket/CMakeFiles/zoo_socket_static.dir/src/zoo_select.c.o
+socket/libzoo_socket.a: socket/CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_socket.c.o
+socket/libzoo_socket.a: socket/CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_select.c.o
 socket/libzoo_socket.a: socket/CMakeFiles/zoo_socket_static.dir/build.make
 socket/libzoo_socket.a: socket/CMakeFiles/zoo_socket_static.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking C static library libzoo_socket.a"

@@ -220,32 +220,32 @@ zoo_util_shared/fast:
 	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/CMakeFiles/zoo_util_shared.dir/build.make util/CMakeFiles/zoo_util_shared.dir/build
 .PHONY : zoo_util_shared/fast
 
-src/zoo_util.o: src/zoo_util.c.o
-.PHONY : src/zoo_util.o
+__/src/util/zoo_util.o: __/src/util/zoo_util.c.o
+.PHONY : __/src/util/zoo_util.o
 
 # target to build an object file
-src/zoo_util.c.o:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/CMakeFiles/zoo_util_static.dir/build.make util/CMakeFiles/zoo_util_static.dir/src/zoo_util.c.o
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/CMakeFiles/zoo_util_shared.dir/build.make util/CMakeFiles/zoo_util_shared.dir/src/zoo_util.c.o
-.PHONY : src/zoo_util.c.o
+__/src/util/zoo_util.c.o:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/CMakeFiles/zoo_util_static.dir/build.make util/CMakeFiles/zoo_util_static.dir/__/src/util/zoo_util.c.o
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/CMakeFiles/zoo_util_shared.dir/build.make util/CMakeFiles/zoo_util_shared.dir/__/src/util/zoo_util.c.o
+.PHONY : __/src/util/zoo_util.c.o
 
-src/zoo_util.i: src/zoo_util.c.i
-.PHONY : src/zoo_util.i
+__/src/util/zoo_util.i: __/src/util/zoo_util.c.i
+.PHONY : __/src/util/zoo_util.i
 
 # target to preprocess a source file
-src/zoo_util.c.i:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/CMakeFiles/zoo_util_static.dir/build.make util/CMakeFiles/zoo_util_static.dir/src/zoo_util.c.i
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/CMakeFiles/zoo_util_shared.dir/build.make util/CMakeFiles/zoo_util_shared.dir/src/zoo_util.c.i
-.PHONY : src/zoo_util.c.i
+__/src/util/zoo_util.c.i:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/CMakeFiles/zoo_util_static.dir/build.make util/CMakeFiles/zoo_util_static.dir/__/src/util/zoo_util.c.i
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/CMakeFiles/zoo_util_shared.dir/build.make util/CMakeFiles/zoo_util_shared.dir/__/src/util/zoo_util.c.i
+.PHONY : __/src/util/zoo_util.c.i
 
-src/zoo_util.s: src/zoo_util.c.s
-.PHONY : src/zoo_util.s
+__/src/util/zoo_util.s: __/src/util/zoo_util.c.s
+.PHONY : __/src/util/zoo_util.s
 
 # target to generate assembly for a file
-src/zoo_util.c.s:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/CMakeFiles/zoo_util_static.dir/build.make util/CMakeFiles/zoo_util_static.dir/src/zoo_util.c.s
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/CMakeFiles/zoo_util_shared.dir/build.make util/CMakeFiles/zoo_util_shared.dir/src/zoo_util.c.s
-.PHONY : src/zoo_util.c.s
+__/src/util/zoo_util.c.s:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/CMakeFiles/zoo_util_static.dir/build.make util/CMakeFiles/zoo_util_static.dir/__/src/util/zoo_util.c.s
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f util/CMakeFiles/zoo_util_shared.dir/build.make util/CMakeFiles/zoo_util_shared.dir/__/src/util/zoo_util.c.s
+.PHONY : __/src/util/zoo_util.c.s
 
 # Help Target
 help:
@@ -264,9 +264,9 @@ help:
 	@echo "... test"
 	@echo "... zoo_util_shared"
 	@echo "... zoo_util_static"
-	@echo "... src/zoo_util.o"
-	@echo "... src/zoo_util.i"
-	@echo "... src/zoo_util.s"
+	@echo "... __/src/util/zoo_util.o"
+	@echo "... __/src/util/zoo_util.i"
+	@echo "... __/src/util/zoo_util.s"
 .PHONY : help
 
 

@@ -220,32 +220,32 @@ zoo_dispatcher_shared/fast:
 	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/build.make dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/build
 .PHONY : zoo_dispatcher_shared/fast
 
-src/zoo_dispatcher.o: src/zoo_dispatcher.c.o
-.PHONY : src/zoo_dispatcher.o
+__/src/dispatcher/zoo_dispatcher.o: __/src/dispatcher/zoo_dispatcher.c.o
+.PHONY : __/src/dispatcher/zoo_dispatcher.o
 
 # target to build an object file
-src/zoo_dispatcher.c.o:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f dispatcher/CMakeFiles/zoo_dispatcher_static.dir/build.make dispatcher/CMakeFiles/zoo_dispatcher_static.dir/src/zoo_dispatcher.c.o
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/build.make dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/src/zoo_dispatcher.c.o
-.PHONY : src/zoo_dispatcher.c.o
+__/src/dispatcher/zoo_dispatcher.c.o:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f dispatcher/CMakeFiles/zoo_dispatcher_static.dir/build.make dispatcher/CMakeFiles/zoo_dispatcher_static.dir/__/src/dispatcher/zoo_dispatcher.c.o
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/build.make dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/__/src/dispatcher/zoo_dispatcher.c.o
+.PHONY : __/src/dispatcher/zoo_dispatcher.c.o
 
-src/zoo_dispatcher.i: src/zoo_dispatcher.c.i
-.PHONY : src/zoo_dispatcher.i
+__/src/dispatcher/zoo_dispatcher.i: __/src/dispatcher/zoo_dispatcher.c.i
+.PHONY : __/src/dispatcher/zoo_dispatcher.i
 
 # target to preprocess a source file
-src/zoo_dispatcher.c.i:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f dispatcher/CMakeFiles/zoo_dispatcher_static.dir/build.make dispatcher/CMakeFiles/zoo_dispatcher_static.dir/src/zoo_dispatcher.c.i
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/build.make dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/src/zoo_dispatcher.c.i
-.PHONY : src/zoo_dispatcher.c.i
+__/src/dispatcher/zoo_dispatcher.c.i:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f dispatcher/CMakeFiles/zoo_dispatcher_static.dir/build.make dispatcher/CMakeFiles/zoo_dispatcher_static.dir/__/src/dispatcher/zoo_dispatcher.c.i
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/build.make dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/__/src/dispatcher/zoo_dispatcher.c.i
+.PHONY : __/src/dispatcher/zoo_dispatcher.c.i
 
-src/zoo_dispatcher.s: src/zoo_dispatcher.c.s
-.PHONY : src/zoo_dispatcher.s
+__/src/dispatcher/zoo_dispatcher.s: __/src/dispatcher/zoo_dispatcher.c.s
+.PHONY : __/src/dispatcher/zoo_dispatcher.s
 
 # target to generate assembly for a file
-src/zoo_dispatcher.c.s:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f dispatcher/CMakeFiles/zoo_dispatcher_static.dir/build.make dispatcher/CMakeFiles/zoo_dispatcher_static.dir/src/zoo_dispatcher.c.s
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/build.make dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/src/zoo_dispatcher.c.s
-.PHONY : src/zoo_dispatcher.c.s
+__/src/dispatcher/zoo_dispatcher.c.s:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f dispatcher/CMakeFiles/zoo_dispatcher_static.dir/build.make dispatcher/CMakeFiles/zoo_dispatcher_static.dir/__/src/dispatcher/zoo_dispatcher.c.s
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/build.make dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/__/src/dispatcher/zoo_dispatcher.c.s
+.PHONY : __/src/dispatcher/zoo_dispatcher.c.s
 
 # Help Target
 help:
@@ -264,9 +264,9 @@ help:
 	@echo "... test"
 	@echo "... zoo_dispatcher_shared"
 	@echo "... zoo_dispatcher_static"
-	@echo "... src/zoo_dispatcher.o"
-	@echo "... src/zoo_dispatcher.i"
-	@echo "... src/zoo_dispatcher.s"
+	@echo "... __/src/dispatcher/zoo_dispatcher.o"
+	@echo "... __/src/dispatcher/zoo_dispatcher.i"
+	@echo "... __/src/dispatcher/zoo_dispatcher.s"
 .PHONY : help
 
 

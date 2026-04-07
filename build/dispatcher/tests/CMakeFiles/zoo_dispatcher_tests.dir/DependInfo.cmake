@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/mozeat/zoo/dispatcher/tests/test_zoo_dispatcher.c" "dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir/test_zoo_dispatcher.c.o" "gcc" "dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir/test_zoo_dispatcher.c.o.d"
+  "/home/mozeat/zoo/tests/dispatcher/test_zoo_dispatcher.c" "dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir/test_zoo_dispatcher.c.o" "gcc" "dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir/test_zoo_dispatcher.c.o.d"
   )
 
 # Targets to which this target links.

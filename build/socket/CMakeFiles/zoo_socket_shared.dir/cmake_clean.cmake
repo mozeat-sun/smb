@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/zoo_socket_shared.dir/src/zoo_select.c.o"
-  "CMakeFiles/zoo_socket_shared.dir/src/zoo_select.c.o.d"
-  "CMakeFiles/zoo_socket_shared.dir/src/zoo_socket.c.o"
-  "CMakeFiles/zoo_socket_shared.dir/src/zoo_socket.c.o.d"
+  "CMakeFiles/zoo_socket_shared.dir/__/src/socket/zoo_select.c.o"
+  "CMakeFiles/zoo_socket_shared.dir/__/src/socket/zoo_select.c.o.d"
+  "CMakeFiles/zoo_socket_shared.dir/__/src/socket/zoo_socket.c.o"
+  "CMakeFiles/zoo_socket_shared.dir/__/src/socket/zoo_socket.c.o.d"
   "libzoo_socket.pdb"
   "libzoo_socket.so"
   "libzoo_socket.so.1"

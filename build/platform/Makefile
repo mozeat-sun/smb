@@ -220,32 +220,32 @@ zoo_platform_shared/fast:
 	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f platform/CMakeFiles/zoo_platform_shared.dir/build.make platform/CMakeFiles/zoo_platform_shared.dir/build
 .PHONY : zoo_platform_shared/fast
 
-src/zoo_error.o: src/zoo_error.c.o
-.PHONY : src/zoo_error.o
+__/src/platform/zoo_error.o: __/src/platform/zoo_error.c.o
+.PHONY : __/src/platform/zoo_error.o
 
 # target to build an object file
-src/zoo_error.c.o:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f platform/CMakeFiles/zoo_platform_static.dir/build.make platform/CMakeFiles/zoo_platform_static.dir/src/zoo_error.c.o
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f platform/CMakeFiles/zoo_platform_shared.dir/build.make platform/CMakeFiles/zoo_platform_shared.dir/src/zoo_error.c.o
-.PHONY : src/zoo_error.c.o
+__/src/platform/zoo_error.c.o:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f platform/CMakeFiles/zoo_platform_static.dir/build.make platform/CMakeFiles/zoo_platform_static.dir/__/src/platform/zoo_error.c.o
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f platform/CMakeFiles/zoo_platform_shared.dir/build.make platform/CMakeFiles/zoo_platform_shared.dir/__/src/platform/zoo_error.c.o
+.PHONY : __/src/platform/zoo_error.c.o
 
-src/zoo_error.i: src/zoo_error.c.i
-.PHONY : src/zoo_error.i
+__/src/platform/zoo_error.i: __/src/platform/zoo_error.c.i
+.PHONY : __/src/platform/zoo_error.i
 
 # target to preprocess a source file
-src/zoo_error.c.i:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f platform/CMakeFiles/zoo_platform_static.dir/build.make platform/CMakeFiles/zoo_platform_static.dir/src/zoo_error.c.i
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f platform/CMakeFiles/zoo_platform_shared.dir/build.make platform/CMakeFiles/zoo_platform_shared.dir/src/zoo_error.c.i
-.PHONY : src/zoo_error.c.i
+__/src/platform/zoo_error.c.i:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f platform/CMakeFiles/zoo_platform_static.dir/build.make platform/CMakeFiles/zoo_platform_static.dir/__/src/platform/zoo_error.c.i
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f platform/CMakeFiles/zoo_platform_shared.dir/build.make platform/CMakeFiles/zoo_platform_shared.dir/__/src/platform/zoo_error.c.i
+.PHONY : __/src/platform/zoo_error.c.i
 
-src/zoo_error.s: src/zoo_error.c.s
-.PHONY : src/zoo_error.s
+__/src/platform/zoo_error.s: __/src/platform/zoo_error.c.s
+.PHONY : __/src/platform/zoo_error.s
 
 # target to generate assembly for a file
-src/zoo_error.c.s:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f platform/CMakeFiles/zoo_platform_static.dir/build.make platform/CMakeFiles/zoo_platform_static.dir/src/zoo_error.c.s
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f platform/CMakeFiles/zoo_platform_shared.dir/build.make platform/CMakeFiles/zoo_platform_shared.dir/src/zoo_error.c.s
-.PHONY : src/zoo_error.c.s
+__/src/platform/zoo_error.c.s:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f platform/CMakeFiles/zoo_platform_static.dir/build.make platform/CMakeFiles/zoo_platform_static.dir/__/src/platform/zoo_error.c.s
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f platform/CMakeFiles/zoo_platform_shared.dir/build.make platform/CMakeFiles/zoo_platform_shared.dir/__/src/platform/zoo_error.c.s
+.PHONY : __/src/platform/zoo_error.c.s
 
 # Help Target
 help:
@@ -264,9 +264,9 @@ help:
 	@echo "... test"
 	@echo "... zoo_platform_shared"
 	@echo "... zoo_platform_static"
-	@echo "... src/zoo_error.o"
-	@echo "... src/zoo_error.i"
-	@echo "... src/zoo_error.s"
+	@echo "... __/src/platform/zoo_error.o"
+	@echo "... __/src/platform/zoo_error.i"
+	@echo "... __/src/platform/zoo_error.s"
 .PHONY : help
 
 

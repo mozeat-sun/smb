@@ -1,1 +1,0 @@
-/usr/bin/cc  -Wall -Wextra -Wpedantic -D_GNU_SOURCE -O3 -DNDEBUG -O2 -DNDEBUG CMakeFiles/tcp_server_example.dir/tcp_server.c.o -o tcp_server_example  ../libzoo_socket.a -lpthread 

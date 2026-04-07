@@ -206,29 +206,29 @@ zoo_platform_tests/fast:
 	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f platform/tests/CMakeFiles/zoo_platform_tests.dir/build.make platform/tests/CMakeFiles/zoo_platform_tests.dir/build
 .PHONY : zoo_platform_tests/fast
 
-__/__/third_party/test/unity/src/unity.o: __/__/third_party/test/unity/src/unity.c.o
-.PHONY : __/__/third_party/test/unity/src/unity.o
+__/__/thirdparty/test/unity/src/unity.o: __/__/thirdparty/test/unity/src/unity.c.o
+.PHONY : __/__/thirdparty/test/unity/src/unity.o
 
 # target to build an object file
-__/__/third_party/test/unity/src/unity.c.o:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f platform/tests/CMakeFiles/zoo_platform_tests.dir/build.make platform/tests/CMakeFiles/zoo_platform_tests.dir/__/__/third_party/test/unity/src/unity.c.o
-.PHONY : __/__/third_party/test/unity/src/unity.c.o
+__/__/thirdparty/test/unity/src/unity.c.o:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f platform/tests/CMakeFiles/zoo_platform_tests.dir/build.make platform/tests/CMakeFiles/zoo_platform_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o
+.PHONY : __/__/thirdparty/test/unity/src/unity.c.o
 
-__/__/third_party/test/unity/src/unity.i: __/__/third_party/test/unity/src/unity.c.i
-.PHONY : __/__/third_party/test/unity/src/unity.i
+__/__/thirdparty/test/unity/src/unity.i: __/__/thirdparty/test/unity/src/unity.c.i
+.PHONY : __/__/thirdparty/test/unity/src/unity.i
 
 # target to preprocess a source file
-__/__/third_party/test/unity/src/unity.c.i:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f platform/tests/CMakeFiles/zoo_platform_tests.dir/build.make platform/tests/CMakeFiles/zoo_platform_tests.dir/__/__/third_party/test/unity/src/unity.c.i
-.PHONY : __/__/third_party/test/unity/src/unity.c.i
+__/__/thirdparty/test/unity/src/unity.c.i:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f platform/tests/CMakeFiles/zoo_platform_tests.dir/build.make platform/tests/CMakeFiles/zoo_platform_tests.dir/__/__/thirdparty/test/unity/src/unity.c.i
+.PHONY : __/__/thirdparty/test/unity/src/unity.c.i
 
-__/__/third_party/test/unity/src/unity.s: __/__/third_party/test/unity/src/unity.c.s
-.PHONY : __/__/third_party/test/unity/src/unity.s
+__/__/thirdparty/test/unity/src/unity.s: __/__/thirdparty/test/unity/src/unity.c.s
+.PHONY : __/__/thirdparty/test/unity/src/unity.s
 
 # target to generate assembly for a file
-__/__/third_party/test/unity/src/unity.c.s:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f platform/tests/CMakeFiles/zoo_platform_tests.dir/build.make platform/tests/CMakeFiles/zoo_platform_tests.dir/__/__/third_party/test/unity/src/unity.c.s
-.PHONY : __/__/third_party/test/unity/src/unity.c.s
+__/__/thirdparty/test/unity/src/unity.c.s:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f platform/tests/CMakeFiles/zoo_platform_tests.dir/build.make platform/tests/CMakeFiles/zoo_platform_tests.dir/__/__/thirdparty/test/unity/src/unity.c.s
+.PHONY : __/__/thirdparty/test/unity/src/unity.c.s
 
 test_platform_atomic.o: test_platform_atomic.c.o
 .PHONY : test_platform_atomic.o
@@ -390,9 +390,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... test"
 	@echo "... zoo_platform_tests"
-	@echo "... __/__/third_party/test/unity/src/unity.o"
-	@echo "... __/__/third_party/test/unity/src/unity.i"
-	@echo "... __/__/third_party/test/unity/src/unity.s"
+	@echo "... __/__/thirdparty/test/unity/src/unity.o"
+	@echo "... __/__/thirdparty/test/unity/src/unity.i"
+	@echo "... __/__/thirdparty/test/unity/src/unity.s"
 	@echo "... test_platform_atomic.o"
 	@echo "... test_platform_atomic.i"
 	@echo "... test_platform_atomic.s"

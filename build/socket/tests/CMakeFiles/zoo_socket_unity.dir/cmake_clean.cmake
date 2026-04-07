@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/zoo_socket_unity.dir/__/__/third_party/test/unity/src/unity.c.o"
-  "CMakeFiles/zoo_socket_unity.dir/__/__/third_party/test/unity/src/unity.c.o.d"
+  "CMakeFiles/zoo_socket_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o"
+  "CMakeFiles/zoo_socket_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o.d"
   "libzoo_socket_unity.a"
   "libzoo_socket_unity.pdb"
 )

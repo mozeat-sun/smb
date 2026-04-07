@@ -1,5 +1,5 @@
 smb/tests/CMakeFiles/test_transport_performance.dir/performance/test_transport_performance.c.o: \
- /home/mozeat/zoo/smb/tests/performance/test_transport_performance.c \
+ /home/mozeat/zoo/tests/smb/performance/test_transport_performance.c \
  /usr/include/stdc-predef.h /usr/include/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -43,8 +43,8 @@ smb/tests/CMakeFiles/test_transport_performance.dir/performance/test_transport_p
  /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/timer_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
- /home/mozeat/zoo/third_party/test/unity/src/unity.h \
- /home/mozeat/zoo/third_party/test/unity/src/unity_internals.h \
+ /home/mozeat/zoo/thirdparty/test/unity/src/unity.h \
+ /home/mozeat/zoo/thirdparty/test/unity/src/unity_internals.h \
  /usr/include/setjmp.h /usr/include/x86_64-linux-gnu/bits/setjmp.h \
  /usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h \
  /usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h \
@@ -71,13 +71,12 @@ smb/tests/CMakeFiles/test_transport_performance.dir/performance/test_transport_p
  /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
  /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
  /usr/include/x86_64-linux-gnu/bits/uio_lim.h \
- /home/mozeat/zoo/smb/inc/core/zoo_smb.h \
- /home/mozeat/zoo/smb/inc/utility/zoo_smb_error.h \
+ /home/mozeat/zoo/include/smb/core/zoo_smb.h \
+ /home/mozeat/zoo/include/smb/utility/zoo_smb_error.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdbool.h \
- /home/mozeat/zoo/smb/inc/../../platform/inc/zoo.h \
- /home/mozeat/zoo/smb/inc/../../platform/inc/zoo_platform.h \
- /usr/include/pthread.h /usr/include/sched.h \
- /usr/include/x86_64-linux-gnu/bits/sched.h \
+ /home/mozeat/zoo/include/platform/zoo.h \
+ /home/mozeat/zoo/include/platform/zoo_platform.h /usr/include/pthread.h \
+ /usr/include/sched.h /usr/include/x86_64-linux-gnu/bits/sched.h \
  /usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h \
  /usr/include/x86_64-linux-gnu/bits/cpu-set.h \
  /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h \
@@ -123,37 +122,35 @@ smb/tests/CMakeFiles/test_transport_performance.dir/performance/test_transport_p
  /usr/include/x86_64-linux-gnu/sys/syslog.h \
  /usr/include/x86_64-linux-gnu/bits/syslog-path.h \
  /usr/include/x86_64-linux-gnu/bits/syslog.h \
- /home/mozeat/zoo/smb/inc/../../platform/inc/zoo_types.h \
- /usr/include/inttypes.h \
+ /home/mozeat/zoo/include/platform/zoo_types.h /usr/include/inttypes.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdatomic.h \
- /home/mozeat/zoo/smb/inc/../../platform/inc/zoo_error.h \
- /home/mozeat/zoo/platform/inc/zoo_error.h \
- /home/mozeat/zoo/smb/inc/node/zoo_smb_node.h \
- /home/mozeat/zoo/smb/src/../../util/inc/zoo_util.h \
- /home/mozeat/zoo/platform/inc/zoo.h \
- /home/mozeat/zoo/smb/src/../../util/inc/zoo_timestamp.h \
+ /home/mozeat/zoo/include/platform/zoo_error.h \
+ /home/mozeat/zoo/include/platform/zoo_error.h \
+ /home/mozeat/zoo/include/smb/node/zoo_smb_node.h \
+ /home/mozeat/zoo/include/util/zoo_util.h \
+ /home/mozeat/zoo/include/util/zoo_timestamp.h \
  /usr/include/x86_64-linux-gnu/sys/time.h \
- /home/mozeat/zoo/smb/src/../../util/inc/zoo_string.h \
- /usr/include/stdlib.h /usr/include/x86_64-linux-gnu/bits/waitflags.h \
+ /home/mozeat/zoo/include/util/zoo_string.h /usr/include/stdlib.h \
+ /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h /usr/include/alloca.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib.h \
- /home/mozeat/zoo/smb/src/../../util/inc/zoo_memory.h \
- /home/mozeat/zoo/smb/src/../../util/inc/zoo_math.h \
- /home/mozeat/zoo/smb/inc/node/zoo_smb_node_observer.h \
- /home/mozeat/zoo/smb/inc/utility/zoo_smb_types.h \
- /home/mozeat/zoo/smb/inc/transport/zoo_smb_protocol.h \
- /home/mozeat/zoo/smb/inc/core/zoo_smb_message.h \
- /home/mozeat/zoo/smb/inc/../../log/inc/zoo_log.h \
- /home/mozeat/zoo/smb/inc/../../log/inc/../../platform/inc/zoo_types.h \
- /home/mozeat/zoo/smb/inc/core/zoo_smb_service.h \
- /home/mozeat/zoo/smb/inc/../../buffer/inc/zoo_list.h \
- /home/mozeat/zoo/smb/inc/../../memory_pool/inc/zoo_memory_pool.h \
- /home/mozeat/zoo/smb/inc/node/zoo_smb_server.h \
- /home/mozeat/zoo/smb/inc/qos/zoo_smb_qos.h \
- /home/mozeat/zoo/smb/inc/qos/zoo_smb_qos_policy.h \
- /home/mozeat/zoo/smb/inc/qos/zoo_smb_qos_ctx.h \
- /home/mozeat/zoo/smb/inc/node/zoo_smb_client.h \
- /home/mozeat/zoo/smb/inc/node/zoo_smb_publisher.h \
- /home/mozeat/zoo/smb/inc/node/zoo_smb_subscriber.h
+ /home/mozeat/zoo/include/util/zoo_memory.h \
+ /home/mozeat/zoo/include/util/zoo_math.h \
+ /home/mozeat/zoo/include/smb/node/zoo_smb_node_observer.h \
+ /home/mozeat/zoo/include/smb/utility/zoo_smb_types.h \
+ /home/mozeat/zoo/include/smb/transport/zoo_smb_protocol.h \
+ /home/mozeat/zoo/include/smb/core/zoo_smb_message.h \
+ /home/mozeat/zoo/include/log/zoo_log.h \
+ /home/mozeat/zoo/include/platform/zoo_types.h \
+ /home/mozeat/zoo/include/smb/core/zoo_smb_service.h \
+ /home/mozeat/zoo/include/buffer/zoo_list.h \
+ /home/mozeat/zoo/include/memory_pool/zoo_memory_pool.h \
+ /home/mozeat/zoo/include/smb/node/zoo_smb_server.h \
+ /home/mozeat/zoo/include/smb/qos/zoo_smb_qos.h \
+ /home/mozeat/zoo/include/smb/qos/zoo_smb_qos_policy.h \
+ /home/mozeat/zoo/include/smb/qos/zoo_smb_qos_ctx.h \
+ /home/mozeat/zoo/include/smb/node/zoo_smb_client.h \
+ /home/mozeat/zoo/include/smb/node/zoo_smb_publisher.h \
+ /home/mozeat/zoo/include/smb/node/zoo_smb_subscriber.h

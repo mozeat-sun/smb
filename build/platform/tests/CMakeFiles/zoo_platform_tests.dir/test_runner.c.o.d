@@ -1,7 +1,7 @@
 platform/tests/CMakeFiles/zoo_platform_tests.dir/test_runner.c.o: \
- /home/mozeat/zoo/platform/tests/test_runner.c /usr/include/stdc-predef.h \
- /home/mozeat/zoo/third_party/test/unity/src/unity.h \
- /home/mozeat/zoo/third_party/test/unity/src/unity_internals.h \
+ /home/mozeat/zoo/tests/platform/test_runner.c /usr/include/stdc-predef.h \
+ /home/mozeat/zoo/thirdparty/test/unity/src/unity.h \
+ /home/mozeat/zoo/thirdparty/test/unity/src/unity_internals.h \
  /usr/include/setjmp.h /usr/include/features.h \
  /usr/include/features-time64.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -54,10 +54,10 @@ platform/tests/CMakeFiles/zoo_platform_tests.dir/test_runner.c.o: \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/stdio2.h \
- /home/mozeat/zoo/platform/inc/zoo.h \
+ /home/mozeat/zoo/platform/../include/platform/zoo.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdbool.h \
- /home/mozeat/zoo/platform/inc/zoo_platform.h /usr/include/time.h \
- /usr/include/x86_64-linux-gnu/bits/time.h \
+ /home/mozeat/zoo/platform/../include/platform/zoo_platform.h \
+ /usr/include/time.h /usr/include/x86_64-linux-gnu/bits/time.h \
  /usr/include/x86_64-linux-gnu/bits/timex.h \
  /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
  /usr/include/x86_64-linux-gnu/bits/types/clock_t.h \
@@ -118,6 +118,7 @@ platform/tests/CMakeFiles/zoo_platform_tests.dir/test_runner.c.o: \
  /usr/include/x86_64-linux-gnu/sys/syslog.h \
  /usr/include/x86_64-linux-gnu/bits/syslog-path.h \
  /usr/include/x86_64-linux-gnu/bits/syslog.h \
- /home/mozeat/zoo/platform/inc/zoo_types.h /usr/include/inttypes.h \
+ /home/mozeat/zoo/platform/../include/platform/zoo_types.h \
+ /usr/include/inttypes.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdatomic.h \
- /home/mozeat/zoo/platform/inc/zoo_error.h
+ /home/mozeat/zoo/platform/../include/platform/zoo_error.h

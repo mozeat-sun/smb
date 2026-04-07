@@ -1,4 +1,4 @@
-# Install script for directory: /home/mozeat/zoo/thread_pool/tests
+# Install script for directory: /home/mozeat/zoo/tests/thread_pool
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

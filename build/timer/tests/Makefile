@@ -234,77 +234,77 @@ timer_test_verbose/fast:
 	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/tests/CMakeFiles/timer_test_verbose.dir/build.make timer/tests/CMakeFiles/timer_test_verbose.dir/build
 .PHONY : timer_test_verbose/fast
 
-__/__/third_party/test/CMock/src/cmock.o: __/__/third_party/test/CMock/src/cmock.c.o
-.PHONY : __/__/third_party/test/CMock/src/cmock.o
+__/__/src/timer/zoo_timer.o: __/__/src/timer/zoo_timer.c.o
+.PHONY : __/__/src/timer/zoo_timer.o
 
 # target to build an object file
-__/__/third_party/test/CMock/src/cmock.c.o:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/tests/CMakeFiles/zoo_timer_tests.dir/build.make timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/CMock/src/cmock.c.o
-.PHONY : __/__/third_party/test/CMock/src/cmock.c.o
+__/__/src/timer/zoo_timer.c.o:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/tests/CMakeFiles/zoo_timer_tests.dir/build.make timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/src/timer/zoo_timer.c.o
+.PHONY : __/__/src/timer/zoo_timer.c.o
 
-__/__/third_party/test/CMock/src/cmock.i: __/__/third_party/test/CMock/src/cmock.c.i
-.PHONY : __/__/third_party/test/CMock/src/cmock.i
+__/__/src/timer/zoo_timer.i: __/__/src/timer/zoo_timer.c.i
+.PHONY : __/__/src/timer/zoo_timer.i
 
 # target to preprocess a source file
-__/__/third_party/test/CMock/src/cmock.c.i:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/tests/CMakeFiles/zoo_timer_tests.dir/build.make timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/CMock/src/cmock.c.i
-.PHONY : __/__/third_party/test/CMock/src/cmock.c.i
+__/__/src/timer/zoo_timer.c.i:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/tests/CMakeFiles/zoo_timer_tests.dir/build.make timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/src/timer/zoo_timer.c.i
+.PHONY : __/__/src/timer/zoo_timer.c.i
 
-__/__/third_party/test/CMock/src/cmock.s: __/__/third_party/test/CMock/src/cmock.c.s
-.PHONY : __/__/third_party/test/CMock/src/cmock.s
+__/__/src/timer/zoo_timer.s: __/__/src/timer/zoo_timer.c.s
+.PHONY : __/__/src/timer/zoo_timer.s
 
 # target to generate assembly for a file
-__/__/third_party/test/CMock/src/cmock.c.s:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/tests/CMakeFiles/zoo_timer_tests.dir/build.make timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/CMock/src/cmock.c.s
-.PHONY : __/__/third_party/test/CMock/src/cmock.c.s
+__/__/src/timer/zoo_timer.c.s:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/tests/CMakeFiles/zoo_timer_tests.dir/build.make timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/src/timer/zoo_timer.c.s
+.PHONY : __/__/src/timer/zoo_timer.c.s
 
-__/__/third_party/test/unity/src/unity.o: __/__/third_party/test/unity/src/unity.c.o
-.PHONY : __/__/third_party/test/unity/src/unity.o
+__/__/thirdparty/test/CMock/src/cmock.o: __/__/thirdparty/test/CMock/src/cmock.c.o
+.PHONY : __/__/thirdparty/test/CMock/src/cmock.o
 
 # target to build an object file
-__/__/third_party/test/unity/src/unity.c.o:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/tests/CMakeFiles/zoo_timer_tests.dir/build.make timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/unity/src/unity.c.o
-.PHONY : __/__/third_party/test/unity/src/unity.c.o
+__/__/thirdparty/test/CMock/src/cmock.c.o:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/tests/CMakeFiles/zoo_timer_tests.dir/build.make timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.o
+.PHONY : __/__/thirdparty/test/CMock/src/cmock.c.o
 
-__/__/third_party/test/unity/src/unity.i: __/__/third_party/test/unity/src/unity.c.i
-.PHONY : __/__/third_party/test/unity/src/unity.i
+__/__/thirdparty/test/CMock/src/cmock.i: __/__/thirdparty/test/CMock/src/cmock.c.i
+.PHONY : __/__/thirdparty/test/CMock/src/cmock.i
 
 # target to preprocess a source file
-__/__/third_party/test/unity/src/unity.c.i:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/tests/CMakeFiles/zoo_timer_tests.dir/build.make timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/unity/src/unity.c.i
-.PHONY : __/__/third_party/test/unity/src/unity.c.i
+__/__/thirdparty/test/CMock/src/cmock.c.i:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/tests/CMakeFiles/zoo_timer_tests.dir/build.make timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.i
+.PHONY : __/__/thirdparty/test/CMock/src/cmock.c.i
 
-__/__/third_party/test/unity/src/unity.s: __/__/third_party/test/unity/src/unity.c.s
-.PHONY : __/__/third_party/test/unity/src/unity.s
+__/__/thirdparty/test/CMock/src/cmock.s: __/__/thirdparty/test/CMock/src/cmock.c.s
+.PHONY : __/__/thirdparty/test/CMock/src/cmock.s
 
 # target to generate assembly for a file
-__/__/third_party/test/unity/src/unity.c.s:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/tests/CMakeFiles/zoo_timer_tests.dir/build.make timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/third_party/test/unity/src/unity.c.s
-.PHONY : __/__/third_party/test/unity/src/unity.c.s
+__/__/thirdparty/test/CMock/src/cmock.c.s:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/tests/CMakeFiles/zoo_timer_tests.dir/build.make timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.s
+.PHONY : __/__/thirdparty/test/CMock/src/cmock.c.s
 
-__/src/zoo_timer.o: __/src/zoo_timer.c.o
-.PHONY : __/src/zoo_timer.o
+__/__/thirdparty/test/unity/src/unity.o: __/__/thirdparty/test/unity/src/unity.c.o
+.PHONY : __/__/thirdparty/test/unity/src/unity.o
 
 # target to build an object file
-__/src/zoo_timer.c.o:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/tests/CMakeFiles/zoo_timer_tests.dir/build.make timer/tests/CMakeFiles/zoo_timer_tests.dir/__/src/zoo_timer.c.o
-.PHONY : __/src/zoo_timer.c.o
+__/__/thirdparty/test/unity/src/unity.c.o:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/tests/CMakeFiles/zoo_timer_tests.dir/build.make timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o
+.PHONY : __/__/thirdparty/test/unity/src/unity.c.o
 
-__/src/zoo_timer.i: __/src/zoo_timer.c.i
-.PHONY : __/src/zoo_timer.i
+__/__/thirdparty/test/unity/src/unity.i: __/__/thirdparty/test/unity/src/unity.c.i
+.PHONY : __/__/thirdparty/test/unity/src/unity.i
 
 # target to preprocess a source file
-__/src/zoo_timer.c.i:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/tests/CMakeFiles/zoo_timer_tests.dir/build.make timer/tests/CMakeFiles/zoo_timer_tests.dir/__/src/zoo_timer.c.i
-.PHONY : __/src/zoo_timer.c.i
+__/__/thirdparty/test/unity/src/unity.c.i:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/tests/CMakeFiles/zoo_timer_tests.dir/build.make timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/unity/src/unity.c.i
+.PHONY : __/__/thirdparty/test/unity/src/unity.c.i
 
-__/src/zoo_timer.s: __/src/zoo_timer.c.s
-.PHONY : __/src/zoo_timer.s
+__/__/thirdparty/test/unity/src/unity.s: __/__/thirdparty/test/unity/src/unity.c.s
+.PHONY : __/__/thirdparty/test/unity/src/unity.s
 
 # target to generate assembly for a file
-__/src/zoo_timer.c.s:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/tests/CMakeFiles/zoo_timer_tests.dir/build.make timer/tests/CMakeFiles/zoo_timer_tests.dir/__/src/zoo_timer.c.s
-.PHONY : __/src/zoo_timer.c.s
+__/__/thirdparty/test/unity/src/unity.c.s:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/tests/CMakeFiles/zoo_timer_tests.dir/build.make timer/tests/CMakeFiles/zoo_timer_tests.dir/__/__/thirdparty/test/unity/src/unity.c.s
+.PHONY : __/__/thirdparty/test/unity/src/unity.c.s
 
 mocks/mock_stdlib.o: mocks/mock_stdlib.c.o
 .PHONY : mocks/mock_stdlib.o
@@ -444,15 +444,15 @@ help:
 	@echo "... timer_test_clean"
 	@echo "... timer_test_verbose"
 	@echo "... zoo_timer_tests"
-	@echo "... __/__/third_party/test/CMock/src/cmock.o"
-	@echo "... __/__/third_party/test/CMock/src/cmock.i"
-	@echo "... __/__/third_party/test/CMock/src/cmock.s"
-	@echo "... __/__/third_party/test/unity/src/unity.o"
-	@echo "... __/__/third_party/test/unity/src/unity.i"
-	@echo "... __/__/third_party/test/unity/src/unity.s"
-	@echo "... __/src/zoo_timer.o"
-	@echo "... __/src/zoo_timer.i"
-	@echo "... __/src/zoo_timer.s"
+	@echo "... __/__/src/timer/zoo_timer.o"
+	@echo "... __/__/src/timer/zoo_timer.i"
+	@echo "... __/__/src/timer/zoo_timer.s"
+	@echo "... __/__/thirdparty/test/CMock/src/cmock.o"
+	@echo "... __/__/thirdparty/test/CMock/src/cmock.i"
+	@echo "... __/__/thirdparty/test/CMock/src/cmock.s"
+	@echo "... __/__/thirdparty/test/unity/src/unity.o"
+	@echo "... __/__/thirdparty/test/unity/src/unity.i"
+	@echo "... __/__/thirdparty/test/unity/src/unity.s"
 	@echo "... mocks/mock_stdlib.o"
 	@echo "... mocks/mock_stdlib.i"
 	@echo "... mocks/mock_stdlib.s"

@@ -220,32 +220,32 @@ zoo_timer_shared/fast:
 	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/CMakeFiles/zoo_timer_shared.dir/build.make timer/CMakeFiles/zoo_timer_shared.dir/build
 .PHONY : zoo_timer_shared/fast
 
-src/zoo_timer.o: src/zoo_timer.c.o
-.PHONY : src/zoo_timer.o
+__/src/timer/zoo_timer.o: __/src/timer/zoo_timer.c.o
+.PHONY : __/src/timer/zoo_timer.o
 
 # target to build an object file
-src/zoo_timer.c.o:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/CMakeFiles/zoo_timer_static.dir/build.make timer/CMakeFiles/zoo_timer_static.dir/src/zoo_timer.c.o
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/CMakeFiles/zoo_timer_shared.dir/build.make timer/CMakeFiles/zoo_timer_shared.dir/src/zoo_timer.c.o
-.PHONY : src/zoo_timer.c.o
+__/src/timer/zoo_timer.c.o:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/CMakeFiles/zoo_timer_static.dir/build.make timer/CMakeFiles/zoo_timer_static.dir/__/src/timer/zoo_timer.c.o
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/CMakeFiles/zoo_timer_shared.dir/build.make timer/CMakeFiles/zoo_timer_shared.dir/__/src/timer/zoo_timer.c.o
+.PHONY : __/src/timer/zoo_timer.c.o
 
-src/zoo_timer.i: src/zoo_timer.c.i
-.PHONY : src/zoo_timer.i
+__/src/timer/zoo_timer.i: __/src/timer/zoo_timer.c.i
+.PHONY : __/src/timer/zoo_timer.i
 
 # target to preprocess a source file
-src/zoo_timer.c.i:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/CMakeFiles/zoo_timer_static.dir/build.make timer/CMakeFiles/zoo_timer_static.dir/src/zoo_timer.c.i
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/CMakeFiles/zoo_timer_shared.dir/build.make timer/CMakeFiles/zoo_timer_shared.dir/src/zoo_timer.c.i
-.PHONY : src/zoo_timer.c.i
+__/src/timer/zoo_timer.c.i:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/CMakeFiles/zoo_timer_static.dir/build.make timer/CMakeFiles/zoo_timer_static.dir/__/src/timer/zoo_timer.c.i
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/CMakeFiles/zoo_timer_shared.dir/build.make timer/CMakeFiles/zoo_timer_shared.dir/__/src/timer/zoo_timer.c.i
+.PHONY : __/src/timer/zoo_timer.c.i
 
-src/zoo_timer.s: src/zoo_timer.c.s
-.PHONY : src/zoo_timer.s
+__/src/timer/zoo_timer.s: __/src/timer/zoo_timer.c.s
+.PHONY : __/src/timer/zoo_timer.s
 
 # target to generate assembly for a file
-src/zoo_timer.c.s:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/CMakeFiles/zoo_timer_static.dir/build.make timer/CMakeFiles/zoo_timer_static.dir/src/zoo_timer.c.s
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/CMakeFiles/zoo_timer_shared.dir/build.make timer/CMakeFiles/zoo_timer_shared.dir/src/zoo_timer.c.s
-.PHONY : src/zoo_timer.c.s
+__/src/timer/zoo_timer.c.s:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/CMakeFiles/zoo_timer_static.dir/build.make timer/CMakeFiles/zoo_timer_static.dir/__/src/timer/zoo_timer.c.s
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f timer/CMakeFiles/zoo_timer_shared.dir/build.make timer/CMakeFiles/zoo_timer_shared.dir/__/src/timer/zoo_timer.c.s
+.PHONY : __/src/timer/zoo_timer.c.s
 
 # Help Target
 help:
@@ -264,9 +264,9 @@ help:
 	@echo "... test"
 	@echo "... zoo_timer_shared"
 	@echo "... zoo_timer_static"
-	@echo "... src/zoo_timer.o"
-	@echo "... src/zoo_timer.i"
-	@echo "... src/zoo_timer.s"
+	@echo "... __/src/timer/zoo_timer.o"
+	@echo "... __/src/timer/zoo_timer.i"
+	@echo "... __/src/timer/zoo_timer.s"
 .PHONY : help
 
 

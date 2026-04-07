@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/zoo_util_shared.dir/src/zoo_util.c.o"
-  "CMakeFiles/zoo_util_shared.dir/src/zoo_util.c.o.d"
+  "CMakeFiles/zoo_util_shared.dir/__/src/util/zoo_util.c.o"
+  "CMakeFiles/zoo_util_shared.dir/__/src/util/zoo_util.c.o.d"
   "libzoo_util.pdb"
   "libzoo_util.so"
   "libzoo_util.so.1"

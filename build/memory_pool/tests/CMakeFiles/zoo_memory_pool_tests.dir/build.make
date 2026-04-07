@@ -70,75 +70,75 @@ include memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/progress.make
 include memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/flags.make
 
 memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.o: memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/flags.make
-memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.o: ../memory_pool/tests/test_zoo_memory_pool.c
+memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.o: ../tests/memory_pool/test_zoo_memory_pool.c
 memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.o: memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.o"
-	cd /home/mozeat/zoo/build/memory_pool/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.o -MF CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.o.d -o CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.o -c /home/mozeat/zoo/memory_pool/tests/test_zoo_memory_pool.c
+	cd /home/mozeat/zoo/build/memory_pool/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.o -MF CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.o.d -o CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.o -c /home/mozeat/zoo/tests/memory_pool/test_zoo_memory_pool.c
 
 memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.i"
-	cd /home/mozeat/zoo/build/memory_pool/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/memory_pool/tests/test_zoo_memory_pool.c > CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.i
+	cd /home/mozeat/zoo/build/memory_pool/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/memory_pool/test_zoo_memory_pool.c > CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.i
 
 memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.s"
-	cd /home/mozeat/zoo/build/memory_pool/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/memory_pool/tests/test_zoo_memory_pool.c -o CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.s
+	cd /home/mozeat/zoo/build/memory_pool/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/memory_pool/test_zoo_memory_pool.c -o CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.s
 
 memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_runner.c.o: memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/flags.make
-memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_runner.c.o: ../memory_pool/tests/test_runner.c
+memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_runner.c.o: ../tests/memory_pool/test_runner.c
 memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_runner.c.o: memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_runner.c.o"
-	cd /home/mozeat/zoo/build/memory_pool/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_runner.c.o -MF CMakeFiles/zoo_memory_pool_tests.dir/test_runner.c.o.d -o CMakeFiles/zoo_memory_pool_tests.dir/test_runner.c.o -c /home/mozeat/zoo/memory_pool/tests/test_runner.c
+	cd /home/mozeat/zoo/build/memory_pool/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_runner.c.o -MF CMakeFiles/zoo_memory_pool_tests.dir/test_runner.c.o.d -o CMakeFiles/zoo_memory_pool_tests.dir/test_runner.c.o -c /home/mozeat/zoo/tests/memory_pool/test_runner.c
 
 memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_runner.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_memory_pool_tests.dir/test_runner.c.i"
-	cd /home/mozeat/zoo/build/memory_pool/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/memory_pool/tests/test_runner.c > CMakeFiles/zoo_memory_pool_tests.dir/test_runner.c.i
+	cd /home/mozeat/zoo/build/memory_pool/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/memory_pool/test_runner.c > CMakeFiles/zoo_memory_pool_tests.dir/test_runner.c.i
 
 memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_runner.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_memory_pool_tests.dir/test_runner.c.s"
-	cd /home/mozeat/zoo/build/memory_pool/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/memory_pool/tests/test_runner.c -o CMakeFiles/zoo_memory_pool_tests.dir/test_runner.c.s
+	cd /home/mozeat/zoo/build/memory_pool/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/memory_pool/test_runner.c -o CMakeFiles/zoo_memory_pool_tests.dir/test_runner.c.s
 
-memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/unity/src/unity.c.o: memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/flags.make
-memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/unity/src/unity.c.o: ../third_party/test/unity/src/unity.c
-memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/unity/src/unity.c.o: memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/unity/src/unity.c.o"
-	cd /home/mozeat/zoo/build/memory_pool/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/unity/src/unity.c.o -MF CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/unity/src/unity.c.o.d -o CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/unity/src/unity.c.o -c /home/mozeat/zoo/third_party/test/unity/src/unity.c
+memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o: memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/flags.make
+memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o: ../thirdparty/test/unity/src/unity.c
+memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o: memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o"
+	cd /home/mozeat/zoo/build/memory_pool/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o -MF CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o.d -o CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o -c /home/mozeat/zoo/thirdparty/test/unity/src/unity.c
 
-memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/unity/src/unity.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/unity/src/unity.c.i"
-	cd /home/mozeat/zoo/build/memory_pool/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/third_party/test/unity/src/unity.c > CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/unity/src/unity.c.i
+memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/unity/src/unity.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/unity/src/unity.c.i"
+	cd /home/mozeat/zoo/build/memory_pool/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/thirdparty/test/unity/src/unity.c > CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/unity/src/unity.c.i
 
-memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/unity/src/unity.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/unity/src/unity.c.s"
-	cd /home/mozeat/zoo/build/memory_pool/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/third_party/test/unity/src/unity.c -o CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/unity/src/unity.c.s
+memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/unity/src/unity.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/unity/src/unity.c.s"
+	cd /home/mozeat/zoo/build/memory_pool/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/thirdparty/test/unity/src/unity.c -o CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/unity/src/unity.c.s
 
-memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/CMock/src/cmock.c.o: memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/flags.make
-memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/CMock/src/cmock.c.o: ../third_party/test/CMock/src/cmock.c
-memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/CMock/src/cmock.c.o: memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/CMock/src/cmock.c.o"
-	cd /home/mozeat/zoo/build/memory_pool/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/CMock/src/cmock.c.o -MF CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/CMock/src/cmock.c.o.d -o CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/CMock/src/cmock.c.o -c /home/mozeat/zoo/third_party/test/CMock/src/cmock.c
+memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.o: memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/flags.make
+memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.o: ../thirdparty/test/CMock/src/cmock.c
+memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.o: memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.o"
+	cd /home/mozeat/zoo/build/memory_pool/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.o -MF CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.o.d -o CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.o -c /home/mozeat/zoo/thirdparty/test/CMock/src/cmock.c
 
-memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/CMock/src/cmock.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/CMock/src/cmock.c.i"
-	cd /home/mozeat/zoo/build/memory_pool/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/third_party/test/CMock/src/cmock.c > CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/CMock/src/cmock.c.i
+memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.i"
+	cd /home/mozeat/zoo/build/memory_pool/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/thirdparty/test/CMock/src/cmock.c > CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.i
 
-memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/CMock/src/cmock.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/CMock/src/cmock.c.s"
-	cd /home/mozeat/zoo/build/memory_pool/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/third_party/test/CMock/src/cmock.c -o CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/CMock/src/cmock.c.s
+memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.s"
+	cd /home/mozeat/zoo/build/memory_pool/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/thirdparty/test/CMock/src/cmock.c -o CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.s
 
 # Object files for target zoo_memory_pool_tests
 zoo_memory_pool_tests_OBJECTS = \
 "CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.o" \
 "CMakeFiles/zoo_memory_pool_tests.dir/test_runner.c.o" \
-"CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/unity/src/unity.c.o" \
-"CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/CMock/src/cmock.c.o"
+"CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o" \
+"CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.o"
 
 # External object files for target zoo_memory_pool_tests
 zoo_memory_pool_tests_EXTERNAL_OBJECTS =
 
 bin/zoo_memory_pool_tests: memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.o
 bin/zoo_memory_pool_tests: memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_runner.c.o
-bin/zoo_memory_pool_tests: memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/unity/src/unity.c.o
-bin/zoo_memory_pool_tests: memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/third_party/test/CMock/src/cmock.c.o
+bin/zoo_memory_pool_tests: memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o
+bin/zoo_memory_pool_tests: memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/__/__/thirdparty/test/CMock/src/cmock.c.o
 bin/zoo_memory_pool_tests: memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/build.make
 bin/zoo_memory_pool_tests: memory_pool/libzoo_memory_pool.a
 bin/zoo_memory_pool_tests: memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/link.txt
@@ -154,6 +154,6 @@ memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/clean:
 .PHONY : memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/clean
 
 memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/depend:
-	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/memory_pool/tests /home/mozeat/zoo/build /home/mozeat/zoo/build/memory_pool/tests /home/mozeat/zoo/build/memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/tests/memory_pool /home/mozeat/zoo/build /home/mozeat/zoo/build/memory_pool/tests /home/mozeat/zoo/build/memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/depend
 

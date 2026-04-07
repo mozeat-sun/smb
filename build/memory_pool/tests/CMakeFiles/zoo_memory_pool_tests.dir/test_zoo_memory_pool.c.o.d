@@ -1,9 +1,9 @@
 memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.o: \
- /home/mozeat/zoo/memory_pool/tests/test_zoo_memory_pool.c \
+ /home/mozeat/zoo/tests/memory_pool/test_zoo_memory_pool.c \
  /usr/include/stdc-predef.h \
- /home/mozeat/zoo/third_party/test/unity/src/unity.h \
- /home/mozeat/zoo/third_party/test/unity/src/unity_internals.h \
- /home/mozeat/zoo/third_party/test/unity/unity_config.h \
+ /home/mozeat/zoo/thirdparty/test/unity/src/unity.h \
+ /home/mozeat/zoo/thirdparty/test/unity/src/unity_internals.h \
+ /home/mozeat/zoo/thirdparty/test/unity/unity_config.h \
  /usr/include/math.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -52,8 +52,8 @@ memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.o:
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/stdio2.h \
- /home/mozeat/zoo/third_party/test/CMock/src/cmock.h \
- /home/mozeat/zoo/third_party/test/CMock/src/cmock_internals.h \
+ /home/mozeat/zoo/thirdparty/test/CMock/src/cmock.h \
+ /home/mozeat/zoo/thirdparty/test/CMock/src/cmock_internals.h \
  /usr/include/stdlib.h /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
@@ -83,10 +83,10 @@ memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.o:
  /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib.h \
- /home/mozeat/zoo/memory_pool/inc/zoo_memory_pool.h \
- /home/mozeat/zoo/platform/inc/zoo.h \
+ /home/mozeat/zoo/include/memory_pool/zoo_memory_pool.h \
+ /home/mozeat/zoo/include/platform/zoo.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdbool.h \
- /home/mozeat/zoo/platform/inc/zoo_platform.h /usr/include/time.h \
+ /home/mozeat/zoo/include/platform/zoo_platform.h /usr/include/time.h \
  /usr/include/x86_64-linux-gnu/bits/time.h \
  /usr/include/x86_64-linux-gnu/bits/timex.h \
  /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
@@ -127,10 +127,10 @@ memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/test_zoo_memory_pool.c.o:
  /usr/include/x86_64-linux-gnu/sys/syslog.h \
  /usr/include/x86_64-linux-gnu/bits/syslog-path.h \
  /usr/include/x86_64-linux-gnu/bits/syslog.h \
- /home/mozeat/zoo/platform/inc/zoo_types.h /usr/include/inttypes.h \
+ /home/mozeat/zoo/include/platform/zoo_types.h /usr/include/inttypes.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdatomic.h \
- /home/mozeat/zoo/platform/inc/zoo_error.h \
- /home/mozeat/zoo/platform/inc/zoo_error.h /usr/include/string.h \
+ /home/mozeat/zoo/include/platform/zoo_error.h \
+ /home/mozeat/zoo/include/platform/zoo_error.h /usr/include/string.h \
  /usr/include/strings.h \
  /usr/include/x86_64-linux-gnu/bits/strings_fortified.h \
  /usr/include/x86_64-linux-gnu/bits/string_fortified.h

@@ -1,4 +1,4 @@
-# Install script for directory: /home/mozeat/zoo/memory_pool/tests
+# Install script for directory: /home/mozeat/zoo/tests/memory_pool
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

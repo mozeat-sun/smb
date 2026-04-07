@@ -1,10 +1,10 @@
 smb/src/CMakeFiles/zoo_smb_static.dir/transport/zoo_smb_transport_tcp_client.c.o: \
- /home/mozeat/zoo/smb/src/transport/zoo_smb_transport_tcp_client.c \
+ /home/mozeat/zoo/src/smb/transport/zoo_smb_transport_tcp_client.c \
  /usr/include/stdc-predef.h \
- /home/mozeat/zoo/smb/src/../inc/transport/zoo_smb_transport_tcp_client.h \
- /home/mozeat/zoo/smb/src/../inc/transport/zoo_smb_transport_tcp_common.h \
- /home/mozeat/zoo/smb/src/../../util/inc/zoo_util.h \
- /home/mozeat/zoo/smb/src/../../platform/inc/zoo.h \
+ /home/mozeat/zoo/include/smb/transport/zoo_smb_transport_tcp_client.h \
+ /home/mozeat/zoo/include/smb/transport/zoo_smb_transport_tcp_common.h \
+ /home/mozeat/zoo/include/util/zoo_util.h \
+ /home/mozeat/zoo/include/platform/zoo.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -22,8 +22,8 @@ smb/src/CMakeFiles/zoo_smb_static.dir/transport/zoo_smb_transport_tcp_client.c.o
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdbool.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stddef.h \
- /home/mozeat/zoo/smb/src/../../platform/inc/zoo_platform.h \
- /usr/include/stdio.h /usr/lib/gcc/x86_64-linux-gnu/11/include/stdarg.h \
+ /home/mozeat/zoo/include/platform/zoo_platform.h /usr/include/stdio.h \
+ /usr/lib/gcc/x86_64-linux-gnu/11/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h \
@@ -101,15 +101,14 @@ smb/src/CMakeFiles/zoo_smb_static.dir/transport/zoo_smb_transport_tcp_client.c.o
  /usr/include/x86_64-linux-gnu/sys/syslog.h \
  /usr/include/x86_64-linux-gnu/bits/syslog-path.h \
  /usr/include/x86_64-linux-gnu/bits/syslog.h \
- /home/mozeat/zoo/smb/src/../../platform/inc/zoo_types.h \
- /usr/include/inttypes.h \
+ /home/mozeat/zoo/include/platform/zoo_types.h /usr/include/inttypes.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdatomic.h \
- /home/mozeat/zoo/smb/src/../../platform/inc/zoo_error.h \
- /home/mozeat/zoo/smb/src/../../platform/inc/zoo_error.h \
- /home/mozeat/zoo/smb/src/../../util/inc/zoo_timestamp.h \
+ /home/mozeat/zoo/include/platform/zoo_error.h \
+ /home/mozeat/zoo/include/platform/zoo_error.h \
+ /home/mozeat/zoo/include/util/zoo_timestamp.h \
  /usr/include/x86_64-linux-gnu/sys/time.h \
- /home/mozeat/zoo/smb/src/../../util/inc/zoo_string.h \
- /usr/include/string.h /usr/include/strings.h \
+ /home/mozeat/zoo/include/util/zoo_string.h /usr/include/string.h \
+ /usr/include/strings.h \
  /usr/include/x86_64-linux-gnu/bits/strings_fortified.h \
  /usr/include/x86_64-linux-gnu/bits/string_fortified.h \
  /usr/include/stdlib.h /usr/include/x86_64-linux-gnu/bits/waitflags.h \
@@ -117,8 +116,8 @@ smb/src/CMakeFiles/zoo_smb_static.dir/transport/zoo_smb_transport_tcp_client.c.o
  /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib.h \
- /home/mozeat/zoo/smb/src/../../util/inc/zoo_memory.h \
- /home/mozeat/zoo/smb/src/../../util/inc/zoo_math.h /usr/include/math.h \
+ /home/mozeat/zoo/include/util/zoo_memory.h \
+ /home/mozeat/zoo/include/util/zoo_math.h /usr/include/math.h \
  /usr/include/x86_64-linux-gnu/bits/math-vector.h \
  /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
  /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
@@ -136,22 +135,19 @@ smb/src/CMakeFiles/zoo_smb_static.dir/transport/zoo_smb_transport_tcp_client.c.o
  /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
  /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
  /usr/include/x86_64-linux-gnu/bits/uio_lim.h \
- /home/mozeat/zoo/smb/src/../inc/transport/zoo_smb_transport.h \
- /home/mozeat/zoo/smb/src/../inc/transport/zoo_smb_transport_observer.h \
- /home/mozeat/zoo/smb/src/../inc/transport/zoo_smb_protocol.h \
- /home/mozeat/zoo/smb/src/../inc/core/zoo_smb_message.h \
- /home/mozeat/zoo/smb/src/../inc/utility/zoo_smb_error.h \
- /home/mozeat/zoo/smb/inc/../../platform/inc/zoo.h \
- /home/mozeat/zoo/smb/inc/../../log/inc/zoo_log.h \
- /home/mozeat/zoo/smb/inc/../../log/inc/../../platform/inc/zoo_types.h \
- /home/mozeat/zoo/smb/src/../inc/utility/zoo_smb_types.h \
- /home/mozeat/zoo/smb/src/../inc/core/zoo_smb_service.h \
- /home/mozeat/zoo/smb/inc/../../buffer/inc/zoo_list.h \
- /home/mozeat/zoo/smb/inc/../../memory_pool/inc/zoo_memory_pool.h \
- /home/mozeat/zoo/smb/inc/../../socket/inc/zoo_socket.h \
- /home/mozeat/zoo/smb/src/../../platform/inc/zoo_platform.h \
- /home/mozeat/zoo/smb/src/../../platform/inc/zoo_types.h \
- /home/mozeat/zoo/smb/inc/../../socket/inc/../../platform/inc/zoo_error.h \
+ /home/mozeat/zoo/include/smb/transport/zoo_smb_transport.h \
+ /home/mozeat/zoo/include/smb/transport/zoo_smb_transport_observer.h \
+ /home/mozeat/zoo/include/smb/transport/zoo_smb_protocol.h \
+ /home/mozeat/zoo/include/smb/core/zoo_smb_message.h \
+ /home/mozeat/zoo/include/smb/utility/zoo_smb_error.h \
+ /home/mozeat/zoo/include/log/zoo_log.h \
+ /home/mozeat/zoo/include/platform/zoo_types.h \
+ /home/mozeat/zoo/include/smb/utility/zoo_smb_types.h \
+ /home/mozeat/zoo/include/smb/core/zoo_smb_service.h \
+ /home/mozeat/zoo/include/buffer/zoo_list.h \
+ /home/mozeat/zoo/include/memory_pool/zoo_memory_pool.h \
+ /home/mozeat/zoo/include/socket/zoo_socket.h \
+ /home/mozeat/zoo/include/platform/zoo_platform.h \
  /usr/include/x86_64-linux-gnu/sys/epoll.h \
  /usr/include/x86_64-linux-gnu/bits/epoll.h /usr/include/netinet/in.h \
  /usr/include/x86_64-linux-gnu/sys/socket.h \
@@ -166,8 +162,8 @@ smb/src/CMakeFiles/zoo_smb_static.dir/transport/zoo_smb_transport_tcp_client.c.o
  /usr/include/x86_64-linux-gnu/bits/types/struct_osockaddr.h \
  /usr/include/x86_64-linux-gnu/bits/socket2.h \
  /usr/include/x86_64-linux-gnu/bits/in.h \
- /home/mozeat/zoo/smb/src/../inc/transport/zoo_smb_transport_tcp_common.h \
- /home/mozeat/zoo/smb/src/../inc/core/zoo_smb_reactor.h \
+ /home/mozeat/zoo/include/smb/transport/zoo_smb_transport_tcp_common.h \
+ /home/mozeat/zoo/include/smb/core/zoo_smb_reactor.h \
  /usr/include/arpa/inet.h /usr/include/errno.h \
  /usr/include/x86_64-linux-gnu/bits/errno.h /usr/include/linux/errno.h \
  /usr/include/x86_64-linux-gnu/asm/errno.h \

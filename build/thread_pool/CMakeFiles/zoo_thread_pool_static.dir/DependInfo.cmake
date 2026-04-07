@@ -8,11 +8,12 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/mozeat/zoo/thread_pool/src/zoo_thread_pool.c" "thread_pool/CMakeFiles/zoo_thread_pool_static.dir/src/zoo_thread_pool.c.o" "gcc" "thread_pool/CMakeFiles/zoo_thread_pool_static.dir/src/zoo_thread_pool.c.o.d"
+  "/home/mozeat/zoo/src/thread_pool/zoo_thread_pool.c" "thread_pool/CMakeFiles/zoo_thread_pool_static.dir/__/src/thread_pool/zoo_thread_pool.c.o" "gcc" "thread_pool/CMakeFiles/zoo_thread_pool_static.dir/__/src/thread_pool/zoo_thread_pool.c.o.d"
   )
 
 # Targets to which this target links.
 set(CMAKE_TARGET_LINKED_INFO_FILES
+  "/home/mozeat/zoo/build/buffer/CMakeFiles/zoo_buffer_static.dir/DependInfo.cmake"
   )
 
 # Fortran module output directory.

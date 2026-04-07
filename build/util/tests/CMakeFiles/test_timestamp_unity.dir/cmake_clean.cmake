@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/test_timestamp_unity.dir/__/__/third_party/test/unity/src/unity.c.o"
-  "CMakeFiles/test_timestamp_unity.dir/__/__/third_party/test/unity/src/unity.c.o.d"
+  "CMakeFiles/test_timestamp_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o"
+  "CMakeFiles/test_timestamp_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o.d"
   "CMakeFiles/test_timestamp_unity.dir/test_zoo_util_timestamp_unity.c.o"
   "CMakeFiles/test_timestamp_unity.dir/test_zoo_util_timestamp_unity.c.o.d"
   "test_timestamp_unity"

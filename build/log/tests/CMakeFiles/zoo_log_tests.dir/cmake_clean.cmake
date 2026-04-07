@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/zoo_log_tests.dir/__/__/third_party/test/unity/src/unity.c.o"
-  "CMakeFiles/zoo_log_tests.dir/__/__/third_party/test/unity/src/unity.c.o.d"
+  "CMakeFiles/zoo_log_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o"
+  "CMakeFiles/zoo_log_tests.dir/__/__/thirdparty/test/unity/src/unity.c.o.d"
   "CMakeFiles/zoo_log_tests.dir/test_runner.c.o"
   "CMakeFiles/zoo_log_tests.dir/test_runner.c.o.d"
   "CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.o"

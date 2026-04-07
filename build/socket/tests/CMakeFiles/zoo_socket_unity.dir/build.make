@@ -69,28 +69,28 @@ include socket/tests/CMakeFiles/zoo_socket_unity.dir/progress.make
 # Include the compile flags for this target's objects.
 include socket/tests/CMakeFiles/zoo_socket_unity.dir/flags.make
 
-socket/tests/CMakeFiles/zoo_socket_unity.dir/__/__/third_party/test/unity/src/unity.c.o: socket/tests/CMakeFiles/zoo_socket_unity.dir/flags.make
-socket/tests/CMakeFiles/zoo_socket_unity.dir/__/__/third_party/test/unity/src/unity.c.o: ../third_party/test/unity/src/unity.c
-socket/tests/CMakeFiles/zoo_socket_unity.dir/__/__/third_party/test/unity/src/unity.c.o: socket/tests/CMakeFiles/zoo_socket_unity.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object socket/tests/CMakeFiles/zoo_socket_unity.dir/__/__/third_party/test/unity/src/unity.c.o"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/tests/CMakeFiles/zoo_socket_unity.dir/__/__/third_party/test/unity/src/unity.c.o -MF CMakeFiles/zoo_socket_unity.dir/__/__/third_party/test/unity/src/unity.c.o.d -o CMakeFiles/zoo_socket_unity.dir/__/__/third_party/test/unity/src/unity.c.o -c /home/mozeat/zoo/third_party/test/unity/src/unity.c
+socket/tests/CMakeFiles/zoo_socket_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o: socket/tests/CMakeFiles/zoo_socket_unity.dir/flags.make
+socket/tests/CMakeFiles/zoo_socket_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o: ../thirdparty/test/unity/src/unity.c
+socket/tests/CMakeFiles/zoo_socket_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o: socket/tests/CMakeFiles/zoo_socket_unity.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object socket/tests/CMakeFiles/zoo_socket_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o"
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/tests/CMakeFiles/zoo_socket_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o -MF CMakeFiles/zoo_socket_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o.d -o CMakeFiles/zoo_socket_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o -c /home/mozeat/zoo/thirdparty/test/unity/src/unity.c
 
-socket/tests/CMakeFiles/zoo_socket_unity.dir/__/__/third_party/test/unity/src/unity.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_socket_unity.dir/__/__/third_party/test/unity/src/unity.c.i"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/third_party/test/unity/src/unity.c > CMakeFiles/zoo_socket_unity.dir/__/__/third_party/test/unity/src/unity.c.i
+socket/tests/CMakeFiles/zoo_socket_unity.dir/__/__/thirdparty/test/unity/src/unity.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_socket_unity.dir/__/__/thirdparty/test/unity/src/unity.c.i"
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/thirdparty/test/unity/src/unity.c > CMakeFiles/zoo_socket_unity.dir/__/__/thirdparty/test/unity/src/unity.c.i
 
-socket/tests/CMakeFiles/zoo_socket_unity.dir/__/__/third_party/test/unity/src/unity.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_socket_unity.dir/__/__/third_party/test/unity/src/unity.c.s"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/third_party/test/unity/src/unity.c -o CMakeFiles/zoo_socket_unity.dir/__/__/third_party/test/unity/src/unity.c.s
+socket/tests/CMakeFiles/zoo_socket_unity.dir/__/__/thirdparty/test/unity/src/unity.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_socket_unity.dir/__/__/thirdparty/test/unity/src/unity.c.s"
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/thirdparty/test/unity/src/unity.c -o CMakeFiles/zoo_socket_unity.dir/__/__/thirdparty/test/unity/src/unity.c.s
 
 # Object files for target zoo_socket_unity
 zoo_socket_unity_OBJECTS = \
-"CMakeFiles/zoo_socket_unity.dir/__/__/third_party/test/unity/src/unity.c.o"
+"CMakeFiles/zoo_socket_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o"
 
 # External object files for target zoo_socket_unity
 zoo_socket_unity_EXTERNAL_OBJECTS =
 
-socket/tests/libzoo_socket_unity.a: socket/tests/CMakeFiles/zoo_socket_unity.dir/__/__/third_party/test/unity/src/unity.c.o
+socket/tests/libzoo_socket_unity.a: socket/tests/CMakeFiles/zoo_socket_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o
 socket/tests/libzoo_socket_unity.a: socket/tests/CMakeFiles/zoo_socket_unity.dir/build.make
 socket/tests/libzoo_socket_unity.a: socket/tests/CMakeFiles/zoo_socket_unity.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C static library libzoo_socket_unity.a"
@@ -106,6 +106,6 @@ socket/tests/CMakeFiles/zoo_socket_unity.dir/clean:
 .PHONY : socket/tests/CMakeFiles/zoo_socket_unity.dir/clean
 
 socket/tests/CMakeFiles/zoo_socket_unity.dir/depend:
-	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/socket/tests /home/mozeat/zoo/build /home/mozeat/zoo/build/socket/tests /home/mozeat/zoo/build/socket/tests/CMakeFiles/zoo_socket_unity.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/tests/socket /home/mozeat/zoo/build /home/mozeat/zoo/build/socket/tests /home/mozeat/zoo/build/socket/tests/CMakeFiles/zoo_socket_unity.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : socket/tests/CMakeFiles/zoo_socket_unity.dir/depend
 

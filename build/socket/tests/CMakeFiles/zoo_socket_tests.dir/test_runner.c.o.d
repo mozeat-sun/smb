@@ -1,7 +1,7 @@
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_runner.c.o: \
- /home/mozeat/zoo/socket/tests/test_runner.c /usr/include/stdc-predef.h \
- /home/mozeat/zoo/third_party/test/unity/src/unity.h \
- /home/mozeat/zoo/third_party/test/unity/src/unity_internals.h \
+ /home/mozeat/zoo/tests/socket/test_runner.c /usr/include/stdc-predef.h \
+ /home/mozeat/zoo/thirdparty/test/unity/src/unity.h \
+ /home/mozeat/zoo/thirdparty/test/unity/src/unity_internals.h \
  /usr/include/setjmp.h /usr/include/features.h \
  /usr/include/features-time64.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -54,8 +54,8 @@ socket/tests/CMakeFiles/zoo_socket_tests.dir/test_runner.c.o: \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/stdio2.h \
- /home/mozeat/zoo/socket/inc/zoo_socket.h \
- /home/mozeat/zoo/socket/../platform/inc/zoo_platform.h \
+ /home/mozeat/zoo/include/socket/zoo_socket.h \
+ /home/mozeat/zoo/socket/../include/platform/zoo_platform.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdbool.h /usr/include/time.h \
  /usr/include/x86_64-linux-gnu/bits/time.h \
  /usr/include/x86_64-linux-gnu/bits/timex.h \
@@ -118,11 +118,11 @@ socket/tests/CMakeFiles/zoo_socket_tests.dir/test_runner.c.o: \
  /usr/include/x86_64-linux-gnu/sys/syslog.h \
  /usr/include/x86_64-linux-gnu/bits/syslog-path.h \
  /usr/include/x86_64-linux-gnu/bits/syslog.h \
- /home/mozeat/zoo/socket/../platform/inc/zoo_types.h \
+ /home/mozeat/zoo/socket/../include/platform/zoo_types.h \
  /usr/include/inttypes.h \
- /home/mozeat/zoo/socket/../platform/inc/zoo_platform.h \
+ /home/mozeat/zoo/socket/../include/platform/zoo_platform.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdatomic.h \
- /home/mozeat/zoo/socket/inc/../../platform/inc/zoo_error.h \
+ /home/mozeat/zoo/socket/../include/platform/zoo_error.h \
  /usr/include/stdlib.h /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h /usr/include/alloca.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \

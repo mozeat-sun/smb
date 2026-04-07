@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/zoo_dispatcher_shared.dir/src/zoo_dispatcher.c.o"
-  "CMakeFiles/zoo_dispatcher_shared.dir/src/zoo_dispatcher.c.o.d"
+  "CMakeFiles/zoo_dispatcher_shared.dir/__/src/dispatcher/zoo_dispatcher.c.o"
+  "CMakeFiles/zoo_dispatcher_shared.dir/__/src/dispatcher/zoo_dispatcher.c.o.d"
   "libzoo_dispatcher.pdb"
   "libzoo_dispatcher.so"
   "libzoo_dispatcher.so.1"

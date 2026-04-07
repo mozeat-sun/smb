@@ -1,8 +1,8 @@
 smb/tests/CMakeFiles/test_zoo_smb_message_dispatcher.dir/unit/test_zoo_smb_message_dispatcher.c.o: \
- /home/mozeat/zoo/smb/tests/unit/test_zoo_smb_message_dispatcher.c \
+ /home/mozeat/zoo/tests/smb/unit/test_zoo_smb_message_dispatcher.c \
  /usr/include/stdc-predef.h \
- /home/mozeat/zoo/third_party/test/unity/src/unity.h \
- /home/mozeat/zoo/third_party/test/unity/src/unity_internals.h \
+ /home/mozeat/zoo/thirdparty/test/unity/src/unity.h \
+ /home/mozeat/zoo/thirdparty/test/unity/src/unity_internals.h \
  /usr/include/setjmp.h /usr/include/features.h \
  /usr/include/features-time64.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -55,11 +55,11 @@ smb/tests/CMakeFiles/test_zoo_smb_message_dispatcher.dir/unit/test_zoo_smb_messa
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/stdio2.h \
- /home/mozeat/zoo/smb/inc/core/zoo_smb_message_dispatcher.h \
- /home/mozeat/zoo/smb/inc/../../platform/inc/zoo.h \
+ /home/mozeat/zoo/include/smb/core/zoo_smb_message_dispatcher.h \
+ /home/mozeat/zoo/include/platform/zoo.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdbool.h \
- /home/mozeat/zoo/smb/inc/../../platform/inc/zoo_platform.h \
- /usr/include/time.h /usr/include/x86_64-linux-gnu/bits/time.h \
+ /home/mozeat/zoo/include/platform/zoo_platform.h /usr/include/time.h \
+ /usr/include/x86_64-linux-gnu/bits/time.h \
  /usr/include/x86_64-linux-gnu/bits/timex.h \
  /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
  /usr/include/x86_64-linux-gnu/bits/types/clock_t.h \
@@ -120,12 +120,10 @@ smb/tests/CMakeFiles/test_zoo_smb_message_dispatcher.dir/unit/test_zoo_smb_messa
  /usr/include/x86_64-linux-gnu/sys/syslog.h \
  /usr/include/x86_64-linux-gnu/bits/syslog-path.h \
  /usr/include/x86_64-linux-gnu/bits/syslog.h \
- /home/mozeat/zoo/smb/inc/../../platform/inc/zoo_types.h \
- /usr/include/inttypes.h \
+ /home/mozeat/zoo/include/platform/zoo_types.h /usr/include/inttypes.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdatomic.h \
- /home/mozeat/zoo/smb/inc/../../platform/inc/zoo_error.h \
- /home/mozeat/zoo/smb/inc/../../buffer/inc/zoo_queue.h \
- /home/mozeat/zoo/platform/inc/zoo.h \
- /home/mozeat/zoo/platform/inc/zoo_error.h \
- /home/mozeat/zoo/smb/inc/utility/zoo_smb_error.h \
- /home/mozeat/zoo/smb/tests/unit/../../../memory_pool/inc/zoo_memory_pool.h
+ /home/mozeat/zoo/include/platform/zoo_error.h \
+ /home/mozeat/zoo/include/buffer/zoo_queue.h \
+ /home/mozeat/zoo/include/platform/zoo_error.h \
+ /home/mozeat/zoo/include/smb/utility/zoo_smb_error.h \
+ /home/mozeat/zoo/include/memory_pool/zoo_memory_pool.h

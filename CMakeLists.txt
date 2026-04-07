@@ -82,7 +82,22 @@ else()
 endif()
 
 # Global include directories
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+# Unified output directories at repository root
+set(ZOO_BIN_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/bin")
+set(ZOO_LIB_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/lib")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${ZOO_BIN_OUTPUT_DIR}")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${ZOO_LIB_OUTPUT_DIR}")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${ZOO_LIB_OUTPUT_DIR}")
+
+# Keep multi-config generators consistent (e.g. Ninja Multi-Config, Visual Studio)
+foreach(cfg Debug Release RelWithDebInfo MinSizeRel)
+    string(TOUPPER "${cfg}" cfg_upper)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${cfg_upper} "${ZOO_BIN_OUTPUT_DIR}")
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${cfg_upper} "${ZOO_LIB_OUTPUT_DIR}")
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${cfg_upper} "${ZOO_LIB_OUTPUT_DIR}")
+endforeach()
 
 # ==============================================================================
 # CMAKE MODULE PATH
@@ -113,44 +128,50 @@ endif()
 
 # Build platform module first (dependencies)
 if(ZOO_BUILD_PLATFORM)
-    add_subdirectory(platform)
+    add_subdirectory(src/platform)
 endif()
 
 # Build core modules (dependency-aware order)
 if(ZOO_BUILD_UTIL)
-    add_subdirectory(util)
+    add_subdirectory(src/util)
 endif()
 
 if(ZOO_BUILD_LOG)
-    add_subdirectory(log)
+    add_subdirectory(src/log)
 endif()
 
 if(ZOO_BUILD_MEMORY_POOL)
-    add_subdirectory(memory_pool)
+    add_subdirectory(src/memory_pool)
 endif()
 
 if(ZOO_BUILD_BUFFER)
-    add_subdirectory(buffer)
+    add_subdirectory(src/buffer)
 endif()
 
 if(ZOO_BUILD_SOCKET)
-    add_subdirectory(socket)
+    add_subdirectory(src/socket)
 endif()
 
 if(ZOO_BUILD_THREAD_POOL)
-    add_subdirectory(thread_pool)
+    add_subdirectory(src/thread_pool)
 endif()
 
 if(ZOO_BUILD_DISPATCHER)
-    add_subdirectory(dispatcher)
+    add_subdirectory(src/dispatcher)
 endif()
 
 if(ZOO_BUILD_TIMER)
-    add_subdirectory(timer)
+    add_subdirectory(src/timer)
 endif()
 
 if(ZOO_BUILD_SMB)
-    add_subdirectory(smb)
+    add_subdirectory(src/smb)
+    if(ZOO_BUILD_TESTS)
+        add_subdirectory(tests/smb ${CMAKE_CURRENT_BINARY_DIR}/smb/tests)
+    endif()
+    if(ZOO_BUILD_EXAMPLES)
+        add_subdirectory(examples/smb ${CMAKE_CURRENT_BINARY_DIR}/smb/examples)
+    endif()
 endif()
 
 # ==============================================================================
@@ -158,7 +179,7 @@ endif()
 # ==============================================================================
 
 # Install headers
-install(DIRECTORY inc/
+install(DIRECTORY include/
     DESTINATION include/zoo
     FILES_MATCHING PATTERN "*.h"
 )

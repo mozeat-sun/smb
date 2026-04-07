@@ -103,8 +103,8 @@ endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/zoo" TYPE FILE FILES
-    "/home/mozeat/zoo/socket/inc/zoo_socket.h"
-    "/home/mozeat/zoo/socket/inc/zoo_select.h"
+    "/home/mozeat/zoo/socket/../include/socket/zoo_socket.h"
+    "/home/mozeat/zoo/socket/../include/socket/zoo_select.h"
     )
 endif()
 

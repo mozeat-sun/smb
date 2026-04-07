@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/mozeat/zoo/third_party/test/unity/src/unity.c" "socket/tests/CMakeFiles/zoo_socket_unity.dir/__/__/third_party/test/unity/src/unity.c.o" "gcc" "socket/tests/CMakeFiles/zoo_socket_unity.dir/__/__/third_party/test/unity/src/unity.c.o.d"
+  "/home/mozeat/zoo/thirdparty/test/unity/src/unity.c" "socket/tests/CMakeFiles/zoo_socket_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o" "gcc" "socket/tests/CMakeFiles/zoo_socket_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o.d"
   )
 
 # Targets to which this target links.

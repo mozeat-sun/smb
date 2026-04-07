@@ -1,2 +1,2 @@
-/usr/bin/ar qc libzoo_memory_pool.a CMakeFiles/zoo_memory_pool_static.dir/src/zoo_memory_pool.c.o
+/usr/bin/ar qc libzoo_memory_pool.a CMakeFiles/zoo_memory_pool_static.dir/__/src/memory_pool/zoo_memory_pool.c.o
 /usr/bin/ranlib libzoo_memory_pool.a

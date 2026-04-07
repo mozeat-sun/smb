@@ -220,59 +220,59 @@ zoo_buffer_shared/fast:
 	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f buffer/CMakeFiles/zoo_buffer_shared.dir/build.make buffer/CMakeFiles/zoo_buffer_shared.dir/build
 .PHONY : zoo_buffer_shared/fast
 
-src/zoo_list.o: src/zoo_list.c.o
-.PHONY : src/zoo_list.o
+__/src/buffer/zoo_list.o: __/src/buffer/zoo_list.c.o
+.PHONY : __/src/buffer/zoo_list.o
 
 # target to build an object file
-src/zoo_list.c.o:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f buffer/CMakeFiles/zoo_buffer_static.dir/build.make buffer/CMakeFiles/zoo_buffer_static.dir/src/zoo_list.c.o
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f buffer/CMakeFiles/zoo_buffer_shared.dir/build.make buffer/CMakeFiles/zoo_buffer_shared.dir/src/zoo_list.c.o
-.PHONY : src/zoo_list.c.o
+__/src/buffer/zoo_list.c.o:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f buffer/CMakeFiles/zoo_buffer_static.dir/build.make buffer/CMakeFiles/zoo_buffer_static.dir/__/src/buffer/zoo_list.c.o
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f buffer/CMakeFiles/zoo_buffer_shared.dir/build.make buffer/CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_list.c.o
+.PHONY : __/src/buffer/zoo_list.c.o
 
-src/zoo_list.i: src/zoo_list.c.i
-.PHONY : src/zoo_list.i
+__/src/buffer/zoo_list.i: __/src/buffer/zoo_list.c.i
+.PHONY : __/src/buffer/zoo_list.i
 
 # target to preprocess a source file
-src/zoo_list.c.i:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f buffer/CMakeFiles/zoo_buffer_static.dir/build.make buffer/CMakeFiles/zoo_buffer_static.dir/src/zoo_list.c.i
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f buffer/CMakeFiles/zoo_buffer_shared.dir/build.make buffer/CMakeFiles/zoo_buffer_shared.dir/src/zoo_list.c.i
-.PHONY : src/zoo_list.c.i
+__/src/buffer/zoo_list.c.i:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f buffer/CMakeFiles/zoo_buffer_static.dir/build.make buffer/CMakeFiles/zoo_buffer_static.dir/__/src/buffer/zoo_list.c.i
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f buffer/CMakeFiles/zoo_buffer_shared.dir/build.make buffer/CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_list.c.i
+.PHONY : __/src/buffer/zoo_list.c.i
 
-src/zoo_list.s: src/zoo_list.c.s
-.PHONY : src/zoo_list.s
+__/src/buffer/zoo_list.s: __/src/buffer/zoo_list.c.s
+.PHONY : __/src/buffer/zoo_list.s
 
 # target to generate assembly for a file
-src/zoo_list.c.s:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f buffer/CMakeFiles/zoo_buffer_static.dir/build.make buffer/CMakeFiles/zoo_buffer_static.dir/src/zoo_list.c.s
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f buffer/CMakeFiles/zoo_buffer_shared.dir/build.make buffer/CMakeFiles/zoo_buffer_shared.dir/src/zoo_list.c.s
-.PHONY : src/zoo_list.c.s
+__/src/buffer/zoo_list.c.s:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f buffer/CMakeFiles/zoo_buffer_static.dir/build.make buffer/CMakeFiles/zoo_buffer_static.dir/__/src/buffer/zoo_list.c.s
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f buffer/CMakeFiles/zoo_buffer_shared.dir/build.make buffer/CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_list.c.s
+.PHONY : __/src/buffer/zoo_list.c.s
 
-src/zoo_queue.o: src/zoo_queue.c.o
-.PHONY : src/zoo_queue.o
+__/src/buffer/zoo_queue.o: __/src/buffer/zoo_queue.c.o
+.PHONY : __/src/buffer/zoo_queue.o
 
 # target to build an object file
-src/zoo_queue.c.o:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f buffer/CMakeFiles/zoo_buffer_static.dir/build.make buffer/CMakeFiles/zoo_buffer_static.dir/src/zoo_queue.c.o
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f buffer/CMakeFiles/zoo_buffer_shared.dir/build.make buffer/CMakeFiles/zoo_buffer_shared.dir/src/zoo_queue.c.o
-.PHONY : src/zoo_queue.c.o
+__/src/buffer/zoo_queue.c.o:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f buffer/CMakeFiles/zoo_buffer_static.dir/build.make buffer/CMakeFiles/zoo_buffer_static.dir/__/src/buffer/zoo_queue.c.o
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f buffer/CMakeFiles/zoo_buffer_shared.dir/build.make buffer/CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_queue.c.o
+.PHONY : __/src/buffer/zoo_queue.c.o
 
-src/zoo_queue.i: src/zoo_queue.c.i
-.PHONY : src/zoo_queue.i
+__/src/buffer/zoo_queue.i: __/src/buffer/zoo_queue.c.i
+.PHONY : __/src/buffer/zoo_queue.i
 
 # target to preprocess a source file
-src/zoo_queue.c.i:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f buffer/CMakeFiles/zoo_buffer_static.dir/build.make buffer/CMakeFiles/zoo_buffer_static.dir/src/zoo_queue.c.i
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f buffer/CMakeFiles/zoo_buffer_shared.dir/build.make buffer/CMakeFiles/zoo_buffer_shared.dir/src/zoo_queue.c.i
-.PHONY : src/zoo_queue.c.i
+__/src/buffer/zoo_queue.c.i:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f buffer/CMakeFiles/zoo_buffer_static.dir/build.make buffer/CMakeFiles/zoo_buffer_static.dir/__/src/buffer/zoo_queue.c.i
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f buffer/CMakeFiles/zoo_buffer_shared.dir/build.make buffer/CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_queue.c.i
+.PHONY : __/src/buffer/zoo_queue.c.i
 
-src/zoo_queue.s: src/zoo_queue.c.s
-.PHONY : src/zoo_queue.s
+__/src/buffer/zoo_queue.s: __/src/buffer/zoo_queue.c.s
+.PHONY : __/src/buffer/zoo_queue.s
 
 # target to generate assembly for a file
-src/zoo_queue.c.s:
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f buffer/CMakeFiles/zoo_buffer_static.dir/build.make buffer/CMakeFiles/zoo_buffer_static.dir/src/zoo_queue.c.s
-	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f buffer/CMakeFiles/zoo_buffer_shared.dir/build.make buffer/CMakeFiles/zoo_buffer_shared.dir/src/zoo_queue.c.s
-.PHONY : src/zoo_queue.c.s
+__/src/buffer/zoo_queue.c.s:
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f buffer/CMakeFiles/zoo_buffer_static.dir/build.make buffer/CMakeFiles/zoo_buffer_static.dir/__/src/buffer/zoo_queue.c.s
+	cd /home/mozeat/zoo/build && $(MAKE) $(MAKESILENT) -f buffer/CMakeFiles/zoo_buffer_shared.dir/build.make buffer/CMakeFiles/zoo_buffer_shared.dir/__/src/buffer/zoo_queue.c.s
+.PHONY : __/src/buffer/zoo_queue.c.s
 
 # Help Target
 help:
@@ -291,12 +291,12 @@ help:
 	@echo "... test"
 	@echo "... zoo_buffer_shared"
 	@echo "... zoo_buffer_static"
-	@echo "... src/zoo_list.o"
-	@echo "... src/zoo_list.i"
-	@echo "... src/zoo_list.s"
-	@echo "... src/zoo_queue.o"
-	@echo "... src/zoo_queue.i"
-	@echo "... src/zoo_queue.s"
+	@echo "... __/src/buffer/zoo_list.o"
+	@echo "... __/src/buffer/zoo_list.i"
+	@echo "... __/src/buffer/zoo_list.s"
+	@echo "... __/src/buffer/zoo_queue.o"
+	@echo "... __/src/buffer/zoo_queue.i"
+	@echo "... __/src/buffer/zoo_queue.s"
 .PHONY : help
 
 

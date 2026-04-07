@@ -1,4 +1,4 @@
-# Install script for directory: /home/mozeat/zoo/socket/examples
+# Install script for directory: /home/mozeat/zoo/examples/socket
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

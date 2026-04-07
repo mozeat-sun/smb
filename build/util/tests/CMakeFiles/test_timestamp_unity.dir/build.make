@@ -70,43 +70,43 @@ include util/tests/CMakeFiles/test_timestamp_unity.dir/progress.make
 include util/tests/CMakeFiles/test_timestamp_unity.dir/flags.make
 
 util/tests/CMakeFiles/test_timestamp_unity.dir/test_zoo_util_timestamp_unity.c.o: util/tests/CMakeFiles/test_timestamp_unity.dir/flags.make
-util/tests/CMakeFiles/test_timestamp_unity.dir/test_zoo_util_timestamp_unity.c.o: ../util/tests/test_zoo_util_timestamp_unity.c
+util/tests/CMakeFiles/test_timestamp_unity.dir/test_zoo_util_timestamp_unity.c.o: ../tests/util/test_zoo_util_timestamp_unity.c
 util/tests/CMakeFiles/test_timestamp_unity.dir/test_zoo_util_timestamp_unity.c.o: util/tests/CMakeFiles/test_timestamp_unity.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object util/tests/CMakeFiles/test_timestamp_unity.dir/test_zoo_util_timestamp_unity.c.o"
-	cd /home/mozeat/zoo/build/util/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT util/tests/CMakeFiles/test_timestamp_unity.dir/test_zoo_util_timestamp_unity.c.o -MF CMakeFiles/test_timestamp_unity.dir/test_zoo_util_timestamp_unity.c.o.d -o CMakeFiles/test_timestamp_unity.dir/test_zoo_util_timestamp_unity.c.o -c /home/mozeat/zoo/util/tests/test_zoo_util_timestamp_unity.c
+	cd /home/mozeat/zoo/build/util/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT util/tests/CMakeFiles/test_timestamp_unity.dir/test_zoo_util_timestamp_unity.c.o -MF CMakeFiles/test_timestamp_unity.dir/test_zoo_util_timestamp_unity.c.o.d -o CMakeFiles/test_timestamp_unity.dir/test_zoo_util_timestamp_unity.c.o -c /home/mozeat/zoo/tests/util/test_zoo_util_timestamp_unity.c
 
 util/tests/CMakeFiles/test_timestamp_unity.dir/test_zoo_util_timestamp_unity.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/test_timestamp_unity.dir/test_zoo_util_timestamp_unity.c.i"
-	cd /home/mozeat/zoo/build/util/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/util/tests/test_zoo_util_timestamp_unity.c > CMakeFiles/test_timestamp_unity.dir/test_zoo_util_timestamp_unity.c.i
+	cd /home/mozeat/zoo/build/util/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/util/test_zoo_util_timestamp_unity.c > CMakeFiles/test_timestamp_unity.dir/test_zoo_util_timestamp_unity.c.i
 
 util/tests/CMakeFiles/test_timestamp_unity.dir/test_zoo_util_timestamp_unity.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/test_timestamp_unity.dir/test_zoo_util_timestamp_unity.c.s"
-	cd /home/mozeat/zoo/build/util/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/util/tests/test_zoo_util_timestamp_unity.c -o CMakeFiles/test_timestamp_unity.dir/test_zoo_util_timestamp_unity.c.s
+	cd /home/mozeat/zoo/build/util/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/util/test_zoo_util_timestamp_unity.c -o CMakeFiles/test_timestamp_unity.dir/test_zoo_util_timestamp_unity.c.s
 
-util/tests/CMakeFiles/test_timestamp_unity.dir/__/__/third_party/test/unity/src/unity.c.o: util/tests/CMakeFiles/test_timestamp_unity.dir/flags.make
-util/tests/CMakeFiles/test_timestamp_unity.dir/__/__/third_party/test/unity/src/unity.c.o: ../third_party/test/unity/src/unity.c
-util/tests/CMakeFiles/test_timestamp_unity.dir/__/__/third_party/test/unity/src/unity.c.o: util/tests/CMakeFiles/test_timestamp_unity.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object util/tests/CMakeFiles/test_timestamp_unity.dir/__/__/third_party/test/unity/src/unity.c.o"
-	cd /home/mozeat/zoo/build/util/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT util/tests/CMakeFiles/test_timestamp_unity.dir/__/__/third_party/test/unity/src/unity.c.o -MF CMakeFiles/test_timestamp_unity.dir/__/__/third_party/test/unity/src/unity.c.o.d -o CMakeFiles/test_timestamp_unity.dir/__/__/third_party/test/unity/src/unity.c.o -c /home/mozeat/zoo/third_party/test/unity/src/unity.c
+util/tests/CMakeFiles/test_timestamp_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o: util/tests/CMakeFiles/test_timestamp_unity.dir/flags.make
+util/tests/CMakeFiles/test_timestamp_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o: ../thirdparty/test/unity/src/unity.c
+util/tests/CMakeFiles/test_timestamp_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o: util/tests/CMakeFiles/test_timestamp_unity.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object util/tests/CMakeFiles/test_timestamp_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o"
+	cd /home/mozeat/zoo/build/util/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT util/tests/CMakeFiles/test_timestamp_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o -MF CMakeFiles/test_timestamp_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o.d -o CMakeFiles/test_timestamp_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o -c /home/mozeat/zoo/thirdparty/test/unity/src/unity.c
 
-util/tests/CMakeFiles/test_timestamp_unity.dir/__/__/third_party/test/unity/src/unity.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/test_timestamp_unity.dir/__/__/third_party/test/unity/src/unity.c.i"
-	cd /home/mozeat/zoo/build/util/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/third_party/test/unity/src/unity.c > CMakeFiles/test_timestamp_unity.dir/__/__/third_party/test/unity/src/unity.c.i
+util/tests/CMakeFiles/test_timestamp_unity.dir/__/__/thirdparty/test/unity/src/unity.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/test_timestamp_unity.dir/__/__/thirdparty/test/unity/src/unity.c.i"
+	cd /home/mozeat/zoo/build/util/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/thirdparty/test/unity/src/unity.c > CMakeFiles/test_timestamp_unity.dir/__/__/thirdparty/test/unity/src/unity.c.i
 
-util/tests/CMakeFiles/test_timestamp_unity.dir/__/__/third_party/test/unity/src/unity.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/test_timestamp_unity.dir/__/__/third_party/test/unity/src/unity.c.s"
-	cd /home/mozeat/zoo/build/util/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/third_party/test/unity/src/unity.c -o CMakeFiles/test_timestamp_unity.dir/__/__/third_party/test/unity/src/unity.c.s
+util/tests/CMakeFiles/test_timestamp_unity.dir/__/__/thirdparty/test/unity/src/unity.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/test_timestamp_unity.dir/__/__/thirdparty/test/unity/src/unity.c.s"
+	cd /home/mozeat/zoo/build/util/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/thirdparty/test/unity/src/unity.c -o CMakeFiles/test_timestamp_unity.dir/__/__/thirdparty/test/unity/src/unity.c.s
 
 # Object files for target test_timestamp_unity
 test_timestamp_unity_OBJECTS = \
 "CMakeFiles/test_timestamp_unity.dir/test_zoo_util_timestamp_unity.c.o" \
-"CMakeFiles/test_timestamp_unity.dir/__/__/third_party/test/unity/src/unity.c.o"
+"CMakeFiles/test_timestamp_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o"
 
 # External object files for target test_timestamp_unity
 test_timestamp_unity_EXTERNAL_OBJECTS =
 
 util/tests/test_timestamp_unity: util/tests/CMakeFiles/test_timestamp_unity.dir/test_zoo_util_timestamp_unity.c.o
-util/tests/test_timestamp_unity: util/tests/CMakeFiles/test_timestamp_unity.dir/__/__/third_party/test/unity/src/unity.c.o
+util/tests/test_timestamp_unity: util/tests/CMakeFiles/test_timestamp_unity.dir/__/__/thirdparty/test/unity/src/unity.c.o
 util/tests/test_timestamp_unity: util/tests/CMakeFiles/test_timestamp_unity.dir/build.make
 util/tests/test_timestamp_unity: util/libzoo_util.a
 util/tests/test_timestamp_unity: util/tests/CMakeFiles/test_timestamp_unity.dir/link.txt
@@ -122,6 +122,6 @@ util/tests/CMakeFiles/test_timestamp_unity.dir/clean:
 .PHONY : util/tests/CMakeFiles/test_timestamp_unity.dir/clean
 
 util/tests/CMakeFiles/test_timestamp_unity.dir/depend:
-	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/util/tests /home/mozeat/zoo/build /home/mozeat/zoo/build/util/tests /home/mozeat/zoo/build/util/tests/CMakeFiles/test_timestamp_unity.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/tests/util /home/mozeat/zoo/build /home/mozeat/zoo/build/util/tests /home/mozeat/zoo/build/util/tests/CMakeFiles/test_timestamp_unity.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : util/tests/CMakeFiles/test_timestamp_unity.dir/depend
 

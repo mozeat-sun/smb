@@ -70,144 +70,144 @@ include socket/tests/CMakeFiles/zoo_socket_tests.dir/progress.make
 include socket/tests/CMakeFiles/zoo_socket_tests.dir/flags.make
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_runner.c.o: socket/tests/CMakeFiles/zoo_socket_tests.dir/flags.make
-socket/tests/CMakeFiles/zoo_socket_tests.dir/test_runner.c.o: ../socket/tests/test_runner.c
+socket/tests/CMakeFiles/zoo_socket_tests.dir/test_runner.c.o: ../tests/socket/test_runner.c
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_runner.c.o: socket/tests/CMakeFiles/zoo_socket_tests.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object socket/tests/CMakeFiles/zoo_socket_tests.dir/test_runner.c.o"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/tests/CMakeFiles/zoo_socket_tests.dir/test_runner.c.o -MF CMakeFiles/zoo_socket_tests.dir/test_runner.c.o.d -o CMakeFiles/zoo_socket_tests.dir/test_runner.c.o -c /home/mozeat/zoo/socket/tests/test_runner.c
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/tests/CMakeFiles/zoo_socket_tests.dir/test_runner.c.o -MF CMakeFiles/zoo_socket_tests.dir/test_runner.c.o.d -o CMakeFiles/zoo_socket_tests.dir/test_runner.c.o -c /home/mozeat/zoo/tests/socket/test_runner.c
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_runner.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_socket_tests.dir/test_runner.c.i"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/socket/tests/test_runner.c > CMakeFiles/zoo_socket_tests.dir/test_runner.c.i
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/socket/test_runner.c > CMakeFiles/zoo_socket_tests.dir/test_runner.c.i
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_runner.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_socket_tests.dir/test_runner.c.s"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/socket/tests/test_runner.c -o CMakeFiles/zoo_socket_tests.dir/test_runner.c.s
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/socket/test_runner.c -o CMakeFiles/zoo_socket_tests.dir/test_runner.c.s
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_init.c.o: socket/tests/CMakeFiles/zoo_socket_tests.dir/flags.make
-socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_init.c.o: ../socket/tests/test_zoo_socket_init.c
+socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_init.c.o: ../tests/socket/test_zoo_socket_init.c
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_init.c.o: socket/tests/CMakeFiles/zoo_socket_tests.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_init.c.o"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_init.c.o -MF CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_init.c.o.d -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_init.c.o -c /home/mozeat/zoo/socket/tests/test_zoo_socket_init.c
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_init.c.o -MF CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_init.c.o.d -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_init.c.o -c /home/mozeat/zoo/tests/socket/test_zoo_socket_init.c
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_init.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_init.c.i"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/socket/tests/test_zoo_socket_init.c > CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_init.c.i
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/socket/test_zoo_socket_init.c > CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_init.c.i
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_init.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_init.c.s"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/socket/tests/test_zoo_socket_init.c -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_init.c.s
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/socket/test_zoo_socket_init.c -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_init.c.s
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_create.c.o: socket/tests/CMakeFiles/zoo_socket_tests.dir/flags.make
-socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_create.c.o: ../socket/tests/test_zoo_socket_create.c
+socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_create.c.o: ../tests/socket/test_zoo_socket_create.c
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_create.c.o: socket/tests/CMakeFiles/zoo_socket_tests.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_create.c.o"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_create.c.o -MF CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_create.c.o.d -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_create.c.o -c /home/mozeat/zoo/socket/tests/test_zoo_socket_create.c
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_create.c.o -MF CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_create.c.o.d -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_create.c.o -c /home/mozeat/zoo/tests/socket/test_zoo_socket_create.c
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_create.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_create.c.i"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/socket/tests/test_zoo_socket_create.c > CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_create.c.i
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/socket/test_zoo_socket_create.c > CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_create.c.i
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_create.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_create.c.s"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/socket/tests/test_zoo_socket_create.c -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_create.c.s
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/socket/test_zoo_socket_create.c -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_create.c.s
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_address.c.o: socket/tests/CMakeFiles/zoo_socket_tests.dir/flags.make
-socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_address.c.o: ../socket/tests/test_zoo_socket_address.c
+socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_address.c.o: ../tests/socket/test_zoo_socket_address.c
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_address.c.o: socket/tests/CMakeFiles/zoo_socket_tests.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_address.c.o"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_address.c.o -MF CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_address.c.o.d -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_address.c.o -c /home/mozeat/zoo/socket/tests/test_zoo_socket_address.c
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_address.c.o -MF CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_address.c.o.d -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_address.c.o -c /home/mozeat/zoo/tests/socket/test_zoo_socket_address.c
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_address.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_address.c.i"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/socket/tests/test_zoo_socket_address.c > CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_address.c.i
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/socket/test_zoo_socket_address.c > CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_address.c.i
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_address.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_address.c.s"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/socket/tests/test_zoo_socket_address.c -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_address.c.s
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/socket/test_zoo_socket_address.c -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_address.c.s
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_connect.c.o: socket/tests/CMakeFiles/zoo_socket_tests.dir/flags.make
-socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_connect.c.o: ../socket/tests/test_zoo_socket_connect.c
+socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_connect.c.o: ../tests/socket/test_zoo_socket_connect.c
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_connect.c.o: socket/tests/CMakeFiles/zoo_socket_tests.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_connect.c.o"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_connect.c.o -MF CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_connect.c.o.d -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_connect.c.o -c /home/mozeat/zoo/socket/tests/test_zoo_socket_connect.c
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_connect.c.o -MF CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_connect.c.o.d -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_connect.c.o -c /home/mozeat/zoo/tests/socket/test_zoo_socket_connect.c
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_connect.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_connect.c.i"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/socket/tests/test_zoo_socket_connect.c > CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_connect.c.i
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/socket/test_zoo_socket_connect.c > CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_connect.c.i
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_connect.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_connect.c.s"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/socket/tests/test_zoo_socket_connect.c -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_connect.c.s
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/socket/test_zoo_socket_connect.c -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_connect.c.s
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_bind_listen.c.o: socket/tests/CMakeFiles/zoo_socket_tests.dir/flags.make
-socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_bind_listen.c.o: ../socket/tests/test_zoo_socket_bind_listen.c
+socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_bind_listen.c.o: ../tests/socket/test_zoo_socket_bind_listen.c
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_bind_listen.c.o: socket/tests/CMakeFiles/zoo_socket_tests.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_bind_listen.c.o"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_bind_listen.c.o -MF CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_bind_listen.c.o.d -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_bind_listen.c.o -c /home/mozeat/zoo/socket/tests/test_zoo_socket_bind_listen.c
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_bind_listen.c.o -MF CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_bind_listen.c.o.d -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_bind_listen.c.o -c /home/mozeat/zoo/tests/socket/test_zoo_socket_bind_listen.c
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_bind_listen.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_bind_listen.c.i"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/socket/tests/test_zoo_socket_bind_listen.c > CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_bind_listen.c.i
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/socket/test_zoo_socket_bind_listen.c > CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_bind_listen.c.i
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_bind_listen.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_bind_listen.c.s"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/socket/tests/test_zoo_socket_bind_listen.c -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_bind_listen.c.s
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/socket/test_zoo_socket_bind_listen.c -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_bind_listen.c.s
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_send_recv.c.o: socket/tests/CMakeFiles/zoo_socket_tests.dir/flags.make
-socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_send_recv.c.o: ../socket/tests/test_zoo_socket_send_recv.c
+socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_send_recv.c.o: ../tests/socket/test_zoo_socket_send_recv.c
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_send_recv.c.o: socket/tests/CMakeFiles/zoo_socket_tests.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_send_recv.c.o"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_send_recv.c.o -MF CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_send_recv.c.o.d -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_send_recv.c.o -c /home/mozeat/zoo/socket/tests/test_zoo_socket_send_recv.c
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_send_recv.c.o -MF CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_send_recv.c.o.d -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_send_recv.c.o -c /home/mozeat/zoo/tests/socket/test_zoo_socket_send_recv.c
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_send_recv.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_send_recv.c.i"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/socket/tests/test_zoo_socket_send_recv.c > CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_send_recv.c.i
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/socket/test_zoo_socket_send_recv.c > CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_send_recv.c.i
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_send_recv.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_send_recv.c.s"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/socket/tests/test_zoo_socket_send_recv.c -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_send_recv.c.s
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/socket/test_zoo_socket_send_recv.c -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_send_recv.c.s
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_options.c.o: socket/tests/CMakeFiles/zoo_socket_tests.dir/flags.make
-socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_options.c.o: ../socket/tests/test_zoo_socket_options.c
+socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_options.c.o: ../tests/socket/test_zoo_socket_options.c
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_options.c.o: socket/tests/CMakeFiles/zoo_socket_tests.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building C object socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_options.c.o"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_options.c.o -MF CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_options.c.o.d -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_options.c.o -c /home/mozeat/zoo/socket/tests/test_zoo_socket_options.c
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_options.c.o -MF CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_options.c.o.d -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_options.c.o -c /home/mozeat/zoo/tests/socket/test_zoo_socket_options.c
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_options.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_options.c.i"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/socket/tests/test_zoo_socket_options.c > CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_options.c.i
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/socket/test_zoo_socket_options.c > CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_options.c.i
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_options.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_options.c.s"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/socket/tests/test_zoo_socket_options.c -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_options.c.s
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/socket/test_zoo_socket_options.c -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_options.c.s
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_select.c.o: socket/tests/CMakeFiles/zoo_socket_tests.dir/flags.make
-socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_select.c.o: ../socket/tests/test_zoo_socket_select.c
+socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_select.c.o: ../tests/socket/test_zoo_socket_select.c
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_select.c.o: socket/tests/CMakeFiles/zoo_socket_tests.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building C object socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_select.c.o"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_select.c.o -MF CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_select.c.o.d -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_select.c.o -c /home/mozeat/zoo/socket/tests/test_zoo_socket_select.c
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_select.c.o -MF CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_select.c.o.d -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_select.c.o -c /home/mozeat/zoo/tests/socket/test_zoo_socket_select.c
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_select.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_select.c.i"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/socket/tests/test_zoo_socket_select.c > CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_select.c.i
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/socket/test_zoo_socket_select.c > CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_select.c.i
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_select.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_select.c.s"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/socket/tests/test_zoo_socket_select.c -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_select.c.s
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/socket/test_zoo_socket_select.c -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_select.c.s
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_error.c.o: socket/tests/CMakeFiles/zoo_socket_tests.dir/flags.make
-socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_error.c.o: ../socket/tests/test_zoo_socket_error.c
+socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_error.c.o: ../tests/socket/test_zoo_socket_error.c
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_error.c.o: socket/tests/CMakeFiles/zoo_socket_tests.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building C object socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_error.c.o"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_error.c.o -MF CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_error.c.o.d -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_error.c.o -c /home/mozeat/zoo/socket/tests/test_zoo_socket_error.c
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_error.c.o -MF CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_error.c.o.d -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_error.c.o -c /home/mozeat/zoo/tests/socket/test_zoo_socket_error.c
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_error.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_error.c.i"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/socket/tests/test_zoo_socket_error.c > CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_error.c.i
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/tests/socket/test_zoo_socket_error.c > CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_error.c.i
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_error.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_error.c.s"
-	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/socket/tests/test_zoo_socket_error.c -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_error.c.s
+	cd /home/mozeat/zoo/build/socket/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/tests/socket/test_zoo_socket_error.c -o CMakeFiles/zoo_socket_tests.dir/test_zoo_socket_error.c.s
 
 # Object files for target zoo_socket_tests
 zoo_socket_tests_OBJECTS = \
@@ -251,6 +251,6 @@ socket/tests/CMakeFiles/zoo_socket_tests.dir/clean:
 .PHONY : socket/tests/CMakeFiles/zoo_socket_tests.dir/clean
 
 socket/tests/CMakeFiles/zoo_socket_tests.dir/depend:
-	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/socket/tests /home/mozeat/zoo/build /home/mozeat/zoo/build/socket/tests /home/mozeat/zoo/build/socket/tests/CMakeFiles/zoo_socket_tests.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/tests/socket /home/mozeat/zoo/build /home/mozeat/zoo/build/socket/tests /home/mozeat/zoo/build/socket/tests/CMakeFiles/zoo_socket_tests.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : socket/tests/CMakeFiles/zoo_socket_tests.dir/depend
 

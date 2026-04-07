@@ -69,28 +69,28 @@ include memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/progress.make
 # Include the compile flags for this target's objects.
 include memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/flags.make
 
-memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/src/zoo_memory_pool.c.o: memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/flags.make
-memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/src/zoo_memory_pool.c.o: ../memory_pool/src/zoo_memory_pool.c
-memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/src/zoo_memory_pool.c.o: memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/src/zoo_memory_pool.c.o"
-	cd /home/mozeat/zoo/build/memory_pool && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/src/zoo_memory_pool.c.o -MF CMakeFiles/zoo_memory_pool_shared.dir/src/zoo_memory_pool.c.o.d -o CMakeFiles/zoo_memory_pool_shared.dir/src/zoo_memory_pool.c.o -c /home/mozeat/zoo/memory_pool/src/zoo_memory_pool.c
+memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/__/src/memory_pool/zoo_memory_pool.c.o: memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/flags.make
+memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/__/src/memory_pool/zoo_memory_pool.c.o: ../src/memory_pool/zoo_memory_pool.c
+memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/__/src/memory_pool/zoo_memory_pool.c.o: memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/__/src/memory_pool/zoo_memory_pool.c.o"
+	cd /home/mozeat/zoo/build/memory_pool && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/__/src/memory_pool/zoo_memory_pool.c.o -MF CMakeFiles/zoo_memory_pool_shared.dir/__/src/memory_pool/zoo_memory_pool.c.o.d -o CMakeFiles/zoo_memory_pool_shared.dir/__/src/memory_pool/zoo_memory_pool.c.o -c /home/mozeat/zoo/src/memory_pool/zoo_memory_pool.c
 
-memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/src/zoo_memory_pool.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_memory_pool_shared.dir/src/zoo_memory_pool.c.i"
-	cd /home/mozeat/zoo/build/memory_pool && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/memory_pool/src/zoo_memory_pool.c > CMakeFiles/zoo_memory_pool_shared.dir/src/zoo_memory_pool.c.i
+memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/__/src/memory_pool/zoo_memory_pool.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/zoo_memory_pool_shared.dir/__/src/memory_pool/zoo_memory_pool.c.i"
+	cd /home/mozeat/zoo/build/memory_pool && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/mozeat/zoo/src/memory_pool/zoo_memory_pool.c > CMakeFiles/zoo_memory_pool_shared.dir/__/src/memory_pool/zoo_memory_pool.c.i
 
-memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/src/zoo_memory_pool.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_memory_pool_shared.dir/src/zoo_memory_pool.c.s"
-	cd /home/mozeat/zoo/build/memory_pool && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/memory_pool/src/zoo_memory_pool.c -o CMakeFiles/zoo_memory_pool_shared.dir/src/zoo_memory_pool.c.s
+memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/__/src/memory_pool/zoo_memory_pool.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/zoo_memory_pool_shared.dir/__/src/memory_pool/zoo_memory_pool.c.s"
+	cd /home/mozeat/zoo/build/memory_pool && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/mozeat/zoo/src/memory_pool/zoo_memory_pool.c -o CMakeFiles/zoo_memory_pool_shared.dir/__/src/memory_pool/zoo_memory_pool.c.s
 
 # Object files for target zoo_memory_pool_shared
 zoo_memory_pool_shared_OBJECTS = \
-"CMakeFiles/zoo_memory_pool_shared.dir/src/zoo_memory_pool.c.o"
+"CMakeFiles/zoo_memory_pool_shared.dir/__/src/memory_pool/zoo_memory_pool.c.o"
 
 # External object files for target zoo_memory_pool_shared
 zoo_memory_pool_shared_EXTERNAL_OBJECTS =
 
-memory_pool/libzoo_memory_pool.so.1.0.0: memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/src/zoo_memory_pool.c.o
+memory_pool/libzoo_memory_pool.so.1.0.0: memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/__/src/memory_pool/zoo_memory_pool.c.o
 memory_pool/libzoo_memory_pool.so.1.0.0: memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/build.make
 memory_pool/libzoo_memory_pool.so.1.0.0: memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C shared library libzoo_memory_pool.so"

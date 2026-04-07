@@ -1,1 +1,0 @@
-/usr/bin/cc  -Wall -Wextra -Wpedantic -D_GNU_SOURCE -O3 -DNDEBUG -O2 -DNDEBUG CMakeFiles/address_example.dir/address_example.c.o -o address_example  ../libzoo_socket.a -lpthread 

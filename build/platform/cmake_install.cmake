@@ -93,10 +93,10 @@ endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/zoo" TYPE FILE FILES
-    "/home/mozeat/zoo/platform/inc/zoo.h"
-    "/home/mozeat/zoo/platform/inc/zoo_error.h"
-    "/home/mozeat/zoo/platform/inc/zoo_types.h"
-    "/home/mozeat/zoo/platform/inc/zoo_platform.h"
+    "/home/mozeat/zoo/platform/../include/platform/zoo.h"
+    "/home/mozeat/zoo/platform/../include/platform/zoo_error.h"
+    "/home/mozeat/zoo/platform/../include/platform/zoo_types.h"
+    "/home/mozeat/zoo/platform/../include/platform/zoo_platform.h"
     )
 endif()
 

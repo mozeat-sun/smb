@@ -1,8 +1,8 @@
 log/tests/CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.o: \
- /home/mozeat/zoo/log/tests/test_zoo_log.c /usr/include/stdc-predef.h \
- /home/mozeat/zoo/third_party/test/unity/src/unity.h \
- /home/mozeat/zoo/third_party/test/unity/src/unity_internals.h \
- /home/mozeat/zoo/third_party/test/unity/unity_config.h \
+ /home/mozeat/zoo/tests/log/test_zoo_log.c /usr/include/stdc-predef.h \
+ /home/mozeat/zoo/thirdparty/test/unity/src/unity.h \
+ /home/mozeat/zoo/thirdparty/test/unity/src/unity_internals.h \
+ /home/mozeat/zoo/thirdparty/test/unity/unity_config.h \
  /usr/include/math.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -51,11 +51,10 @@ log/tests/CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.o: \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/stdio2.h \
- /home/mozeat/zoo/log/inc/zoo_log.h \
- /home/mozeat/zoo/log/inc/../../platform/inc/zoo_types.h \
+ /home/mozeat/zoo/include/log/zoo_log.h \
+ /home/mozeat/zoo/include/platform/zoo_types.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdbool.h \
- /usr/include/inttypes.h \
- /home/mozeat/zoo/log/inc/../../platform/inc/zoo_platform.h \
+ /usr/include/inttypes.h /home/mozeat/zoo/include/platform/zoo_platform.h \
  /usr/include/time.h /usr/include/x86_64-linux-gnu/bits/time.h \
  /usr/include/x86_64-linux-gnu/bits/timex.h \
  /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
@@ -121,10 +120,9 @@ log/tests/CMakeFiles/zoo_log_tests.dir/test_zoo_log.c.o: \
  /usr/include/x86_64-linux-gnu/bits/syslog-path.h \
  /usr/include/x86_64-linux-gnu/bits/syslog.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdatomic.h \
- /home/mozeat/zoo/platform/inc/zoo.h \
- /home/mozeat/zoo/platform/inc/zoo_platform.h \
- /home/mozeat/zoo/platform/inc/zoo_types.h \
- /home/mozeat/zoo/platform/inc/zoo_error.h /usr/include/stdlib.h \
+ /home/mozeat/zoo/include/platform/zoo.h \
+ /home/mozeat/zoo/include/platform/zoo_types.h \
+ /home/mozeat/zoo/include/platform/zoo_error.h /usr/include/stdlib.h \
  /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h /usr/include/alloca.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \

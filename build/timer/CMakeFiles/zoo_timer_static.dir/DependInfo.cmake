@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/mozeat/zoo/timer/src/zoo_timer.c" "timer/CMakeFiles/zoo_timer_static.dir/src/zoo_timer.c.o" "gcc" "timer/CMakeFiles/zoo_timer_static.dir/src/zoo_timer.c.o.d"
+  "/home/mozeat/zoo/src/timer/zoo_timer.c" "timer/CMakeFiles/zoo_timer_static.dir/__/src/timer/zoo_timer.c.o" "gcc" "timer/CMakeFiles/zoo_timer_static.dir/__/src/timer/zoo_timer.c.o.d"
   )
 
 # Targets to which this target links.

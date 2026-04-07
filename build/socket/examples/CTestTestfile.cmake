@@ -1,5 +1,5 @@
 # CMake generated Testfile for 
-# Source directory: /home/mozeat/zoo/socket/examples
+# Source directory: /home/mozeat/zoo/examples/socket
 # Build directory: /home/mozeat/zoo/build/socket/examples
 # 
 # This file includes the relevant testing commands required for 

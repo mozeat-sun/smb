@@ -83,6 +83,6 @@ memory_pool/tests/CMakeFiles/memory_pool_quick_test.dir/clean:
 .PHONY : memory_pool/tests/CMakeFiles/memory_pool_quick_test.dir/clean
 
 memory_pool/tests/CMakeFiles/memory_pool_quick_test.dir/depend:
-	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/memory_pool/tests /home/mozeat/zoo/build /home/mozeat/zoo/build/memory_pool/tests /home/mozeat/zoo/build/memory_pool/tests/CMakeFiles/memory_pool_quick_test.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mozeat/zoo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mozeat/zoo /home/mozeat/zoo/tests/memory_pool /home/mozeat/zoo/build /home/mozeat/zoo/build/memory_pool/tests /home/mozeat/zoo/build/memory_pool/tests/CMakeFiles/memory_pool_quick_test.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : memory_pool/tests/CMakeFiles/memory_pool_quick_test.dir/depend
 
