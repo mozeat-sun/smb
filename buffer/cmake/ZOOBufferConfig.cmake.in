@@ -1,0 +1,20 @@
+# ZOOBufferConfig.cmake.in
+# CMake package configuration file for ZOO Buffer Module
+
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+# Find dependencies
+if(@ZOO_TARGET_OS@ STREQUAL "Linux")
+    find_dependency(Threads REQUIRED)
+endif()
+
+# Include the targets file
+include("${CMAKE_CURRENT_LIST_DIR}/ZOOBufferTargets.cmake")
+
+# Set variables for users
+set(ZOOBuffer_LIBRARIES ZOO::zoo_buffer)
+set(ZOOBuffer_INCLUDE_DIRS "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@/zoo")
+
+check_required_components(ZOOBuffer)

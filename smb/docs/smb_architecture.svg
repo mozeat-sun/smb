@@ -1,0 +1,172 @@
+<svg width="1400" height="920" viewBox="0 0 1400 920" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">ZOO SMB Architecture</title>
+  <desc id="desc">Layered architecture for ZOO SMB including node API, core runtime, routing policy, transport protocol, and platform utility dependencies.</desc>
+
+  <defs>
+    <style>
+      .bg { fill: #0e1628; }
+      .title { fill: #ffffff; font: 700 30px 'Segoe UI', Arial, sans-serif; }
+      .subtitle { fill: #a9c2f0; font: 400 15px 'Segoe UI', Arial, sans-serif; }
+
+      .layerA { fill: #13233f; stroke: #3f6fb5; stroke-width: 2; rx: 14; }
+      .layerB { fill: #142b4a; stroke: #4d7fcc; stroke-width: 2; rx: 14; }
+      .layerLabel { fill: #dce9ff; font: 600 20px 'Segoe UI', Arial, sans-serif; }
+
+      .boxA { fill: #1d3458; stroke: #6a9be0; stroke-width: 2; rx: 10; }
+      .boxB { fill: #24426d; stroke: #83b1ef; stroke-width: 2; rx: 10; }
+      .boxText { fill: #f0f6ff; font: 600 17px 'Segoe UI', Arial, sans-serif; }
+      .boxSub { fill: #c1d9ff; font: 400 13px 'Segoe UI', Arial, sans-serif; }
+
+      .arrow { stroke: #8fc4ff; stroke-width: 2.6; fill: none; marker-end: url(#mBlue); }
+      .arrow2 { stroke: #79dfbd; stroke-width: 2.6; fill: none; marker-end: url(#mGreen); }
+      .legend { fill: #cfe2ff; font: 400 13px 'Segoe UI', Arial, sans-serif; }
+    </style>
+
+    <marker id="mBlue" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8fc4ff"/>
+    </marker>
+    <marker id="mGreen" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#79dfbd"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1400" height="920"/>
+
+  <text class="title" x="34" y="48">ZOO SMB - Architecture Design</text>
+  <text class="subtitle" x="34" y="74">Node API to Runtime, Routing, Transport, and Platform Foundation</text>
+
+  <!-- Layer 1 -->
+  <rect class="layerA" x="26" y="96" width="1348" height="140"/>
+  <text class="layerLabel" x="46" y="126">Layer 1: Application / Node API</text>
+
+  <rect class="boxA" x="54" y="144" width="300" height="74"/>
+  <text class="boxText" x="162" y="172">Server</text>
+  <text class="boxSub" x="88" y="193">zoo_smb_create_server()</text>
+
+  <rect class="boxA" x="378" y="144" width="300" height="74"/>
+  <text class="boxText" x="490" y="172">Client</text>
+  <text class="boxSub" x="414" y="193">zoo_smb_create_client()</text>
+
+  <rect class="boxA" x="702" y="144" width="300" height="74"/>
+  <text class="boxText" x="796" y="172">Publisher</text>
+  <text class="boxSub" x="728" y="193">zoo_smb_publish_message()</text>
+
+  <rect class="boxA" x="1026" y="144" width="320" height="74"/>
+  <text class="boxText" x="1134" y="172">Subscriber</text>
+  <text class="boxSub" x="1050" y="193">zoo_smb_subscribe_message()</text>
+
+  <!-- Layer 2 -->
+  <rect class="layerB" x="26" y="254" width="1348" height="172"/>
+  <text class="layerLabel" x="46" y="284">Layer 2: Core Bus &amp; Runtime</text>
+
+  <rect class="boxB" x="54" y="304" width="300" height="100"/>
+  <text class="boxText" x="133" y="334">Message Dispatcher</text>
+  <text class="boxSub" x="82" y="356">ingress / local dispatch / forward</text>
+  <text class="boxSub" x="82" y="376">bridge Node API and routing</text>
+
+  <rect class="boxB" x="378" y="304" width="300" height="100"/>
+  <text class="boxText" x="472" y="334">Runtime</text>
+  <text class="boxSub" x="408" y="356">lifecycle + state transitions</text>
+  <text class="boxSub" x="408" y="376">HA scaffold / role management</text>
+
+  <rect class="boxB" x="702" y="304" width="300" height="100"/>
+  <text class="boxText" x="780" y="334">Service Manager</text>
+  <text class="boxSub" x="734" y="356">service lifecycle governance</text>
+  <text class="boxSub" x="734" y="376">dependency orchestration</text>
+
+  <rect class="boxB" x="1026" y="304" width="320" height="100"/>
+  <text class="boxText" x="1097" y="334">Service Discovery</text>
+  <text class="boxSub" x="1052" y="356">registry and discovery sync</text>
+  <text class="boxSub" x="1052" y="376">cluster awareness input</text>
+
+  <!-- Layer 3 -->
+  <rect class="layerA" x="26" y="444" width="1348" height="172"/>
+  <text class="layerLabel" x="46" y="474">Layer 3: Routing &amp; Policy</text>
+
+  <rect class="boxA" x="54" y="494" width="300" height="100"/>
+  <text class="boxText" x="130" y="524">Routing Engine</text>
+  <text class="boxSub" x="88" y="546">rule match and target decision</text>
+  <text class="boxSub" x="88" y="566">drop reason and flow control hooks</text>
+
+  <rect class="boxA" x="378" y="494" width="300" height="100"/>
+  <text class="boxText" x="457" y="524">Rule Manager</text>
+  <text class="boxSub" x="407" y="546">hashed rule index + consistency</text>
+  <text class="boxSub" x="407" y="566">rule lifecycle operations</text>
+
+  <rect class="boxA" x="702" y="494" width="300" height="100"/>
+  <text class="boxText" x="798" y="524">Routing Rule</text>
+  <text class="boxSub" x="736" y="546">routing condition model</text>
+  <text class="boxSub" x="736" y="566">strategy and priority metadata</text>
+
+  <rect class="boxA" x="1026" y="494" width="320" height="100"/>
+  <text class="boxText" x="1158" y="524">QoS</text>
+  <text class="boxSub" x="1058" y="546">retry / throttle / backpressure</text>
+  <text class="boxSub" x="1058" y="566">queue pressure policy</text>
+
+  <!-- Layer 4 -->
+  <rect class="layerB" x="26" y="634" width="1348" height="168"/>
+  <text class="layerLabel" x="46" y="664">Layer 4: Transport &amp; Protocol</text>
+
+  <rect class="boxB" x="54" y="684" width="260" height="98"/>
+  <text class="boxText" x="103" y="714">Reactor / Event Loop</text>
+  <text class="boxSub" x="79" y="736">ingress event scheduling</text>
+  <text class="boxSub" x="79" y="756">readable/writable trigger</text>
+
+  <rect class="boxB" x="332" y="684" width="280" height="98"/>
+  <text class="boxText" x="384" y="714">Transport Manager</text>
+  <text class="boxSub" x="358" y="736">health + circuit breaker</text>
+  <text class="boxSub" x="358" y="756">send retry orchestration</text>
+
+  <rect class="boxB" x="630" y="684" width="220" height="98"/>
+  <text class="boxText" x="709" y="714">Protocol</text>
+  <text class="boxSub" x="654" y="736">serialize / deserialize</text>
+  <text class="boxSub" x="654" y="756">message framing</text>
+
+  <rect class="boxB" x="868" y="684" width="220" height="98"/>
+  <text class="boxText" x="958" y="714">TCP/UDP</text>
+  <text class="boxSub" x="890" y="736">unicast / broadcast</text>
+  <text class="boxSub" x="890" y="756">network backends</text>
+
+  <rect class="boxB" x="1106" y="684" width="240" height="98"/>
+  <text class="boxText" x="1202" y="714">SHM</text>
+  <text class="boxSub" x="1136" y="736">shared-memory transport</text>
+  <text class="boxSub" x="1136" y="756">low latency local path</text>
+
+  <!-- Dependencies strip -->
+  <rect class="layerA" x="26" y="816" width="1348" height="76"/>
+  <text class="layerLabel" x="46" y="847">Platform &amp; Utility Dependencies</text>
+  <text class="legend" x="52" y="872">Buffer/Queue  |  Ring Buffer  |  Thread/Mutex/Cond  |  Memory Pool  |  Socket/Event Backend  |  Timer  |  Metrics</text>
+
+  <!-- Arrows from layer 1 to layer 2 -->
+  <path class="arrow" d="M204 218 L204 300"/>
+  <path class="arrow" d="M528 218 L528 300"/>
+  <path class="arrow" d="M852 218 L852 300"/>
+  <path class="arrow" d="M1188 218 L1188 300"/>
+
+  <!-- Arrows inside core -->
+  <path class="arrow" d="M354 354 L378 354"/>
+  <path class="arrow" d="M678 354 L702 354"/>
+  <path class="arrow" d="M1002 354 L1026 354"/>
+
+  <!-- Core to routing -->
+  <path class="arrow2" d="M204 404 L204 490"/>
+  <path class="arrow2" d="M528 404 L528 490"/>
+  <path class="arrow2" d="M852 404 L852 490"/>
+  <path class="arrow2" d="M1188 404 L1188 490"/>
+
+  <!-- Routing to transport -->
+  <path class="arrow2" d="M204 594 L184 680"/>
+  <path class="arrow2" d="M528 594 L472 680"/>
+  <path class="arrow2" d="M852 594 L740 680"/>
+  <path class="arrow2" d="M1188 594 L980 680"/>
+
+  <!-- Transport to dependency strip -->
+  <path class="arrow" d="M184 782 L184 814"/>
+  <path class="arrow" d="M472 782 L472 814"/>
+  <path class="arrow" d="M740 782 L740 814"/>
+  <path class="arrow" d="M980 782 L980 814"/>
+  <path class="arrow" d="M1226 782 L1226 814"/>
+
+  <!-- Ingress / Egress hints -->
+  <text class="legend" x="1130" y="120">Ingress -> Reactor -> Protocol -> Dispatcher -> Routing -> Egress</text>
+</svg>
