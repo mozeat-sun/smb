@@ -116,13 +116,9 @@ if(ZOO_BUILD_PLATFORM)
     add_subdirectory(platform)
 endif()
 
-# Build core modules
-if(ZOO_BUILD_BUFFER)
-    add_subdirectory(buffer)
-endif()
-
-if(ZOO_BUILD_DISPATCHER)
-    add_subdirectory(dispatcher)
+# Build core modules (dependency-aware order)
+if(ZOO_BUILD_UTIL)
+    add_subdirectory(util)
 endif()
 
 if(ZOO_BUILD_LOG)
@@ -133,8 +129,8 @@ if(ZOO_BUILD_MEMORY_POOL)
     add_subdirectory(memory_pool)
 endif()
 
-if(ZOO_BUILD_SMB)
-    add_subdirectory(smb)
+if(ZOO_BUILD_BUFFER)
+    add_subdirectory(buffer)
 endif()
 
 if(ZOO_BUILD_SOCKET)
@@ -145,12 +141,16 @@ if(ZOO_BUILD_THREAD_POOL)
     add_subdirectory(thread_pool)
 endif()
 
+if(ZOO_BUILD_DISPATCHER)
+    add_subdirectory(dispatcher)
+endif()
+
 if(ZOO_BUILD_TIMER)
     add_subdirectory(timer)
 endif()
 
-if(ZOO_BUILD_UTIL)
-    add_subdirectory(util)
+if(ZOO_BUILD_SMB)
+    add_subdirectory(smb)
 endif()
 
 # ==============================================================================

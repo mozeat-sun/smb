@@ -1,0 +1,10 @@
+{
+  "benchmark_profiles": {
+    "default": {
+      "p99_latency_ms_max": null,
+      "throughput_ops_min": null,
+      "jitter_ms_max": null,
+      "notes": "Populate after first approved benchmark capture"
+    }
+  }
+}
