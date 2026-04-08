@@ -1,6 +1,6 @@
 # CMake generated Testfile for 
-# Source directory: /home/mozeat/zoo
-# Build directory: /home/mozeat/zoo/build
+# Source directory: /home/ubuntu/workspace/zoo
+# Build directory: /home/ubuntu/workspace/zoo/build
 # 
 # This file includes the relevant testing commands required for 
 # testing this directory and lists subdirectories to be tested as well.
@@ -14,4 +14,3 @@ subdirs("src/thread_pool")
 subdirs("src/dispatcher")
 subdirs("src/timer")
 subdirs("src/smb")
-subdirs("examples")

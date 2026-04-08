@@ -420,7 +420,7 @@ ZOO_ERROR_TYPE udp_send_unicast_by_name(ZOO_SMB_UDP_TRANSPORT_COMMON* udp,
         for (size_t i = 0; i < zoo_list_size(udp->clients); i++)
         {
             ZOO_SMB_CONSUMER_STRUCT* client = (ZOO_SMB_CONSUMER_STRUCT*)zoo_list_at(udp->clients, i);
-            if (client && client->name)
+            if (client && client->name[0] != '\0')
             {
                 ZOO_LOG_DEBUG("  - %s", client->name);
             }
@@ -793,24 +793,24 @@ static ZOO_ERROR_TYPE configure_socket_address(const ZOO_SMB_TRANSPORT_STRUCT* t
     if (udp->is_server)
     {
         // Server: bind to specified address or INADDR_ANY
-        udp->server_addr.sin_addr.s_addr = transport->config->address ? 
+        udp->server_addr.sin_addr.s_addr = transport->config->address[0] != '\0' ?
             inet_addr(transport->config->address) : htonl(INADDR_ANY);
         ZOO_LOG_DEBUG("Configured server bind address: %s:%d", 
-                          transport->config->address ? transport->config->address : "0.0.0.0", 
+                          transport->config->address[0] != '\0' ? transport->config->address : "0.0.0.0",
                           transport->config->port);
     }
     else
     {
         // Client: server_addr is the target server address for sending
-        udp->server_addr.sin_addr.s_addr = transport->config->address ? 
+        udp->server_addr.sin_addr.s_addr = transport->config->address[0] != '\0' ?
             inet_addr(transport->config->address) : inet_addr("127.0.0.1");
         ZOO_LOG_DEBUG("Configured client target server address: %s:%d", 
-                          transport->config->address ? transport->config->address : "127.0.0.1", 
+                          transport->config->address[0] != '\0' ? transport->config->address : "127.0.0.1",
                           transport->config->port);
     }
 
     // Configure multicast address if provided
-    if (transport->config->multicast_address && transport->config->multicast_port > 0)
+    if (transport->config->multicast_address[0] != '\0' && transport->config->multicast_port > 0)
     {
         memset(&udp->multicast_addr, 0, sizeof(udp->multicast_addr));
         udp->multicast_addr.sin_family = AF_INET;

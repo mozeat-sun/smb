@@ -1,28 +1,45 @@
 
-# 忽略 build 目录及其所有内容
-build/
-bin/
-lib/
-buffer/build
-dispatcher/build
-log/build
-memory_pool/build
-platform/build
-smb/build
-smb/reporters
-socket/build
-thread_pool/build
-timer/build
-util/build
-# 忽略所有 .log 文件
+# Top-level build outputs
+/build/
+/bin/
+/lib/
+/artifacts/
+
+# Per-module generated build/report folders
+/buffer/build/
+/dispatcher/build/
+/log/build/
+/memory_pool/build/
+/platform/build/
+/smb/build/
+/smb/reporters/
+/socket/build/
+/thread_pool/build/
+/timer/build/
+/util/build/
+/reporters/
+
+# Generated install/package outputs
+/stage/bin/
+/stage/lib/
+/stage/packages/_CPack_Packages/**/bin/
+/stage/packages/_CPack_Packages/**/lib/
+
+# CMake and build system artifacts (in-source builds)
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+CTestTestfile.cmake
+compile_commands.json
+
+# Logs and temporary files
 *.log
-# 忽略所有 .tmp 文件    
 *.tmp
-# 忽略所有 .DS_Store 文件
-.DS_Store
-# 忽略所有 .env 文件
+
+# Environment and editor files
 .env
-# 忽略所有 .swp 文件
 *.swp
 .vscode/
-.clang-format
+
+# OS-specific files
+.DS_Store

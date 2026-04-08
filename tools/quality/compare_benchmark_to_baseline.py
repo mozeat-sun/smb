@@ -50,6 +50,7 @@ baseline = json.loads(baseline_path.read_text())
 metrics = json.loads(summary_path.read_text())
 validate_baseline(baseline, profile_name)
 profile = baseline.get("benchmark_profiles", {}).get(profile_name, {})
+require_metrics = os.environ.get("QUALITY_REQUIRE_METRICS", "0") == "1"
 
 failures = []
 p99_max = profile.get("p99_latency_ms_max")
@@ -59,6 +60,14 @@ jitter_max = profile.get("jitter_ms_max")
 p99_actual = metrics.get("p99_latency_ms")
 throughput_actual = metrics.get("throughput_ops")
 jitter_actual = metrics.get("jitter_ms")
+
+if require_metrics:
+    if p99_max is not None and p99_actual is None:
+        failures.append("p99 latency metric missing while threshold is configured")
+    if throughput_min is not None and throughput_actual is None:
+        failures.append("throughput metric missing while threshold is configured")
+    if jitter_max is not None and jitter_actual is None:
+        failures.append("jitter metric missing while threshold is configured")
 
 if p99_max is not None and p99_actual is not None and p99_actual > p99_max:
     failures.append(f"p99 latency {p99_actual} exceeds {p99_max}")

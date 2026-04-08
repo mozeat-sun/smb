@@ -1,2 +1,0 @@
-/usr/bin/ar qc libzoo_buffer.a CMakeFiles/zoo_buffer_static.dir/__/src/buffer/zoo_list.c.o CMakeFiles/zoo_buffer_static.dir/__/src/buffer/zoo_queue.c.o
-/usr/bin/ranlib libzoo_buffer.a

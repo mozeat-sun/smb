@@ -6,9 +6,9 @@
   "benchmark_profiles": {
     "default": {
       "p99_latency_ms_max": null,
-      "throughput_ops_min": null,
+      "throughput_ops_min": 0.01,
       "jitter_ms_max": null,
-      "notes": "Populate after first approved benchmark capture"
+      "notes": "Initial compatibility guardrail; keep minimal until default profile is formally calibrated."
     }
   }
 }

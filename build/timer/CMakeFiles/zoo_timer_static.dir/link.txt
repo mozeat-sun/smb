@@ -1,2 +1,0 @@
-/usr/bin/ar qc libzoo_timer.a CMakeFiles/zoo_timer_static.dir/__/src/timer/zoo_timer.c.o
-/usr/bin/ranlib libzoo_timer.a

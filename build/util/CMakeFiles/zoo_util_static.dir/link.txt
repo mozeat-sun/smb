@@ -1,2 +1,0 @@
-/usr/bin/ar qc libzoo_util.a CMakeFiles/zoo_util_static.dir/__/src/util/zoo_util.c.o
-/usr/bin/ranlib libzoo_util.a

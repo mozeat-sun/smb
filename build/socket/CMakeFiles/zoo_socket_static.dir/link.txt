@@ -1,2 +1,0 @@
-/usr/bin/ar qc libzoo_socket.a CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_socket.c.o CMakeFiles/zoo_socket_static.dir/__/src/socket/zoo_select.c.o
-/usr/bin/ranlib libzoo_socket.a

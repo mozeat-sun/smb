@@ -6,9 +6,9 @@
   "benchmark_profiles": {
     "release": {
       "p99_latency_ms_max": null,
-      "throughput_ops_min": null,
+      "throughput_ops_min": 0.01,
       "jitter_ms_max": null,
-      "notes": "Populate only from approved release benchmark runs"
+      "notes": "Initial guardrail before release calibration; replace with measured release-host thresholds."
     }
   }
 }

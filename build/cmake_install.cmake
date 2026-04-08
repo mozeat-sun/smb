@@ -1,8 +1,8 @@
-# Install script for directory: /home/mozeat/zoo
+# Install script for directory: /home/ubuntu/workspace/zoo
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/mozeat/zoo/stage")
+  set(CMAKE_INSTALL_PREFIX "/home/ubuntu/workspace/zoo/stage")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -44,67 +44,62 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/mozeat/zoo/build/src/platform/cmake_install.cmake")
+  include("/home/ubuntu/workspace/zoo/build/src/platform/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/mozeat/zoo/build/src/util/cmake_install.cmake")
+  include("/home/ubuntu/workspace/zoo/build/src/util/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/mozeat/zoo/build/src/log/cmake_install.cmake")
+  include("/home/ubuntu/workspace/zoo/build/src/log/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/mozeat/zoo/build/src/memory_pool/cmake_install.cmake")
+  include("/home/ubuntu/workspace/zoo/build/src/memory_pool/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/mozeat/zoo/build/src/buffer/cmake_install.cmake")
+  include("/home/ubuntu/workspace/zoo/build/src/buffer/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/mozeat/zoo/build/src/socket/cmake_install.cmake")
+  include("/home/ubuntu/workspace/zoo/build/src/socket/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/mozeat/zoo/build/src/thread_pool/cmake_install.cmake")
+  include("/home/ubuntu/workspace/zoo/build/src/thread_pool/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/mozeat/zoo/build/src/dispatcher/cmake_install.cmake")
+  include("/home/ubuntu/workspace/zoo/build/src/dispatcher/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/mozeat/zoo/build/src/timer/cmake_install.cmake")
+  include("/home/ubuntu/workspace/zoo/build/src/timer/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/mozeat/zoo/build/src/smb/cmake_install.cmake")
+  include("/home/ubuntu/workspace/zoo/build/src/smb/cmake_install.cmake")
 endif()
 
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for the subdirectory.
-  include("/home/mozeat/zoo/build/examples/cmake_install.cmake")
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/zoo" TYPE DIRECTORY FILES "/home/ubuntu/workspace/zoo/include/" FILES_MATCHING REGEX "/[^/]*\\.h$")
 endif()
 
-if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/zoo" TYPE DIRECTORY FILES "/home/mozeat/zoo/include/" FILES_MATCHING REGEX "/[^/]*\\.h$")
-endif()
-
-if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/Zoo" TYPE FILE FILES
-    "/home/mozeat/zoo/build/ZooConfig.cmake"
-    "/home/mozeat/zoo/build/ZooConfigVersion.cmake"
+    "/home/ubuntu/workspace/zoo/build/ZooConfig.cmake"
+    "/home/ubuntu/workspace/zoo/build/ZooConfigVersion.cmake"
     )
 endif()
 
@@ -116,5 +111,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/mozeat/zoo/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/ubuntu/workspace/zoo/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

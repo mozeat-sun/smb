@@ -59,8 +59,8 @@ ZOO_ERROR_TYPE tcp_client_init(const ZOO_SMB_TRANSPORT_STRUCT* transport)
 
     const ZOO_SMB_TRANSPORT_CONFIG_STRUCT* config = transport->config;
     ZOO_LOG_INFO("tcp_client_init: config info - name=%s, address=%s, port=%d, retry_interval_s=%d",
-                     config->name ? config->name : "(null)",
-                     config->address ? config->address : "(null)",
+                     config->name[0] != '\0' ? config->name : "(empty)",
+                     config->address[0] != '\0' ? config->address : "(empty)",
                      config->port,
                      config->retry_interval_s);
 
@@ -87,7 +87,7 @@ ZOO_ERROR_TYPE tcp_client_init(const ZOO_SMB_TRANSPORT_STRUCT* transport)
     client->common.addr.sin_family = AF_INET;
     client->common.addr.sin_port = htons(config->port);
 
-    if (!(config->address && strlen(config->address) > 0))
+    if (config->address[0] == '\0')
     {
         ZOO_LOG_ERROR("address is not set in transport config");
         zoo_free_to_pool(client);

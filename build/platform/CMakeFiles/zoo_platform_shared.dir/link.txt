@@ -1,1 +1,0 @@
-/usr/bin/cc -fPIC -O3 -DNDEBUG -shared -Wl,-soname,libzoo_platform.so.1 -o ../lib/libzoo_platform.so.1.2.2 CMakeFiles/zoo_platform_shared.dir/__/src/platform/zoo_error.c.o 

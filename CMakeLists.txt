@@ -215,7 +215,7 @@ endforeach()
 # - libsmb.so
 # - libzoo_platform.so* (versioned symlinks/files)
 add_custom_target(zoo_cleanup_shared_outputs ALL
-    COMMAND /bin/sh -c "find '${ZOO_LIB_OUTPUT_DIR}' -maxdepth 1 \\( -type f -o -type l \\) -name 'libzoo_*.so*' ! -name 'libzoo_platform.so*' -delete"
+    COMMAND /bin/sh -c "find '${ZOO_LIB_OUTPUT_DIR}' -maxdepth 1 -name 'libzoo_*.so*' ! -name 'libzoo_platform.so*' -delete"
     COMMENT "Pruning shared library outputs to requested set"
 )
 if(TARGET zoo_smb_shared)
