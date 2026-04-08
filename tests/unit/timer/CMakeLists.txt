@@ -141,6 +141,7 @@ add_test(
     COMMAND zoo_timer_tests
     WORKING_DIRECTORY ${TEST_BINARY_DIR}
 )
+set_tests_properties(zoo_timer_unit_tests PROPERTIES LABELS "unit;timer;core")
 
 # ==============================================================================
 # Coverage Target

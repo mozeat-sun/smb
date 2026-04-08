@@ -121,6 +121,7 @@ add_test(NAME zoo_socket_unit_tests COMMAND zoo_socket_tests)
 
 # Set test properties
 set_tests_properties(zoo_socket_unit_tests PROPERTIES
+    LABELS "unit;socket;core"
     TIMEOUT 60
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 )

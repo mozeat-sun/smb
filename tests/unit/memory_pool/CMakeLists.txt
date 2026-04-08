@@ -83,6 +83,7 @@ if(EXISTS "${UNITY_DIR}" AND EXISTS "${CMOCK_DIR}")
     # Add test targets for CTest integration
     enable_testing()
     add_test(NAME zoo_memory_pool_unit_tests COMMAND zoo_memory_pool_tests)
+    set_tests_properties(zoo_memory_pool_unit_tests PROPERTIES LABELS "unit;memory_pool;core")
     
     # Custom test targets
     add_custom_target(memory_pool_quick_test

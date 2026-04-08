@@ -92,6 +92,11 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("/home/ubuntu/workspace/zoo/build/src/smb/cmake_install.cmake")
 endif()
 
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/ubuntu/workspace/zoo/build/tests/integration/cmake_install.cmake")
+endif()
+
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/zoo" TYPE DIRECTORY FILES "/home/ubuntu/workspace/zoo/include/" FILES_MATCHING REGEX "/[^/]*\\.h$")
 endif()

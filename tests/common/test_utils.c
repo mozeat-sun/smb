@@ -252,6 +252,8 @@ void zoo_free_to_pool(void* ptr) {
  * @brief Test or example function zoo_calc_crc32.
  */
 uint32_t zoo_calc_crc32(const void* data, size_t size) {
+    (void)data;
+    (void)size;
     // Simple stub - return a dummy CRC value
     return 0x12345678;
 }

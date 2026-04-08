@@ -189,6 +189,12 @@ if(ZOO_BUILD_EXAMPLES)
     endif()
 endif()
 
+if(ZOO_BUILD_TESTS)
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/CMakeLists.txt")
+        add_subdirectory(tests/integration ${CMAKE_CURRENT_BINARY_DIR}/tests/integration)
+    endif()
+endif()
+
 # Keep only two shared libraries in stage/lib:
 # - libsmb.so
 # - libzoo_platform.so
@@ -246,6 +252,15 @@ endif()
 if(TARGET zoo_platform_shared)
     add_dependencies(zoo_cleanup_shared_outputs zoo_platform_shared)
 endif()
+if(TARGET test_zoo_smb_integration)
+    add_dependencies(zoo_cleanup_shared_outputs
+        test_zoo_smb_integration
+        test_service_discovery
+        test_backpressure_security
+        test_zoo_smb_transport_udp
+        test_zoo_smb_transport_shm
+    )
+endif()
 
 # Remove historical/extra static outputs from stage/lib and keep only:
 # - libzoo_smb.a
@@ -259,6 +274,15 @@ if(TARGET zoo_smb_static)
 endif()
 if(TARGET zoo_platform_static)
     add_dependencies(zoo_cleanup_static_outputs zoo_platform_static)
+endif()
+if(TARGET test_zoo_smb_integration)
+    add_dependencies(zoo_cleanup_static_outputs
+        test_zoo_smb_integration
+        test_service_discovery
+        test_backpressure_security
+        test_zoo_smb_transport_udp
+        test_zoo_smb_transport_shm
+    )
 endif()
 
 # ==============================================================================

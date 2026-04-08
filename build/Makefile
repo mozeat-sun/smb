@@ -738,6 +738,84 @@ zoo_smb_shared/fast:
 	$(MAKE) $(MAKESILENT) -f src/smb/CMakeFiles/zoo_smb_shared.dir/build.make src/smb/CMakeFiles/zoo_smb_shared.dir/build
 .PHONY : zoo_smb_shared/fast
 
+#=============================================================================
+# Target rules for targets named zoo_integration_unity
+
+# Build rule for target.
+zoo_integration_unity: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_integration_unity
+.PHONY : zoo_integration_unity
+
+# fast build rule for target.
+zoo_integration_unity/fast:
+	$(MAKE) $(MAKESILENT) -f tests/integration/CMakeFiles/zoo_integration_unity.dir/build.make tests/integration/CMakeFiles/zoo_integration_unity.dir/build
+.PHONY : zoo_integration_unity/fast
+
+#=============================================================================
+# Target rules for targets named test_zoo_smb_integration
+
+# Build rule for target.
+test_zoo_smb_integration: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_zoo_smb_integration
+.PHONY : test_zoo_smb_integration
+
+# fast build rule for target.
+test_zoo_smb_integration/fast:
+	$(MAKE) $(MAKESILENT) -f tests/integration/CMakeFiles/test_zoo_smb_integration.dir/build.make tests/integration/CMakeFiles/test_zoo_smb_integration.dir/build
+.PHONY : test_zoo_smb_integration/fast
+
+#=============================================================================
+# Target rules for targets named test_service_discovery
+
+# Build rule for target.
+test_service_discovery: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_service_discovery
+.PHONY : test_service_discovery
+
+# fast build rule for target.
+test_service_discovery/fast:
+	$(MAKE) $(MAKESILENT) -f tests/integration/CMakeFiles/test_service_discovery.dir/build.make tests/integration/CMakeFiles/test_service_discovery.dir/build
+.PHONY : test_service_discovery/fast
+
+#=============================================================================
+# Target rules for targets named test_backpressure_security
+
+# Build rule for target.
+test_backpressure_security: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_backpressure_security
+.PHONY : test_backpressure_security
+
+# fast build rule for target.
+test_backpressure_security/fast:
+	$(MAKE) $(MAKESILENT) -f tests/integration/CMakeFiles/test_backpressure_security.dir/build.make tests/integration/CMakeFiles/test_backpressure_security.dir/build
+.PHONY : test_backpressure_security/fast
+
+#=============================================================================
+# Target rules for targets named test_zoo_smb_transport_udp
+
+# Build rule for target.
+test_zoo_smb_transport_udp: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_zoo_smb_transport_udp
+.PHONY : test_zoo_smb_transport_udp
+
+# fast build rule for target.
+test_zoo_smb_transport_udp/fast:
+	$(MAKE) $(MAKESILENT) -f tests/integration/CMakeFiles/test_zoo_smb_transport_udp.dir/build.make tests/integration/CMakeFiles/test_zoo_smb_transport_udp.dir/build
+.PHONY : test_zoo_smb_transport_udp/fast
+
+#=============================================================================
+# Target rules for targets named test_zoo_smb_transport_shm
+
+# Build rule for target.
+test_zoo_smb_transport_shm: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_zoo_smb_transport_shm
+.PHONY : test_zoo_smb_transport_shm
+
+# fast build rule for target.
+test_zoo_smb_transport_shm/fast:
+	$(MAKE) $(MAKESILENT) -f tests/integration/CMakeFiles/test_zoo_smb_transport_shm.dir/build.make tests/integration/CMakeFiles/test_zoo_smb_transport_shm.dir/build
+.PHONY : test_zoo_smb_transport_shm/fast
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -765,15 +843,21 @@ help:
 	@echo "... timer_test_verbose"
 	@echo "... zoo_cleanup_shared_outputs"
 	@echo "... zoo_cleanup_static_outputs"
+	@echo "... test_backpressure_security"
 	@echo "... test_math_unity"
 	@echo "... test_memory_unity"
+	@echo "... test_service_discovery"
 	@echo "... test_string_unity"
 	@echo "... test_timestamp_unity"
+	@echo "... test_zoo_smb_integration"
+	@echo "... test_zoo_smb_transport_shm"
+	@echo "... test_zoo_smb_transport_udp"
 	@echo "... util_unity"
 	@echo "... zoo_buffer_shared"
 	@echo "... zoo_buffer_static"
 	@echo "... zoo_dispatcher_shared"
 	@echo "... zoo_dispatcher_static"
+	@echo "... zoo_integration_unity"
 	@echo "... zoo_log_shared"
 	@echo "... zoo_log_static"
 	@echo "... zoo_log_tests"

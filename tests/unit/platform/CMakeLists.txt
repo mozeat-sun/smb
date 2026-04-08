@@ -46,6 +46,7 @@ enable_testing()
 
 # Add test
 add_test(NAME ZooPlatformTests COMMAND zoo_platform_tests)
+set_tests_properties(ZooPlatformTests PROPERTIES LABELS "unit;platform;core")
 
 # Compiler flags for C
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -g")

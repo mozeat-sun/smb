@@ -101,14 +101,14 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR ZOO_THREAD_POOL_BUILD_TESTS OR ZO
     add_test(NAME ZOO_Thread_Pool_Basic_Unity_Tests 
              COMMAND test_thread_pool_basic_unity)
     set_tests_properties(ZOO_Thread_Pool_Basic_Unity_Tests PROPERTIES
-        LABELS "thread_pool;unity;basic"
+        LABELS "unit;thread_pool;unity;basic"
         TIMEOUT 60
     )
     
     add_test(NAME ZOO_Thread_Pool_Stress_Unity_Tests 
              COMMAND test_thread_pool_stress_unity)
     set_tests_properties(ZOO_Thread_Pool_Stress_Unity_Tests PROPERTIES
-        LABELS "thread_pool;unity;stress"
+        LABELS "unit;thread_pool;unity;stress"
         TIMEOUT 180
     )
     

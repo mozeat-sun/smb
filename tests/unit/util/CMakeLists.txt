@@ -102,6 +102,7 @@ add_test(NAME MathTests COMMAND test_math_unity)
 # Set test properties
 set_tests_properties(TimestampTests StringTests MemoryTests MathTests
     PROPERTIES
+    LABELS "unit;util;core"
     TIMEOUT 30
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 )

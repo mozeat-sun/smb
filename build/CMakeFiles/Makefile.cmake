@@ -34,6 +34,7 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/home/ubuntu/workspace/zoo/src/util/CMakeLists.txt"
   "/home/ubuntu/workspace/zoo/src/util/cmake/ZooUtilConfig.cmake.in"
   "/home/ubuntu/workspace/zoo/src/util/cmake/zoo-util.pc.in"
+  "/home/ubuntu/workspace/zoo/tests/integration/CMakeLists.txt"
   "/home/ubuntu/workspace/zoo/tests/unit/buffer/CMakeLists.txt"
   "/home/ubuntu/workspace/zoo/tests/unit/log/CMakeLists.txt"
   "/home/ubuntu/workspace/zoo/tests/unit/memory_pool/CMakeLists.txt"
@@ -123,6 +124,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
   "src/timer/CMakeFiles/CMakeDirectoryInformation.cmake"
   "src/timer/tests/CMakeFiles/CMakeDirectoryInformation.cmake"
   "src/smb/CMakeFiles/CMakeDirectoryInformation.cmake"
+  "tests/integration/CMakeFiles/CMakeDirectoryInformation.cmake"
   )
 
 # Dependency information for all targets:
@@ -169,4 +171,10 @@ set(CMAKE_DEPEND_INFO_FILES
   "src/timer/tests/CMakeFiles/timer_test_verbose.dir/DependInfo.cmake"
   "src/smb/CMakeFiles/zoo_smb_static.dir/DependInfo.cmake"
   "src/smb/CMakeFiles/zoo_smb_shared.dir/DependInfo.cmake"
+  "tests/integration/CMakeFiles/zoo_integration_unity.dir/DependInfo.cmake"
+  "tests/integration/CMakeFiles/test_zoo_smb_integration.dir/DependInfo.cmake"
+  "tests/integration/CMakeFiles/test_service_discovery.dir/DependInfo.cmake"
+  "tests/integration/CMakeFiles/test_backpressure_security.dir/DependInfo.cmake"
+  "tests/integration/CMakeFiles/test_zoo_smb_transport_udp.dir/DependInfo.cmake"
+  "tests/integration/CMakeFiles/test_zoo_smb_transport_shm.dir/DependInfo.cmake"
   )
