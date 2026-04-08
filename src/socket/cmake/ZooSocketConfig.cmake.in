@@ -1,0 +1,34 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+if(NOT TARGET Zoo::zoo_socket_static AND NOT TARGET Zoo::zoo_socket_shared)
+    include("${CMAKE_CURRENT_LIST_DIR}/ZooSocketTargets.cmake")
+endif()
+
+set(ZooSocket_FOUND FALSE)
+set(ZooSocket_VERSION "@PROJECT_VERSION@")
+
+if(TARGET Zoo::zoo_socket_static)
+    set(ZooSocket_FOUND TRUE)
+    set(ZooSocket_LIBRARIES Zoo::zoo_socket_static)
+    set(ZooSocket_INCLUDE_DIRS "$<TARGET_PROPERTY:Zoo::zoo_socket_static,INTERFACE_INCLUDE_DIRECTORIES>")
+endif()
+
+if(TARGET Zoo::zoo_socket_shared AND NOT ZooSocket_LIBRARIES)
+    set(ZooSocket_FOUND TRUE)
+    set(ZooSocket_LIBRARIES Zoo::zoo_socket_shared)
+    set(ZooSocket_INCLUDE_DIRS "$<TARGET_PROPERTY:Zoo::zoo_socket_shared,INTERFACE_INCLUDE_DIRECTORIES>")
+endif()
+
+# Backward-compatibility variables
+set(zoo_socket_FOUND ${ZooSocket_FOUND})
+set(zoo_socket_VERSION ${ZooSocket_VERSION})
+set(zoo_socket_LIBRARIES ${ZooSocket_LIBRARIES})
+set(zoo_socket_INCLUDE_DIRS ${ZooSocket_INCLUDE_DIRS})
+
+check_required_components(ZooSocket)
+
+if(ZooSocket_FOUND AND NOT ZooSocket_FIND_QUIETLY)
+    message(STATUS "Found ZooSocket: ${ZooSocket_VERSION}")
+endif()

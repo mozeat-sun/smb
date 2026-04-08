@@ -1,5 +1,5 @@
 # ZooConfig.cmake.in
-# Configuration file for the ZOO library package
+# Configuration file for the ZOO umbrella package
 
 
 ####### Expanded from @PACKAGE_INIT@ by configure_package_config_file() #######
@@ -27,18 +27,40 @@ endmacro()
 
 ####################################################################################
 
-# Set up import targets
-include("${CMAKE_CURRENT_LIST_DIR}/ZooTargets.cmake" OPTIONAL)
+include(CMakeFindDependencyMacro)
 
-# Provide legacy variables for compatibility
 set(ZOO_FOUND TRUE)
 set(ZOO_VERSION "1.0.0")
-set(ZOO_INCLUDE_DIRS "/usr/local/include/zoo")
+set_and_check(ZOO_INCLUDE_DIRS "${PACKAGE_PREFIX_DIR}/include/zoo")
 
-# Check if all requested components are available
+# Root package currently acts as an umbrella package for installed module configs.
+# Individual module targets are exported by their respective module packages.
+set(ZOO_SUPPORTED_COMPONENTS
+    Platform
+    Util
+    Log
+    MemoryPool
+    Buffer
+    Socket
+    ThreadPool
+    Dispatcher
+    Timer
+    SMB
+)
+
+set(_zoo_component_missing FALSE)
+foreach(_component IN LISTS Zoo_FIND_COMPONENTS)
+    if(NOT _component IN_LIST ZOO_SUPPORTED_COMPONENTS)
+        set(Zoo_FOUND FALSE)
+        set(_zoo_component_missing TRUE)
+        if(NOT Zoo_FIND_QUIETLY)
+            message(WARNING "ZOO component '${_component}' is not supported by the umbrella package")
+        endif()
+    endif()
+endforeach()
+
 check_required_components(Zoo)
 
-# Display found message
-if(NOT Zoo_FIND_QUIETLY)
+if(NOT Zoo_FIND_QUIETLY AND Zoo_FOUND)
     message(STATUS "Found ZOO: ${ZOO_VERSION} (${ZOO_INCLUDE_DIRS})")
 endif()

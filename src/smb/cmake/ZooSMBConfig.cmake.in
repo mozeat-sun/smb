@@ -4,4 +4,4 @@ find_package(Threads REQUIRED)
 
 include("${CMAKE_CURRENT_LIST_DIR}/ZooSMBTargets.cmake")
 
-check_required_components(zoo_smb)
+check_required_components(ZooSMB)

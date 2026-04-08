@@ -1,4 +1,8 @@
 {
+  "schema_version": 1,
+  "owner": "zoo-quality",
+  "updated_at_utc": "2026-04-08T00:00:00Z",
+  "notes": "Compatibility baseline file retained for existing scripts.",
   "benchmark_profiles": {
     "default": {
       "p99_latency_ms_max": null,

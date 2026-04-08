@@ -1,0 +1,142 @@
+name: CMake Matrix
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  native-build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [gcc, clang]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build
+
+      - name: Configure
+        env:
+          CC: ${{ matrix.compiler }}
+          CXX: ${{ matrix.compiler == 'clang' && 'clang++' || 'g++' }}
+        run: cmake -S . -B build-${{ matrix.compiler }} -G Ninja
+
+      - name: Build
+        run: cmake --build build-${{ matrix.compiler }} -j"$(nproc)"
+
+  cross-configure:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [aarch64, mingw]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install cross toolchains
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build gcc-aarch64-linux-gnu g++-aarch64-linux-gnu mingw-w64
+
+      - name: Configure (AArch64)
+        if: matrix.target == 'aarch64'
+        run: |
+          cmake -S . -B build-aarch64 -G Ninja \
+            -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/aarch64-linux-gnu.cmake
+
+      - name: Configure (MinGW)
+        if: matrix.target == 'mingw'
+        run: |
+          cmake -S . -B build-mingw -G Ninja \
+            -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/mingw-w64-x86_64.cmake
+
+  package-consumer-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build
+
+      - name: Configure (installable build)
+        run: |
+          cmake -S . -B build-install -G Ninja \
+            -DZOO_BUILD_TESTS=OFF \
+            -DZOO_BUILD_EXAMPLES=OFF \
+            -DBUILD_TESTS=OFF
+
+      - name: Build and install
+        run: |
+          cmake --build build-install -j"$(nproc)"
+          cmake --install build-install --prefix "$GITHUB_WORKSPACE/stage"
+
+      - name: Create consumer projects
+        run: |
+          mkdir -p consumer-socket consumer-timer
+
+          cat > consumer-socket/CMakeLists.txt <<'EOF'
+          cmake_minimum_required(VERSION 3.16)
+          project(consumer_socket C)
+
+          find_package(ZooSocket REQUIRED)
+
+          if(TARGET Zoo::zoo_socket_static)
+            set(SOCKET_TARGET Zoo::zoo_socket_static)
+          elseif(TARGET Zoo::zoo_socket_shared)
+            set(SOCKET_TARGET Zoo::zoo_socket_shared)
+          else()
+            message(FATAL_ERROR "ZooSocket imported target not found")
+          endif()
+
+          add_executable(consumer_socket main.c)
+          target_link_libraries(consumer_socket PRIVATE ${SOCKET_TARGET})
+          EOF
+
+          cat > consumer-socket/main.c <<'EOF'
+          int main(void) { return 0; }
+          EOF
+
+          cat > consumer-timer/CMakeLists.txt <<'EOF'
+          cmake_minimum_required(VERSION 3.16)
+          project(consumer_timer C)
+
+          find_package(ZooTimer REQUIRED)
+
+          if(TARGET Zoo::zoo_timer_static)
+            set(TIMER_TARGET Zoo::zoo_timer_static)
+          elseif(TARGET Zoo::zoo_timer_shared)
+            set(TIMER_TARGET Zoo::zoo_timer_shared)
+          else()
+            message(FATAL_ERROR "ZooTimer imported target not found")
+          endif()
+
+          add_executable(consumer_timer main.c)
+          target_link_libraries(consumer_timer PRIVATE ${TIMER_TARGET})
+          EOF
+
+          cat > consumer-timer/main.c <<'EOF'
+          int main(void) { return 0; }
+          EOF
+
+      - name: Configure and build consumer projects
+        run: |
+          cmake -S consumer-socket -B consumer-socket/build -G Ninja \
+            -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/stage"
+          cmake --build consumer-socket/build -j"$(nproc)"
+
+          cmake -S consumer-timer -B consumer-timer/build -G Ninja \
+            -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/stage"
+          cmake --build consumer-timer/build -j"$(nproc)"

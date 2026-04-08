@@ -221,7 +221,9 @@ option(ZOO_SOCKET_BUILD_TESTS "Build ZOO Socket tests" ON)
 
 if(ZOO_SOCKET_BUILD_TESTS)
     enable_testing()
-    add_subdirectory(${ZOO_ROOT}/tests/socket ${CMAKE_CURRENT_BINARY_DIR}/tests)
+    if(EXISTS "${ZOO_ROOT}/tests/unit/socket/CMakeLists.txt")
+        add_subdirectory(${ZOO_ROOT}/tests/unit/socket ${CMAKE_CURRENT_BINARY_DIR}/tests)
+    endif()
 endif()
 
 # ==============================================================================
@@ -232,7 +234,9 @@ endif()
 option(ZOO_SOCKET_BUILD_EXAMPLES "Build ZOO Socket examples" ON)
 
 if(ZOO_SOCKET_BUILD_EXAMPLES)
-    add_subdirectory(${ZOO_ROOT}/examples/socket ${CMAKE_CURRENT_BINARY_DIR}/examples)
+    if(EXISTS "${ZOO_ROOT}/examples/socket/CMakeLists.txt")
+        add_subdirectory(${ZOO_ROOT}/examples/socket ${CMAKE_CURRENT_BINARY_DIR}/examples)
+    endif()
 endif()
 
 # ==============================================================================
@@ -241,7 +245,7 @@ endif()
 
 # Install library targets
 install(TARGETS zoo_socket_static zoo_socket_shared zoo_socket
-    EXPORT zoo_socket_targets
+    EXPORT ZooSocketTargets
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
     RUNTIME DESTINATION bin
@@ -254,9 +258,15 @@ install(FILES ${ZOO_SOCKET_HEADERS}
 )
 
 # Install export targets
-install(EXPORT zoo_socket_targets
-    FILE zoo_socket_targets.cmake
-    NAMESPACE zoo::
+install(EXPORT ZooSocketTargets
+    FILE ZooSocketTargets.cmake
+    NAMESPACE Zoo::
+    DESTINATION lib/cmake/ZooSocket
+)
+
+install(EXPORT ZooSocketTargets
+    FILE ZooSocketTargets.cmake
+    NAMESPACE Zoo::
     DESTINATION lib/cmake/zoo_socket
 )
 
@@ -264,21 +274,28 @@ install(EXPORT zoo_socket_targets
 include(CMakePackageConfigHelpers)
 
 configure_package_config_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/zoo_socket_config.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/zoo_socket_config.cmake"
-    INSTALL_DESTINATION lib/cmake/zoo_socket
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/ZooSocketConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/ZooSocketConfig.cmake"
+    INSTALL_DESTINATION lib/cmake/ZooSocket
     PATH_VARS CMAKE_INSTALL_PREFIX
 )
 
 write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/zoo_socket_config_version.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/ZooSocketConfigVersion.cmake"
     VERSION ${PROJECT_VERSION}
     COMPATIBILITY SameMajorVersion
 )
 
 install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/zoo_socket_config.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/zoo_socket_config_version.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/ZooSocketConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/ZooSocketConfigVersion.cmake"
+    DESTINATION lib/cmake/ZooSocket
+)
+
+# Compatibility package path for previous lowercase package naming
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/ZooSocketConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/ZooSocketConfigVersion.cmake"
     DESTINATION lib/cmake/zoo_socket
 )
 
@@ -286,15 +303,17 @@ install(FILES
 # PACKAGE CONFIGURATION
 # ==============================================================================
 
-# Set package properties
-set(CPACK_PACKAGE_NAME "zoo_socket")
-set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Cross-platform socket abstraction library")
-set(CPACK_PACKAGE_VENDOR "ZOO Ltd")
-set(CPACK_PACKAGE_CONTACT "support@zoo.com")
+# Set package properties (standalone module build only)
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+    set(CPACK_PACKAGE_NAME "zoo_socket")
+    set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+    set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Cross-platform socket abstraction library")
+    set(CPACK_PACKAGE_VENDOR "ZOO Ltd")
+    set(CPACK_PACKAGE_CONTACT "support@zoo.com")
 
-# Include CPack
-include(CPack)
+    # Include CPack
+    include(CPack)
+endif()
 
 # ==============================================================================
 # STATUS SUMMARY

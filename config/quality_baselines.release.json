@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "owner": "zoo-release-board",
+  "updated_at_utc": "2026-04-08T00:00:00Z",
+  "notes": "Release baseline profile for controlled reference environment.",
+  "benchmark_profiles": {
+    "release": {
+      "p99_latency_ms_max": null,
+      "throughput_ops_min": null,
+      "jitter_ms_max": null,
+      "notes": "Populate only from approved release benchmark runs"
+    }
+  }
+}

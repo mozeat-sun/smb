@@ -2,4 +2,4 @@
 
 include("${CMAKE_CURRENT_LIST_DIR}/zoo_timer_targets.cmake")
 
-check_required_components(zoo_timer)
+check_required_components(ZooTimer)

@@ -357,7 +357,9 @@ target_compile_definitions(zoo_timer_shared PUBLIC ${PLATFORM_DEFINITIONS} ${ZOO
 enable_testing()
 
 # Add subdirectories
-add_subdirectory(${ZOO_REPO_ROOT_DIR}/tests/timer ${CMAKE_CURRENT_BINARY_DIR}/tests)
+if(EXISTS "${ZOO_REPO_ROOT_DIR}/tests/unit/timer/CMakeLists.txt")
+    add_subdirectory(${ZOO_REPO_ROOT_DIR}/tests/unit/timer ${CMAKE_CURRENT_BINARY_DIR}/tests)
+endif()
 
 # Install configuration
 include(GNUInstallDirs)
@@ -422,20 +424,22 @@ else()
     message(STATUS "pkg-config template not found, skipping pkg-config file generation")
 endif()
 
-# CPack configuration for packaging
-set(CPACK_PACKAGE_NAME "zoo-timer")
-set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "ZOO Timer Module")
-set(CPACK_PACKAGE_VENDOR "Basic Software Research Institute ltd")
-set(CPACK_PACKAGE_CONTACT "weiwang.sun@niopower.com")
+# CPack configuration for packaging (standalone module build only)
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+    set(CPACK_PACKAGE_NAME "zoo-timer")
+    set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+    set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "ZOO Timer Module")
+    set(CPACK_PACKAGE_VENDOR "Basic Software Research Institute ltd")
+    set(CPACK_PACKAGE_CONTACT "weiwang.sun@niopower.com")
 
-set(CPACK_SOURCE_GENERATOR "TGZ")
-set(CPACK_GENERATOR "TGZ;DEB;RPM")
+    set(CPACK_SOURCE_GENERATOR "TGZ")
+    set(CPACK_GENERATOR "TGZ;DEB;RPM")
 
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6, libpthread-stubs0-dev")
-set(CPACK_RPM_PACKAGE_REQUIRES "glibc, glibc-devel")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6, libpthread-stubs0-dev")
+    set(CPACK_RPM_PACKAGE_REQUIRES "glibc, glibc-devel")
 
-include(CPack)
+    include(CPack)
+endif()
 
 # ==============================================================================
 # ENHANCED CONFIGURATION SUMMARY

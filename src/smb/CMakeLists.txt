@@ -50,7 +50,7 @@ target_link_libraries(zoo_smb_static PUBLIC
 
 # Build shared library (excluding bridge sources)
 add_library(zoo_smb_shared SHARED ${SOURCES})
-set_target_properties(zoo_smb_shared PROPERTIES OUTPUT_NAME zoo_smb)
+set_target_properties(zoo_smb_shared PROPERTIES OUTPUT_NAME smb)
 target_compile_definitions(zoo_smb_shared PRIVATE
     _GNU_SOURCE
     _POSIX_C_SOURCE=200809L

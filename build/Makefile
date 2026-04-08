@@ -193,6 +193,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named zoo_cleanup_shared_outputs
+
+# Build rule for target.
+zoo_cleanup_shared_outputs: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_cleanup_shared_outputs
+.PHONY : zoo_cleanup_shared_outputs
+
+# fast build rule for target.
+zoo_cleanup_shared_outputs/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_cleanup_shared_outputs.dir/build.make CMakeFiles/zoo_cleanup_shared_outputs.dir/build
+.PHONY : zoo_cleanup_shared_outputs/fast
+
+#=============================================================================
 # Target rules for targets named zoo_platform_static
 
 # Build rule for target.
@@ -479,45 +492,6 @@ zoo_memory_pool_shared/fast:
 .PHONY : zoo_memory_pool_shared/fast
 
 #=============================================================================
-# Target rules for targets named zoo_memory_pool_tests
-
-# Build rule for target.
-zoo_memory_pool_tests: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_memory_pool_tests
-.PHONY : zoo_memory_pool_tests
-
-# fast build rule for target.
-zoo_memory_pool_tests/fast:
-	$(MAKE) $(MAKESILENT) -f src/memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/build.make src/memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/build
-.PHONY : zoo_memory_pool_tests/fast
-
-#=============================================================================
-# Target rules for targets named memory_pool_quick_test
-
-# Build rule for target.
-memory_pool_quick_test: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 memory_pool_quick_test
-.PHONY : memory_pool_quick_test
-
-# fast build rule for target.
-memory_pool_quick_test/fast:
-	$(MAKE) $(MAKESILENT) -f src/memory_pool/tests/CMakeFiles/memory_pool_quick_test.dir/build.make src/memory_pool/tests/CMakeFiles/memory_pool_quick_test.dir/build
-.PHONY : memory_pool_quick_test/fast
-
-#=============================================================================
-# Target rules for targets named memory_pool_test_verbose
-
-# Build rule for target.
-memory_pool_test_verbose: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 memory_pool_test_verbose
-.PHONY : memory_pool_test_verbose
-
-# fast build rule for target.
-memory_pool_test_verbose/fast:
-	$(MAKE) $(MAKESILENT) -f src/memory_pool/tests/CMakeFiles/memory_pool_test_verbose.dir/build.make src/memory_pool/tests/CMakeFiles/memory_pool_test_verbose.dir/build
-.PHONY : memory_pool_test_verbose/fast
-
-#=============================================================================
 # Target rules for targets named zoo_buffer_static
 
 # Build rule for target.
@@ -609,58 +583,6 @@ socket_test_verbose/fast:
 .PHONY : socket_test_verbose/fast
 
 #=============================================================================
-# Target rules for targets named tcp_client_example
-
-# Build rule for target.
-tcp_client_example: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tcp_client_example
-.PHONY : tcp_client_example
-
-# fast build rule for target.
-tcp_client_example/fast:
-	$(MAKE) $(MAKESILENT) -f src/socket/examples/CMakeFiles/tcp_client_example.dir/build.make src/socket/examples/CMakeFiles/tcp_client_example.dir/build
-.PHONY : tcp_client_example/fast
-
-#=============================================================================
-# Target rules for targets named tcp_server_example
-
-# Build rule for target.
-tcp_server_example: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tcp_server_example
-.PHONY : tcp_server_example
-
-# fast build rule for target.
-tcp_server_example/fast:
-	$(MAKE) $(MAKESILENT) -f src/socket/examples/CMakeFiles/tcp_server_example.dir/build.make src/socket/examples/CMakeFiles/tcp_server_example.dir/build
-.PHONY : tcp_server_example/fast
-
-#=============================================================================
-# Target rules for targets named udp_example
-
-# Build rule for target.
-udp_example: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 udp_example
-.PHONY : udp_example
-
-# fast build rule for target.
-udp_example/fast:
-	$(MAKE) $(MAKESILENT) -f src/socket/examples/CMakeFiles/udp_example.dir/build.make src/socket/examples/CMakeFiles/udp_example.dir/build
-.PHONY : udp_example/fast
-
-#=============================================================================
-# Target rules for targets named address_example
-
-# Build rule for target.
-address_example: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 address_example
-.PHONY : address_example
-
-# fast build rule for target.
-address_example/fast:
-	$(MAKE) $(MAKESILENT) -f src/socket/examples/CMakeFiles/address_example.dir/build.make src/socket/examples/CMakeFiles/address_example.dir/build
-.PHONY : address_example/fast
-
-#=============================================================================
 # Target rules for targets named zoo_thread_pool_static
 
 # Build rule for target.
@@ -711,32 +633,6 @@ zoo_dispatcher_shared: cmake_check_build_system
 zoo_dispatcher_shared/fast:
 	$(MAKE) $(MAKESILENT) -f src/dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/build.make src/dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/build
 .PHONY : zoo_dispatcher_shared/fast
-
-#=============================================================================
-# Target rules for targets named zoo_dispatcher_tests
-
-# Build rule for target.
-zoo_dispatcher_tests: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_dispatcher_tests
-.PHONY : zoo_dispatcher_tests
-
-# fast build rule for target.
-zoo_dispatcher_tests/fast:
-	$(MAKE) $(MAKESILENT) -f src/dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir/build.make src/dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir/build
-.PHONY : zoo_dispatcher_tests/fast
-
-#=============================================================================
-# Target rules for targets named zoo_dispatcher_performance_tests_bin
-
-# Build rule for target.
-zoo_dispatcher_performance_tests_bin: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_dispatcher_performance_tests_bin
-.PHONY : zoo_dispatcher_performance_tests_bin
-
-# fast build rule for target.
-zoo_dispatcher_performance_tests_bin/fast:
-	$(MAKE) $(MAKESILENT) -f src/dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/build.make src/dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/build
-.PHONY : zoo_dispatcher_performance_tests_bin/fast
 
 #=============================================================================
 # Target rules for targets named zoo_timer_static
@@ -829,6 +725,58 @@ zoo_smb_shared/fast:
 	$(MAKE) $(MAKESILENT) -f src/smb/CMakeFiles/zoo_smb_shared.dir/build.make src/smb/CMakeFiles/zoo_smb_shared.dir/build
 .PHONY : zoo_smb_shared/fast
 
+#=============================================================================
+# Target rules for targets named zoo_example_client
+
+# Build rule for target.
+zoo_example_client: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_example_client
+.PHONY : zoo_example_client
+
+# fast build rule for target.
+zoo_example_client/fast:
+	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/zoo_example_client.dir/build.make examples/CMakeFiles/zoo_example_client.dir/build
+.PHONY : zoo_example_client/fast
+
+#=============================================================================
+# Target rules for targets named zoo_example_server
+
+# Build rule for target.
+zoo_example_server: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_example_server
+.PHONY : zoo_example_server
+
+# fast build rule for target.
+zoo_example_server/fast:
+	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/zoo_example_server.dir/build.make examples/CMakeFiles/zoo_example_server.dir/build
+.PHONY : zoo_example_server/fast
+
+#=============================================================================
+# Target rules for targets named zoo_example_publisher
+
+# Build rule for target.
+zoo_example_publisher: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_example_publisher
+.PHONY : zoo_example_publisher
+
+# fast build rule for target.
+zoo_example_publisher/fast:
+	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/zoo_example_publisher.dir/build.make examples/CMakeFiles/zoo_example_publisher.dir/build
+.PHONY : zoo_example_publisher/fast
+
+#=============================================================================
+# Target rules for targets named zoo_example_subscriber
+
+# Build rule for target.
+zoo_example_subscriber: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_example_subscriber
+.PHONY : zoo_example_subscriber
+
+# fast build rule for target.
+zoo_example_subscriber/fast:
+	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/zoo_example_subscriber.dir/build.make examples/CMakeFiles/zoo_example_subscriber.dir/build
+.PHONY : zoo_example_subscriber/fast
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -846,8 +794,6 @@ help:
 	@echo "... test"
 	@echo "... log_quick_test"
 	@echo "... log_test_verbose"
-	@echo "... memory_pool_quick_test"
-	@echo "... memory_pool_test_verbose"
 	@echo "... run_math_tests"
 	@echo "... run_memory_tests"
 	@echo "... run_string_tests"
@@ -856,27 +802,25 @@ help:
 	@echo "... socket_test_verbose"
 	@echo "... timer_test_clean"
 	@echo "... timer_test_verbose"
-	@echo "... address_example"
-	@echo "... tcp_client_example"
-	@echo "... tcp_server_example"
+	@echo "... zoo_cleanup_shared_outputs"
 	@echo "... test_math_unity"
 	@echo "... test_memory_unity"
 	@echo "... test_string_unity"
 	@echo "... test_timestamp_unity"
-	@echo "... udp_example"
 	@echo "... util_unity"
 	@echo "... zoo_buffer_shared"
 	@echo "... zoo_buffer_static"
-	@echo "... zoo_dispatcher_performance_tests_bin"
 	@echo "... zoo_dispatcher_shared"
 	@echo "... zoo_dispatcher_static"
-	@echo "... zoo_dispatcher_tests"
+	@echo "... zoo_example_client"
+	@echo "... zoo_example_publisher"
+	@echo "... zoo_example_server"
+	@echo "... zoo_example_subscriber"
 	@echo "... zoo_log_shared"
 	@echo "... zoo_log_static"
 	@echo "... zoo_log_tests"
 	@echo "... zoo_memory_pool_shared"
 	@echo "... zoo_memory_pool_static"
-	@echo "... zoo_memory_pool_tests"
 	@echo "... zoo_platform_shared"
 	@echo "... zoo_platform_static"
 	@echo "... zoo_platform_tests"

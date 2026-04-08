@@ -91,7 +91,9 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/zoo-platform.pc
 
 # Add tests subdirectory if enabled
 if(BUILD_TESTS)
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../tests/platform ${CMAKE_CURRENT_BINARY_DIR}/tests)
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../../tests/unit/platform/CMakeLists.txt")
+        add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../tests/unit/platform ${CMAKE_CURRENT_BINARY_DIR}/tests)
+    endif()
 endif()
 
 # Print build information

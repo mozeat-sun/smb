@@ -26,6 +26,11 @@ project(ZOO
     LANGUAGES C CXX
 )
 
+# Default install destination is the repository stage directory.
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/stage" CACHE PATH "Install prefix" FORCE)
+endif()
+
 # Set C/C++ standards
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
@@ -85,8 +90,8 @@ endif()
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # Unified output directories at repository root
-set(ZOO_BIN_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/bin")
-set(ZOO_LIB_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/lib")
+set(ZOO_BIN_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/stage/bin")
+set(ZOO_LIB_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/stage/lib")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${ZOO_BIN_OUTPUT_DIR}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${ZOO_LIB_OUTPUT_DIR}")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${ZOO_LIB_OUTPUT_DIR}")
@@ -167,11 +172,57 @@ endif()
 if(ZOO_BUILD_SMB)
     add_subdirectory(src/smb)
     if(ZOO_BUILD_TESTS)
-        add_subdirectory(tests/smb ${CMAKE_CURRENT_BINARY_DIR}/smb/tests)
+        if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/unit/smb/CMakeLists.txt")
+            add_subdirectory(tests/unit/smb ${CMAKE_CURRENT_BINARY_DIR}/smb/tests)
+        endif()
     endif()
     if(ZOO_BUILD_EXAMPLES)
-        add_subdirectory(examples/smb ${CMAKE_CURRENT_BINARY_DIR}/smb/examples)
+        if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/examples/smb/CMakeLists.txt")
+            add_subdirectory(examples/smb ${CMAKE_CURRENT_BINARY_DIR}/smb/examples)
+        endif()
     endif()
+endif()
+
+if(ZOO_BUILD_EXAMPLES)
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/examples/CMakeLists.txt")
+        add_subdirectory(examples ${CMAKE_CURRENT_BINARY_DIR}/examples)
+    endif()
+endif()
+
+# Keep only two shared libraries in stage/lib:
+# - libsmb.so
+# - libzoo_platform.so
+set(ZOO_HIDDEN_SHARED_OUTPUT_DIR "${CMAKE_BINARY_DIR}/hidden_shared_libs")
+set(ZOO_NON_PRIMARY_SHARED_TARGETS
+    zoo_buffer_shared
+    zoo_dispatcher_shared
+    zoo_log_shared
+    zoo_memory_pool_shared
+    zoo_socket_shared
+    zoo_thread_pool_shared
+    zoo_timer_shared
+    zoo_util_shared
+)
+foreach(_tgt IN LISTS ZOO_NON_PRIMARY_SHARED_TARGETS)
+    if(TARGET ${_tgt})
+        set_target_properties(${_tgt} PROPERTIES
+            LIBRARY_OUTPUT_DIRECTORY "${ZOO_HIDDEN_SHARED_OUTPUT_DIR}"
+        )
+    endif()
+endforeach()
+
+# Remove historical/extra shared outputs from stage/lib and keep only:
+# - libsmb.so
+# - libzoo_platform.so* (versioned symlinks/files)
+add_custom_target(zoo_cleanup_shared_outputs ALL
+    COMMAND /bin/sh -c "find '${ZOO_LIB_OUTPUT_DIR}' -maxdepth 1 \\( -type f -o -type l \\) -name 'libzoo_*.so*' ! -name 'libzoo_platform.so*' -delete"
+    COMMENT "Pruning shared library outputs to requested set"
+)
+if(TARGET zoo_smb_shared)
+    add_dependencies(zoo_cleanup_shared_outputs zoo_smb_shared)
+endif()
+if(TARGET zoo_platform_shared)
+    add_dependencies(zoo_cleanup_shared_outputs zoo_platform_shared)
 endif()
 
 # ==============================================================================
@@ -213,6 +264,28 @@ install(FILES
     "${CMAKE_CURRENT_BINARY_DIR}/ZooConfigVersion.cmake"
     DESTINATION lib/cmake/Zoo
 )
+
+# Root package generation (installers are emitted under stage/packages)
+set(CPACK_PACKAGE_NAME "zoo")
+set(CPACK_PACKAGE_VENDOR "ZOO Ltd")
+set(CPACK_PACKAGE_CONTACT "support@zoo.com")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "ZOO Cross-Platform Library Collection")
+set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+set(CPACK_PACKAGE_DIRECTORY "${CMAKE_SOURCE_DIR}/stage/packages")
+set(CPACK_SOURCE_GENERATOR "TGZ;ZIP")
+
+set(ZOO_CPACK_GENERATORS "TGZ;ZIP;STGZ")
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    list(APPEND ZOO_CPACK_GENERATORS "DEB" "RPM")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    list(APPEND ZOO_CPACK_GENERATORS "NSIS")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    list(APPEND ZOO_CPACK_GENERATORS "DragNDrop")
+endif()
+list(REMOVE_DUPLICATES ZOO_CPACK_GENERATORS)
+string(REPLACE ";" ";" CPACK_GENERATOR "${ZOO_CPACK_GENERATORS}")
+
+include(CPack)
 
 # ==============================================================================
 # SUMMARY

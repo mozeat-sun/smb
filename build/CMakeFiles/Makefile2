@@ -63,6 +63,7 @@ CMAKE_BINARY_DIR = /home/mozeat/zoo/build
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
+all: CMakeFiles/zoo_cleanup_shared_outputs.dir/all
 all: src/platform/all
 all: src/util/all
 all: src/log/all
@@ -73,6 +74,7 @@ all: src/thread_pool/all
 all: src/dispatcher/all
 all: src/timer/all
 all: src/smb/all
+all: examples/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -86,9 +88,11 @@ preinstall: src/thread_pool/preinstall
 preinstall: src/dispatcher/preinstall
 preinstall: src/timer/preinstall
 preinstall: src/smb/preinstall
+preinstall: examples/preinstall
 .PHONY : preinstall
 
 # The main recursive "clean" target.
+clean: CMakeFiles/zoo_cleanup_shared_outputs.dir/clean
 clean: src/platform/clean
 clean: src/util/clean
 clean: src/log/clean
@@ -99,7 +103,29 @@ clean: src/thread_pool/clean
 clean: src/dispatcher/clean
 clean: src/timer/clean
 clean: src/smb/clean
+clean: examples/clean
 .PHONY : clean
+
+#=============================================================================
+# Directory level rules for directory examples
+
+# Recursive "all" directory target.
+examples/all: examples/CMakeFiles/zoo_example_client.dir/all
+examples/all: examples/CMakeFiles/zoo_example_server.dir/all
+examples/all: examples/CMakeFiles/zoo_example_publisher.dir/all
+examples/all: examples/CMakeFiles/zoo_example_subscriber.dir/all
+.PHONY : examples/all
+
+# Recursive "preinstall" directory target.
+examples/preinstall:
+.PHONY : examples/preinstall
+
+# Recursive "clean" directory target.
+examples/clean: examples/CMakeFiles/zoo_example_client.dir/clean
+examples/clean: examples/CMakeFiles/zoo_example_server.dir/clean
+examples/clean: examples/CMakeFiles/zoo_example_publisher.dir/clean
+examples/clean: examples/CMakeFiles/zoo_example_subscriber.dir/clean
+.PHONY : examples/clean
 
 #=============================================================================
 # Directory level rules for directory src/buffer
@@ -141,35 +167,16 @@ src/buffer/tests/clean:
 # Recursive "all" directory target.
 src/dispatcher/all: src/dispatcher/CMakeFiles/zoo_dispatcher_static.dir/all
 src/dispatcher/all: src/dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/all
-src/dispatcher/all: src/dispatcher/tests/all
 .PHONY : src/dispatcher/all
 
 # Recursive "preinstall" directory target.
-src/dispatcher/preinstall: src/dispatcher/tests/preinstall
+src/dispatcher/preinstall:
 .PHONY : src/dispatcher/preinstall
 
 # Recursive "clean" directory target.
 src/dispatcher/clean: src/dispatcher/CMakeFiles/zoo_dispatcher_static.dir/clean
 src/dispatcher/clean: src/dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/clean
-src/dispatcher/clean: src/dispatcher/tests/clean
 .PHONY : src/dispatcher/clean
-
-#=============================================================================
-# Directory level rules for directory src/dispatcher/tests
-
-# Recursive "all" directory target.
-src/dispatcher/tests/all: src/dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir/all
-src/dispatcher/tests/all: src/dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/all
-.PHONY : src/dispatcher/tests/all
-
-# Recursive "preinstall" directory target.
-src/dispatcher/tests/preinstall:
-.PHONY : src/dispatcher/tests/preinstall
-
-# Recursive "clean" directory target.
-src/dispatcher/tests/clean: src/dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir/clean
-src/dispatcher/tests/clean: src/dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/clean
-.PHONY : src/dispatcher/tests/clean
 
 #=============================================================================
 # Directory level rules for directory src/log
@@ -230,7 +237,7 @@ src/memory_pool/clean: src/memory_pool/tests/clean
 # Directory level rules for directory src/memory_pool/tests
 
 # Recursive "all" directory target.
-src/memory_pool/tests/all: src/memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/all
+src/memory_pool/tests/all:
 .PHONY : src/memory_pool/tests/all
 
 # Recursive "preinstall" directory target.
@@ -238,9 +245,7 @@ src/memory_pool/tests/preinstall:
 .PHONY : src/memory_pool/tests/preinstall
 
 # Recursive "clean" directory target.
-src/memory_pool/tests/clean: src/memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/clean
-src/memory_pool/tests/clean: src/memory_pool/tests/CMakeFiles/memory_pool_quick_test.dir/clean
-src/memory_pool/tests/clean: src/memory_pool/tests/CMakeFiles/memory_pool_test_verbose.dir/clean
+src/memory_pool/tests/clean:
 .PHONY : src/memory_pool/tests/clean
 
 #=============================================================================
@@ -301,41 +306,17 @@ src/smb/clean: src/smb/CMakeFiles/zoo_smb_shared.dir/clean
 src/socket/all: src/socket/CMakeFiles/zoo_socket_static.dir/all
 src/socket/all: src/socket/CMakeFiles/zoo_socket_shared.dir/all
 src/socket/all: src/socket/tests/all
-src/socket/all: src/socket/examples/all
 .PHONY : src/socket/all
 
 # Recursive "preinstall" directory target.
 src/socket/preinstall: src/socket/tests/preinstall
-src/socket/preinstall: src/socket/examples/preinstall
 .PHONY : src/socket/preinstall
 
 # Recursive "clean" directory target.
 src/socket/clean: src/socket/CMakeFiles/zoo_socket_static.dir/clean
 src/socket/clean: src/socket/CMakeFiles/zoo_socket_shared.dir/clean
 src/socket/clean: src/socket/tests/clean
-src/socket/clean: src/socket/examples/clean
 .PHONY : src/socket/clean
-
-#=============================================================================
-# Directory level rules for directory src/socket/examples
-
-# Recursive "all" directory target.
-src/socket/examples/all: src/socket/examples/CMakeFiles/tcp_client_example.dir/all
-src/socket/examples/all: src/socket/examples/CMakeFiles/tcp_server_example.dir/all
-src/socket/examples/all: src/socket/examples/CMakeFiles/udp_example.dir/all
-src/socket/examples/all: src/socket/examples/CMakeFiles/address_example.dir/all
-.PHONY : src/socket/examples/all
-
-# Recursive "preinstall" directory target.
-src/socket/examples/preinstall:
-.PHONY : src/socket/examples/preinstall
-
-# Recursive "clean" directory target.
-src/socket/examples/clean: src/socket/examples/CMakeFiles/tcp_client_example.dir/clean
-src/socket/examples/clean: src/socket/examples/CMakeFiles/tcp_server_example.dir/clean
-src/socket/examples/clean: src/socket/examples/CMakeFiles/udp_example.dir/clean
-src/socket/examples/clean: src/socket/examples/CMakeFiles/address_example.dir/clean
-.PHONY : src/socket/examples/clean
 
 #=============================================================================
 # Directory level rules for directory src/socket/tests
@@ -473,13 +454,40 @@ src/util/tests/clean: src/util/tests/CMakeFiles/run_math_tests.dir/clean
 .PHONY : src/util/tests/clean
 
 #=============================================================================
+# Target rules for target CMakeFiles/zoo_cleanup_shared_outputs.dir
+
+# All Build rule for target.
+CMakeFiles/zoo_cleanup_shared_outputs.dir/all: src/platform/CMakeFiles/zoo_platform_shared.dir/all
+CMakeFiles/zoo_cleanup_shared_outputs.dir/all: src/smb/CMakeFiles/zoo_smb_shared.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_cleanup_shared_outputs.dir/build.make CMakeFiles/zoo_cleanup_shared_outputs.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_cleanup_shared_outputs.dir/build.make CMakeFiles/zoo_cleanup_shared_outputs.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=15 "Built target zoo_cleanup_shared_outputs"
+.PHONY : CMakeFiles/zoo_cleanup_shared_outputs.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/zoo_cleanup_shared_outputs.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 32
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/zoo_cleanup_shared_outputs.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
+.PHONY : CMakeFiles/zoo_cleanup_shared_outputs.dir/rule
+
+# Convenience name for target.
+zoo_cleanup_shared_outputs: CMakeFiles/zoo_cleanup_shared_outputs.dir/rule
+.PHONY : zoo_cleanup_shared_outputs
+
+# clean rule for target.
+CMakeFiles/zoo_cleanup_shared_outputs.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_cleanup_shared_outputs.dir/build.make CMakeFiles/zoo_cleanup_shared_outputs.dir/clean
+.PHONY : CMakeFiles/zoo_cleanup_shared_outputs.dir/clean
+
+#=============================================================================
 # Target rules for target src/platform/CMakeFiles/zoo_platform_static.dir
 
 # All Build rule for target.
 src/platform/CMakeFiles/zoo_platform_static.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/platform/CMakeFiles/zoo_platform_static.dir/build.make src/platform/CMakeFiles/zoo_platform_static.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/platform/CMakeFiles/zoo_platform_static.dir/build.make src/platform/CMakeFiles/zoo_platform_static.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=33 "Built target zoo_platform_static"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=30 "Built target zoo_platform_static"
 .PHONY : src/platform/CMakeFiles/zoo_platform_static.dir/all
 
 # Build rule for subdir invocation for target.
@@ -505,7 +513,7 @@ src/platform/CMakeFiles/zoo_platform_static.dir/clean:
 src/platform/CMakeFiles/zoo_platform_shared.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/platform/CMakeFiles/zoo_platform_shared.dir/build.make src/platform/CMakeFiles/zoo_platform_shared.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/platform/CMakeFiles/zoo_platform_shared.dir/build.make src/platform/CMakeFiles/zoo_platform_shared.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=32 "Built target zoo_platform_shared"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=29 "Built target zoo_platform_shared"
 .PHONY : src/platform/CMakeFiles/zoo_platform_shared.dir/all
 
 # Build rule for subdir invocation for target.
@@ -531,12 +539,12 @@ src/platform/CMakeFiles/zoo_platform_shared.dir/clean:
 src/platform/tests/CMakeFiles/zoo_platform_tests.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/platform/tests/CMakeFiles/zoo_platform_tests.dir/build.make src/platform/tests/CMakeFiles/zoo_platform_tests.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/platform/tests/CMakeFiles/zoo_platform_tests.dir/build.make src/platform/tests/CMakeFiles/zoo_platform_tests.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=34,35,36 "Built target zoo_platform_tests"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=31,32,33,34 "Built target zoo_platform_tests"
 .PHONY : src/platform/tests/CMakeFiles/zoo_platform_tests.dir/all
 
 # Build rule for subdir invocation for target.
 src/platform/tests/CMakeFiles/zoo_platform_tests.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/platform/tests/CMakeFiles/zoo_platform_tests.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
 .PHONY : src/platform/tests/CMakeFiles/zoo_platform_tests.dir/rule
@@ -557,12 +565,12 @@ src/platform/tests/CMakeFiles/zoo_platform_tests.dir/clean:
 src/util/CMakeFiles/zoo_util_static.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/util/CMakeFiles/zoo_util_static.dir/build.make src/util/CMakeFiles/zoo_util_static.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/util/CMakeFiles/zoo_util_static.dir/build.make src/util/CMakeFiles/zoo_util_static.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=100 "Built target zoo_util_static"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=99,100 "Built target zoo_util_static"
 .PHONY : src/util/CMakeFiles/zoo_util_static.dir/all
 
 # Build rule for subdir invocation for target.
 src/util/CMakeFiles/zoo_util_static.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 1
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 2
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/util/CMakeFiles/zoo_util_static.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
 .PHONY : src/util/CMakeFiles/zoo_util_static.dir/rule
@@ -583,12 +591,12 @@ src/util/CMakeFiles/zoo_util_static.dir/clean:
 src/util/CMakeFiles/zoo_util_shared.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/util/CMakeFiles/zoo_util_shared.dir/build.make src/util/CMakeFiles/zoo_util_shared.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/util/CMakeFiles/zoo_util_shared.dir/build.make src/util/CMakeFiles/zoo_util_shared.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=99 "Built target zoo_util_shared"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=97,98 "Built target zoo_util_shared"
 .PHONY : src/util/CMakeFiles/zoo_util_shared.dir/all
 
 # Build rule for subdir invocation for target.
 src/util/CMakeFiles/zoo_util_shared.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 1
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 2
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/util/CMakeFiles/zoo_util_shared.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
 .PHONY : src/util/CMakeFiles/zoo_util_shared.dir/rule
@@ -609,7 +617,7 @@ src/util/CMakeFiles/zoo_util_shared.dir/clean:
 src/util/tests/CMakeFiles/util_unity.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/util_unity.dir/build.make src/util/tests/CMakeFiles/util_unity.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/util_unity.dir/build.make src/util/tests/CMakeFiles/util_unity.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=16 "Built target util_unity"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=11 "Built target util_unity"
 .PHONY : src/util/tests/CMakeFiles/util_unity.dir/all
 
 # Build rule for subdir invocation for target.
@@ -635,7 +643,7 @@ src/util/tests/CMakeFiles/util_unity.dir/clean:
 src/util/tests/CMakeFiles/test_timestamp_unity.dir/all: src/util/CMakeFiles/zoo_util_static.dir/all
 	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/test_timestamp_unity.dir/build.make src/util/tests/CMakeFiles/test_timestamp_unity.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/test_timestamp_unity.dir/build.make src/util/tests/CMakeFiles/test_timestamp_unity.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=12,13 "Built target test_timestamp_unity"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=9 "Built target test_timestamp_unity"
 .PHONY : src/util/tests/CMakeFiles/test_timestamp_unity.dir/all
 
 # Build rule for subdir invocation for target.
@@ -661,12 +669,12 @@ src/util/tests/CMakeFiles/test_timestamp_unity.dir/clean:
 src/util/tests/CMakeFiles/test_string_unity.dir/all: src/util/CMakeFiles/zoo_util_static.dir/all
 	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/test_string_unity.dir/build.make src/util/tests/CMakeFiles/test_string_unity.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/test_string_unity.dir/build.make src/util/tests/CMakeFiles/test_string_unity.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=11 "Built target test_string_unity"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=7,8 "Built target test_string_unity"
 .PHONY : src/util/tests/CMakeFiles/test_string_unity.dir/all
 
 # Build rule for subdir invocation for target.
 src/util/tests/CMakeFiles/test_string_unity.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/util/tests/CMakeFiles/test_string_unity.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
 .PHONY : src/util/tests/CMakeFiles/test_string_unity.dir/rule
@@ -687,7 +695,7 @@ src/util/tests/CMakeFiles/test_string_unity.dir/clean:
 src/util/tests/CMakeFiles/test_memory_unity.dir/all: src/util/CMakeFiles/zoo_util_static.dir/all
 	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/test_memory_unity.dir/build.make src/util/tests/CMakeFiles/test_memory_unity.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/test_memory_unity.dir/build.make src/util/tests/CMakeFiles/test_memory_unity.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=9,10 "Built target test_memory_unity"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=6 "Built target test_memory_unity"
 .PHONY : src/util/tests/CMakeFiles/test_memory_unity.dir/all
 
 # Build rule for subdir invocation for target.
@@ -713,12 +721,12 @@ src/util/tests/CMakeFiles/test_memory_unity.dir/clean:
 src/util/tests/CMakeFiles/test_math_unity.dir/all: src/util/CMakeFiles/zoo_util_static.dir/all
 	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/test_math_unity.dir/build.make src/util/tests/CMakeFiles/test_math_unity.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/test_math_unity.dir/build.make src/util/tests/CMakeFiles/test_math_unity.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=8 "Built target test_math_unity"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=4,5 "Built target test_math_unity"
 .PHONY : src/util/tests/CMakeFiles/test_math_unity.dir/all
 
 # Build rule for subdir invocation for target.
 src/util/tests/CMakeFiles/test_math_unity.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/util/tests/CMakeFiles/test_math_unity.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
 .PHONY : src/util/tests/CMakeFiles/test_math_unity.dir/rule
@@ -742,7 +750,7 @@ src/util/tests/CMakeFiles/run_unity_tests.dir/all: src/util/tests/CMakeFiles/tes
 src/util/tests/CMakeFiles/run_unity_tests.dir/all: src/util/tests/CMakeFiles/test_math_unity.dir/all
 	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/run_unity_tests.dir/build.make src/util/tests/CMakeFiles/run_unity_tests.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/run_unity_tests.dir/build.make src/util/tests/CMakeFiles/run_unity_tests.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=5 "Built target run_unity_tests"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num= "Built target run_unity_tests"
 .PHONY : src/util/tests/CMakeFiles/run_unity_tests.dir/all
 
 # Build rule for subdir invocation for target.
@@ -768,12 +776,12 @@ src/util/tests/CMakeFiles/run_unity_tests.dir/clean:
 src/util/tests/CMakeFiles/run_timestamp_tests.dir/all: src/util/tests/CMakeFiles/test_timestamp_unity.dir/all
 	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/run_timestamp_tests.dir/build.make src/util/tests/CMakeFiles/run_timestamp_tests.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/run_timestamp_tests.dir/build.make src/util/tests/CMakeFiles/run_timestamp_tests.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num= "Built target run_timestamp_tests"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=3 "Built target run_timestamp_tests"
 .PHONY : src/util/tests/CMakeFiles/run_timestamp_tests.dir/all
 
 # Build rule for subdir invocation for target.
 src/util/tests/CMakeFiles/run_timestamp_tests.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/util/tests/CMakeFiles/run_timestamp_tests.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
 .PHONY : src/util/tests/CMakeFiles/run_timestamp_tests.dir/rule
@@ -794,12 +802,12 @@ src/util/tests/CMakeFiles/run_timestamp_tests.dir/clean:
 src/util/tests/CMakeFiles/run_string_tests.dir/all: src/util/tests/CMakeFiles/test_string_unity.dir/all
 	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/run_string_tests.dir/build.make src/util/tests/CMakeFiles/run_string_tests.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/run_string_tests.dir/build.make src/util/tests/CMakeFiles/run_string_tests.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=4 "Built target run_string_tests"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num= "Built target run_string_tests"
 .PHONY : src/util/tests/CMakeFiles/run_string_tests.dir/all
 
 # Build rule for subdir invocation for target.
 src/util/tests/CMakeFiles/run_string_tests.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/util/tests/CMakeFiles/run_string_tests.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
 .PHONY : src/util/tests/CMakeFiles/run_string_tests.dir/rule
@@ -820,12 +828,12 @@ src/util/tests/CMakeFiles/run_string_tests.dir/clean:
 src/util/tests/CMakeFiles/run_memory_tests.dir/all: src/util/tests/CMakeFiles/test_memory_unity.dir/all
 	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/run_memory_tests.dir/build.make src/util/tests/CMakeFiles/run_memory_tests.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/run_memory_tests.dir/build.make src/util/tests/CMakeFiles/run_memory_tests.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num= "Built target run_memory_tests"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=2 "Built target run_memory_tests"
 .PHONY : src/util/tests/CMakeFiles/run_memory_tests.dir/all
 
 # Build rule for subdir invocation for target.
 src/util/tests/CMakeFiles/run_memory_tests.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/util/tests/CMakeFiles/run_memory_tests.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
 .PHONY : src/util/tests/CMakeFiles/run_memory_tests.dir/rule
@@ -846,12 +854,12 @@ src/util/tests/CMakeFiles/run_memory_tests.dir/clean:
 src/util/tests/CMakeFiles/run_math_tests.dir/all: src/util/tests/CMakeFiles/test_math_unity.dir/all
 	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/run_math_tests.dir/build.make src/util/tests/CMakeFiles/run_math_tests.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/util/tests/CMakeFiles/run_math_tests.dir/build.make src/util/tests/CMakeFiles/run_math_tests.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=3 "Built target run_math_tests"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num= "Built target run_math_tests"
 .PHONY : src/util/tests/CMakeFiles/run_math_tests.dir/all
 
 # Build rule for subdir invocation for target.
 src/util/tests/CMakeFiles/run_math_tests.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/util/tests/CMakeFiles/run_math_tests.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
 .PHONY : src/util/tests/CMakeFiles/run_math_tests.dir/rule
@@ -950,12 +958,12 @@ src/log/tests/CMakeFiles/zoo_log_tests.dir/clean:
 src/log/tests/CMakeFiles/log_quick_test.dir/all: src/log/tests/CMakeFiles/zoo_log_tests.dir/all
 	$(MAKE) $(MAKESILENT) -f src/log/tests/CMakeFiles/log_quick_test.dir/build.make src/log/tests/CMakeFiles/log_quick_test.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/log/tests/CMakeFiles/log_quick_test.dir/build.make src/log/tests/CMakeFiles/log_quick_test.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=1 "Built target log_quick_test"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num= "Built target log_quick_test"
 .PHONY : src/log/tests/CMakeFiles/log_quick_test.dir/all
 
 # Build rule for subdir invocation for target.
 src/log/tests/CMakeFiles/log_quick_test.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 4
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 3
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/log/tests/CMakeFiles/log_quick_test.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
 .PHONY : src/log/tests/CMakeFiles/log_quick_test.dir/rule
@@ -976,12 +984,12 @@ src/log/tests/CMakeFiles/log_quick_test.dir/clean:
 src/log/tests/CMakeFiles/log_test_verbose.dir/all: src/log/tests/CMakeFiles/zoo_log_tests.dir/all
 	$(MAKE) $(MAKESILENT) -f src/log/tests/CMakeFiles/log_test_verbose.dir/build.make src/log/tests/CMakeFiles/log_test_verbose.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/log/tests/CMakeFiles/log_test_verbose.dir/build.make src/log/tests/CMakeFiles/log_test_verbose.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num= "Built target log_test_verbose"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=1 "Built target log_test_verbose"
 .PHONY : src/log/tests/CMakeFiles/log_test_verbose.dir/all
 
 # Build rule for subdir invocation for target.
 src/log/tests/CMakeFiles/log_test_verbose.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/log/tests/CMakeFiles/log_test_verbose.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
 .PHONY : src/log/tests/CMakeFiles/log_test_verbose.dir/rule
@@ -1048,91 +1056,13 @@ src/memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/clean:
 .PHONY : src/memory_pool/CMakeFiles/zoo_memory_pool_shared.dir/clean
 
 #=============================================================================
-# Target rules for target src/memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir
-
-# All Build rule for target.
-src/memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/all: src/memory_pool/CMakeFiles/zoo_memory_pool_static.dir/all
-	$(MAKE) $(MAKESILENT) -f src/memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/build.make src/memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/depend
-	$(MAKE) $(MAKESILENT) -f src/memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/build.make src/memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=29,30,31 "Built target zoo_memory_pool_tests"
-.PHONY : src/memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/all
-
-# Build rule for subdir invocation for target.
-src/memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 4
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
-.PHONY : src/memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/rule
-
-# Convenience name for target.
-zoo_memory_pool_tests: src/memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/rule
-.PHONY : zoo_memory_pool_tests
-
-# clean rule for target.
-src/memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/clean:
-	$(MAKE) $(MAKESILENT) -f src/memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/build.make src/memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/clean
-.PHONY : src/memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/clean
-
-#=============================================================================
-# Target rules for target src/memory_pool/tests/CMakeFiles/memory_pool_quick_test.dir
-
-# All Build rule for target.
-src/memory_pool/tests/CMakeFiles/memory_pool_quick_test.dir/all: src/memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/all
-	$(MAKE) $(MAKESILENT) -f src/memory_pool/tests/CMakeFiles/memory_pool_quick_test.dir/build.make src/memory_pool/tests/CMakeFiles/memory_pool_quick_test.dir/depend
-	$(MAKE) $(MAKESILENT) -f src/memory_pool/tests/CMakeFiles/memory_pool_quick_test.dir/build.make src/memory_pool/tests/CMakeFiles/memory_pool_quick_test.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=2 "Built target memory_pool_quick_test"
-.PHONY : src/memory_pool/tests/CMakeFiles/memory_pool_quick_test.dir/all
-
-# Build rule for subdir invocation for target.
-src/memory_pool/tests/CMakeFiles/memory_pool_quick_test.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 5
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/memory_pool/tests/CMakeFiles/memory_pool_quick_test.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
-.PHONY : src/memory_pool/tests/CMakeFiles/memory_pool_quick_test.dir/rule
-
-# Convenience name for target.
-memory_pool_quick_test: src/memory_pool/tests/CMakeFiles/memory_pool_quick_test.dir/rule
-.PHONY : memory_pool_quick_test
-
-# clean rule for target.
-src/memory_pool/tests/CMakeFiles/memory_pool_quick_test.dir/clean:
-	$(MAKE) $(MAKESILENT) -f src/memory_pool/tests/CMakeFiles/memory_pool_quick_test.dir/build.make src/memory_pool/tests/CMakeFiles/memory_pool_quick_test.dir/clean
-.PHONY : src/memory_pool/tests/CMakeFiles/memory_pool_quick_test.dir/clean
-
-#=============================================================================
-# Target rules for target src/memory_pool/tests/CMakeFiles/memory_pool_test_verbose.dir
-
-# All Build rule for target.
-src/memory_pool/tests/CMakeFiles/memory_pool_test_verbose.dir/all: src/memory_pool/tests/CMakeFiles/zoo_memory_pool_tests.dir/all
-	$(MAKE) $(MAKESILENT) -f src/memory_pool/tests/CMakeFiles/memory_pool_test_verbose.dir/build.make src/memory_pool/tests/CMakeFiles/memory_pool_test_verbose.dir/depend
-	$(MAKE) $(MAKESILENT) -f src/memory_pool/tests/CMakeFiles/memory_pool_test_verbose.dir/build.make src/memory_pool/tests/CMakeFiles/memory_pool_test_verbose.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num= "Built target memory_pool_test_verbose"
-.PHONY : src/memory_pool/tests/CMakeFiles/memory_pool_test_verbose.dir/all
-
-# Build rule for subdir invocation for target.
-src/memory_pool/tests/CMakeFiles/memory_pool_test_verbose.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 4
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/memory_pool/tests/CMakeFiles/memory_pool_test_verbose.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
-.PHONY : src/memory_pool/tests/CMakeFiles/memory_pool_test_verbose.dir/rule
-
-# Convenience name for target.
-memory_pool_test_verbose: src/memory_pool/tests/CMakeFiles/memory_pool_test_verbose.dir/rule
-.PHONY : memory_pool_test_verbose
-
-# clean rule for target.
-src/memory_pool/tests/CMakeFiles/memory_pool_test_verbose.dir/clean:
-	$(MAKE) $(MAKESILENT) -f src/memory_pool/tests/CMakeFiles/memory_pool_test_verbose.dir/build.make src/memory_pool/tests/CMakeFiles/memory_pool_test_verbose.dir/clean
-.PHONY : src/memory_pool/tests/CMakeFiles/memory_pool_test_verbose.dir/clean
-
-#=============================================================================
 # Target rules for target src/buffer/CMakeFiles/zoo_buffer_static.dir
 
 # All Build rule for target.
 src/buffer/CMakeFiles/zoo_buffer_static.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/buffer/CMakeFiles/zoo_buffer_static.dir/build.make src/buffer/CMakeFiles/zoo_buffer_static.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/buffer/CMakeFiles/zoo_buffer_static.dir/build.make src/buffer/CMakeFiles/zoo_buffer_static.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=18 "Built target zoo_buffer_static"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=14 "Built target zoo_buffer_static"
 .PHONY : src/buffer/CMakeFiles/zoo_buffer_static.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1158,12 +1088,12 @@ src/buffer/CMakeFiles/zoo_buffer_static.dir/clean:
 src/buffer/CMakeFiles/zoo_buffer_shared.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/buffer/CMakeFiles/zoo_buffer_shared.dir/build.make src/buffer/CMakeFiles/zoo_buffer_shared.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/buffer/CMakeFiles/zoo_buffer_shared.dir/build.make src/buffer/CMakeFiles/zoo_buffer_shared.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=17 "Built target zoo_buffer_shared"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=12,13 "Built target zoo_buffer_shared"
 .PHONY : src/buffer/CMakeFiles/zoo_buffer_shared.dir/all
 
 # Build rule for subdir invocation for target.
 src/buffer/CMakeFiles/zoo_buffer_shared.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 1
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 2
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/buffer/CMakeFiles/zoo_buffer_shared.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
 .PHONY : src/buffer/CMakeFiles/zoo_buffer_shared.dir/rule
@@ -1184,12 +1114,12 @@ src/buffer/CMakeFiles/zoo_buffer_shared.dir/clean:
 src/socket/CMakeFiles/zoo_socket_static.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/socket/CMakeFiles/zoo_socket_static.dir/build.make src/socket/CMakeFiles/zoo_socket_static.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/socket/CMakeFiles/zoo_socket_static.dir/build.make src/socket/CMakeFiles/zoo_socket_static.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=83 "Built target zoo_socket_static"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=81,82 "Built target zoo_socket_static"
 .PHONY : src/socket/CMakeFiles/zoo_socket_static.dir/all
 
 # Build rule for subdir invocation for target.
 src/socket/CMakeFiles/zoo_socket_static.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 1
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 2
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/socket/CMakeFiles/zoo_socket_static.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
 .PHONY : src/socket/CMakeFiles/zoo_socket_static.dir/rule
@@ -1210,12 +1140,12 @@ src/socket/CMakeFiles/zoo_socket_static.dir/clean:
 src/socket/CMakeFiles/zoo_socket_shared.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/socket/CMakeFiles/zoo_socket_shared.dir/build.make src/socket/CMakeFiles/zoo_socket_shared.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/socket/CMakeFiles/zoo_socket_shared.dir/build.make src/socket/CMakeFiles/zoo_socket_shared.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=81,82 "Built target zoo_socket_shared"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=80 "Built target zoo_socket_shared"
 .PHONY : src/socket/CMakeFiles/zoo_socket_shared.dir/all
 
 # Build rule for subdir invocation for target.
 src/socket/CMakeFiles/zoo_socket_shared.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 1
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/socket/CMakeFiles/zoo_socket_shared.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
 .PHONY : src/socket/CMakeFiles/zoo_socket_shared.dir/rule
@@ -1236,7 +1166,7 @@ src/socket/CMakeFiles/zoo_socket_shared.dir/clean:
 src/socket/tests/CMakeFiles/zoo_socket_unity.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/socket/tests/CMakeFiles/zoo_socket_unity.dir/build.make src/socket/tests/CMakeFiles/zoo_socket_unity.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/socket/tests/CMakeFiles/zoo_socket_unity.dir/build.make src/socket/tests/CMakeFiles/zoo_socket_unity.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=89 "Built target zoo_socket_unity"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=88 "Built target zoo_socket_unity"
 .PHONY : src/socket/tests/CMakeFiles/zoo_socket_unity.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1263,12 +1193,12 @@ src/socket/tests/CMakeFiles/zoo_socket_tests.dir/all: src/socket/CMakeFiles/zoo_
 src/socket/tests/CMakeFiles/zoo_socket_tests.dir/all: src/socket/tests/CMakeFiles/zoo_socket_unity.dir/all
 	$(MAKE) $(MAKESILENT) -f src/socket/tests/CMakeFiles/zoo_socket_tests.dir/build.make src/socket/tests/CMakeFiles/zoo_socket_tests.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/socket/tests/CMakeFiles/zoo_socket_tests.dir/build.make src/socket/tests/CMakeFiles/zoo_socket_tests.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=84,85,86,87,88 "Built target zoo_socket_tests"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=83,84,85,86,87 "Built target zoo_socket_tests"
 .PHONY : src/socket/tests/CMakeFiles/zoo_socket_tests.dir/all
 
 # Build rule for subdir invocation for target.
 src/socket/tests/CMakeFiles/zoo_socket_tests.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 7
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 8
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/socket/tests/CMakeFiles/zoo_socket_tests.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
 .PHONY : src/socket/tests/CMakeFiles/zoo_socket_tests.dir/rule
@@ -1294,7 +1224,7 @@ src/socket/tests/CMakeFiles/socket_test_verbose.dir/all: src/socket/tests/CMakeF
 
 # Build rule for subdir invocation for target.
 src/socket/tests/CMakeFiles/socket_test_verbose.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 7
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 8
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/socket/tests/CMakeFiles/socket_test_verbose.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
 .PHONY : src/socket/tests/CMakeFiles/socket_test_verbose.dir/rule
@@ -1309,117 +1239,13 @@ src/socket/tests/CMakeFiles/socket_test_verbose.dir/clean:
 .PHONY : src/socket/tests/CMakeFiles/socket_test_verbose.dir/clean
 
 #=============================================================================
-# Target rules for target src/socket/examples/CMakeFiles/tcp_client_example.dir
-
-# All Build rule for target.
-src/socket/examples/CMakeFiles/tcp_client_example.dir/all: src/socket/CMakeFiles/zoo_socket_static.dir/all
-	$(MAKE) $(MAKESILENT) -f src/socket/examples/CMakeFiles/tcp_client_example.dir/build.make src/socket/examples/CMakeFiles/tcp_client_example.dir/depend
-	$(MAKE) $(MAKESILENT) -f src/socket/examples/CMakeFiles/tcp_client_example.dir/build.make src/socket/examples/CMakeFiles/tcp_client_example.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=6 "Built target tcp_client_example"
-.PHONY : src/socket/examples/CMakeFiles/tcp_client_example.dir/all
-
-# Build rule for subdir invocation for target.
-src/socket/examples/CMakeFiles/tcp_client_example.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/socket/examples/CMakeFiles/tcp_client_example.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
-.PHONY : src/socket/examples/CMakeFiles/tcp_client_example.dir/rule
-
-# Convenience name for target.
-tcp_client_example: src/socket/examples/CMakeFiles/tcp_client_example.dir/rule
-.PHONY : tcp_client_example
-
-# clean rule for target.
-src/socket/examples/CMakeFiles/tcp_client_example.dir/clean:
-	$(MAKE) $(MAKESILENT) -f src/socket/examples/CMakeFiles/tcp_client_example.dir/build.make src/socket/examples/CMakeFiles/tcp_client_example.dir/clean
-.PHONY : src/socket/examples/CMakeFiles/tcp_client_example.dir/clean
-
-#=============================================================================
-# Target rules for target src/socket/examples/CMakeFiles/tcp_server_example.dir
-
-# All Build rule for target.
-src/socket/examples/CMakeFiles/tcp_server_example.dir/all: src/socket/CMakeFiles/zoo_socket_static.dir/all
-	$(MAKE) $(MAKESILENT) -f src/socket/examples/CMakeFiles/tcp_server_example.dir/build.make src/socket/examples/CMakeFiles/tcp_server_example.dir/depend
-	$(MAKE) $(MAKESILENT) -f src/socket/examples/CMakeFiles/tcp_server_example.dir/build.make src/socket/examples/CMakeFiles/tcp_server_example.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=7 "Built target tcp_server_example"
-.PHONY : src/socket/examples/CMakeFiles/tcp_server_example.dir/all
-
-# Build rule for subdir invocation for target.
-src/socket/examples/CMakeFiles/tcp_server_example.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/socket/examples/CMakeFiles/tcp_server_example.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
-.PHONY : src/socket/examples/CMakeFiles/tcp_server_example.dir/rule
-
-# Convenience name for target.
-tcp_server_example: src/socket/examples/CMakeFiles/tcp_server_example.dir/rule
-.PHONY : tcp_server_example
-
-# clean rule for target.
-src/socket/examples/CMakeFiles/tcp_server_example.dir/clean:
-	$(MAKE) $(MAKESILENT) -f src/socket/examples/CMakeFiles/tcp_server_example.dir/build.make src/socket/examples/CMakeFiles/tcp_server_example.dir/clean
-.PHONY : src/socket/examples/CMakeFiles/tcp_server_example.dir/clean
-
-#=============================================================================
-# Target rules for target src/socket/examples/CMakeFiles/udp_example.dir
-
-# All Build rule for target.
-src/socket/examples/CMakeFiles/udp_example.dir/all: src/socket/CMakeFiles/zoo_socket_static.dir/all
-	$(MAKE) $(MAKESILENT) -f src/socket/examples/CMakeFiles/udp_example.dir/build.make src/socket/examples/CMakeFiles/udp_example.dir/depend
-	$(MAKE) $(MAKESILENT) -f src/socket/examples/CMakeFiles/udp_example.dir/build.make src/socket/examples/CMakeFiles/udp_example.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=15 "Built target udp_example"
-.PHONY : src/socket/examples/CMakeFiles/udp_example.dir/all
-
-# Build rule for subdir invocation for target.
-src/socket/examples/CMakeFiles/udp_example.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/socket/examples/CMakeFiles/udp_example.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
-.PHONY : src/socket/examples/CMakeFiles/udp_example.dir/rule
-
-# Convenience name for target.
-udp_example: src/socket/examples/CMakeFiles/udp_example.dir/rule
-.PHONY : udp_example
-
-# clean rule for target.
-src/socket/examples/CMakeFiles/udp_example.dir/clean:
-	$(MAKE) $(MAKESILENT) -f src/socket/examples/CMakeFiles/udp_example.dir/build.make src/socket/examples/CMakeFiles/udp_example.dir/clean
-.PHONY : src/socket/examples/CMakeFiles/udp_example.dir/clean
-
-#=============================================================================
-# Target rules for target src/socket/examples/CMakeFiles/address_example.dir
-
-# All Build rule for target.
-src/socket/examples/CMakeFiles/address_example.dir/all: src/socket/CMakeFiles/zoo_socket_static.dir/all
-	$(MAKE) $(MAKESILENT) -f src/socket/examples/CMakeFiles/address_example.dir/build.make src/socket/examples/CMakeFiles/address_example.dir/depend
-	$(MAKE) $(MAKESILENT) -f src/socket/examples/CMakeFiles/address_example.dir/build.make src/socket/examples/CMakeFiles/address_example.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num= "Built target address_example"
-.PHONY : src/socket/examples/CMakeFiles/address_example.dir/all
-
-# Build rule for subdir invocation for target.
-src/socket/examples/CMakeFiles/address_example.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 1
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/socket/examples/CMakeFiles/address_example.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
-.PHONY : src/socket/examples/CMakeFiles/address_example.dir/rule
-
-# Convenience name for target.
-address_example: src/socket/examples/CMakeFiles/address_example.dir/rule
-.PHONY : address_example
-
-# clean rule for target.
-src/socket/examples/CMakeFiles/address_example.dir/clean:
-	$(MAKE) $(MAKESILENT) -f src/socket/examples/CMakeFiles/address_example.dir/build.make src/socket/examples/CMakeFiles/address_example.dir/clean
-.PHONY : src/socket/examples/CMakeFiles/address_example.dir/clean
-
-#=============================================================================
 # Target rules for target src/thread_pool/CMakeFiles/zoo_thread_pool_static.dir
 
 # All Build rule for target.
 src/thread_pool/CMakeFiles/zoo_thread_pool_static.dir/all: src/buffer/CMakeFiles/zoo_buffer_static.dir/all
 	$(MAKE) $(MAKESILENT) -f src/thread_pool/CMakeFiles/zoo_thread_pool_static.dir/build.make src/thread_pool/CMakeFiles/zoo_thread_pool_static.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/thread_pool/CMakeFiles/zoo_thread_pool_static.dir/build.make src/thread_pool/CMakeFiles/zoo_thread_pool_static.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=91 "Built target zoo_thread_pool_static"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=90 "Built target zoo_thread_pool_static"
 .PHONY : src/thread_pool/CMakeFiles/zoo_thread_pool_static.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1445,12 +1271,12 @@ src/thread_pool/CMakeFiles/zoo_thread_pool_static.dir/clean:
 src/thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/all: src/buffer/CMakeFiles/zoo_buffer_shared.dir/all
 	$(MAKE) $(MAKESILENT) -f src/thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/build.make src/thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/build.make src/thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=90 "Built target zoo_thread_pool_shared"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=89 "Built target zoo_thread_pool_shared"
 .PHONY : src/thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/all
 
 # Build rule for subdir invocation for target.
 src/thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 3
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
 .PHONY : src/thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/rule
@@ -1471,7 +1297,7 @@ src/thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/clean:
 src/dispatcher/CMakeFiles/zoo_dispatcher_static.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/dispatcher/CMakeFiles/zoo_dispatcher_static.dir/build.make src/dispatcher/CMakeFiles/zoo_dispatcher_static.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/dispatcher/CMakeFiles/zoo_dispatcher_static.dir/build.make src/dispatcher/CMakeFiles/zoo_dispatcher_static.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=21 "Built target zoo_dispatcher_static"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=17 "Built target zoo_dispatcher_static"
 .PHONY : src/dispatcher/CMakeFiles/zoo_dispatcher_static.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1497,7 +1323,7 @@ src/dispatcher/CMakeFiles/zoo_dispatcher_static.dir/clean:
 src/dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/build.make src/dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/build.make src/dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=20 "Built target zoo_dispatcher_shared"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=16 "Built target zoo_dispatcher_shared"
 .PHONY : src/dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1517,71 +1343,13 @@ src/dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/clean:
 .PHONY : src/dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/clean
 
 #=============================================================================
-# Target rules for target src/dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir
-
-# All Build rule for target.
-src/dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir/all: src/log/CMakeFiles/zoo_log_static.dir/all
-src/dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir/all: src/memory_pool/CMakeFiles/zoo_memory_pool_static.dir/all
-src/dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir/all: src/buffer/CMakeFiles/zoo_buffer_static.dir/all
-src/dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir/all: src/dispatcher/CMakeFiles/zoo_dispatcher_static.dir/all
-	$(MAKE) $(MAKESILENT) -f src/dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir/build.make src/dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir/depend
-	$(MAKE) $(MAKESILENT) -f src/dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir/build.make src/dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=22 "Built target zoo_dispatcher_tests"
-.PHONY : src/dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir/all
-
-# Build rule for subdir invocation for target.
-src/dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 5
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
-.PHONY : src/dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir/rule
-
-# Convenience name for target.
-zoo_dispatcher_tests: src/dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir/rule
-.PHONY : zoo_dispatcher_tests
-
-# clean rule for target.
-src/dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir/clean:
-	$(MAKE) $(MAKESILENT) -f src/dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir/build.make src/dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir/clean
-.PHONY : src/dispatcher/tests/CMakeFiles/zoo_dispatcher_tests.dir/clean
-
-#=============================================================================
-# Target rules for target src/dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir
-
-# All Build rule for target.
-src/dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/all: src/log/CMakeFiles/zoo_log_static.dir/all
-src/dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/all: src/memory_pool/CMakeFiles/zoo_memory_pool_static.dir/all
-src/dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/all: src/buffer/CMakeFiles/zoo_buffer_static.dir/all
-src/dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/all: src/dispatcher/CMakeFiles/zoo_dispatcher_static.dir/all
-	$(MAKE) $(MAKESILENT) -f src/dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/build.make src/dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/depend
-	$(MAKE) $(MAKESILENT) -f src/dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/build.make src/dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=19 "Built target zoo_dispatcher_performance_tests_bin"
-.PHONY : src/dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/all
-
-# Build rule for subdir invocation for target.
-src/dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 5
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
-.PHONY : src/dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/rule
-
-# Convenience name for target.
-zoo_dispatcher_performance_tests_bin: src/dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/rule
-.PHONY : zoo_dispatcher_performance_tests_bin
-
-# clean rule for target.
-src/dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/clean:
-	$(MAKE) $(MAKESILENT) -f src/dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/build.make src/dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/clean
-.PHONY : src/dispatcher/tests/CMakeFiles/zoo_dispatcher_performance_tests_bin.dir/clean
-
-#=============================================================================
 # Target rules for target src/timer/CMakeFiles/zoo_timer_static.dir
 
 # All Build rule for target.
 src/timer/CMakeFiles/zoo_timer_static.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/timer/CMakeFiles/zoo_timer_static.dir/build.make src/timer/CMakeFiles/zoo_timer_static.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/timer/CMakeFiles/zoo_timer_static.dir/build.make src/timer/CMakeFiles/zoo_timer_static.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=93 "Built target zoo_timer_static"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=92 "Built target zoo_timer_static"
 .PHONY : src/timer/CMakeFiles/zoo_timer_static.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1607,7 +1375,7 @@ src/timer/CMakeFiles/zoo_timer_static.dir/clean:
 src/timer/CMakeFiles/zoo_timer_shared.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/timer/CMakeFiles/zoo_timer_shared.dir/build.make src/timer/CMakeFiles/zoo_timer_shared.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/timer/CMakeFiles/zoo_timer_shared.dir/build.make src/timer/CMakeFiles/zoo_timer_shared.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=92 "Built target zoo_timer_shared"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=91 "Built target zoo_timer_shared"
 .PHONY : src/timer/CMakeFiles/zoo_timer_shared.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1633,12 +1401,12 @@ src/timer/CMakeFiles/zoo_timer_shared.dir/clean:
 src/timer/tests/CMakeFiles/zoo_timer_tests.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/timer/tests/CMakeFiles/zoo_timer_tests.dir/build.make src/timer/tests/CMakeFiles/zoo_timer_tests.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/timer/tests/CMakeFiles/zoo_timer_tests.dir/build.make src/timer/tests/CMakeFiles/zoo_timer_tests.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=94,95,96,97,98 "Built target zoo_timer_tests"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=93,94,95,96 "Built target zoo_timer_tests"
 .PHONY : src/timer/tests/CMakeFiles/zoo_timer_tests.dir/all
 
 # Build rule for subdir invocation for target.
 src/timer/tests/CMakeFiles/zoo_timer_tests.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 5
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/timer/tests/CMakeFiles/zoo_timer_tests.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
 .PHONY : src/timer/tests/CMakeFiles/zoo_timer_tests.dir/rule
@@ -1659,12 +1427,12 @@ src/timer/tests/CMakeFiles/zoo_timer_tests.dir/clean:
 src/timer/tests/CMakeFiles/timer_test_clean.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/timer/tests/CMakeFiles/timer_test_clean.dir/build.make src/timer/tests/CMakeFiles/timer_test_clean.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/timer/tests/CMakeFiles/timer_test_clean.dir/build.make src/timer/tests/CMakeFiles/timer_test_clean.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num= "Built target timer_test_clean"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=10 "Built target timer_test_clean"
 .PHONY : src/timer/tests/CMakeFiles/timer_test_clean.dir/all
 
 # Build rule for subdir invocation for target.
 src/timer/tests/CMakeFiles/timer_test_clean.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 1
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/timer/tests/CMakeFiles/timer_test_clean.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
 .PHONY : src/timer/tests/CMakeFiles/timer_test_clean.dir/rule
@@ -1685,12 +1453,12 @@ src/timer/tests/CMakeFiles/timer_test_clean.dir/clean:
 src/timer/tests/CMakeFiles/timer_test_verbose.dir/all: src/timer/tests/CMakeFiles/zoo_timer_tests.dir/all
 	$(MAKE) $(MAKESILENT) -f src/timer/tests/CMakeFiles/timer_test_verbose.dir/build.make src/timer/tests/CMakeFiles/timer_test_verbose.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/timer/tests/CMakeFiles/timer_test_verbose.dir/build.make src/timer/tests/CMakeFiles/timer_test_verbose.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=14 "Built target timer_test_verbose"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num= "Built target timer_test_verbose"
 .PHONY : src/timer/tests/CMakeFiles/timer_test_verbose.dir/all
 
 # Build rule for subdir invocation for target.
 src/timer/tests/CMakeFiles/timer_test_verbose.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 6
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/timer/tests/CMakeFiles/timer_test_verbose.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
 .PHONY : src/timer/tests/CMakeFiles/timer_test_verbose.dir/rule
@@ -1717,12 +1485,12 @@ src/smb/CMakeFiles/zoo_smb_static.dir/all: src/socket/CMakeFiles/zoo_socket_stat
 src/smb/CMakeFiles/zoo_smb_static.dir/all: src/thread_pool/CMakeFiles/zoo_thread_pool_static.dir/all
 	$(MAKE) $(MAKESILENT) -f src/smb/CMakeFiles/zoo_smb_static.dir/build.make src/smb/CMakeFiles/zoo_smb_static.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/smb/CMakeFiles/zoo_smb_static.dir/build.make src/smb/CMakeFiles/zoo_smb_static.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80 "Built target zoo_smb_static"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79 "Built target zoo_smb_static"
 .PHONY : src/smb/CMakeFiles/zoo_smb_static.dir/all
 
 # Build rule for subdir invocation for target.
 src/smb/CMakeFiles/zoo_smb_static.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 29
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 32
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/smb/CMakeFiles/zoo_smb_static.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
 .PHONY : src/smb/CMakeFiles/zoo_smb_static.dir/rule
@@ -1749,12 +1517,12 @@ src/smb/CMakeFiles/zoo_smb_shared.dir/all: src/socket/CMakeFiles/zoo_socket_shar
 src/smb/CMakeFiles/zoo_smb_shared.dir/all: src/thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/all
 	$(MAKE) $(MAKESILENT) -f src/smb/CMakeFiles/zoo_smb_shared.dir/build.make src/smb/CMakeFiles/zoo_smb_shared.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/smb/CMakeFiles/zoo_smb_shared.dir/build.make src/smb/CMakeFiles/zoo_smb_shared.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58 "Built target zoo_smb_shared"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56 "Built target zoo_smb_shared"
 .PHONY : src/smb/CMakeFiles/zoo_smb_shared.dir/all
 
 # Build rule for subdir invocation for target.
 src/smb/CMakeFiles/zoo_smb_shared.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 30
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 31
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/smb/CMakeFiles/zoo_smb_shared.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
 .PHONY : src/smb/CMakeFiles/zoo_smb_shared.dir/rule
@@ -1767,6 +1535,138 @@ zoo_smb_shared: src/smb/CMakeFiles/zoo_smb_shared.dir/rule
 src/smb/CMakeFiles/zoo_smb_shared.dir/clean:
 	$(MAKE) $(MAKESILENT) -f src/smb/CMakeFiles/zoo_smb_shared.dir/build.make src/smb/CMakeFiles/zoo_smb_shared.dir/clean
 .PHONY : src/smb/CMakeFiles/zoo_smb_shared.dir/clean
+
+#=============================================================================
+# Target rules for target examples/CMakeFiles/zoo_example_client.dir
+
+# All Build rule for target.
+examples/CMakeFiles/zoo_example_client.dir/all: src/platform/CMakeFiles/zoo_platform_static.dir/all
+examples/CMakeFiles/zoo_example_client.dir/all: src/util/CMakeFiles/zoo_util_static.dir/all
+examples/CMakeFiles/zoo_example_client.dir/all: src/log/CMakeFiles/zoo_log_static.dir/all
+examples/CMakeFiles/zoo_example_client.dir/all: src/memory_pool/CMakeFiles/zoo_memory_pool_static.dir/all
+examples/CMakeFiles/zoo_example_client.dir/all: src/buffer/CMakeFiles/zoo_buffer_static.dir/all
+examples/CMakeFiles/zoo_example_client.dir/all: src/socket/CMakeFiles/zoo_socket_static.dir/all
+examples/CMakeFiles/zoo_example_client.dir/all: src/thread_pool/CMakeFiles/zoo_thread_pool_static.dir/all
+examples/CMakeFiles/zoo_example_client.dir/all: src/smb/CMakeFiles/zoo_smb_static.dir/all
+	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/zoo_example_client.dir/build.make examples/CMakeFiles/zoo_example_client.dir/depend
+	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/zoo_example_client.dir/build.make examples/CMakeFiles/zoo_example_client.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=18 "Built target zoo_example_client"
+.PHONY : examples/CMakeFiles/zoo_example_client.dir/all
+
+# Build rule for subdir invocation for target.
+examples/CMakeFiles/zoo_example_client.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 33
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 examples/CMakeFiles/zoo_example_client.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
+.PHONY : examples/CMakeFiles/zoo_example_client.dir/rule
+
+# Convenience name for target.
+zoo_example_client: examples/CMakeFiles/zoo_example_client.dir/rule
+.PHONY : zoo_example_client
+
+# clean rule for target.
+examples/CMakeFiles/zoo_example_client.dir/clean:
+	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/zoo_example_client.dir/build.make examples/CMakeFiles/zoo_example_client.dir/clean
+.PHONY : examples/CMakeFiles/zoo_example_client.dir/clean
+
+#=============================================================================
+# Target rules for target examples/CMakeFiles/zoo_example_server.dir
+
+# All Build rule for target.
+examples/CMakeFiles/zoo_example_server.dir/all: src/platform/CMakeFiles/zoo_platform_static.dir/all
+examples/CMakeFiles/zoo_example_server.dir/all: src/util/CMakeFiles/zoo_util_static.dir/all
+examples/CMakeFiles/zoo_example_server.dir/all: src/log/CMakeFiles/zoo_log_static.dir/all
+examples/CMakeFiles/zoo_example_server.dir/all: src/memory_pool/CMakeFiles/zoo_memory_pool_static.dir/all
+examples/CMakeFiles/zoo_example_server.dir/all: src/buffer/CMakeFiles/zoo_buffer_static.dir/all
+examples/CMakeFiles/zoo_example_server.dir/all: src/socket/CMakeFiles/zoo_socket_static.dir/all
+examples/CMakeFiles/zoo_example_server.dir/all: src/thread_pool/CMakeFiles/zoo_thread_pool_static.dir/all
+examples/CMakeFiles/zoo_example_server.dir/all: src/smb/CMakeFiles/zoo_smb_static.dir/all
+	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/zoo_example_server.dir/build.make examples/CMakeFiles/zoo_example_server.dir/depend
+	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/zoo_example_server.dir/build.make examples/CMakeFiles/zoo_example_server.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=20,21 "Built target zoo_example_server"
+.PHONY : examples/CMakeFiles/zoo_example_server.dir/all
+
+# Build rule for subdir invocation for target.
+examples/CMakeFiles/zoo_example_server.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 34
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 examples/CMakeFiles/zoo_example_server.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
+.PHONY : examples/CMakeFiles/zoo_example_server.dir/rule
+
+# Convenience name for target.
+zoo_example_server: examples/CMakeFiles/zoo_example_server.dir/rule
+.PHONY : zoo_example_server
+
+# clean rule for target.
+examples/CMakeFiles/zoo_example_server.dir/clean:
+	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/zoo_example_server.dir/build.make examples/CMakeFiles/zoo_example_server.dir/clean
+.PHONY : examples/CMakeFiles/zoo_example_server.dir/clean
+
+#=============================================================================
+# Target rules for target examples/CMakeFiles/zoo_example_publisher.dir
+
+# All Build rule for target.
+examples/CMakeFiles/zoo_example_publisher.dir/all: src/platform/CMakeFiles/zoo_platform_static.dir/all
+examples/CMakeFiles/zoo_example_publisher.dir/all: src/util/CMakeFiles/zoo_util_static.dir/all
+examples/CMakeFiles/zoo_example_publisher.dir/all: src/log/CMakeFiles/zoo_log_static.dir/all
+examples/CMakeFiles/zoo_example_publisher.dir/all: src/memory_pool/CMakeFiles/zoo_memory_pool_static.dir/all
+examples/CMakeFiles/zoo_example_publisher.dir/all: src/buffer/CMakeFiles/zoo_buffer_static.dir/all
+examples/CMakeFiles/zoo_example_publisher.dir/all: src/socket/CMakeFiles/zoo_socket_static.dir/all
+examples/CMakeFiles/zoo_example_publisher.dir/all: src/thread_pool/CMakeFiles/zoo_thread_pool_static.dir/all
+examples/CMakeFiles/zoo_example_publisher.dir/all: src/smb/CMakeFiles/zoo_smb_static.dir/all
+	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/zoo_example_publisher.dir/build.make examples/CMakeFiles/zoo_example_publisher.dir/depend
+	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/zoo_example_publisher.dir/build.make examples/CMakeFiles/zoo_example_publisher.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=19 "Built target zoo_example_publisher"
+.PHONY : examples/CMakeFiles/zoo_example_publisher.dir/all
+
+# Build rule for subdir invocation for target.
+examples/CMakeFiles/zoo_example_publisher.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 33
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 examples/CMakeFiles/zoo_example_publisher.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
+.PHONY : examples/CMakeFiles/zoo_example_publisher.dir/rule
+
+# Convenience name for target.
+zoo_example_publisher: examples/CMakeFiles/zoo_example_publisher.dir/rule
+.PHONY : zoo_example_publisher
+
+# clean rule for target.
+examples/CMakeFiles/zoo_example_publisher.dir/clean:
+	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/zoo_example_publisher.dir/build.make examples/CMakeFiles/zoo_example_publisher.dir/clean
+.PHONY : examples/CMakeFiles/zoo_example_publisher.dir/clean
+
+#=============================================================================
+# Target rules for target examples/CMakeFiles/zoo_example_subscriber.dir
+
+# All Build rule for target.
+examples/CMakeFiles/zoo_example_subscriber.dir/all: src/platform/CMakeFiles/zoo_platform_static.dir/all
+examples/CMakeFiles/zoo_example_subscriber.dir/all: src/util/CMakeFiles/zoo_util_static.dir/all
+examples/CMakeFiles/zoo_example_subscriber.dir/all: src/log/CMakeFiles/zoo_log_static.dir/all
+examples/CMakeFiles/zoo_example_subscriber.dir/all: src/memory_pool/CMakeFiles/zoo_memory_pool_static.dir/all
+examples/CMakeFiles/zoo_example_subscriber.dir/all: src/buffer/CMakeFiles/zoo_buffer_static.dir/all
+examples/CMakeFiles/zoo_example_subscriber.dir/all: src/socket/CMakeFiles/zoo_socket_static.dir/all
+examples/CMakeFiles/zoo_example_subscriber.dir/all: src/thread_pool/CMakeFiles/zoo_thread_pool_static.dir/all
+examples/CMakeFiles/zoo_example_subscriber.dir/all: src/smb/CMakeFiles/zoo_smb_static.dir/all
+	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/zoo_example_subscriber.dir/build.make examples/CMakeFiles/zoo_example_subscriber.dir/depend
+	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/zoo_example_subscriber.dir/build.make examples/CMakeFiles/zoo_example_subscriber.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/mozeat/zoo/build/CMakeFiles --progress-num=22 "Built target zoo_example_subscriber"
+.PHONY : examples/CMakeFiles/zoo_example_subscriber.dir/all
+
+# Build rule for subdir invocation for target.
+examples/CMakeFiles/zoo_example_subscriber.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 33
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 examples/CMakeFiles/zoo_example_subscriber.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mozeat/zoo/build/CMakeFiles 0
+.PHONY : examples/CMakeFiles/zoo_example_subscriber.dir/rule
+
+# Convenience name for target.
+zoo_example_subscriber: examples/CMakeFiles/zoo_example_subscriber.dir/rule
+.PHONY : zoo_example_subscriber
+
+# clean rule for target.
+examples/CMakeFiles/zoo_example_subscriber.dir/clean:
+	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/zoo_example_subscriber.dir/build.make examples/CMakeFiles/zoo_example_subscriber.dir/clean
+.PHONY : examples/CMakeFiles/zoo_example_subscriber.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

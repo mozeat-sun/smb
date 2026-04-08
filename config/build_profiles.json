@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "owner": "zoo-build",
+  "updated_at_utc": "2026-04-08T00:00:00Z",
+  "profiles": {
+    "ci-linux-gcc": {
+      "generator": "Ninja",
+      "cmake_options": [
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DZOO_BUILD_TESTS=ON",
+        "-DZOO_BUILD_EXAMPLES=ON"
+      ],
+      "toolchain_file": null
+    },
+    "cross-aarch64-linux-gnu": {
+      "generator": "Ninja",
+      "cmake_options": [
+        "-DCMAKE_BUILD_TYPE=Release"
+      ],
+      "toolchain_file": "cmake/toolchains/aarch64-linux-gnu.cmake"
+    },
+    "cross-mingw-w64-x86_64": {
+      "generator": "Ninja",
+      "cmake_options": [
+        "-DCMAKE_BUILD_TYPE=Release"
+      ],
+      "toolchain_file": "cmake/toolchains/mingw-w64-x86_64.cmake"
+    },
+    "release-linux-gcc": {
+      "generator": "Ninja",
+      "cmake_options": [
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DZOO_BUILD_TESTS=OFF",
+        "-DZOO_BUILD_EXAMPLES=OFF"
+      ],
+      "toolchain_file": null
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "owner": "zoo-quality",
+  "updated_at_utc": "2026-04-08T00:00:00Z",
+  "notes": "CI baseline profile for regression guardrails. Tune after approved benchmark capture.",
+  "benchmark_profiles": {
+    "ci": {
+      "p99_latency_ms_max": null,
+      "throughput_ops_min": null,
+      "jitter_ms_max": null,
+      "notes": "Populate with stable CI-host baselines"
+    }
+  }
+}

@@ -1,14 +1,45 @@
 #!/usr/bin/env python3
 import json
+import os
 import sys
 from pathlib import Path
 
-baseline_path = Path(sys.argv[1] if len(sys.argv) > 1 else "config/quality_baselines.json")
+baseline_path = Path(sys.argv[1] if len(sys.argv) > 1 else "config/quality_baselines.ci.json")
 summary_path = Path(sys.argv[2] if len(sys.argv) > 2 else "artifacts/quality/benchmark_metrics.json")
+profile_name = sys.argv[3] if len(sys.argv) > 3 else os.environ.get("QUALITY_BASELINE_PROFILE", "ci")
+
+
+def fail(code: int, msg: str) -> None:
+    print(msg)
+    sys.exit(code)
+
+
+def validate_baseline(doc: dict, profile: str) -> None:
+    required_top = ["schema_version", "owner", "updated_at_utc", "benchmark_profiles"]
+    for key in required_top:
+        if key not in doc:
+            fail(3, f"invalid baseline: missing top-level key '{key}'")
+
+    if not isinstance(doc["schema_version"], int) or doc["schema_version"] < 1:
+        fail(3, "invalid baseline: schema_version must be integer >= 1")
+
+    profiles = doc.get("benchmark_profiles")
+    if not isinstance(profiles, dict) or not profiles:
+        fail(3, "invalid baseline: benchmark_profiles must be a non-empty object")
+
+    if profile not in profiles:
+        fail(3, f"baseline profile '{profile}' not found in {baseline_path}")
+
+    profile_doc = profiles[profile]
+    for metric_key in ["p99_latency_ms_max", "throughput_ops_min", "jitter_ms_max"]:
+        if metric_key not in profile_doc:
+            fail(3, f"invalid baseline profile '{profile}': missing '{metric_key}'")
+        value = profile_doc[metric_key]
+        if value is not None and not isinstance(value, (int, float)):
+            fail(3, f"invalid baseline profile '{profile}': '{metric_key}' must be number or null")
 
 if not baseline_path.exists():
-    print(f"baseline file missing: {baseline_path}")
-    sys.exit(1)
+    fail(1, f"baseline file missing: {baseline_path}")
 
 if not summary_path.exists():
     print(f"benchmark metrics missing: {summary_path}")
@@ -17,7 +48,8 @@ if not summary_path.exists():
 
 baseline = json.loads(baseline_path.read_text())
 metrics = json.loads(summary_path.read_text())
-profile = baseline.get("benchmark_profiles", {}).get("default", {})
+validate_baseline(baseline, profile_name)
+profile = baseline.get("benchmark_profiles", {}).get(profile_name, {})
 
 failures = []
 p99_max = profile.get("p99_latency_ms_max")
@@ -40,4 +72,7 @@ if failures:
         print(failure)
     sys.exit(2)
 
-print("Benchmark baseline comparison passed or baseline thresholds are not yet populated.")
+print(
+    f"Benchmark baseline comparison passed for profile '{profile_name}' "
+    "or thresholds are not yet populated."
+)

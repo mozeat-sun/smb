@@ -1,0 +1,9 @@
+Architecture: amd64
+Description: ZOO Cross-Platform Library Collection
+Maintainer: support@zoo.com
+Package: zoo
+Priority: optional
+Section: devel
+Version: 1.0.0
+Installed-Size: 121103
+
