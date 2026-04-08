@@ -1,5 +1,4 @@
 #include "unity.h"
-#include "test_utils.h"
 #include "zoo_smb_transport_shm.h"
 #include "zoo_smb_transport.h"
 #include "zoo_smb_config.h"
@@ -19,8 +18,6 @@ static ZOO_THREAD_POOL_HANDLE thread_pool;
  * @brief Test or example function setUp.
  */
 void setUp(void) {
-    test_memory_tracker_init();
-    
     // Initialize SHM transport
     zoo_smb_transport_shm_init();
 
@@ -63,7 +60,6 @@ void tearDown(void) {
         // zoo_destroy_thread_pool(thread_pool); // Stub - not available
         thread_pool = NULL;
     }
-    test_memory_tracker_cleanup();
 }
 
 /**

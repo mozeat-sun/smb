@@ -8,7 +8,12 @@ Security fixes are applied to the latest default branch.
 
 Please do not report security vulnerabilities in public issues.
 
-Send a private report to the repository maintainers, including:
+Use one of the private channels below:
+
+- GitHub Security Advisory: open a private vulnerability report in the Security tab.
+- Email: security@zoo.dev
+
+Include the following details:
 
 - Affected component and version/commit
 - Reproduction steps or proof of concept
@@ -17,6 +22,9 @@ Send a private report to the repository maintainers, including:
 
 Maintainers will acknowledge reports within 5 business days and provide a
 status update after triage.
+
+If a report is sent to a public channel by mistake, maintainers may redact
+details and continue discussion in a private channel.
 
 ## Disclosure
 

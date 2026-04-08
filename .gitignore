@@ -1,6 +1,7 @@
 
 # Top-level build outputs
 /build/
+/stage/
 /bin/
 /lib/
 /artifacts/

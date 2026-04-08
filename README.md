@@ -46,6 +46,14 @@ cmake --build build -j"$(nproc)"
 ctest --test-dir build --output-on-failure
 ```
 
+To include extended SMB integration tests:
+
+```bash
+cmake -S . -B build -DZOO_ENABLE_EXTENDED_INTEGRATION_TESTS=ON
+cmake --build build -j"$(nproc)"
+ctest --test-dir build --output-on-failure
+```
+
 ### Build With Examples Enabled
 
 ```bash

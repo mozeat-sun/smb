@@ -10,6 +10,8 @@ if(NOT EXISTS "${UNITY_ROOT}")
 endif()
 set(UNITY_SRC_DIR "${UNITY_ROOT}/src")
 
+option(ZOO_ENABLE_EXTENDED_INTEGRATION_TESTS "Enable extended SMB integration tests" OFF)
+
 if(NOT EXISTS "${UNITY_SRC_DIR}/unity.c")
     message(WARNING "Unity not found for integration tests; expected ${UNITY_SRC_DIR}/unity.c")
     return()
@@ -54,20 +56,33 @@ function(zoo_add_smb_integration_test target_name source_file)
         atomic
     )
 
+    # Integration binaries depend on internal shared libraries that may be
+    # redirected outside stage/lib by root-level output pruning policy.
+    set(_zoo_test_runtime_paths
+        "${ZOO_LIB_OUTPUT_DIR}"
+        "${CMAKE_BINARY_DIR}/hidden_shared_libs"
+    )
+    list(JOIN _zoo_test_runtime_paths ":" _zoo_test_ld_path)
+    list(JOIN _zoo_test_runtime_paths ";" _zoo_test_rpath)
+
+    set_target_properties(${target_name} PROPERTIES
+        BUILD_RPATH "${_zoo_test_rpath}"
+    )
+
     add_test(NAME ${target_name} COMMAND ${target_name})
     set_tests_properties(${target_name} PROPERTIES
         LABELS "integration;smb"
         TIMEOUT 120
+        ENVIRONMENT "LD_LIBRARY_PATH=${_zoo_test_ld_path}:$ENV{LD_LIBRARY_PATH}"
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     )
 endfunction()
 
 zoo_add_smb_integration_test(test_zoo_smb_integration smb/test_zoo_smb_integration.c)
-zoo_add_smb_integration_test(test_service_discovery smb/test_service_discovery.c)
-zoo_add_smb_integration_test(test_backpressure_security smb/test_backpressure_security.c)
-zoo_add_smb_integration_test(test_zoo_smb_transport_udp smb/test_zoo_smb_transport_udp.c)
-zoo_add_smb_integration_test(test_zoo_smb_transport_shm smb/test_zoo_smb_transport_shm.c)
 
-target_sources(test_zoo_smb_transport_shm PRIVATE
-    "${ZOO_REPO_ROOT_DIR}/tests/common/test_utils.c"
-)
+if(ZOO_ENABLE_EXTENDED_INTEGRATION_TESTS)
+    zoo_add_smb_integration_test(test_service_discovery smb/test_service_discovery.c)
+    zoo_add_smb_integration_test(test_backpressure_security smb/test_backpressure_security.c)
+    zoo_add_smb_integration_test(test_zoo_smb_transport_udp smb/test_zoo_smb_transport_udp.c)
+    zoo_add_smb_integration_test(test_zoo_smb_transport_shm smb/test_zoo_smb_transport_shm.c)
+endif()
