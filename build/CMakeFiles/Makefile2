@@ -64,6 +64,7 @@ CMAKE_BINARY_DIR = /home/ubuntu/workspace/zoo/build
 
 # The main recursive "all" target.
 all: CMakeFiles/zoo_cleanup_shared_outputs.dir/all
+all: CMakeFiles/zoo_cleanup_static_outputs.dir/all
 all: src/platform/all
 all: src/util/all
 all: src/log/all
@@ -91,6 +92,7 @@ preinstall: src/smb/preinstall
 
 # The main recursive "clean" target.
 clean: CMakeFiles/zoo_cleanup_shared_outputs.dir/clean
+clean: CMakeFiles/zoo_cleanup_static_outputs.dir/clean
 clean: src/platform/clean
 clean: src/util/clean
 clean: src/log/clean
@@ -442,7 +444,7 @@ CMakeFiles/zoo_cleanup_shared_outputs.dir/all: src/smb/CMakeFiles/zoo_smb_shared
 
 # Build rule for subdir invocation for target.
 CMakeFiles/zoo_cleanup_shared_outputs.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 33
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 32
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/zoo_cleanup_shared_outputs.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 0
 .PHONY : CMakeFiles/zoo_cleanup_shared_outputs.dir/rule
@@ -455,6 +457,33 @@ zoo_cleanup_shared_outputs: CMakeFiles/zoo_cleanup_shared_outputs.dir/rule
 CMakeFiles/zoo_cleanup_shared_outputs.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_cleanup_shared_outputs.dir/build.make CMakeFiles/zoo_cleanup_shared_outputs.dir/clean
 .PHONY : CMakeFiles/zoo_cleanup_shared_outputs.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/zoo_cleanup_static_outputs.dir
+
+# All Build rule for target.
+CMakeFiles/zoo_cleanup_static_outputs.dir/all: src/platform/CMakeFiles/zoo_platform_static.dir/all
+CMakeFiles/zoo_cleanup_static_outputs.dir/all: src/smb/CMakeFiles/zoo_smb_static.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_cleanup_static_outputs.dir/build.make CMakeFiles/zoo_cleanup_static_outputs.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_cleanup_static_outputs.dir/build.make CMakeFiles/zoo_cleanup_static_outputs.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/ubuntu/workspace/zoo/build/CMakeFiles --progress-num=16 "Built target zoo_cleanup_static_outputs"
+.PHONY : CMakeFiles/zoo_cleanup_static_outputs.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/zoo_cleanup_static_outputs.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 34
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/zoo_cleanup_static_outputs.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 0
+.PHONY : CMakeFiles/zoo_cleanup_static_outputs.dir/rule
+
+# Convenience name for target.
+zoo_cleanup_static_outputs: CMakeFiles/zoo_cleanup_static_outputs.dir/rule
+.PHONY : zoo_cleanup_static_outputs
+
+# clean rule for target.
+CMakeFiles/zoo_cleanup_static_outputs.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_cleanup_static_outputs.dir/build.make CMakeFiles/zoo_cleanup_static_outputs.dir/clean
+.PHONY : CMakeFiles/zoo_cleanup_static_outputs.dir/clean
 
 #=============================================================================
 # Target rules for target src/platform/CMakeFiles/zoo_platform_static.dir
@@ -515,12 +544,12 @@ src/platform/CMakeFiles/zoo_platform_shared.dir/clean:
 src/platform/tests/CMakeFiles/zoo_platform_tests.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/platform/tests/CMakeFiles/zoo_platform_tests.dir/build.make src/platform/tests/CMakeFiles/zoo_platform_tests.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/platform/tests/CMakeFiles/zoo_platform_tests.dir/build.make src/platform/tests/CMakeFiles/zoo_platform_tests.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/ubuntu/workspace/zoo/build/CMakeFiles --progress-num=27,28,29,30 "Built target zoo_platform_tests"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/ubuntu/workspace/zoo/build/CMakeFiles --progress-num=27,28,29,30,31 "Built target zoo_platform_tests"
 .PHONY : src/platform/tests/CMakeFiles/zoo_platform_tests.dir/all
 
 # Build rule for subdir invocation for target.
 src/platform/tests/CMakeFiles/zoo_platform_tests.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 4
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 5
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/platform/tests/CMakeFiles/zoo_platform_tests.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 0
 .PHONY : src/platform/tests/CMakeFiles/zoo_platform_tests.dir/rule
@@ -882,12 +911,12 @@ src/log/CMakeFiles/zoo_log_static.dir/clean:
 src/log/CMakeFiles/zoo_log_shared.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/log/CMakeFiles/zoo_log_shared.dir/build.make src/log/CMakeFiles/zoo_log_shared.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/log/CMakeFiles/zoo_log_shared.dir/build.make src/log/CMakeFiles/zoo_log_shared.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/ubuntu/workspace/zoo/build/CMakeFiles --progress-num=18,19 "Built target zoo_log_shared"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/ubuntu/workspace/zoo/build/CMakeFiles --progress-num=19 "Built target zoo_log_shared"
 .PHONY : src/log/CMakeFiles/zoo_log_shared.dir/all
 
 # Build rule for subdir invocation for target.
 src/log/CMakeFiles/zoo_log_shared.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 1
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/log/CMakeFiles/zoo_log_shared.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 0
 .PHONY : src/log/CMakeFiles/zoo_log_shared.dir/rule
@@ -1090,12 +1119,12 @@ src/buffer/CMakeFiles/zoo_buffer_shared.dir/clean:
 src/socket/CMakeFiles/zoo_socket_static.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/socket/CMakeFiles/zoo_socket_static.dir/build.make src/socket/CMakeFiles/zoo_socket_static.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/socket/CMakeFiles/zoo_socket_static.dir/build.make src/socket/CMakeFiles/zoo_socket_static.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/ubuntu/workspace/zoo/build/CMakeFiles --progress-num=80,81 "Built target zoo_socket_static"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/ubuntu/workspace/zoo/build/CMakeFiles --progress-num=81 "Built target zoo_socket_static"
 .PHONY : src/socket/CMakeFiles/zoo_socket_static.dir/all
 
 # Build rule for subdir invocation for target.
 src/socket/CMakeFiles/zoo_socket_static.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 1
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/socket/CMakeFiles/zoo_socket_static.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 0
 .PHONY : src/socket/CMakeFiles/zoo_socket_static.dir/rule
@@ -1116,12 +1145,12 @@ src/socket/CMakeFiles/zoo_socket_static.dir/clean:
 src/socket/CMakeFiles/zoo_socket_shared.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/socket/CMakeFiles/zoo_socket_shared.dir/build.make src/socket/CMakeFiles/zoo_socket_shared.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/socket/CMakeFiles/zoo_socket_shared.dir/build.make src/socket/CMakeFiles/zoo_socket_shared.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/ubuntu/workspace/zoo/build/CMakeFiles --progress-num=79 "Built target zoo_socket_shared"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/ubuntu/workspace/zoo/build/CMakeFiles --progress-num=79,80 "Built target zoo_socket_shared"
 .PHONY : src/socket/CMakeFiles/zoo_socket_shared.dir/all
 
 # Build rule for subdir invocation for target.
 src/socket/CMakeFiles/zoo_socket_shared.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 1
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 2
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/socket/CMakeFiles/zoo_socket_shared.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 0
 .PHONY : src/socket/CMakeFiles/zoo_socket_shared.dir/rule
@@ -1174,7 +1203,7 @@ src/socket/tests/CMakeFiles/zoo_socket_tests.dir/all: src/socket/tests/CMakeFile
 
 # Build rule for subdir invocation for target.
 src/socket/tests/CMakeFiles/zoo_socket_tests.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 9
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 8
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/socket/tests/CMakeFiles/zoo_socket_tests.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 0
 .PHONY : src/socket/tests/CMakeFiles/zoo_socket_tests.dir/rule
@@ -1200,7 +1229,7 @@ src/socket/tests/CMakeFiles/socket_test_verbose.dir/all: src/socket/tests/CMakeF
 
 # Build rule for subdir invocation for target.
 src/socket/tests/CMakeFiles/socket_test_verbose.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 9
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 8
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/socket/tests/CMakeFiles/socket_test_verbose.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 0
 .PHONY : src/socket/tests/CMakeFiles/socket_test_verbose.dir/rule
@@ -1273,7 +1302,7 @@ src/thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/clean:
 src/dispatcher/CMakeFiles/zoo_dispatcher_static.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/dispatcher/CMakeFiles/zoo_dispatcher_static.dir/build.make src/dispatcher/CMakeFiles/zoo_dispatcher_static.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/dispatcher/CMakeFiles/zoo_dispatcher_static.dir/build.make src/dispatcher/CMakeFiles/zoo_dispatcher_static.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/ubuntu/workspace/zoo/build/CMakeFiles --progress-num=17 "Built target zoo_dispatcher_static"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/ubuntu/workspace/zoo/build/CMakeFiles --progress-num=18 "Built target zoo_dispatcher_static"
 .PHONY : src/dispatcher/CMakeFiles/zoo_dispatcher_static.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1299,7 +1328,7 @@ src/dispatcher/CMakeFiles/zoo_dispatcher_static.dir/clean:
 src/dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/build.make src/dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/build.make src/dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/ubuntu/workspace/zoo/build/CMakeFiles --progress-num=16 "Built target zoo_dispatcher_shared"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/ubuntu/workspace/zoo/build/CMakeFiles --progress-num=17 "Built target zoo_dispatcher_shared"
 .PHONY : src/dispatcher/CMakeFiles/zoo_dispatcher_shared.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1466,7 +1495,7 @@ src/smb/CMakeFiles/zoo_smb_static.dir/all: src/thread_pool/CMakeFiles/zoo_thread
 
 # Build rule for subdir invocation for target.
 src/smb/CMakeFiles/zoo_smb_static.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 34
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 33
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/smb/CMakeFiles/zoo_smb_static.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 0
 .PHONY : src/smb/CMakeFiles/zoo_smb_static.dir/rule
@@ -1493,12 +1522,12 @@ src/smb/CMakeFiles/zoo_smb_shared.dir/all: src/socket/CMakeFiles/zoo_socket_shar
 src/smb/CMakeFiles/zoo_smb_shared.dir/all: src/thread_pool/CMakeFiles/zoo_thread_pool_shared.dir/all
 	$(MAKE) $(MAKESILENT) -f src/smb/CMakeFiles/zoo_smb_shared.dir/build.make src/smb/CMakeFiles/zoo_smb_shared.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/smb/CMakeFiles/zoo_smb_shared.dir/build.make src/smb/CMakeFiles/zoo_smb_shared.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/ubuntu/workspace/zoo/build/CMakeFiles --progress-num=31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54 "Built target zoo_smb_shared"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/ubuntu/workspace/zoo/build/CMakeFiles --progress-num=32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54 "Built target zoo_smb_shared"
 .PHONY : src/smb/CMakeFiles/zoo_smb_shared.dir/all
 
 # Build rule for subdir invocation for target.
 src/smb/CMakeFiles/zoo_smb_shared.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 33
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 32
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/smb/CMakeFiles/zoo_smb_shared.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/workspace/zoo/build/CMakeFiles 0
 .PHONY : src/smb/CMakeFiles/zoo_smb_shared.dir/rule

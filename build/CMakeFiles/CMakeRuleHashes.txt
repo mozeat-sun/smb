@@ -1,5 +1,6 @@
 # Hashes of file build rules.
 f25a6870a6e91a980d1d81f6ca8859eb CMakeFiles/zoo_cleanup_shared_outputs
+0c75a8680c863a31c3aaa3c98697d7b1 CMakeFiles/zoo_cleanup_static_outputs
 5b4afa950a40cdd5556db80d3feec900 src/log/tests/CMakeFiles/log_quick_test
 0c6c34c2ca444da9292b5a4daff70856 src/log/tests/CMakeFiles/log_test_verbose
 781b9f2558536a62d9f1f369616b9af3 src/socket/tests/CMakeFiles/socket_test_verbose

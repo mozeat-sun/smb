@@ -206,6 +206,19 @@ zoo_cleanup_shared_outputs/fast:
 .PHONY : zoo_cleanup_shared_outputs/fast
 
 #=============================================================================
+# Target rules for targets named zoo_cleanup_static_outputs
+
+# Build rule for target.
+zoo_cleanup_static_outputs: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zoo_cleanup_static_outputs
+.PHONY : zoo_cleanup_static_outputs
+
+# fast build rule for target.
+zoo_cleanup_static_outputs/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/zoo_cleanup_static_outputs.dir/build.make CMakeFiles/zoo_cleanup_static_outputs.dir/build
+.PHONY : zoo_cleanup_static_outputs/fast
+
+#=============================================================================
 # Target rules for targets named zoo_platform_static
 
 # Build rule for target.
@@ -751,6 +764,7 @@ help:
 	@echo "... timer_test_clean"
 	@echo "... timer_test_verbose"
 	@echo "... zoo_cleanup_shared_outputs"
+	@echo "... zoo_cleanup_static_outputs"
 	@echo "... test_math_unity"
 	@echo "... test_memory_unity"
 	@echo "... test_string_unity"

@@ -211,6 +211,28 @@ foreach(_tgt IN LISTS ZOO_NON_PRIMARY_SHARED_TARGETS)
     endif()
 endforeach()
 
+# Keep only two static libraries in stage/lib:
+# - libzoo_smb.a
+# - libzoo_platform.a
+set(ZOO_HIDDEN_STATIC_OUTPUT_DIR "${CMAKE_BINARY_DIR}/hidden_static_libs")
+set(ZOO_NON_PRIMARY_STATIC_TARGETS
+    zoo_buffer_static
+    zoo_dispatcher_static
+    zoo_log_static
+    zoo_memory_pool_static
+    zoo_socket_static
+    zoo_thread_pool_static
+    zoo_timer_static
+    zoo_util_static
+)
+foreach(_tgt IN LISTS ZOO_NON_PRIMARY_STATIC_TARGETS)
+    if(TARGET ${_tgt})
+        set_target_properties(${_tgt} PROPERTIES
+            ARCHIVE_OUTPUT_DIRECTORY "${ZOO_HIDDEN_STATIC_OUTPUT_DIR}"
+        )
+    endif()
+endforeach()
+
 # Remove historical/extra shared outputs from stage/lib and keep only:
 # - libsmb.so
 # - libzoo_platform.so* (versioned symlinks/files)
@@ -223,6 +245,20 @@ if(TARGET zoo_smb_shared)
 endif()
 if(TARGET zoo_platform_shared)
     add_dependencies(zoo_cleanup_shared_outputs zoo_platform_shared)
+endif()
+
+# Remove historical/extra static outputs from stage/lib and keep only:
+# - libzoo_smb.a
+# - libzoo_platform.a
+add_custom_target(zoo_cleanup_static_outputs ALL
+    COMMAND /bin/sh -c "find '${ZOO_LIB_OUTPUT_DIR}' -maxdepth 1 -type f -name '*.a' ! -name 'libzoo_smb.a' ! -name 'libzoo_platform.a' -delete"
+    COMMENT "Pruning static library outputs to requested set"
+)
+if(TARGET zoo_smb_static)
+    add_dependencies(zoo_cleanup_static_outputs zoo_smb_static)
+endif()
+if(TARGET zoo_platform_static)
+    add_dependencies(zoo_cleanup_static_outputs zoo_platform_static)
 endif()
 
 # ==============================================================================

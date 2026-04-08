@@ -128,6 +128,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/zoo_cleanup_shared_outputs.dir/DependInfo.cmake"
+  "CMakeFiles/zoo_cleanup_static_outputs.dir/DependInfo.cmake"
   "src/platform/CMakeFiles/zoo_platform_static.dir/DependInfo.cmake"
   "src/platform/CMakeFiles/zoo_platform_shared.dir/DependInfo.cmake"
   "src/platform/tests/CMakeFiles/zoo_platform_tests.dir/DependInfo.cmake"

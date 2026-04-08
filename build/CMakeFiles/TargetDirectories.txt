@@ -1,4 +1,5 @@
 /home/ubuntu/workspace/zoo/build/CMakeFiles/zoo_cleanup_shared_outputs.dir
+/home/ubuntu/workspace/zoo/build/CMakeFiles/zoo_cleanup_static_outputs.dir
 /home/ubuntu/workspace/zoo/build/CMakeFiles/package.dir
 /home/ubuntu/workspace/zoo/build/CMakeFiles/package_source.dir
 /home/ubuntu/workspace/zoo/build/CMakeFiles/test.dir

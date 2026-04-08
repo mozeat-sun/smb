@@ -402,7 +402,11 @@ static int run_rpc_server_child(const char* server_name, const char* server_targ
  * end-to-end deployment. Each payload embeds a send timestamp so the subscriber
  * can calculate one-way latency without additional synchronization.
  */
-static int run_pubsub_publisher_child(int rounds)
+static int run_pubsub_publisher_child(
+    int rounds,
+    const char* publisher_name,
+    const char* target_name,
+    const char* topic_name)
 {
     ZOO_SMB_PUBLISHER_HANDLE publisher;
     int publish_ok = 0;
@@ -412,9 +416,9 @@ static int run_pubsub_publisher_child(int rounds)
     signal(SIGINT, benchmark_child_stop_handler);
 
     publisher = zoo_smb_create_publisher(
-        "fish",
-        "sea",
-        "water",
+        publisher_name,
+        target_name,
+        topic_name,
         ZOO_SMB_TRANSPORT_TYPE_DEFAULT,
         NULL);
     if (!publisher)
@@ -456,9 +460,19 @@ static int run_pubsub_publisher_child(int rounds)
  * the child start from a clean runtime context. This is important for the RPC and
  * pub/sub benchmarks that intentionally model multi-process behavior.
  */
-static pid_t spawn_helper_process(const char* mode, const char* arg)
+/*
+ * Spawn helper process with up to four optional arguments.
+ */
+static pid_t spawn_helper_process_args(
+    const char* mode,
+    const char* arg1,
+    const char* arg2,
+    const char* arg3,
+    const char* arg4)
 {
     pid_t pid;
+    char* argv_exec[8];
+    int index = 0;
 
     if (!g_program_path || !mode)
     {
@@ -472,14 +486,19 @@ static pid_t spawn_helper_process(const char* mode, const char* arg)
     }
 
     // Re-exec the same binary in helper mode to avoid inherited in-process state.
-    if (arg)
-    {
-        execl(g_program_path, g_program_path, mode, arg, (char*)NULL);
-    }
-    else
-    {
-        execl(g_program_path, g_program_path, mode, (char*)NULL);
-    }
+    argv_exec[index++] = (char*)g_program_path;
+    argv_exec[index++] = (char*)mode;
+    if (arg1)
+        argv_exec[index++] = (char*)arg1;
+    if (arg2)
+        argv_exec[index++] = (char*)arg2;
+    if (arg3)
+        argv_exec[index++] = (char*)arg3;
+    if (arg4)
+        argv_exec[index++] = (char*)arg4;
+    argv_exec[index] = NULL;
+
+    execv(g_program_path, argv_exec);
 
     _exit(127);
 }
@@ -699,10 +718,12 @@ static void benchmark4_mixed_node_creation(void)
  */
 static void benchmark5_rpc_round_trip_latency(void)
 {
-    const char* server_target = "127.0.0.1:8080";
-    const char* client_name = "127.0.0.1:8080";
-    const char* topic_name = "default_topic";
+    char server_name[64];
+    char server_target[64];
+    char client_name[64];
+    char topic_name[64];
     char label[160];
+    uint32_t run_id = (uint32_t)(time(NULL) ^ (uint32_t)getpid());
     struct timespec start;
     struct timespec end;
     int64_t latencies_us[BENCH_RPC_ROUNDS];
@@ -713,8 +734,13 @@ static void benchmark5_rpc_round_trip_latency(void)
     pid_t server_pid;
     int status = 0;
 
+    snprintf(server_name, sizeof(server_name), "bench5_srv_%u", run_id);
+    snprintf(server_target, sizeof(server_target), "bench5_target_%u", run_id);
+    snprintf(client_name, sizeof(client_name), "bench5_cli_%u", run_id);
+    snprintf(topic_name, sizeof(topic_name), "bench5/topic/%u", run_id);
+
     // Run server in a dedicated process to emulate real RPC round-trip conditions.
-    server_pid = spawn_helper_process("bench5-server", NULL);
+    server_pid = spawn_helper_process_args("bench5-server", server_name, server_target, topic_name, NULL);
     if (server_pid <= 0)
     {
         printf("[bench5] spawn server process failed\n");
@@ -801,21 +827,28 @@ static void benchmark5_rpc_round_trip_latency(void)
  */
 static void benchmark6_pubsub_end_to_end(void)
 {
-    const char* publisher_name = "fish";
-    const char* target_name = "sea";
-    const char* topic_name = "water";
+    char publisher_name[64];
+    char subscriber_name[64];
+    char topic_name[64];
     char label[160];
+    uint32_t run_id = (uint32_t)(time(NULL) ^ (uint32_t)getpid());
+    const char* target_name = publisher_name;
     struct timespec start;
     struct timespec end;
     BENCH_PUBSUB_CONTEXT_STRUCT ctx;
     int32_t sub_handle = -1;
     int published = 0;
     int received;
+    ZOO_ERROR_TYPE subscribe_result = ZOO_SMB_ERROR_INVALID_PARAM;
     ZOO_SMB_SUBSCRIBER_HANDLE subscriber = NULL;
     pid_t publisher_pid;
     int status = 0;
 
     memset(&ctx, 0, sizeof(ctx));
+    snprintf(publisher_name, sizeof(publisher_name), "bench6_pub_%u", run_id);
+    snprintf(subscriber_name, sizeof(subscriber_name), "bench6_sub_%u", run_id);
+    snprintf(topic_name, sizeof(topic_name), "bench6/topic/%u", run_id);
+
     ctx.capacity = BENCH_PUBSUB_ROUNDS;
     ctx.latency_us = (int64_t*)calloc((size_t)BENCH_PUBSUB_ROUNDS, sizeof(int64_t));
     if (!ctx.latency_us || pthread_mutex_init(&ctx.mutex, NULL) != 0)
@@ -828,7 +861,7 @@ static void benchmark6_pubsub_end_to_end(void)
     (void)publisher_name;
 
     // Run publisher in a separate process so this benchmark measures true E2E delivery.
-    publisher_pid = spawn_helper_process("bench6-publisher", "200");
+    publisher_pid = spawn_helper_process_args("bench6-publisher", "200", publisher_name, target_name, topic_name);
     if (publisher_pid <= 0)
     {
         printf("[bench6] spawn publisher process failed\n");
@@ -853,7 +886,14 @@ static void benchmark6_pubsub_end_to_end(void)
         return;
     }
 
-    subscriber = zoo_smb_create_subscriber("fisherman", target_name, topic_name, NULL);
+    for (int attempt = 0; attempt < 3 && !subscriber; ++attempt)
+    {
+        subscriber = zoo_smb_create_subscriber(subscriber_name, target_name, topic_name, NULL);
+        if (!subscriber)
+        {
+            usleep(200000);
+        }
+    }
 
     if (!subscriber)
     {
@@ -865,9 +905,23 @@ static void benchmark6_pubsub_end_to_end(void)
         return;
     }
 
-    if (zoo_smb_subscribe_message(subscriber, BENCH_PUBSUB_MSG_ID, benchmark_pubsub_handler, &ctx, &sub_handle) != ZOO_SMB_OK)
+    for (int attempt = 0; attempt < 3; ++attempt)
     {
-        printf("[bench6] subscribe failed\n");
+        subscribe_result = zoo_smb_subscribe_message(subscriber, BENCH_PUBSUB_MSG_ID, benchmark_pubsub_handler, &ctx, &sub_handle);
+        if (subscribe_result == ZOO_SMB_OK)
+        {
+            break;
+        }
+
+        if (attempt + 1 < 3)
+        {
+            usleep(200000);
+        }
+    }
+
+    if (subscribe_result != ZOO_SMB_OK)
+    {
+        printf("[bench6] subscribe failed (err=%d)\n", (int)subscribe_result);
         kill(publisher_pid, SIGTERM);
         (void)waitpid(publisher_pid, &status, 0);
         zoo_smb_destroy_subscriber(subscriber);
@@ -918,12 +972,18 @@ int main(int argc, char* argv[])
     // Hidden helper modes used by bench5/bench6 parent orchestration.
     if (argc >= 2 && strcmp(argv[1], "bench5-server") == 0)
     {
-        return run_rpc_server_child("bench_rpc_server", "127.0.0.1:8080", "default_topic");
+        const char* server_name = argc >= 3 ? argv[2] : "bench_rpc_server";
+        const char* server_target = argc >= 4 ? argv[3] : "127.0.0.1:8080";
+        const char* topic_name = argc >= 5 ? argv[4] : "default_topic";
+        return run_rpc_server_child(server_name, server_target, topic_name);
     }
 
     if (argc >= 2 && strcmp(argv[1], "bench6-publisher") == 0)
     {
         int rounds = BENCH_PUBSUB_ROUNDS;
+        const char* publisher_name = argc >= 4 ? argv[3] : "fish";
+        const char* target_name = argc >= 5 ? argv[4] : "sea";
+        const char* topic_name = argc >= 6 ? argv[5] : "water";
         if (argc >= 3)
         {
             rounds = atoi(argv[2]);
@@ -932,7 +992,7 @@ int main(int argc, char* argv[])
                 rounds = BENCH_PUBSUB_ROUNDS;
             }
         }
-        return run_pubsub_publisher_child(rounds);
+        return run_pubsub_publisher_child(rounds, publisher_name, target_name, topic_name);
     }
 
     if (argc < 2)
@@ -945,12 +1005,28 @@ int main(int argc, char* argv[])
 
     if (strcmp(argv[1], "all") == 0)
     {
-        benchmark1_publish_throughput();
-        benchmark2_payload_size_impact();
-        benchmark3_node_lifecycle();
-        benchmark4_mixed_node_creation();
-        benchmark5_rpc_round_trip_latency();
-        benchmark6_pubsub_end_to_end();
+        char cmd[2048];
+        unsigned int settle_seconds = BENCH_WAIT_TIMEOUT_MS / 1000U;
+
+        snprintf(
+            cmd,
+            sizeof(cmd),
+            "\"%s\" 1 && sleep %u && "
+            "\"%s\" 2 && sleep %u && "
+            "\"%s\" 3 && sleep %u && "
+            "\"%s\" 4 && sleep %u && "
+            "\"%s\" 5 && sleep %u && "
+            "\"%s\" 6",
+            g_program_path, settle_seconds,
+            g_program_path, settle_seconds,
+            g_program_path, settle_seconds,
+            g_program_path, settle_seconds,
+            g_program_path, settle_seconds,
+            g_program_path);
+
+        execl("/bin/sh", "sh", "-c", cmd, (char*)NULL);
+        printf("Failed to execute all-mode benchmark chain\n");
+        return 1;
     }
     else
     {
