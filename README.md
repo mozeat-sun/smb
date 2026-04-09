@@ -83,6 +83,7 @@ Examples are under `examples/`:
 
 - `examples/client_server/`
 - `examples/pub_sub/`
+- `examples/transport_shm/`
 
 See `examples/README.md` for usage details.
 

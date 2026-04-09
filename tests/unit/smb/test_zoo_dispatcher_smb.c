@@ -4,17 +4,17 @@
  * Product: ZOO
  * Module: Soft Message Bus
  * Component id: UNIT_TEST
- * File name: test_zoo_smb_message_dispatcher.c
- * Description: Unit tests for the SMB message dispatcher implementation
+ * File name: test_zoo_dispatcher_smb.c
+ * Description: Unit tests for generic dispatcher usage in SMB context
  ******************************************************************************/
 
 #include "unity.h"
-#include "zoo_smb_message_dispatcher.h"
+#include "zoo_dispatcher.h"
 #include "zoo_memory_pool.h"
 #include <pthread.h>
 
 static ZOO_QUEUE_HANDLE g_queue;
-static ZOO_SMB_MESSAGE_DISPATCHER_HANDLE g_dispatcher;
+static ZOO_DISPATCHER_HANDLE g_dispatcher;
 static pthread_t g_dispatcher_thread;
 static ZOO_BOOL g_dispatcher_thread_started;
 static volatile int g_handler_calls;
@@ -49,7 +49,7 @@ static void dispatcher_test_handler(void* user_data, void* msg, void* context)
 
 static void* dispatcher_thread_main(void* arg)
 {
-    (void)zoo_smb_start_message_dispatcher((ZOO_SMB_MESSAGE_DISPATCHER_HANDLE)arg);
+    zoo_start_dispatcher((ZOO_DISPATCHER_HANDLE)arg);
     return NULL;
 }
 
@@ -57,7 +57,7 @@ void setUp(void)
 {
     zoo_create_memory_pool(2 * 1024 * 1024);
     g_queue = zoo_create_queue(8);
-    g_dispatcher = zoo_smb_create_message_dispatcher(g_queue);
+    g_dispatcher = zoo_create_dispatcher(g_queue);
     g_dispatcher_thread_started = ZOO_FALSE;
     g_handler_calls = 0;
     g_last_message_value = -1;
@@ -69,14 +69,14 @@ void tearDown(void)
 {
     if (g_dispatcher_thread_started)
     {
-        (void)zoo_smb_stop_message_dispatcher(g_dispatcher);
+        zoo_stop_dispatcher(g_dispatcher);
         (void)pthread_join(g_dispatcher_thread, NULL);
         g_dispatcher_thread_started = ZOO_FALSE;
     }
 
     if (g_dispatcher)
     {
-        zoo_smb_destroy_message_dispatcher(g_dispatcher);
+        zoo_destroy_dispatcher(g_dispatcher);
         g_dispatcher = NULL;
     }
 

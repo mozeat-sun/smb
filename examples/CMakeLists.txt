@@ -15,6 +15,8 @@ set(EXAMPLES_INCLUDE_DIRS
     ${ZOO_REPO_ROOT_DIR}/include/smb/transport
     ${ZOO_REPO_ROOT_DIR}/include/smb/utility
     ${ZOO_REPO_ROOT_DIR}/include/log
+    ${ZOO_REPO_ROOT_DIR}/include/memory_pool
+    ${ZOO_REPO_ROOT_DIR}/include/thread_pool
     ${ZOO_REPO_ROOT_DIR}/include/util
     ${ZOO_REPO_ROOT_DIR}/include/platform
     ${CMAKE_CURRENT_SOURCE_DIR}/common
@@ -82,4 +84,18 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/pub_sub/subscriber.c")
         ${CMAKE_CURRENT_SOURCE_DIR}/pub_sub/subscriber.c
     )
     zoo_configure_example(zoo_example_subscriber)
+endif()
+
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/transport_shm/server.c")
+    add_executable(zoo_example_shm_server
+        ${CMAKE_CURRENT_SOURCE_DIR}/transport_shm/server.c
+    )
+    zoo_configure_example(zoo_example_shm_server)
+endif()
+
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/transport_shm/client.c")
+    add_executable(zoo_example_shm_client
+        ${CMAKE_CURRENT_SOURCE_DIR}/transport_shm/client.c
+    )
+    zoo_configure_example(zoo_example_shm_client)
 endif()

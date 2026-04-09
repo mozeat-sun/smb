@@ -28,6 +28,7 @@ target_include_directories(zoo_smb_static PUBLIC
     ${CMAKE_SOURCE_DIR}/include/smb/node
     ${CMAKE_SOURCE_DIR}/include/smb/transport
     ${CMAKE_SOURCE_DIR}/include/smb/qos
+    ${CMAKE_SOURCE_DIR}/include/dispatcher
     ${CMAKE_SOURCE_DIR}/include/memory_pool
     ${CMAKE_SOURCE_DIR}/include/thread_pool
     ${CMAKE_SOURCE_DIR}/include/buffer
@@ -39,6 +40,7 @@ target_include_directories(zoo_smb_static PUBLIC
 target_link_libraries(zoo_smb_static PUBLIC
     Threads::Threads
     atomic
+    zoo_dispatcher_static
     zoo_buffer_static
     zoo_thread_pool_static
     zoo_socket_static
@@ -63,6 +65,7 @@ target_include_directories(zoo_smb_shared PUBLIC
     ${CMAKE_SOURCE_DIR}/include/smb/node
     ${CMAKE_SOURCE_DIR}/include/smb/transport
     ${CMAKE_SOURCE_DIR}/include/smb/qos
+    ${CMAKE_SOURCE_DIR}/include/dispatcher
     ${CMAKE_SOURCE_DIR}/include/memory_pool
     ${CMAKE_SOURCE_DIR}/include/thread_pool
     ${CMAKE_SOURCE_DIR}/include/buffer
@@ -74,6 +77,7 @@ target_include_directories(zoo_smb_shared PUBLIC
 target_link_libraries(zoo_smb_shared PUBLIC
     Threads::Threads
     atomic
+    zoo_dispatcher_shared
     zoo_buffer_shared
     zoo_thread_pool_shared
     zoo_socket_shared

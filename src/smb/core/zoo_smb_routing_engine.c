@@ -18,7 +18,7 @@
 #include "zoo_smb_transport_manager.h"
 #include "zoo_smb_rule_manager.h"
 #include "zoo_queue.h"
-#include "zoo_smb_message_dispatcher.h"
+#include "zoo_dispatcher.h"
 #include "zoo_list.h"
 #include "zoo_smb_node_observer.h"
 #include "../transport/zoo_smb_protocol.h"
@@ -40,7 +40,7 @@ typedef struct
     ZOO_BOOL is_running;        // Flag to indicate if the engine is running
     ZOO_MUTEX_T mutex;      // Mutex for thread safety
     ZOO_QUEUE_HANDLE message_queue;
-    ZOO_SMB_MESSAGE_DISPATCHER_HANDLE message_dispatcher;
+    ZOO_DISPATCHER_HANDLE message_dispatcher;
     ZOO_SMB_TRANSPORT_MANAGER_HANDLE transport_manager;  // Transport manager for handling transports
     ZOO_SMB_SERVICE_MANAGER_HANDLE service_manager;      // Service manager for handling services
     ZOO_SMB_RULE_MANAGER_HANDLE rule_manager;            // Manager for routing rules
@@ -68,6 +68,12 @@ typedef struct
     ZOO_SMB_MSG_STRUCT* message;  // Pointer to the message being routed
 } ROUTING_CONTEXT_STRUCT;
 
+/*
+ * Keep one aggregate drop counter and one reason-specific counter so
+ * operators can quickly detect total loss and then drill down by cause.
+ * All counters are atomic because this path can be hit concurrently by
+ * multiple transport callbacks.
+ */
 static void routing_engine_record_drop(
     ZOO_SMB_ROUTING_ENGINE_STRUCT* engine,
     ZOO_SMB_INGRESS_DROP_REASON_ENUM reason)
@@ -85,24 +91,28 @@ static void routing_engine_record_drop(
     switch (reason)
     {
         case ZOO_SMB_INGRESS_DROP_QUEUE_FULL:
+            /* Queue rejected enqueue because capacity was exhausted. */
             if (engine->telemetry_enabled)
             {
                 atomic_fetch_add(&engine->ingress_drop_queue_full, 1);
             }
             break;
         case ZOO_SMB_INGRESS_DROP_BACKPRESSURE:
+            /* Engine intentionally shed load due to high in-flight pressure. */
             if (engine->telemetry_enabled)
             {
                 atomic_fetch_add(&engine->ingress_drop_backpressure, 1);
             }
             break;
         case ZOO_SMB_INGRESS_DROP_INVALID_HEADER:
+            /* Message failed protocol/header validation. */
             if (engine->telemetry_enabled)
             {
                 atomic_fetch_add(&engine->ingress_drop_invalid_header, 1);
             }
             break;
         case ZOO_SMB_INGRESS_DROP_SECURITY_POLICY:
+            /* Message was rejected by security policy checks. */
             if (engine->telemetry_enabled)
             {
                 atomic_fetch_add(&engine->ingress_drop_security_policy, 1);
@@ -132,7 +142,7 @@ static ZOO_ERROR_TYPE engine_task(void* user_data, void* argument)
     {
         return ZOO_SMB_ERROR_INVALID_PARAM;
     }
-    zoo_smb_start_message_dispatcher(e->message_dispatcher);
+    zoo_start_dispatcher(e->message_dispatcher);
     return ZOO_SMB_OK;
 }
 
@@ -359,7 +369,7 @@ ZOO_SMB_ROUTING_ENGINE_HANDLE zoo_smb_create_routing_engine(const ZOO_SMB_CONFIG
         return NULL;
     }
 
-    engine->message_dispatcher = zoo_smb_create_message_dispatcher(engine->message_queue);
+    engine->message_dispatcher = zoo_create_dispatcher(engine->message_queue);
     if (engine->message_dispatcher == NULL)
     {
         ZOO_LOG_ERROR("Failed to create message dispatcher");
@@ -488,7 +498,7 @@ void zoo_smb_destroy_routing_engine(ZOO_SMB_ROUTING_ENGINE_HANDLE engine)
     // Clean up message dispatcher and queue
     if (e->message_dispatcher)
     {
-        zoo_smb_destroy_message_dispatcher(e->message_dispatcher);
+        zoo_destroy_dispatcher(e->message_dispatcher);
     }
 
     if (e->message_queue)
@@ -556,7 +566,7 @@ void zoo_smb_stop_routing_engine(ZOO_SMB_ROUTING_ENGINE_HANDLE engine)
     e->is_running = ZOO_FALSE;
     UNLOCK_ENGINE(e);
 
-    zoo_smb_stop_message_dispatcher(e->message_dispatcher);
+    zoo_stop_dispatcher(e->message_dispatcher);
     ZOO_LOG_DEBUG("Routing engine stopped successfully");
 }
 
