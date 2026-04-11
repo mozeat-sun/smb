@@ -7,6 +7,12 @@
 #include "zoo_smb_transport.h"
 #include <string.h>
 
+/*
+ * Traceability coverage:
+ * - REQ-REL-004: routing-rule manager behavior for available/degraded service paths.
+ * - REQ-SAFE-003: requirement-linked unit evidence for rule composition and lookup.
+ */
+
 static ZOO_LIST_HANDLE observers;
 
 /**

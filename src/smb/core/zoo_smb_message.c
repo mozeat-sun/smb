@@ -15,11 +15,30 @@
 #include "zoo_smb_message.h"
 #include "zoo_memory_pool.h"
 #include "zoo_crc32.h"
+#include "zoo_smb_config.h"
 #include "zoo_util.h"
 #include "zoo_smb_error.h"
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+
+static size_t smb_effective_max_payload_size(void)
+{
+    size_t transport_budget = ZOO_SMB_DEFAULT_MAX_TRANSPORT_BUFFER_SIZE;
+    const ZOO_SMB_CONFIG_STRUCT* config = zoo_smb_config_peek();
+
+    if (config && config->sys.max_transport_buffer_size > 0)
+    {
+        transport_budget = config->sys.max_transport_buffer_size;
+    }
+
+    if (transport_budget <= sizeof(ZOO_SMB_MSG_HEADER_STRUCT))
+    {
+        return 0;
+    }
+
+    return transport_budget - sizeof(ZOO_SMB_MSG_HEADER_STRUCT);
+}
 
 /**
  * @brief Sets basic fields in message header
@@ -165,6 +184,14 @@ ZOO_SMB_MSG_STRUCT* zoo_smb_create_message(
     if (!sender || !topic || (payload_size > 0 && !payload))
     {
         ZOO_LOG_ERROR("zoo_smb_create_message: Invalid parameters");
+        return NULL;
+    }
+
+    if (payload_size > smb_effective_max_payload_size())
+    {
+        ZOO_LOG_ERROR("zoo_smb_create_message: Payload size exceeds configured transport budget: size=%zu max=%zu",
+                      payload_size,
+                      smb_effective_max_payload_size());
         return NULL;
     }
 
@@ -328,11 +355,10 @@ void zoo_smb_destroy_message_header(IN ZOO_SMB_MSG_HEADER_STRUCT* msg_header)
  * @brief Copies the contents of one ZOO_SMB_MSG_STRUCT to another.
  *
  * @param from Pointer to the source ZOO_SMB_MSG_STRUCT to copy from.
- * @param ...  Additional parameters (not shown in selection).
+ * @param to Pointer to destination ZOO_SMB_MSG_STRUCT to populate.
  *
- * This function performs a deep or shallow copy (depending on implementation)
- * of the ZOO_SMB_MSG_STRUCT structure from the source to the destination.
- * Ensure that both source and destination pointers are valid before calling.
+ * This function copies header metadata and duplicates payload storage when
+ * payload_size is non-zero.
  */
 void zoo_smb_copy_message(IN const ZOO_SMB_MSG_STRUCT* from,
                           IN ZOO_SMB_MSG_STRUCT* to)

@@ -6,6 +6,9 @@
  * Component id: test_zoo_smb_message_
  * File name: test_zoo_smb_message.c
  * Description: Unity-based message tests (converted from GTest)
+ * Traceability coverage:
+ * - REQ-SAFE-001: deterministic message/header construction and validation paths.
+ * - REQ-SAFE-003: requirement-linked unit evidence for message primitives.
  * History recorder:
  * Version   date           author            context
  * 1.0       2025-08-05     AI                converted from GTest

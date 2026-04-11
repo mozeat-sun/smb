@@ -175,6 +175,9 @@ if(ZOO_BUILD_SMB)
         if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/unit/smb/CMakeLists.txt")
             add_subdirectory(tests/unit/smb ${CMAKE_CURRENT_BINARY_DIR}/smb/tests)
         endif()
+        if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/fuzz/CMakeLists.txt")
+            add_subdirectory(tests/fuzz ${CMAKE_CURRENT_BINARY_DIR}/tests/fuzz)
+        endif()
     endif()
     if(ZOO_BUILD_EXAMPLES)
         if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/examples/smb/CMakeLists.txt")
@@ -192,6 +195,9 @@ endif()
 if(ZOO_BUILD_TESTS)
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/integration/CMakeLists.txt")
         add_subdirectory(tests/integration ${CMAKE_CURRENT_BINARY_DIR}/tests/integration)
+    endif()
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/benchmark/CMakeLists.txt")
+        add_subdirectory(tests/benchmark ${CMAKE_CURRENT_BINARY_DIR}/tests/benchmark)
     endif()
 endif()
 
@@ -270,6 +276,7 @@ if(ZOO_PRUNE_NON_PRIMARY_OUTPUTS)
             test_backpressure_security
             test_zoo_smb_transport_udp
             test_zoo_smb_transport_shm
+            test_zoo_smb_transport_tcp
         )
     endif()
 endif()
@@ -295,6 +302,7 @@ if(ZOO_PRUNE_NON_PRIMARY_OUTPUTS)
             test_backpressure_security
             test_zoo_smb_transport_udp
             test_zoo_smb_transport_shm
+            test_zoo_smb_transport_tcp
         )
     endif()
 endif()

@@ -22,6 +22,9 @@ extern "C"
 #include "zoo_smb_types.h"
 
 #define ZOO_SMB_MAX_QUEUE_SIZE 1024
+#define ZOO_SMB_DEFAULT_MAX_TRANSPORT_BUFFER_SIZE (40U * 1024U)
+#define ZOO_SMB_MEMORY_HIGH_WATERMARK_PCT_DEFAULT 85U
+#define ZOO_SMB_MEMORY_LOW_WATERMARK_PCT_DEFAULT 70U
     typedef struct
     {
         char address[64];  /**< Local machine address for routing */
@@ -74,6 +77,9 @@ extern "C"
         uint32_t send_low_watermark;        /**< Backpressure release threshold for concurrent sends */
         uint32_t ingress_high_watermark;    /**< Max in-flight ingress messages before drops */
         uint32_t ingress_low_watermark;     /**< Ingress backpressure release threshold */
+        ZOO_BOOL enable_deterministic_memory_profile; /**< Enable bounded-memory profile validation */
+        uint32_t memory_high_watermark_pct; /**< Pool usage percentage considered high pressure */
+        uint32_t memory_low_watermark_pct;  /**< Pool usage percentage considered recovered */
         ZOO_BOOL enable_transport_telemetry;/**< Enable transport manager telemetry counters */
         ZOO_BOOL enable_routing_telemetry;  /**< Enable routing ingress telemetry counters */
         ZOO_BOOL enforce_encrypted_messages;/**< Reject non-encrypted messages when enabled */
@@ -81,7 +87,7 @@ extern "C"
         uint32_t mem_pool_size;             /**< Reserved for future use */
         uint32_t max_queue_size;            /**< Reserved for future use */
         uint32_t max_node_size;             /**< Reserved for future use */
-        uint32_t max_transport_buffer_size; /**< Reserved for future use */
+        uint32_t max_transport_buffer_size; /**< Maximum transport/message buffer size in bytes */
         int32_t max_timeout;                /**< Max timeout for operations in milliseconds */
         int msg_flag;                       /**< Message flags: compress/encrypt */
         ZOO_BOOL reuse_transport;               /**< Reuse transport connections */
@@ -117,6 +123,12 @@ extern "C"
      * @return const ZOO_SMB_CONFIG_STRUCT* Pointer to the current SMB configuration structure.
      */
     const ZOO_SMB_CONFIG_STRUCT* zoo_smb_get_config();
+
+    /**
+     * @brief Returns the active SMB configuration without forcing initialization.
+     * @return Initialized configuration pointer, or NULL if config init has not run yet.
+     */
+    const ZOO_SMB_CONFIG_STRUCT* zoo_smb_config_peek(void);
 
     /**
      * @brief Saves the SMB configuration to a file.

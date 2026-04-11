@@ -5,56 +5,104 @@ ARTIFACT_DIR="${ARTIFACT_DIR:-artifacts/quality}"
 QUALITY_BASELINE_FILE="${QUALITY_BASELINE_FILE:-config/quality_baselines.ci.json}"
 QUALITY_BASELINE_PROFILE="${QUALITY_BASELINE_PROFILE:-ci}"
 QUALITY_REQUIRE_METRICS="${QUALITY_REQUIRE_METRICS:-0}"
+BUILD_DIR="${BUILD_DIR:-build}"
 mkdir -p "${ARTIFACT_DIR}"
 
-if [[ -x "smb/run_performance_tests.sh" ]]; then
-  bash smb/run_performance_tests.sh | tee "${ARTIFACT_DIR}/benchmark.log"
-  echo '{"source":"smb/run_performance_tests.sh"}' > "${ARTIFACT_DIR}/benchmark_summary.json"
-  if [[ ! -f "${ARTIFACT_DIR}/benchmark_metrics.json" ]]; then
-    echo '{"p99_latency_ms":null,"throughput_ops":null,"jitter_ms":null}' > "${ARTIFACT_DIR}/benchmark_metrics.json"
-  fi
-  python3 tools/quality/compare_benchmark_to_baseline.py "${QUALITY_BASELINE_FILE}" "${ARTIFACT_DIR}/benchmark_metrics.json" "${QUALITY_BASELINE_PROFILE}"
-  exit 0
-fi
-
-BUILD_DIR="${BUILD_DIR:-build}"
 if [[ ! -d "${BUILD_DIR}" ]]; then
   cmake -S . -B "${BUILD_DIR}"
-  cmake --build "${BUILD_DIR}" -j"$(nproc)"
+fi
+cmake --build "${BUILD_DIR}" -j"$(nproc)" --target e2e_performance_benchmark
+
+BENCHMARK_BIN="stage/bin/e2e_performance_benchmark"
+if [[ ! -x "${BENCHMARK_BIN}" ]]; then
+  echo "benchmark binary missing: ${BENCHMARK_BIN}" | tee "${ARTIFACT_DIR}/benchmark.log"
+  exit 1
 fi
 
-/usr/bin/time -v ctest --test-dir "${BUILD_DIR}" --output-on-failure |& tee "${ARTIFACT_DIR}/benchmark.log"
+export LD_LIBRARY_PATH="$PWD/stage/lib:$PWD/${BUILD_DIR}/hidden_shared_libs:${LD_LIBRARY_PATH:-}"
 
-echo '{"source":"ctest-timing-fallback"}' > "${ARTIFACT_DIR}/benchmark_summary.json"
-python3 - "${BUILD_DIR}" "${ARTIFACT_DIR}/benchmark.log" > "${ARTIFACT_DIR}/benchmark_metrics.json" <<'PY'
+{
+  echo "Benchmark execution path: isolated modes 1, 2, and 6"
+  echo "Date: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  echo
+  echo "[mode 1]"
+  "${BENCHMARK_BIN}" 1 2>&1 | grep '\[bench' || true
+  sleep 6
+  echo
+  echo "[mode 2]"
+  "${BENCHMARK_BIN}" 2 2>&1 | grep '\[bench' || true
+  sleep 6
+  echo
+  echo "[mode 6]"
+  "${BENCHMARK_BIN}" 6 2>&1 | grep '\[bench' || true
+} | tee "${ARTIFACT_DIR}/benchmark.log"
+
+python3 - "${ARTIFACT_DIR}/benchmark.log" > "${ARTIFACT_DIR}/benchmark_metrics.json" <<'PY'
 import json
 import re
-import subprocess
 import sys
 
-build_dir = sys.argv[1]
-log_path = sys.argv[2]
-metrics = {"p99_latency_ms": None, "throughput_ops": None, "jitter_ms": None}
+log_path = sys.argv[1]
+metrics = {
+  "p99_latency_ms": None,
+  "throughput_ops": None,
+  "jitter_ms": None,
+  "message_size_throughput_ops": {},
+  "bench6_throughput_ops": None,
+  "p50_latency_ms": None,
+  "p95_latency_ms": None,
+}
 
 try:
   with open(log_path, "r", encoding="utf-8", errors="ignore") as f:
     content = f.read()
 
-  m = re.search(r"Total Test time \(real\) =\s*([0-9]+(?:\.[0-9]+)?)\s*sec", content)
-  if m:
-    duration_sec = float(m.group(1))
-    out = subprocess.check_output(
-      ["ctest", "--test-dir", build_dir, "-N"],
-      stderr=subprocess.STDOUT,
-      text=True,
-    )
-    n = re.search(r"Total Tests:\s*([0-9]+)", out)
-    if n and duration_sec > 0:
-      metrics["throughput_ops"] = round(int(n.group(1)) / duration_sec, 6)
+  bench1 = re.search(r"\[bench1\].*?,\s*([0-9]+(?:\.[0-9]+)?)\s+msg/s", content)
+  if bench1:
+    metrics["throughput_ops"] = float(bench1.group(1))
+
+  for payload_size, throughput in re.findall(r"\[bench2\]\s+payload=([0-9]+)B\s+success=[0-9]+/[0-9]+\s+throughput=([0-9]+(?:\.[0-9]+)?)\s+msg/s", content):
+    metrics["message_size_throughput_ops"][payload_size] = float(throughput)
+
+  bench6 = re.search(
+    r"\[bench6\].*?throughput=([0-9]+(?:\.[0-9]+)?)\s+msg/s\s+avg=([0-9]+(?:\.[0-9]+)?)\s+us\s+p50=([0-9]+(?:\.[0-9]+)?)\s+us\s+p95=([0-9]+(?:\.[0-9]+)?)\s+us\s+p99=([0-9]+(?:\.[0-9]+)?)\s+us\s+min=([0-9]+(?:\.[0-9]+)?)\s+us\s+max=([0-9]+(?:\.[0-9]+)?)\s+us",
+    content,
+  )
+  if bench6:
+    metrics["bench6_throughput_ops"] = float(bench6.group(1))
+    metrics["p50_latency_ms"] = round(float(bench6.group(3)) / 1000.0, 3)
+    metrics["p95_latency_ms"] = round(float(bench6.group(4)) / 1000.0, 3)
+    metrics["p99_latency_ms"] = round(float(bench6.group(5)) / 1000.0, 3)
+    min_ms = float(bench6.group(6)) / 1000.0
+    max_ms = float(bench6.group(7)) / 1000.0
+    metrics["jitter_ms"] = round(max_ms - min_ms, 3)
 except Exception:
   pass
 
 print(json.dumps(metrics))
+PY
+
+python3 - "${ARTIFACT_DIR}/benchmark_metrics.json" "${QUALITY_BASELINE_PROFILE}" > "${ARTIFACT_DIR}/benchmark_summary.json" <<'PY'
+import json
+import sys
+
+metrics_path = sys.argv[1]
+profile_name = sys.argv[2]
+with open(metrics_path, "r", encoding="utf-8") as f:
+    metrics = json.load(f)
+
+summary = {
+    "source": "isolated-e2e-benchmark-modes",
+    "profile": profile_name,
+    "throughput_ops": metrics.get("throughput_ops"),
+    "bench6_throughput_ops": metrics.get("bench6_throughput_ops"),
+    "p50_latency_ms": metrics.get("p50_latency_ms"),
+    "p95_latency_ms": metrics.get("p95_latency_ms"),
+    "p99_latency_ms": metrics.get("p99_latency_ms"),
+    "jitter_ms": metrics.get("jitter_ms"),
+    "message_size_throughput_ops": metrics.get("message_size_throughput_ops", {}),
+}
+print(json.dumps(summary))
 PY
 
 QUALITY_REQUIRE_METRICS="${QUALITY_REQUIRE_METRICS}" \

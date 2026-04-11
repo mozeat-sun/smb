@@ -49,14 +49,24 @@ These specifications apply to:
 - Purpose.
 - Parameters and ownership expectations.
 - Return value and error behavior.
-3. Complex logic blocks (state machines, retry logic, lock-sensitive flows) should include short rationale comments.
-4. Keep comments accurate during refactors; outdated comments are treated as defects.
-5. Use complete, direct sentences and avoid ambiguous wording.
-6. Do not leave commented-out code in committed source; use version history instead.
-7. Use TODO/FIXME tags only with a clear action and scope.
-8. File header comments should include module/component metadata when required by module conventions.
-9. Performance-sensitive paths should annotate important invariants (for example, lock ordering or amortized complexity assumptions).
-10. Security- or safety-relevant checks should include short comments where misuse risk is high.
+3. Public API comments must match the current function signature exactly (parameter names, directions, and semantics). Signature/comment mismatches are defects.
+4. Function comments must describe behavioral contract, not only summary wording. At minimum, document:
+- Blocking vs non-blocking behavior.
+- State changes and side effects.
+- Async/deferred execution behavior when applicable.
+- Handle/identifier reuse semantics when applicable.
+5. For APIs with retries, state transitions, or reconciliation loops, comments must state transition triggers, terminal conditions, and retry/backoff intent.
+6. For lock-sensitive or thread-facing APIs, comments must state required thread-safety assumptions (for example, caller-held lock expectations or callback threading model).
+7. Return-value comments must include success condition and principal error classes/codes expected by callers.
+8. Complex logic blocks (state machines, retry logic, lock-sensitive flows) should include short rationale comments.
+9. Keep comments accurate during refactors; outdated comments are treated as defects.
+10. Use complete, direct sentences and avoid ambiguous wording.
+11. Do not leave commented-out code in committed source; use version history instead.
+12. Use TODO/FIXME tags only with a clear action and scope.
+13. File header comments should include module/component metadata when required by module conventions.
+14. Performance-sensitive paths should annotate important invariants (for example, lock ordering or amortized complexity assumptions).
+15. Security- or safety-relevant checks should include short comments where misuse risk is high.
+16. Review gate: comments such as "registers intent" or "handles message" are insufficient unless the function contract clarifies timing, side effects, and failure behavior.
 
 ## 6. API Design Rules
 
@@ -167,3 +177,4 @@ These specifications apply to:
 
 - 2026-04-05: Initial repository-level code specifications.
 - 2026-04-05: Added repository-wide comments specifications section.
+- 2026-04-11: Strengthened comment contract rules for API behavior, async semantics, and review gate criteria.

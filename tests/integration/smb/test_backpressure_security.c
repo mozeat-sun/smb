@@ -7,6 +7,10 @@
  * File name: test_backpressure_security.c
  * Description: Integration regression tests for backpressure watermarks,
  *              drop-reason telemetry, and security policy enforcement.
+ * Traceability coverage:
+ * - REQ-REL-003: overload handling, watermarks, and backpressure metrics.
+ * - REQ-SAFE-002: bounded-memory operation and transport budget enforcement.
+ * - REQ-SAFE-003: requirement-linked integration evidence for quality gates.
  * History recorder:
  * Version   date           author            context
  * 1.0       2026-04-01     AI Assistant      created
@@ -17,6 +21,7 @@
 #include "zoo_smb_routing_engine.h"
 #include "zoo_smb_service_manager.h"
 #include "zoo_smb_service.h"
+#include "zoo_smb_metrics_report.h"
 #include "zoo_smb_message.h"
 #include "zoo_smb_config.h"
 #include "zoo_smb_error.h"
@@ -46,7 +51,7 @@ void setUp(void)
 {
     zoo_log_set_level(ZOO_LOG_LEVEL_ERROR); /* suppress INFO/WARN noise */
 
-    const ZOO_SMB_CONFIG_STRUCT* base = zoo_smb_config_init();
+    ZOO_SMB_CONFIG_STRUCT* base = (ZOO_SMB_CONFIG_STRUCT*)zoo_smb_config_init();
     memcpy(&g_cfg, base, sizeof(ZOO_SMB_CONFIG_STRUCT));
 
     /* sensible watermarks for unit-level testing */
@@ -54,13 +59,16 @@ void setUp(void)
     g_cfg.sys.send_low_watermark         = 4;
     g_cfg.sys.ingress_high_watermark     = 8;
     g_cfg.sys.ingress_low_watermark      = 4;
+    g_cfg.sys.enable_deterministic_memory_profile = ZOO_TRUE;
+    g_cfg.sys.memory_high_watermark_pct  = 80;
+    g_cfg.sys.memory_low_watermark_pct   = 60;
+    g_cfg.sys.max_transport_buffer_size  = 2048;
     g_cfg.sys.enable_transport_telemetry = ZOO_TRUE;
     g_cfg.sys.enable_routing_telemetry   = ZOO_TRUE;
     g_cfg.sys.require_sender_identity    = ZOO_FALSE; /* overridden per-test */
     g_cfg.sys.enforce_encrypted_messages = ZOO_FALSE; /* overridden per-test */
 
-    zoo_create_memory_pool(10 * 1024 * 1024);
-    zoo_create_thread_pool(4, 500);
+    memcpy(base, &g_cfg, sizeof(ZOO_SMB_CONFIG_STRUCT));
 
     g_svc_mgr = zoo_smb_create_service_manager(&g_cfg);
     g_tm      = zoo_smb_create_transport_manager(g_svc_mgr, &g_cfg);
@@ -84,8 +92,6 @@ void tearDown(void)
         zoo_smb_destroy_service_manager(g_svc_mgr);
         g_svc_mgr = NULL;
     }
-    zoo_destroy_thread_pool(ZOO_FALSE);
-    zoo_destroy_memory_pool();
 }
 
 /* --------------------------------------------------------------------------
@@ -168,6 +174,81 @@ void test_tm_metrics_watermarks_match_config(void)
 
     TEST_ASSERT_EQUAL_UINT32(g_cfg.sys.send_high_watermark, m.send_high_watermark);
     TEST_ASSERT_EQUAL_UINT32(g_cfg.sys.send_low_watermark,  m.send_low_watermark);
+}
+
+void test_metrics_snapshot_reports_memory_watermarks(void)
+{
+    ZOO_SMB_METRICS_SNAPSHOT_STRUCT snapshot;
+
+    memset(&snapshot, 0, sizeof(snapshot));
+    TEST_ASSERT_SMB_STATUS_EQUAL(ZOO_SMB_OK,
+                                 zoo_smb_collect_metrics_snapshot(g_tm, g_re, &snapshot));
+
+    TEST_ASSERT_GREATER_THAN_UINT32(0, (uint32_t)snapshot.memory.pool_size_bytes);
+    TEST_ASSERT_EQUAL_UINT32(g_cfg.sys.memory_high_watermark_pct,
+                             snapshot.memory.high_watermark_pct);
+    TEST_ASSERT_EQUAL_UINT32(g_cfg.sys.memory_low_watermark_pct,
+                             snapshot.memory.low_watermark_pct);
+}
+
+void test_memory_profile_repeated_message_allocations_return_to_baseline(void)
+{
+    ZOO_SMB_METRICS_SNAPSHOT_STRUCT before;
+    ZOO_SMB_METRICS_SNAPSHOT_STRUCT after;
+    char payload[512];
+
+    memset(payload, 'a', sizeof(payload));
+    memset(&before, 0, sizeof(before));
+    memset(&after, 0, sizeof(after));
+
+    TEST_ASSERT_SMB_STATUS_EQUAL(ZOO_SMB_OK,
+                                 zoo_smb_collect_metrics_snapshot(g_tm, g_re, &before));
+
+    for (int iteration = 0; iteration < 512; ++iteration)
+    {
+        ZOO_SMB_MSG_STRUCT* msg = zoo_smb_create_message(
+            ZOO_SMB_MSG_TYPE_REQ,
+            "deterministic-sender",
+            "test/topic",
+            payload,
+            sizeof(payload),
+            (uint32_t)iteration + 1U,
+            (uint64_t)iteration + 1U);
+
+        TEST_ASSERT_NOT_NULL(msg);
+        zoo_smb_destroy_message(msg);
+    }
+
+    TEST_ASSERT_SMB_STATUS_EQUAL(ZOO_SMB_OK,
+                                 zoo_smb_collect_metrics_snapshot(g_tm, g_re, &after));
+    TEST_ASSERT_FALSE(after.memory.high_watermark_active);
+    TEST_ASSERT_LESS_OR_EQUAL_size_t(before.memory.used_size_bytes + 4096U,
+                                     after.memory.used_size_bytes);
+}
+
+void test_message_create_rejects_payload_above_transport_budget(void)
+{
+    static char oversized_payload[ZOO_SMB_DEFAULT_MAX_TRANSPORT_BUFFER_SIZE + 1U];
+
+    memset(oversized_payload, 'b', sizeof(oversized_payload));
+
+    TEST_ASSERT_NULL(zoo_smb_create_message(
+        ZOO_SMB_MSG_TYPE_REQ,
+        "budget-sender",
+        "test/topic",
+        oversized_payload,
+        sizeof(oversized_payload),
+        7,
+        9));
+
+    TEST_ASSERT_NULL(zoo_smb_create_message(
+        ZOO_SMB_MSG_TYPE_REQ,
+        "budget-sender",
+        "test/topic",
+        oversized_payload,
+        g_cfg.sys.max_transport_buffer_size,
+        8,
+        10));
 }
 
 void test_tm_get_metrics_null_handle_returns_error(void)
@@ -483,6 +564,9 @@ int main(void)
     RUN_TEST(test_tm_metrics_initial_all_zero);
     RUN_TEST(test_tm_metrics_reset_clears_counters);
     RUN_TEST(test_tm_metrics_watermarks_match_config);
+    RUN_TEST(test_metrics_snapshot_reports_memory_watermarks);
+    RUN_TEST(test_memory_profile_repeated_message_allocations_return_to_baseline);
+    RUN_TEST(test_message_create_rejects_payload_above_transport_budget);
     RUN_TEST(test_tm_get_metrics_null_handle_returns_error);
     RUN_TEST(test_tm_get_metrics_null_out_returns_error);
     RUN_TEST(test_tm_transport_metrics_for_created_transport);

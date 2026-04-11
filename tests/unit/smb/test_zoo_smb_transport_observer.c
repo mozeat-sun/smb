@@ -3,6 +3,12 @@
 #include "zoo_smb_transport_observer.h"
 #include <string.h>
 
+/*
+ * Traceability coverage:
+ * - REQ-SAFE-001: deterministic transport observer registration and callback dispatch.
+ * - REQ-SAFE-003: requirement-linked unit evidence for transport observer behavior.
+ */
+
 static int g_callback_count = 0;
 
 /**

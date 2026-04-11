@@ -4,6 +4,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <signal.h>
+#include <limits.h>
 
 static char server_name[128];
 static volatile int g_running = 1;
@@ -51,7 +52,8 @@ int server_event_handler(void* user_data,
     ZOO_LOG_INFO("Received [%s] request on msg_id: %u, request_id: %ld, timestamp: %lu", sender, msg_id, request_id, timestamp);
     if (payload && payload_size > 0)
     {
-        ZOO_LOG_INFO("payload_size: %zu, Payload: %.*s", payload_size, (const char*)payload);
+        int printable_len = (payload_size > (size_t)INT_MAX) ? INT_MAX : (int)payload_size;
+        ZOO_LOG_INFO("payload_size: %zu, Payload: %.*s", payload_size, printable_len, (const char*)payload);
     }
 
     // Memory pool usage printing removed - not available in parent implementation

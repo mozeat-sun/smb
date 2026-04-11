@@ -100,7 +100,7 @@ extern "C"
      * @brief Creates and initializes a new SMB transport instance.
      *
      * This function is responsible for setting up a new transport mechanism
-     * for SMB (Server Message Block) communication. It typically allocates
+     * for SMB (Soft Message Bus) communication. It typically allocates
      * necessary resources and configures the transport according to the
      * specified parameters.
      *

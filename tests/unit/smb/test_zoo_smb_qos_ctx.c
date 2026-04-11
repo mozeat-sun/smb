@@ -4,6 +4,12 @@
 #include <string.h>
 #include <stdint.h>
 
+/*
+ * Traceability coverage:
+ * - REQ-SAFE-001: deterministic QoS state tracking and request-status transitions.
+ * - REQ-SAFE-003: requirement-linked unit evidence for QoS context state management.
+ */
+
 /**
  * @brief Test or example function setUp.
  */

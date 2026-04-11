@@ -339,7 +339,7 @@ ZOO_BOOL zoo_smb_qos_policy_is_valid(IN const ZOO_SMB_QOS_POLICY_HANDLE qos_poli
 /**
  * @brief Creates a new SMB QoS (Quality of Service) policy handle.
  *
- * This function initializes and returns a handle to a new QoS policy for SMB (Server Message Block).
+ * This function initializes and returns a handle to a new QoS policy for SMB (Soft Message Bus).
  * The created policy handle can be used to configure and manage QoS settings for SMB operations.
  *
  * @return ZOO_SMB_QOS_POLICY_HANDLE A handle to the newly created QoS policy.

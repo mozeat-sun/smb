@@ -31,6 +31,12 @@ TEST(zoo_smb_backpressure, queue_saturation_req_rel_003)
 
 Use `tools/quality/generate_traceability_matrix.sh` to generate a simple requirement coverage report from repository content.
 
+Use `tools/quality/traceability_gate.sh` to enforce the repository review gate. The gate requires:
+
+- every catalog requirement to have at least one repository link outside the catalog itself
+- critical verification-oriented requirements to have test-tree evidence
+- an audit sample artifact showing one design or implementation link and one verification link per requirement
+
 ## Review gate
 
 A release candidate should not be approved if critical requirement IDs have no linked verification evidence.

@@ -39,7 +39,7 @@ extern "C"
     /**
      * @brief Creates a new SMB routing rule.
      *
-     * This function initializes and creates a routing rule for SMB (Server Message Block) services,
+     * This function initializes and creates a routing rule for SMB (Soft Message Bus) services,
      * associating it with the specified service information, transport configuration, transport handle,
      * QoS policy, and node type.
      *

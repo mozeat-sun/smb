@@ -6,6 +6,10 @@
  * Component id: UNIT_TEST_REACTOR
  * File name: test_zoo_smb_reactor.c
  * Description: Unit tests for Reactor abstraction layer
+ * Traceability coverage:
+ * - REQ-REL-001: event reactor readiness and watch lifecycle validation.
+ * - REQ-SAFE-001: deterministic fd watch registration behavior.
+ * - REQ-SAFE-003: requirement-linked unit evidence for reactor primitives.
  * History recorder:
  * Version   date           author            context
  * 1.0       2026-04-01     AI Assistant      created

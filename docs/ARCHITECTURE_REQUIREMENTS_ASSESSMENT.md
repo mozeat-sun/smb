@@ -12,6 +12,7 @@ Overall conclusion:
 
 - The current architecture is sufficient to support the next industrial-grade hardening iterations without a rewrite.
 - The current architecture is not yet sufficient for later automotive-grade and military/aerospace-grade iterations without structural additions.
+- The repository is currently best characterized as late Milestone M3 with early Milestone M4 scaffolding in place.
 
 ## Requirement Matrix
 
@@ -21,19 +22,19 @@ Overall conclusion:
 | REQ-REL-002 | Partial | Restart scaffolding now has an architecture baseline for persistence and recovery, but there is still no implemented recovery manager, WAL, checkpoint store, or measured restart guarantee. | Runtime lifecycle and HA state model exist, and recovery/persistence architecture now defines durable-state scope and restart sequence. | Need implementation of recovery components plus measured RTO evidence. |
 | REQ-REL-003 | Present | The architecture already includes configurable backpressure and overload control. | Flow-control watermarks, ingress protection, and transport manager backpressure metrics are already defined. | Need policy completeness across all message classes and release evidence. |
 | REQ-REL-004 | Partial | Health exists conceptually and in runtime state, but unified repository-level liveness, readiness, and degraded semantics are not yet fully standardized. | Runtime degraded state and ready APIs exist; transport health tracking is documented. | Need one consistent health contract across runtime, transport, routing, and service layers. |
-| REQ-PERF-001 | Partial | The architecture is observable enough to publish benchmarks, but benchmark publication is still process tooling rather than a product-level architecture contract. | Metrics and observability are called out in the SMB architecture and examples include performance benchmarking. | Need approved benchmark profiles and release-quality publication discipline. |
-| REQ-PERF-002 | Partial | The architecture can support latency metrics, but p50/p95/p99 definitions are not yet formalized in the transport or runtime contract. | Telemetry and metrics structures exist; quality-gate scripts now provide benchmark scaffolding. | Need canonical benchmark metrics schema and sampling method. |
-| REQ-PERF-003 | Partial | Regression detection is now scaffolded in CI, but the architecture does not yet define stable baselines per deployment profile. | Repository includes baseline framework and comparison tooling. | Need approved baselines and environment control for trustworthy comparisons. |
-| REQ-SAFE-001 | Partial | Deterministic operation now has an architecture baseline, but the profile is not yet enforced in implementation and there is no worst-case timing evidence. | Deterministic bounded-memory profile now defines deterministic rules, budgets, and allowed behavior. | Need profile enforcement, message-class mapping, and timing evidence. |
-| REQ-SAFE-002 | Partial | Bounded-memory behavior now has an architecture baseline, but startup validation and hot-path enforcement are not yet implemented. | Deterministic bounded-memory profile defines budget rules, bounded replay, and disallowed unbounded behavior. | Need implementation of startup budget validation and enforcement tests. |
-| REQ-SAFE-003 | Partial | Repository-level traceability scaffolding now exists, but the current architecture and implementation are not yet systematically tagged to requirements. | Requirements catalog and traceability tooling have been added. | Need requirement IDs embedded in tests, design decisions, and critical code paths. |
-| REQ-SEC-001 | Partial | A maintained threat-model baseline now exists, but identity, replay protection, and update-trust controls are still not fully designed into the product architecture. | SMB threat model and security architecture now define threats, boundaries, and control allocation. | Need concrete identity, replay-protection, and secure-update architecture decisions. |
+| REQ-PERF-001 | Partial | The architecture is now observable enough to publish reproducible throughput and pub/sub latency benchmarks, though broader end-to-end performance coverage still needs additional scenarios beyond bench6. | Metrics and observability are called out in the SMB architecture; `tools/quality/benchmark.sh` now generates rebuildable throughput artifacts and stabilized bench6 latency captures from isolated benchmark modes. | Need broader scenario coverage and controlled-environment capture discipline for higher-assurance grades. |
+| REQ-PERF-002 | Partial | Throughput regression enforcement and bench6 p99/jitter regression enforcement now exist, but p50/p95 publication is still informational rather than separately threshold-gated. | Telemetry and metrics structures exist; `docs/BENCHMARK_BASELINE_PROCESS.md` and the benchmark gate now define and enforce the approved throughput plus bench6 latency capture workflow. | Need explicit policy on whether p50/p95 should remain informational or become separately gated. |
+| REQ-PERF-003 | Present | Regression detection is now active for aggregate throughput, per-message-size throughput, and stabilized bench6 latency metrics. | Repository includes benchmark schema, calibrated throughput and latency baselines, and comparison tooling in benchmark quality scripts and config baselines. | Continue periodic controlled-environment rebaseline discipline as hardware and runtime behavior evolve. |
+| REQ-SAFE-001 | Partial | Deterministic memory profile enforcement now exists for startup budget validation and bounded payload sizing, but message-class mapping and timing evidence are still missing. | Deterministic profile config, startup budget checks, and memory telemetry are implemented in SMB config/runtime and metrics reporting. | Need message-class mapping and worst-case timing evidence. |
+| REQ-SAFE-002 | Partial | Bounded-memory behavior is now enforced for configured transport payload budgets and memory-pool watermarks, but full release-grade endurance evidence is still missing. | Deterministic bounded-memory profile validates queue/buffer budgets at startup, caps message payload allocation size, and exposes memory-pool watermark metrics. | Need sustained endurance evidence and release-gate enforcement. |
+| REQ-SAFE-003 | Present | Repository-level requirement-to-test traceability is now maintained with CI enforcement and audit artifacts. | Requirements catalog, traceability matrix generation, audit-sample gate, and requirement-tagged SMB and performance verification sources are present in repository CI and test trees. | Continue broadening requirement IDs in lower-priority modules as routine maintenance. |
+| REQ-SEC-001 | Present | A maintained threat-model baseline now exists for protocol, control plane, and release surfaces. | `docs/THREAT_MODEL.md` defines assets, trust boundaries, threat scenarios, and current controls tied to repository quality evidence. | Need stronger identity, replay-protection, and secure-update architecture decisions for higher assurance grades. |
 | REQ-SEC-002 | Present | Continuous static analysis is now supported at the repository quality-gate level. | Quality workflow includes static-analysis automation. | Need tuning and policy thresholds so results become release-gating evidence. |
 | REQ-SEC-003 | Present | Dependency and component inventory scanning is now supported at the repository quality-gate level. | Quality workflow includes dependency inventory generation. | Need stronger provenance and vulnerability correlation for higher assurance grades. |
-| REQ-SEC-004 | Partial | Vulnerability reporting exists, but tracked remediation workflow is still more governance than architecture. | Root security policy and release scorecard process exist. | Need SLA tracking, remediation evidence, and link to release authority gates. |
+| REQ-SEC-004 | Present | Vulnerability reporting and tracked remediation workflow now exist with explicit SLA evidence. | `SECURITY.md`, `docs/VULNERABILITY_REMEDIATION_SLA.md`, `docs/VULNERABILITY_REMEDIATION_LOG.csv`, and `tools/quality/vulnerability_sla_report.sh` provide tracked remediation policy and CI artifacts. | Need live operational discipline as findings volume grows. |
 | REQ-COMP-001 | Partial | Protocol versioning now has a bus-wide policy baseline, but transport-wide implementation and interop tests are still missing. | Protocol compatibility policy now defines wire major/minor version rules and fail-fast mismatch behavior. | Need unified implementation across transports and version-interop tests. |
-| REQ-COMP-002 | Partial | Compatibility policy is now explicit, but not yet enforced through release automation and compatibility matrices. | Protocol compatibility policy now defines scope, rules, and release requirements. | Need compatibility matrix generation and release-gate enforcement. |
-| REQ-COMP-003 | Partial | Deprecation and compatibility governance are now defined at policy level, but not yet fully integrated into release workflow. | Protocol compatibility policy now requires deprecation cycle and release declarations. | Need release-note enforcement and migration reporting. |
+| REQ-COMP-002 | Partial | Compatibility policy is explicit and a repository quality gate now generates the compatibility matrix artifact, but transport-level interoperability testing is still missing. | Protocol compatibility policy now defines scope, rules, and release requirements, and CI generates `artifacts/quality/protocol_compatibility_matrix.md`. | Need unified implementation across transports and version-interop tests. |
+| REQ-COMP-003 | Partial | Deprecation and compatibility governance are now integrated into the release template, but completed per-release declarations and migration reporting still depend on release execution discipline. | Protocol compatibility policy now requires deprecation cycle and release declarations, and the release notes template captures mandatory compatibility fields. | Need release-time completion checks and migration reporting. |
 
 ## Summary by category
 
@@ -48,7 +49,7 @@ Overall conclusion:
 ### Good foundation but not yet sufficient
 
 - Unified health contract
-- Traceability coverage across code and tests
+- Broader latency scenario coverage beyond the current stabilized bench6 path
 
 ### Still missing as architectural capabilities
 
@@ -63,8 +64,11 @@ The current architecture meets the needs of the next subsequent iterations if th
 - backpressure hardening
 - observability
 - benchmark and soak evidence
-- traceability rollout
 - security workflow maturation
+
+The remaining short-term release blocker is no longer the basic latency percentile benchmark path from M2; that path is now stabilized and regression-gated.
+
+In practical repository terms, this means the current codebase can complete the remaining M2 benchmark-governance work and the early M3 traceability rollout without architectural rework.
 
 The current architecture does not yet meet the needs of later iterations if those iterations require:
 

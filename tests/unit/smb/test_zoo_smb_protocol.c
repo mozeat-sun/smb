@@ -6,6 +6,9 @@
  * Component id: test_zoo_smb_protocol_
  * File name: test_zoo_smb_protocol.c
  * Description: Unity-based protocol tests (converted from GTest)
+ * Traceability coverage:
+ * - REQ-COMP-001: explicit wire header magic/version parsing and validation.
+ * - REQ-SAFE-003: requirement-linked unit evidence for protocol encoding/decoding.
  * History recorder:
  * Version   date           author            context
  * 1.0       2025-08-05     AI                converted from GTest

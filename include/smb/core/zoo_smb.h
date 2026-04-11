@@ -21,6 +21,7 @@ extern "C"
 #endif
 #include "zoo_smb_error.h"
 #include "zoo_smb_node.h"
+#include "zoo_smb_service_observer.h"
 #include <stdint.h>
 #include <stdbool.h>
 #define ZOO_SMB_MAX_NODE_SIZE 1024
@@ -38,7 +39,7 @@ extern "C"
     /**
      * @brief Retrieves the singleton instance handle for the SMB module.
      *
-     * This function returns a handle to the SMB (Server Message Block) instance,
+     * This function returns a handle to the SMB (Soft Message Bus) instance,
      * allowing access to SMB-related operations. The returned handle should be used
      * with other SMB API functions.
      *
@@ -49,7 +50,7 @@ extern "C"
     /**
      * @brief Checks if the specified SMB handle is ready for operations.
      *
-     * This function determines whether the given SMB (Server Message Block) handle
+     * This function determines whether the given SMB (Soft Message Bus) handle
      * is properly initialized and ready to be used for further SMB operations.
      *
      * @param[in] smb The handle to the SMB context to check.
@@ -85,6 +86,29 @@ extern "C"
      * @return ZOO_FALSE if the service is offline or inaccessible
      */
     ZOO_BOOL zoo_smb_service_is_online(const char* service_name);
+
+    /**
+     * @brief Checks whether a service is currently known and marked online without blocking.
+     *
+     * @param service_name The name of the SMB service to check.
+     * @return ZOO_TRUE if the service exists in the registry and is online, ZOO_FALSE otherwise.
+     */
+    ZOO_BOOL zoo_smb_service_is_available(const char* service_name);
+
+    /**
+     * @brief Registers a service change observer at the SMB facade level.
+     *
+     * @param observer Observer handle to register.
+     * @return ZOO_SMB_OK on success, error code otherwise.
+     */
+    ZOO_ERROR_TYPE zoo_smb_add_service_observer(IN ZOO_SMB_SERVICE_OBSERVER_HANDLE observer);
+
+    /**
+     * @brief Unregisters a previously registered service change observer.
+     *
+     * @param observer Observer handle to unregister.
+     */
+    void zoo_smb_remove_service_observer(IN ZOO_SMB_SERVICE_OBSERVER_HANDLE observer);
 
     /**
      * @brief Routes a message through the specified SMB node.

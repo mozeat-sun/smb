@@ -673,7 +673,7 @@ ZOO_SMB_TRANSPORT_HANDLE zoo_smb_transport_manager_make_transport(
     ZOO_SMB_TRANSPORT_HANDLE transport = find_transport_by_service(manager, service);
     if (transport)
     {
-        ZOO_LOG_WARN("transport for address '%s:%d' already exists", config.address, config.port);
+        ZOO_LOG_DEBUG("transport for address '%s:%d' already exists", config.address, config.port);
         return transport;
     }
 
@@ -776,8 +776,11 @@ const char* zoo_smb_transport_manager_get_transport_name(ZOO_SMB_TRANSPORT_HANDL
  * This function allows a client to register a callback or observer that will be notified
  * whenever new data is received by the SMB transport manager.
  *
- * @param ... Parameters describing the observer and any context required (details depend on full function signature).
- * @return ZOO_ERROR_TYPE indicating the result of the registration operation.
+ * @param manager Transport manager handle.
+ * @param transport Transport instance where observer is attached.
+ * @param observer Observer callback/context handle.
+ * @return ZOO_SMB_OK on success, ZOO_SMB_ERROR_INVALID_PARAM for invalid inputs,
+ *         or transport-level registration error.
  */
 ZOO_ERROR_TYPE zoo_smb_transport_manager_register_incoming_data_observer(
     ZOO_SMB_TRANSPORT_MANAGER_HANDLE manager,
@@ -819,14 +822,17 @@ void zoo_smb_transport_manager_unregister_incoming_data_observer(
 }
 
 /**
- * @brief Sends a message using the SMB transport manager.
+ * @brief Sends one message through selected transport.
  *
- * This function is responsible for transmitting a message through the SMB transport layer.
+ * Security policy checks are enforced before send. Telemetry counters are
+ * updated for success/failure and backpressure outcomes.
  *
- * @param ... [Add parameter descriptions here]
- * @return ZOO_ERROR_TYPE Returns an error code indicating the result of the operation.
- *
- * @note [Add any additional notes or usage information here]
+ * @param manager Transport manager handle.
+ * @param transport Transport instance used for send.
+ * @param message Message object to transmit.
+ * @param receiver Optional receiver identity; may be NULL for multicast/broadcast paths.
+ * @return ZOO_SMB_OK on success, or module error code on validation/security/
+ *         transport failure.
  */
 ZOO_ERROR_TYPE zoo_smb_transport_manager_send_message(
     ZOO_SMB_TRANSPORT_MANAGER_HANDLE manager,

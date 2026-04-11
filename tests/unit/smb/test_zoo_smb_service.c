@@ -3,6 +3,12 @@
 #include "zoo_smb_service.h"
 #include <string.h>
 
+/*
+ * Traceability coverage:
+ * - REQ-REL-001: service object creation, duplication, and teardown lifecycle validation.
+ * - REQ-SAFE-003: requirement-linked unit evidence for service descriptors.
+ */
+
 /**
  * @brief Test or example function setUp.
  */

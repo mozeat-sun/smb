@@ -6,6 +6,10 @@
  * Component id: PERFORMANCE_TEST_TRANSPORT
  * File name: test_transport_performance.c
  * Description: Comprehensive transport layer performance benchmarks
+ * Traceability coverage:
+ * - REQ-PERF-001: transport throughput evidence for node lifecycle operations.
+ * - REQ-PERF-002: transport timing evidence for benchmark latency reporting.
+ * - REQ-PERF-003: regression threshold candidate for transport path performance.
  * History recorder:
  * Version   date           author            context
  * 1.0       2026-04-01     AI Assistant      created

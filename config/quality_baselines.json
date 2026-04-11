@@ -1,14 +1,20 @@
 {
   "schema_version": 1,
   "owner": "zoo-quality",
-  "updated_at_utc": "2026-04-08T00:00:00Z",
+  "updated_at_utc": "2026-04-11T00:00:00Z",
   "notes": "Compatibility baseline file retained for existing scripts.",
   "benchmark_profiles": {
     "default": {
-      "p99_latency_ms_max": null,
-      "throughput_ops_min": 0.01,
-      "jitter_ms_max": null,
-      "notes": "Initial compatibility guardrail; keep minimal until default profile is formally calibrated."
+      "p99_latency_ms_max": 3200,
+      "throughput_ops_min": 200,
+      "jitter_ms_max": 3200,
+      "message_size_throughput_ops_min": {
+        "64": 500,
+        "256": 40,
+        "1024": 10,
+        "4096": 2
+      },
+      "notes": "Default benchmark guardrail aligned with the approved CI throughput and stabilized bench6 latency profile."
     }
   }
 }

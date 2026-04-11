@@ -1,3 +1,10 @@
+/*
+ * Traceability coverage:
+ * - REQ-PERF-001: memory-pool throughput benchmark for SMB runtime allocation path.
+ * - REQ-PERF-002: allocation/free timing evidence for latency reporting.
+ * - REQ-PERF-003: regression threshold candidate for deterministic memory path.
+ */
+
 #include "unity.h"
 #include "../common/test_utils.h"
 #include <time.h>

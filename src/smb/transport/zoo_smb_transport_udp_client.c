@@ -145,7 +145,7 @@ ZOO_ERROR_TYPE udp_client_start(void* impl)
     ZOO_SMB_UDP_CLIENT_TRANSPORT* client = (ZOO_SMB_UDP_CLIENT_TRANSPORT*)impl;
     if (client->common.running)
     {
-        ZOO_LOG_WARN("UDP client transport already started");
+        ZOO_LOG_DEBUG("UDP client transport already started");
         return ZOO_SMB_OK;
     }
 

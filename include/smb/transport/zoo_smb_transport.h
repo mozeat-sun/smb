@@ -48,7 +48,7 @@ extern "C"
      * @brief Configuration structure for SMB transport layer.
      *
      * This structure defines the configuration parameters required to initialize
-     * and manage a transport connection for SMB (Server Message Block) communication.
+     * and manage a transport connection for SMB (Soft Message Bus) communication.
      *
      * Members:
      * - type: Specifies the transport type (e.g., TCP, UDP, ZeroMQ).

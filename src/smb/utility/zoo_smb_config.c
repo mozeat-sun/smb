@@ -77,6 +77,9 @@ static const ZOO_SMB_CONFIG_STRUCT ZOO_SMB_CONFIG_DEFAULT = {
         .send_low_watermark = 64,
         .ingress_high_watermark = 768,
         .ingress_low_watermark = 512,
+        .enable_deterministic_memory_profile = ZOO_FALSE,
+        .memory_high_watermark_pct = ZOO_SMB_MEMORY_HIGH_WATERMARK_PCT_DEFAULT,
+        .memory_low_watermark_pct = ZOO_SMB_MEMORY_LOW_WATERMARK_PCT_DEFAULT,
         .enable_transport_telemetry = ZOO_TRUE,
         .enable_routing_telemetry = ZOO_TRUE,
         .enforce_encrypted_messages = ZOO_FALSE,
@@ -86,7 +89,7 @@ static const ZOO_SMB_CONFIG_STRUCT ZOO_SMB_CONFIG_DEFAULT = {
         .max_queue_size = 10240, 
         .max_node_size = 128, 
         .max_timeout = 5000, 
-        .max_transport_buffer_size = 40 * 1024, 
+        .max_transport_buffer_size = ZOO_SMB_DEFAULT_MAX_TRANSPORT_BUFFER_SIZE, 
         .msg_flag = 0, 
         .default_transport_type = ZOO_SMB_TRANSPORT_TYPE_SHM, 
         .transport_auto_select = 0
@@ -301,6 +304,9 @@ static void load_sys_config(config_t* cfg, ZOO_SMB_CONFIG_STRUCT* config)
     config->sys.send_low_watermark = get_config_int(section, "send_low_watermark", config->sys.send_low_watermark);
     config->sys.ingress_high_watermark = get_config_int(section, "ingress_high_watermark", config->sys.ingress_high_watermark);
     config->sys.ingress_low_watermark = get_config_int(section, "ingress_low_watermark", config->sys.ingress_low_watermark);
+    config->sys.enable_deterministic_memory_profile = get_config_bool(section, "enable_deterministic_memory_profile", config->sys.enable_deterministic_memory_profile);
+    config->sys.memory_high_watermark_pct = get_config_int(section, "memory_high_watermark_pct", config->sys.memory_high_watermark_pct);
+    config->sys.memory_low_watermark_pct = get_config_int(section, "memory_low_watermark_pct", config->sys.memory_low_watermark_pct);
     config->sys.enable_transport_telemetry = get_config_bool(section, "enable_transport_telemetry", config->sys.enable_transport_telemetry);
     config->sys.enable_routing_telemetry = get_config_bool(section, "enable_routing_telemetry", config->sys.enable_routing_telemetry);
     config->sys.enforce_encrypted_messages = get_config_bool(section, "enforce_encrypted_messages", config->sys.enforce_encrypted_messages);
@@ -453,6 +459,12 @@ static void create_sys_section(config_setting_t* root)
                            ZOO_SMB_CONFIG_DEFAULT.sys.ingress_high_watermark);
     config_setting_set_int(config_setting_add(section, "ingress_low_watermark", CONFIG_TYPE_INT),
                            ZOO_SMB_CONFIG_DEFAULT.sys.ingress_low_watermark);
+    config_setting_set_bool(config_setting_add(section, "enable_deterministic_memory_profile", CONFIG_TYPE_BOOL),
+                            ZOO_SMB_CONFIG_DEFAULT.sys.enable_deterministic_memory_profile);
+    config_setting_set_int(config_setting_add(section, "memory_high_watermark_pct", CONFIG_TYPE_INT),
+                           ZOO_SMB_CONFIG_DEFAULT.sys.memory_high_watermark_pct);
+    config_setting_set_int(config_setting_add(section, "memory_low_watermark_pct", CONFIG_TYPE_INT),
+                           ZOO_SMB_CONFIG_DEFAULT.sys.memory_low_watermark_pct);
     config_setting_set_bool(config_setting_add(section, "enable_transport_telemetry", CONFIG_TYPE_BOOL),
                             ZOO_SMB_CONFIG_DEFAULT.sys.enable_transport_telemetry);
     config_setting_set_bool(config_setting_add(section, "enable_routing_telemetry", CONFIG_TYPE_BOOL),
@@ -637,6 +649,11 @@ static ZOO_ERROR_TYPE validate_config(void)
         g_smb_config.sys.mem_pool_size = 1024;
     }
 
+    if (g_smb_config.sys.max_transport_buffer_size == 0)
+    {
+        g_smb_config.sys.max_transport_buffer_size = ZOO_SMB_DEFAULT_MAX_TRANSPORT_BUFFER_SIZE;
+    }
+
     if (g_smb_config.sys.send_high_watermark == 0)
     {
         g_smb_config.sys.send_high_watermark = g_smb_config.sys.max_thread_queue_size > 0
@@ -668,6 +685,26 @@ static ZOO_ERROR_TYPE validate_config(void)
         if (g_smb_config.sys.ingress_low_watermark == 0)
         {
             g_smb_config.sys.ingress_low_watermark = 1;
+        }
+    }
+
+    if (g_smb_config.sys.memory_high_watermark_pct == 0 ||
+        g_smb_config.sys.memory_high_watermark_pct > 100)
+    {
+        g_smb_config.sys.memory_high_watermark_pct = ZOO_SMB_MEMORY_HIGH_WATERMARK_PCT_DEFAULT;
+    }
+
+    if (g_smb_config.sys.memory_low_watermark_pct == 0 ||
+        g_smb_config.sys.memory_low_watermark_pct >= g_smb_config.sys.memory_high_watermark_pct)
+    {
+        g_smb_config.sys.memory_low_watermark_pct = ZOO_SMB_MEMORY_LOW_WATERMARK_PCT_DEFAULT;
+        if (g_smb_config.sys.memory_low_watermark_pct >= g_smb_config.sys.memory_high_watermark_pct)
+        {
+            g_smb_config.sys.memory_low_watermark_pct = g_smb_config.sys.memory_high_watermark_pct / 2;
+            if (g_smb_config.sys.memory_low_watermark_pct == 0)
+            {
+                g_smb_config.sys.memory_low_watermark_pct = 1;
+            }
         }
     }
 
@@ -737,6 +774,9 @@ static void log_config_summary(void)
     ZOO_LOG_INFO("  send_low_watermark: %u", g_smb_config.sys.send_low_watermark);
     ZOO_LOG_INFO("  ingress_high_watermark: %u", g_smb_config.sys.ingress_high_watermark);
     ZOO_LOG_INFO("  ingress_low_watermark: %u", g_smb_config.sys.ingress_low_watermark);
+    ZOO_LOG_INFO("  enable_deterministic_memory_profile: %s", g_smb_config.sys.enable_deterministic_memory_profile ? "ZOO_TRUE" : "ZOO_FALSE");
+    ZOO_LOG_INFO("  memory_high_watermark_pct: %u", g_smb_config.sys.memory_high_watermark_pct);
+    ZOO_LOG_INFO("  memory_low_watermark_pct: %u", g_smb_config.sys.memory_low_watermark_pct);
     ZOO_LOG_INFO("  enable_transport_telemetry: %s", g_smb_config.sys.enable_transport_telemetry ? "ZOO_TRUE" : "ZOO_FALSE");
     ZOO_LOG_INFO("  enable_routing_telemetry: %s", g_smb_config.sys.enable_routing_telemetry ? "ZOO_TRUE" : "ZOO_FALSE");
     ZOO_LOG_INFO("  enforce_encrypted_messages: %s", g_smb_config.sys.enforce_encrypted_messages ? "ZOO_TRUE" : "ZOO_FALSE");
@@ -830,6 +870,11 @@ const ZOO_SMB_CONFIG_STRUCT* zoo_smb_get_config(void)
         zoo_smb_config_init();
     }
     return &g_smb_config;
+}
+
+const ZOO_SMB_CONFIG_STRUCT* zoo_smb_config_peek(void)
+{
+    return g_config_initialized ? &g_smb_config : NULL;
 }
 
 /**

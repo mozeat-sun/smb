@@ -1,14 +1,20 @@
 {
   "schema_version": 1,
   "owner": "zoo-quality",
-  "updated_at_utc": "2026-04-08T00:00:00Z",
+  "updated_at_utc": "2026-04-11T00:00:00Z",
   "notes": "CI baseline profile for regression guardrails. Tune after approved benchmark capture.",
   "benchmark_profiles": {
     "ci": {
-      "p99_latency_ms_max": null,
-      "throughput_ops_min": 0.01,
-      "jitter_ms_max": null,
-      "notes": "Initial guardrail: require non-zero throughput from benchmark fallback; tune with measured CI baselines."
+      "p99_latency_ms_max": 3200,
+      "throughput_ops_min": 200,
+      "jitter_ms_max": 3200,
+      "message_size_throughput_ops_min": {
+        "64": 500,
+        "256": 40,
+        "1024": 10,
+        "4096": 2
+      },
+      "notes": "Approved CI guardrails from isolated throughput benchmark modes and stabilized bench6 pub/sub latency captures on the shared Linux CI host. P99 and jitter thresholds are intentionally conservative to absorb normal host variance while remaining regression-gating."
     }
   }
 }

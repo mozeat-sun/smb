@@ -5,7 +5,7 @@
  * Module: Soft Message Bus
  * Component id: ZOO_SMB_SERVER
  * File name: zoo_smb_server.c
- * Description: Implementation of server server interface for ZOO SMB
+ * Description: Implementation of server node interface for ZOO SMB
  * History recorder:
  * Version   date           author            context
  * 1.0       2025-05-23     weiwang.sun       created
@@ -29,14 +29,12 @@ typedef struct ZOO_SMB_SERVER_STRUCT
 /**
  * @brief Sends an acknowledgment for a received request to the client.
  *
- * This static function is responsible for constructing and sending an
- * acknowledgment message back to the client after a request has been
- * processed by the server. It ensures that the client is notified
- * about the successful receipt and handling of its request.
+ * Builds and sends a REQACK message carrying msg_id/request_id correlation.
  *
- * @param ... Parameters depend on the function signature (not shown in selection).
- *
- * @note This function is intended for internal use within the server module.
+ * @param server Server runtime object.
+ * @param msg_id Message identifier being acknowledged.
+ * @param request_id Request identifier being acknowledged.
+ * @param receiver Request sender identity that receives ACK.
  */
 static void server_send_request_ack(
     IN ZOO_SMB_SERVER_HANDLE server,
@@ -55,14 +53,14 @@ static void server_send_request_ack(
 }
 
 /**
- * @brief Callback function to handle incoming SMB messages for a server.
+ * @brief Handles incoming REPLACK messages.
  *
- * This function is invoked when a new SMB message is received. It processes
- * the message in the context of the specified server.
+ * When reliability is enabled, this callback marks the corresponding QoS
+ * request state as ACKED.
  *
- * @param context Pointer to user-defined context data associated with the server.
- * @param message Pointer to the received ZOO_SMB_MSG_STRUCT structure containing
- *                the message data to be handled.
+ * @param context Server context pointer.
+ * @param msg Incoming message pointer.
+ * @param msg_len Received message size in bytes.
  */
 static void server_on_handle_REPLACK_msg_cb(void* context, const void* msg, ZOO_USIZE_T msg_len)
 {
@@ -89,14 +87,14 @@ static void server_on_handle_REPLACK_msg_cb(void* context, const void* msg, ZOO_
 }
 
 /**
- * @brief Callback function to handle incoming SMB messages for a server.
+ * @brief Handles incoming REQ messages and dispatches user callback.
  *
- * This function is invoked when a new SMB message is received. It processes
- * the message in the context of the specified server.
+ * For reliability-enabled policies this callback emits REQACK before invoking
+ * the registered message_handler.
  *
- * @param context Pointer to user-defined context data associated with the server.
- * @param message Pointer to the received ZOO_SMB_MSG_STRUCT structure containing
- *                the message data to be handled.
+ * @param context Server context pointer.
+ * @param msg Incoming message pointer.
+ * @param msg_len Received message size in bytes.
  */
 static void server_on_handle_REQ_msg_cb(void* context, const void* msg, ZOO_USIZE_T msg_len)
 {
@@ -132,14 +130,14 @@ static void server_on_handle_REQ_msg_cb(void* context, const void* msg, ZOO_USIZ
 }
 
 /**
- * @brief Create a new server server.
+ * @brief Create a new server node.
  *
- * This function creates a new server server for the Soft Message Bus.
+ * This function creates a new server node for the Soft Message Bus.
  *
- * @param name   Name of the server server.
+ * @param name   Name of the server node.
  * @param target Target address or identifier for the server.
  * @param topic  Name of the topic to serve.
- * @return ZOO_SMB_SERVER_HANDLE Handle to the newly created server server, or NULL on error.
+ * @return ZOO_SMB_SERVER_HANDLE Handle to the newly created server node, or NULL on error.
  */
 ZOO_SMB_SERVER_HANDLE zoo_smb_create_server(
     IN ZOO_STRING_T name,
@@ -212,12 +210,12 @@ ZOO_SMB_SERVER_HANDLE zoo_smb_create_server(
 }
 
 /**
- * @brief Destroys a SMB server server and cleans up associated resources
+ * @brief Destroys an SMB server node and cleans up associated resources
  *
- * This function handles the cleanup and destruction of a SMB server server,
+ * This function handles the cleanup and destruction of an SMB server node,
  * freeing all allocated resources and ensuring proper shutdown.
  *
- * @param server The handle to the SMB server server to be destroyed
+ * @param server The handle to the SMB server node to be destroyed
  *
  * @note After calling this function, the server handle becomes invalid and
  *       should not be used
@@ -239,10 +237,10 @@ void zoo_smb_destroy_server(IN ZOO_SMB_SERVER_HANDLE server)
 /**
  * @brief Send a reply message from the server.
  *
- * This function sends a reply message to a client from the server server.
+ * This function sends a reply message to a client from the server node.
  *
- * @param server         Handle to the server server.
- * @param topic        Name of the reply topic.
+ * @param server         Handle to the server node.
+ * @param receiver       Target receiver identity.
  * @param msg_id       Message ID to reply to.
  * @param payload      Pointer to the reply payload data.
  * @param payload_size Size of the reply payload in bytes.
@@ -285,11 +283,11 @@ ZOO_ERROR_T zoo_smb_server_send_reply(
 }
 
 /**
- * @brief Set the event handler for the server server.
+ * @brief Set the event handler for the server node.
  *
- * This function sets the event handler callback for the server server to handle incoming requests.
+ * This function sets the event handler callback for the server node to handle incoming requests.
  *
- * @param server          Handle to the server server.
+ * @param server          Handle to the server node.
  * @param message_handler Pointer to the event handler function.
  * @param user_data     Pointer to user-defined data to be passed to the event handler.
  */

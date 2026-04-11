@@ -16,6 +16,7 @@
 
 #include "zoo_smb_protocol.h"
 #include "zoo_memory_pool.h"
+#include "zoo_smb_config.h"
 #include "zoo_util.h"
 #include <stdlib.h>
 #include <string.h>
@@ -91,10 +92,18 @@ static ZOO_BOOL validate_protocol_version(uint16_t version)
  */
 static ZOO_BOOL validate_payload_size(uint32_t payload_size)
 {
-    if (payload_size > ZOO_SMB_MAX_PAYLOAD_SIZE)
+    size_t max_payload_size = ZOO_SMB_MAX_PAYLOAD_SIZE;
+    const ZOO_SMB_CONFIG_STRUCT* config = zoo_smb_config_peek();
+
+    if (config && config->sys.max_transport_buffer_size > sizeof(ZOO_SMB_MSG_HEADER_STRUCT))
     {
-        ZOO_LOG_ERROR("Payload size exceeds maximum: max=%u, actual=%u",
-                          ZOO_SMB_MAX_PAYLOAD_SIZE,
+        max_payload_size = config->sys.max_transport_buffer_size - sizeof(ZOO_SMB_MSG_HEADER_STRUCT);
+    }
+
+    if (payload_size > max_payload_size)
+    {
+        ZOO_LOG_ERROR("Payload size exceeds maximum: max=%zu, actual=%u",
+                          max_payload_size,
                           payload_size);
         return ZOO_FALSE;
     }

@@ -305,7 +305,13 @@ void zoo_destroy_dispatcher(
  */
 void zoo_dispatcher_on_queue_changed(void *queue_handle, void *observer, void *msg, void *context, ZOO_QUEUED_HANDLER handler)
 {
-    if (!queue_handle || !observer || !msg || !context || !handler)
+    (void)msg;
+    (void)context;
+    (void)handler;
+
+    // Only queue and dispatcher observer are required for sort/signal behavior.
+    // msg/context/handler can be NULL for valid enqueue paths.
+    if (!queue_handle || !observer)
     {
         ZOO_LOG_WARN("%s", "Invalid parameters in queue change notification");
         return;

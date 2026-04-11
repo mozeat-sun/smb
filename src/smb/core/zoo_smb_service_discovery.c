@@ -52,7 +52,7 @@ typedef struct ZOO_SMB_SERVICE_DISCOVERY_STRUCT
  * @param service Pointer to service information structure to check
  * @param current_time Current timestamp to compare against
  */
-static ZOO_BOOL check_service_online_status_changed(ZOO_SMB_SERVICE_STRUCT* service, time_t current_time)
+static ZOO_BOOL check_service_online_status_changed(ZOO_SMB_SERVICE_DISCOVERY_STRUCT* discover, ZOO_SMB_SERVICE_STRUCT* service, time_t current_time)
 {
     ZOO_SMB_VALIDATE_PTR(service, ZOO_FALSE);
     time_t time_diff = current_time - service->last_seen;
@@ -62,6 +62,7 @@ static ZOO_BOOL check_service_online_status_changed(ZOO_SMB_SERVICE_STRUCT* serv
         {
             service->is_online = ZOO_FALSE;
             ZOO_LOG_WARN("[DISC] Service offline: %s at %s:%d (last seen: %ld seconds ago)", service->name, service->address, service->port, time_diff);
+            zoo_smb_service_manager_notify_observers(discover->service_manager, service);
             return ZOO_TRUE;
         }
     }
@@ -152,7 +153,14 @@ static void handle_received_message_cb(
     }
     else
     {
+        ZOO_BOOL was_online = exist_service->is_online;
         zoo_smb_service_set_last_seen(exist_service, service->last_seen);
+        zoo_smb_service_set_online_status(exist_service, ZOO_TRUE);
+        if (!was_online)
+        {
+            ZOO_LOG_INFO("[DISC] Service online again: %s at %s:%d", exist_service->name, exist_service->address, exist_service->port);
+            zoo_smb_service_manager_notify_observers(discover->service_manager, exist_service);
+        }
     }
     zoo_smb_destroy_service(service);
 }
@@ -246,7 +254,7 @@ static void handle_service_online_status(ZOO_SMB_SERVICE_DISCOVERY_STRUCT* disco
     for (ZOO_USIZE i = 0; i < zoo_list_size(discover->incoming_service_list); i++)
     {
         ZOO_SMB_SERVICE_STRUCT* service = (ZOO_SMB_SERVICE_STRUCT*)zoo_list_at(discover->incoming_service_list, i);
-        check_service_online_status_changed(service, current_time);
+        check_service_online_status_changed(discover, service, current_time);
     }
 }
 

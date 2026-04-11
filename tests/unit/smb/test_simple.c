@@ -6,6 +6,8 @@
  * Component id: test_simple_
  * File name: test_simple.c
  * Description: Simple Unity test to verify framework works
+ * Traceability coverage:
+ * - REQ-SAFE-003: requirement-linked harness sanity check for SMB unit test execution.
  * History recorder:
  * Version   date           author            context
  * 1.0       2025-08-05     AI                created

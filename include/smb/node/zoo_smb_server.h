@@ -54,17 +54,18 @@ extern "C"
     void zoo_smb_destroy_server(IN ZOO_SMB_SERVER_HANDLE server);
 
     /**
-     * @brief Send a reply message from the server.
+     * @brief Sends REPL response for a previously received request.
      *
-     * This function sends a reply message to a client from the server node.
+     * QoS tracking may retain message ownership until ACK when reliability is enabled.
      *
-     * @param node         Handle to the server node.
-     * @param topic        Name of the reply topic.
-     * @param msg_id       Message ID to reply to.
-     * @param payload      Pointer to the reply payload data.
-     * @param payload_size Size of the reply payload in bytes.
-     * @param request_id   Pointer to the request ID (may be updated).
-     * @return ZOO_ERROR_TYPE Error code indicating the result of the operation.
+     * @param server Server handle.
+     * @param receiver Intended receiver identity.
+     * @param msg_id Message identifier for the reply.
+     * @param payload Reply payload pointer.
+     * @param payload_size Reply payload size in bytes.
+     * @param request_id Request identifier being replied to.
+     * @return ZOO_SMB_OK on send success; module error code on validation,
+     *         allocation, QoS, or transport failure.
      */
     ZOO_ERROR_TYPE zoo_smb_server_send_reply(
         IN ZOO_SMB_SERVER_HANDLE server,
@@ -80,8 +81,9 @@ extern "C"
      * This function sets the event handler callback for the server node to handle incoming requests.
      *
      * @param server          Handle to the server node.
-     * @param event_handler Pointer to the event handler function.
-     * @param user_data     Pointer to user-defined data to be passed to the event handler.
+    * @param message_handler Callback invoked for incoming REQ messages.
+    * @param user_data User context passed to message_handler.
+    * @return ZOO_SMB_OK on success, ZOO_SMB_ERROR_INVALID_PARAM when inputs are invalid.
      */
     ZOO_ERROR_TYPE zoo_smb_server_set_message_handler(
         IN ZOO_SMB_SERVER_HANDLE server,

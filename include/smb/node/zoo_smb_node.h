@@ -58,11 +58,16 @@ extern "C"
     } ZOO_SMB_NODE_STRUCT;
 
     /**
-     * @brief Create a new node on the SMB bus.
-     * @param bus        Handle to the SMB instance.
-     * @param name       Name of the node.
-     * @param comm_type  Communication type for the node.
-     * @return           Handle to the created node, or NULL on failure.
+     * @brief Creates a node object with role and transport metadata.
+     *
+     * The created node is inactive until registration/association succeeds.
+     *
+     * @param name Node logical name.
+     * @param target Target service or receiver identity.
+     * @param topic Topic namespace used by the node.
+     * @param node_type Node role (client/server/publisher/subscriber).
+     * @param transport_type Transport backend selection.
+     * @return Node handle on success; NULL on allocation or initialization failure.
      */
     ZOO_SMB_NODE_HANDLE zoo_smb_create_node(
         IN const char* name,
@@ -82,10 +87,16 @@ extern "C"
     void zoo_smb_destroy_node(IN ZOO_SMB_NODE_HANDLE node_handle);
 
     /**
-     * @brief Retrieves a pointer to a base node structure from the SMB handle.
+     * @brief Finds first node in list matching type and optional identity filters.
      *
-     * @param smb The handle to the SMB instance.
-     * @return A constant pointer to the ZOO_SMB_BASE_NODE_STRUCT representing the node.
+     * Each of name, target, and topic may be NULL to disable that filter.
+     *
+     * @param list Node list to search.
+     * @param node_type Required node type, or ZOO_SMB_NODE_TYPE_MAX for any type.
+     * @param name Optional node name filter.
+     * @param target Optional target filter.
+     * @param topic Optional topic filter.
+     * @return Matching node handle, or NULL when no node satisfies filters.
      */
     ZOO_SMB_NODE_HANDLE zoo_smb_find_node_by_type(IN ZOO_LIST_HANDLE list, IN ZOO_SMB_NODE_TYPE_ENUM node_type, IN const char* name, IN const char* target, IN const char* topic);
 

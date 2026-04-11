@@ -14,6 +14,12 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
+/*
+ * Traceability coverage:
+ * - REQ-REL-001: UDP transport create/start/stop lifecycle validation.
+ * - REQ-SAFE-003: requirement-linked transport integration evidence.
+ */
+
 // Test fixture data
 static ZOO_SMB_TRANSPORT_CONFIG_STRUCT server_config;
 static ZOO_SMB_TRANSPORT_CONFIG_STRUCT client_config;
@@ -52,8 +58,6 @@ static TRANSPORT_DATA_OBSERVER_HANDLE create_and_add_observer(ZOO_SMB_TRANSPORT_
 void setUp(void)
 {
     zoo_log_set_level(ZOO_LOG_LEVEL_TRACE);
-    zoo_create_memory_pool(2 * 1024 * 1024);  // 2MB pool
-    zoo_create_thread_pool(2, 128);
 
     // Initialize UDP transport
     zoo_smb_transport_udp_init();
@@ -90,29 +94,35 @@ void setUp(void)
 
 void tearDown(void)
 {
-    // Clean up observers first
-    if (server_observer) {
-        destroy_transport_data_observer(server_observer);
-        server_observer = NULL;
-    }
-    if (client_observer) {
-        destroy_transport_data_observer(client_observer);
-        client_observer = NULL;
-    }
-
     if (server_transport) {
+        if (server_observer) {
+            zoo_smb_transport_remove_data_observer(server_transport, server_observer);
+            destroy_transport_data_observer(server_observer);
+            server_observer = NULL;
+        }
         zoo_smb_transport_stop(server_transport);
         zoo_smb_destroy_transport(server_transport);
         server_transport = NULL;
     }
+    else if (server_observer) {
+        destroy_transport_data_observer(server_observer);
+        server_observer = NULL;
+    }
+
     if (client_transport) {
+        if (client_observer) {
+            zoo_smb_transport_remove_data_observer(client_transport, client_observer);
+            destroy_transport_data_observer(client_observer);
+            client_observer = NULL;
+        }
         zoo_smb_transport_stop(client_transport);
         zoo_smb_destroy_transport(client_transport);
         client_transport = NULL;
     }
-
-    zoo_destroy_memory_pool();
-    zoo_destroy_thread_pool(ZOO_FALSE);
+    else if (client_observer) {
+        destroy_transport_data_observer(client_observer);
+        client_observer = NULL;
+    }
 }
 
 void test_InitializationTest(void)

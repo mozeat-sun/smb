@@ -4,6 +4,13 @@
 #include "zoo_smb_service.h"
 #include <string.h>
 
+/*
+ * Traceability coverage:
+ * - REQ-REL-001: service manager create/register/unregister lifecycle validation.
+ * - REQ-REL-004: service lookup and observer flow support availability-state handling.
+ * - REQ-SAFE-003: requirement-linked unit evidence for service management.
+ */
+
 static ZOO_SMB_CONFIG_STRUCT config;
 
 /**

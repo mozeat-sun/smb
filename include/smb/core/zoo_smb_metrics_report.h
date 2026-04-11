@@ -25,6 +25,18 @@ extern "C"
 #include "zoo_smb_routing_engine.h"
 #include "zoo_smb_error.h"
 
+    typedef struct
+    {
+        size_t pool_size_bytes;
+        size_t used_size_bytes;
+        size_t free_size_bytes;
+        size_t max_free_pages;
+        uint32_t used_pct;
+        uint32_t high_watermark_pct;
+        uint32_t low_watermark_pct;
+        ZOO_BOOL high_watermark_active;
+    } ZOO_SMB_MEMORY_POOL_METRICS_STRUCT;
+
     /**
      * @brief Unified metrics snapshot combining transport and routing telemetry.
      */
@@ -32,6 +44,7 @@ extern "C"
     {
         ZOO_SMB_TRANSPORT_MANAGER_METRICS_STRUCT transport; /**< Send-path metrics  */
         ZOO_SMB_ROUTING_ENGINE_METRICS_STRUCT    routing;   /**< Ingress-path metrics */
+        ZOO_SMB_MEMORY_POOL_METRICS_STRUCT       memory;    /**< Memory-pool pressure metrics */
     } ZOO_SMB_METRICS_SNAPSHOT_STRUCT;
 
     /**

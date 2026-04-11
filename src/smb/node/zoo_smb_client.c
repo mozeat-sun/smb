@@ -29,13 +29,11 @@ typedef struct ZOO_SMB_CLIENT_STRUCT
 } ZOO_SMB_CLIENT_STRUCT;
 
 /**
- * @brief Checks if there is a reply message available.
+ * @brief Predicate used to match reply messages by request id.
  *
- * This function determines whether a reply message exists noded on the provided data.
- *
- * @param data Pointer to the data to be checked for a reply message.
- * @param user_data Pointer to user-defined data, may be used for additional context.
- * @return ZOO_TRUE if a reply message is present, ZOO_FALSE otherwise.
+ * @param data Candidate message item from reply list.
+ * @param user_data Pointer to expected request id (uint64_t*).
+ * @return ZOO_TRUE when message request id matches expected request id.
  */
 static ZOO_BOOL client_compare_message(const void* data, const void* user_data)
 {
@@ -56,14 +54,12 @@ static ZOO_BOOL client_compare_message(const void* data, const void* user_data)
 }
 
 /**
- * Handles the reply message for a client remove operation.
+ * @brief Removes one buffered reply from list and destroys message storage.
  *
- * This function processes the response received after a client requests
- * the removal of a resource or entity. It typically parses the reply,
- * updates internal state as needed, and performs any necessary cleanup.
+ * Caller must hold client mutex while manipulating reply_message_list.
  *
- * @param ... Parameters are not specified in the selection.
- * @return ... Return type and value are not specified in the selection.
+ * @param client Client handle owning reply list.
+ * @param reply_message Reply message entry to remove.
  */
 static void client_remove_reply_message_locked(
     IN ZOO_SMB_CLIENT_HANDLE client,
@@ -82,12 +78,14 @@ static void client_remove_reply_message_locked(
 }
 
 /**
- * Checks if there is a reply message available.
+ * @brief Finds buffered reply matching both message id and request id.
  *
- * This static function determines whether a reply message exists,
- * typically used in the context of SMB client communication.
+ * Caller must hold client mutex while searching reply_message_list.
  *
- * @return Pointer to the reply message if available, or NULL otherwise.
+ * @param c Client runtime pointer.
+ * @param msg_id Expected message identifier.
+ * @param request_id Expected request identifier.
+ * @return Matching message pointer or NULL if not found.
  */
 static ZOO_SMB_MSG_STRUCT* client_find_reply_message_locked(
     IN ZOO_SMB_CLIENT_STRUCT* c,
@@ -324,7 +322,7 @@ ZOO_BOOL zoo_smb_is_server_ready(const char* target)
  * This function releases all resources associated with the given SMB node handle,
  * including closing any open connections and freeing allocated memory.
  *
- * @param[in] node The SMB node handle to be destroyed
+ * @param[in] client The SMB client handle to be destroyed.
  *
  * @note After calling this function, the node handle becomes invalid and should not be used
  */
@@ -345,18 +343,17 @@ void zoo_smb_destroy_client(IN ZOO_SMB_CLIENT_HANDLE client)
 }
 
 /**
- * @brief Sends a request to a specified SMB node with the given topic and payload.
+ * @brief Sends one REQ message from client context.
  *
- * This function sends a request message to the specified SMB node, using the provided topic and payload data.
- * The function assigns or updates the request ID and waits for a response up to the specified timeout.
+ * This call validates parameters and service availability, creates/assigns a
+ * request id, updates QoS state, and dispatches asynchronously through transport.
  *
- * @param node         The target SMB node to which the request will be sent.
- * @param topic        The topic string identifying the type or category of the request.
- * @param payload      Pointer to the payload data to be sent with the request.
- * @param payload_size Size of the payload data in bytes.
- * @param request_id   Pointer to an int64_t variable. On input, may specify a request ID; on output, receives the assigned request ID.
- * @param timeout_ms   Timeout for the request in milliseconds.
- * @return             ZOO_ERROR_TYPE indicating the result of the operation.
+ * @param client Client handle.
+ * @param msg_id Application message identifier.
+ * @param payload Request payload pointer.
+ * @param payload_size Request payload size in bytes.
+ * @param request_id Output request identifier assigned by this call.
+ * @return ZOO_SMB_OK on send success; otherwise a module error code.
  */
 ZOO_ERROR_TYPE zoo_smb_client_send_request(ZOO_SMB_CLIENT_HANDLE client,
                                                IN uint32_t msg_id,
@@ -402,18 +399,18 @@ ZOO_ERROR_TYPE zoo_smb_client_send_request(ZOO_SMB_CLIENT_HANDLE client,
 }
 
 /**
- * @brief Retrieves the reply message for a previously sent SMB request.
+ * @brief Waits for buffered REPL matching msg_id and request_id.
  *
- * This function waits for a reply to a request identified by `request_id` on the specified `node`.
- * The reply message and its size are returned via output parameters. The function will wait up to
- * `timeout_ms` milliseconds for the reply before timing out.
+ * This call may block up to timeout_ms. On success, payload bytes are copied
+ * into caller-provided output buffer and the buffered reply entry is removed.
  *
- * @param node           The SMB node handle from which to retrieve the reply.
- * @param request_id     The unique identifier of the request whose reply is to be fetched.
- * @param reply_message  [out] Pointer to a buffer that will receive the reply message.
- * @param reply_size     [out] Pointer to a variable that will receive the size of the reply message.
- * @param timeout_ms     The maximum time to wait for the reply, in milliseconds.
- * @return ZOO_ERROR_TYPE  Error code indicating the result of the operation.
+ * @param client Client handle.
+ * @param msg_id Expected reply message identifier.
+ * @param request_id Expected request identifier.
+ * @param payload Output buffer pointer receiving copied payload bytes.
+ * @param payload_size Output payload length in bytes.
+ * @param timeout_ms Maximum wait duration in milliseconds.
+ * @return ZOO_SMB_OK on success, or timeout/invalid-param/other module error code.
  */
 ZOO_ERROR_TYPE zoo_smb_client_recv_reply(ZOO_SMB_CLIENT_HANDLE client,
                                              IN uint32_t msg_id,

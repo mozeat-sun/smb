@@ -19,10 +19,26 @@ jobs:
         uses: actions/checkout@v4
       - name: Generate traceability matrix
         run: bash tools/quality/generate_traceability_matrix.sh
+      - name: Enforce traceability review gate
+        run: bash tools/quality/traceability_gate.sh
       - name: Upload traceability artifacts
         uses: actions/upload-artifact@v4
         with:
           name: traceability-artifacts
+          path: artifacts/quality/
+
+  protocol-compatibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Generate protocol compatibility matrix
+        run: bash tools/quality/protocol_compatibility_matrix.sh
+      - name: Upload protocol compatibility artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: protocol-compatibility-artifacts
           path: artifacts/quality/
 
   static-analysis:
@@ -68,18 +84,60 @@ jobs:
           name: dependency-artifacts
           path: artifacts/quality/
 
+  vulnerability-sla:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Generate vulnerability remediation SLA report
+        run: bash tools/quality/vulnerability_sla_report.sh
+      - name: Upload vulnerability SLA artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: vulnerability-sla-artifacts
+          path: artifacts/quality/
+
   soak:
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Set reliability mode
+        id: reliability-mode
+        run: |
+          if [[ "${{ github.event_name }}" == "schedule" ]]; then
+            echo "duration=180" >> "$GITHUB_OUTPUT"
+            echo "mode=weekly" >> "$GITHUB_OUTPUT"
+          else
+            echo "duration=30" >> "$GITHUB_OUTPUT"
+            echo "mode=ci" >> "$GITHUB_OUTPUT"
+          fi
       - name: Run soak test
-        run: bash tools/quality/soak_test.sh 30
+        env:
+          RELIABILITY_MODE: ${{ steps.reliability-mode.outputs.mode }}
+        run: bash tools/quality/soak_test.sh ${{ steps.reliability-mode.outputs.duration }}
       - name: Upload soak artifacts
         uses: actions/upload-artifact@v4
         with:
           name: soak-artifacts
+          path: artifacts/quality/
+
+  reliability-until-fail:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run repeated reliability gate
+        env:
+          MAX_REPETITIONS: "20"
+        run: bash tools/quality/reliability_until_fail.sh
+      - name: Upload reliability artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: reliability-artifacts
           path: artifacts/quality/
 
   fault-injection:

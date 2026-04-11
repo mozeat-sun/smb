@@ -11,12 +11,13 @@ if [[ ! -f "${CATALOG}" ]]; then
 fi
 
 REQ_IDS=$(grep -oE '`REQ-[A-Z]+-[0-9]+`' "${CATALOG}" | tr -d '`' | sort -u)
+TEST_MATRIX_FILE="${ARTIFACT_DIR}/traceability_test_matrix.csv"
 
 {
   echo "requirement_id,linked_occurrences,status"
   while IFS= read -r req_id; do
     [[ -z "${req_id}" ]] && continue
-    count=$(grep -R -I -n --exclude-dir=.git --exclude-dir=build --exclude-dir=build-monorepo --exclude="traceability_matrix.csv" "${req_id}" . | wc -l)
+    count=$({ grep -R -I -n --exclude-dir=.git --exclude-dir=build --exclude-dir=build-monorepo --exclude="traceability_matrix.csv" "${req_id}" . || true; } | wc -l)
     status="unverified"
     if [[ ${count} -gt 1 ]]; then
       status="linked"
@@ -24,6 +25,15 @@ REQ_IDS=$(grep -oE '`REQ-[A-Z]+-[0-9]+`' "${CATALOG}" | tr -d '`' | sort -u)
     echo "${req_id},${count},${status}"
   done <<< "${REQ_IDS}"
 } > "${ARTIFACT_DIR}/traceability_matrix.csv"
+
+{
+  echo "requirement_id,test_links"
+  while IFS= read -r req_id; do
+    [[ -z "${req_id}" ]] && continue
+    count=$({ grep -R -I -n --exclude-dir=.git --exclude-dir=build --exclude-dir=build-monorepo "${req_id}" tests 2>/dev/null || true; } | wc -l)
+    echo "${req_id},${count}"
+  done <<< "${REQ_IDS}"
+} > "${TEST_MATRIX_FILE}"
 
 awk -F',' 'NR>1 {total++; if ($3 == "linked") linked++} END {printf("{\"total\":%d,\"linked\":%d}\n", total, linked)}' \
   "${ARTIFACT_DIR}/traceability_matrix.csv" > "${ARTIFACT_DIR}/traceability_summary.json"

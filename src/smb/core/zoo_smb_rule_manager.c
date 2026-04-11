@@ -329,7 +329,7 @@ ZOO_SMB_RULE_HANDLE zoo_smb_rule_manager_make_rule(IN ZOO_SMB_RULE_MANAGER_HANDL
     if (rule)
     {
         ZOO_MUTEX_UNLOCK(&rule_manager->mutex);
-        ZOO_LOG_WARN("rule '%s' already exists", rule_name);
+        ZOO_LOG_DEBUG("rule '%s' already exists", rule_name);
         return rule;
     }
 

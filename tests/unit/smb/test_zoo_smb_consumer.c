@@ -6,6 +6,9 @@
  * Component id: test_zoo_smb_consumer_
  * File name: test_zoo_smb_consumer.c
  * Description: Unity-based consumer tests (converted from GTest)
+ * Traceability coverage:
+ * - REQ-REL-001: consumer create/destroy and registration lifecycle validation.
+ * - REQ-SAFE-003: requirement-linked unit evidence for consumer management.
  * History recorder:
  * Version   date           author            context
  * 1.0       2025-08-05     AI                converted from GTest

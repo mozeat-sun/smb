@@ -38,6 +38,16 @@ def validate_baseline(doc: dict, profile: str) -> None:
         if value is not None and not isinstance(value, (int, float)):
             fail(3, f"invalid baseline profile '{profile}': '{metric_key}' must be number or null")
 
+    payload_thresholds = profile_doc.get("message_size_throughput_ops_min")
+    if payload_thresholds is not None:
+        if not isinstance(payload_thresholds, dict):
+            fail(3, f"invalid baseline profile '{profile}': 'message_size_throughput_ops_min' must be object or null")
+        for size_key, size_value in payload_thresholds.items():
+            if not isinstance(size_key, str) or not size_key:
+                fail(3, f"invalid baseline profile '{profile}': payload size keys must be non-empty strings")
+            if not isinstance(size_value, (int, float)):
+                fail(3, f"invalid baseline profile '{profile}': payload threshold '{size_key}' must be numeric")
+
 if not baseline_path.exists():
     fail(1, f"baseline file missing: {baseline_path}")
 
@@ -56,10 +66,12 @@ failures = []
 p99_max = profile.get("p99_latency_ms_max")
 throughput_min = profile.get("throughput_ops_min")
 jitter_max = profile.get("jitter_ms_max")
+message_size_thresholds = profile.get("message_size_throughput_ops_min") or {}
 
 p99_actual = metrics.get("p99_latency_ms")
 throughput_actual = metrics.get("throughput_ops")
 jitter_actual = metrics.get("jitter_ms")
+message_size_actuals = metrics.get("message_size_throughput_ops") or {}
 
 if require_metrics:
     if p99_max is not None and p99_actual is None:
@@ -68,6 +80,9 @@ if require_metrics:
         failures.append("throughput metric missing while threshold is configured")
     if jitter_max is not None and jitter_actual is None:
         failures.append("jitter metric missing while threshold is configured")
+    for size_key in message_size_thresholds:
+        if size_key not in message_size_actuals:
+            failures.append(f"payload throughput metric missing for size profile '{size_key}'")
 
 if p99_max is not None and p99_actual is not None and p99_actual > p99_max:
     failures.append(f"p99 latency {p99_actual} exceeds {p99_max}")
@@ -75,6 +90,11 @@ if throughput_min is not None and throughput_actual is not None and throughput_a
     failures.append(f"throughput {throughput_actual} below {throughput_min}")
 if jitter_max is not None and jitter_actual is not None and jitter_actual > jitter_max:
     failures.append(f"jitter {jitter_actual} exceeds {jitter_max}")
+
+for size_key, size_threshold in message_size_thresholds.items():
+    actual_value = message_size_actuals.get(size_key)
+    if actual_value is not None and actual_value < size_threshold:
+        failures.append(f"payload throughput for {size_key}B {actual_value} below {size_threshold}")
 
 if failures:
     for failure in failures:

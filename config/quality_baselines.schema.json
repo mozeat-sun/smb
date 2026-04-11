@@ -56,6 +56,16 @@
             ],
             "minimum": 0
           },
+          "message_size_throughput_ops_min": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
           "notes": {
             "type": "string"
           }

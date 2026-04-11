@@ -173,6 +173,16 @@ extern "C"
         ZOO_SMB_SERVICE_MANAGER_HANDLE manager,
         ZOO_SMB_SERVICE_OBSERVER_HANDLE observer);
 
+    /**
+     * @brief Notifies registered observers that a service state changed.
+     *
+     * @param manager Service manager instance.
+     * @param service Service whose state changed.
+     */
+    void zoo_smb_service_manager_notify_observers(
+        ZOO_SMB_SERVICE_MANAGER_HANDLE manager,
+        ZOO_SMB_SERVICE_HANDLE service);
+
 #ifdef __cplusplus
 }
 #endif

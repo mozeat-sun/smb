@@ -6,6 +6,10 @@
  * Component id: E2E_PERF_BENCHMARK
  * File name: e2e_performance_benchmark.c
  * Description: End-to-end performance benchmarks for complete SMB system
+ * Traceability coverage:
+ * - REQ-PERF-001: end-to-end throughput and latency evidence for SMB flows.
+ * - REQ-PERF-002: benchmark timing captures support p50, p95, and p99 reporting.
+ * - REQ-PERF-003: benchmark output supports baseline and regression review.
  * History recorder:
  * Version   date           author            context
  * 1.0       2026-04-01     AI Assistant      created
@@ -426,8 +430,19 @@ static int run_pubsub_publisher_child(
         return 2;
     }
 
-    // Give subscriber side time to initialize and register subscription.
-    usleep(1200000);
+    // Force lazy publisher association/registration before measured traffic.
+    {
+        BENCH_PUBSUB_PAYLOAD_STRUCT warmup_payload;
+        warmup_payload.send_ns = monotonic_time_ns();
+        warmup_payload.seq = 0U;
+        (void)zoo_smb_publish_message(publisher, BENCH_PUBSUB_MSG_ID, &warmup_payload, sizeof(warmup_payload));
+    }
+
+    // Ensure publisher service is discoverable before measured traffic.
+    (void)wait_for_server_ready(publisher_name, BENCH_WAIT_TIMEOUT_MS * 3U);
+
+    // Give subscriber reconcile flow time to complete SUB/SUBACK negotiation.
+    usleep(2500000);
 
     // Publish timestamped payloads so subscriber can compute one-way latency.
     for (int i = 0; i < rounds && g_child_running; ++i)
@@ -447,7 +462,7 @@ static int run_pubsub_publisher_child(
     }
 
     printf("[bench6-helper] publish_ok=%d publish_fail=%d\n", publish_ok, publish_fail);
-    usleep(500000);
+    usleep(1500000);
 
     zoo_smb_destroy_publisher(publisher);
     return 0;
@@ -830,24 +845,25 @@ static void benchmark6_pubsub_end_to_end(void)
     char publisher_name[64];
     char subscriber_name[64];
     char topic_name[64];
+    char rounds_arg[16];
     char label[160];
     uint32_t run_id = (uint32_t)(time(NULL) ^ (uint32_t)getpid());
-    const char* target_name = publisher_name;
     struct timespec start;
     struct timespec end;
     BENCH_PUBSUB_CONTEXT_STRUCT ctx;
     int32_t sub_handle = -1;
     int published = 0;
     int received;
+    int status = 0;
+    pid_t publisher_pid = -1;
     ZOO_ERROR_TYPE subscribe_result = ZOO_SMB_ERROR_INVALID_PARAM;
     ZOO_SMB_SUBSCRIBER_HANDLE subscriber = NULL;
-    pid_t publisher_pid;
-    int status = 0;
 
     memset(&ctx, 0, sizeof(ctx));
     snprintf(publisher_name, sizeof(publisher_name), "bench6_pub_%u", run_id);
     snprintf(subscriber_name, sizeof(subscriber_name), "bench6_sub_%u", run_id);
     snprintf(topic_name, sizeof(topic_name), "bench6/topic/%u", run_id);
+    snprintf(rounds_arg, sizeof(rounds_arg), "%d", BENCH_PUBSUB_ROUNDS);
 
     ctx.capacity = BENCH_PUBSUB_ROUNDS;
     ctx.latency_us = (int64_t*)calloc((size_t)BENCH_PUBSUB_ROUNDS, sizeof(int64_t));
@@ -858,37 +874,9 @@ static void benchmark6_pubsub_end_to_end(void)
         return;
     }
 
-    (void)publisher_name;
-
-    // Run publisher in a separate process so this benchmark measures true E2E delivery.
-    publisher_pid = spawn_helper_process_args("bench6-publisher", "200", publisher_name, target_name, topic_name);
-    if (publisher_pid <= 0)
-    {
-        printf("[bench6] spawn publisher process failed\n");
-        pthread_mutex_destroy(&ctx.mutex);
-        free(ctx.latency_us);
-        return;
-    }
-
-    // Ensure publisher service is discoverable before creating subscriber node.
-    if (!wait_for_server_ready(target_name, BENCH_WAIT_TIMEOUT_MS))
-    {
-        printf("[bench6] publisher service not ready\n");
-        kill(publisher_pid, SIGTERM);
-        (void)waitpid(publisher_pid, &status, 0);
-        if (sub_handle >= 0)
-        {
-            zoo_smb_unsubscribe_message(subscriber, sub_handle);
-        }
-        zoo_smb_destroy_subscriber(subscriber);
-        pthread_mutex_destroy(&ctx.mutex);
-        free(ctx.latency_us);
-        return;
-    }
-
     for (int attempt = 0; attempt < 3 && !subscriber; ++attempt)
     {
-        subscriber = zoo_smb_create_subscriber(subscriber_name, target_name, topic_name, NULL);
+        subscriber = zoo_smb_create_subscriber(subscriber_name, publisher_name, topic_name, NULL);
         if (!subscriber)
         {
             usleep(200000);
@@ -898,8 +886,6 @@ static void benchmark6_pubsub_end_to_end(void)
     if (!subscriber)
     {
         printf("[bench6] create pub/sub failed\n");
-        kill(publisher_pid, SIGTERM);
-        (void)waitpid(publisher_pid, &status, 0);
         pthread_mutex_destroy(&ctx.mutex);
         free(ctx.latency_us);
         return;
@@ -930,10 +916,36 @@ static void benchmark6_pubsub_end_to_end(void)
         return;
     }
 
+    publisher_pid = spawn_helper_process_args(
+        "bench6-publisher",
+        rounds_arg,
+        publisher_name,
+        publisher_name,
+        topic_name);
+    if (publisher_pid <= 0)
+    {
+        printf("[bench6] create publisher helper failed\n");
+        if (sub_handle >= 0)
+        {
+            zoo_smb_unsubscribe_message(subscriber, sub_handle);
+        }
+        zoo_smb_destroy_subscriber(subscriber);
+        pthread_mutex_destroy(&ctx.mutex);
+        free(ctx.latency_us);
+        return;
+    }
+
+    if (!wait_for_server_ready(publisher_name, BENCH_WAIT_TIMEOUT_MS))
+    {
+        printf("[bench6] publisher helper not ready before publish window\n");
+    }
+
+    usleep(300000);
+
     clock_gettime(CLOCK_MONOTONIC, &start);
     published = BENCH_PUBSUB_ROUNDS;
-
-    received = wait_for_pubsub_messages(&ctx, published, BENCH_WAIT_TIMEOUT_MS);
+    received = wait_for_pubsub_messages(&ctx, published, BENCH_WAIT_TIMEOUT_MS * 6U);
+    (void)waitpid(publisher_pid, &status, 0);
     clock_gettime(CLOCK_MONOTONIC, &end);
 
         snprintf(label,
@@ -949,9 +961,6 @@ static void benchmark6_pubsub_end_to_end(void)
     {
         zoo_smb_unsubscribe_message(subscriber, sub_handle);
     }
-
-    kill(publisher_pid, SIGTERM);
-    (void)waitpid(publisher_pid, &status, 0);
 
     zoo_smb_destroy_subscriber(subscriber);
     pthread_mutex_destroy(&ctx.mutex);

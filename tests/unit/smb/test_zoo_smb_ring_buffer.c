@@ -6,6 +6,10 @@
  * Component id: test_zoo_smb_ring_buffer_
  * File name: test_zoo_smb_ring_buffer.c
  * Description: Unity-based ring buffer tests (converted from GTest)
+ * Traceability coverage:
+ * - REQ-SAFE-001: deterministic ring-buffer read/write behavior.
+ * - REQ-SAFE-002: bounded-memory message buffering using fixed-capacity storage.
+ * - REQ-SAFE-003: requirement-linked unit evidence for deterministic buffering.
  * History recorder:
  * Version   date           author            context
  * 1.0       2025-08-05     AI                converted from GTest

@@ -8,6 +8,53 @@ This file contains issue-ready epics and milestones aligned with the grade roadm
 - Copy each issue title and checklist into a GitHub issue.
 - Link pull requests to these issues and track evidence artifacts.
 
+## Current Repository Status (2026-04-11)
+
+Current execution position:
+
+- Milestone M1 is effectively complete in repository artifacts and CI scaffolding.
+- Milestone M2 is complete in repository artifacts and CI gating for reliability, throughput governance, and stabilized bench6 latency enforcement.
+- Milestone M3 repository-level traceability and security evidence are now in place.
+
+Current practical milestone call:
+
+- Late M3, with early M4 scaffolding already in place.
+- M3 implementation slice is complete in repository artifacts and quality gates; remaining gaps are higher-grade follow-on work rather than Milestone M3 blockers.
+
+## Prepared Next Step (2026-04-09)
+
+Execution focus: Milestone M1, Issue 1 (Freeze wire protocol v1).
+
+Reason for prioritization:
+
+- Architecture assessment marks compatibility requirements as partial and calls out missing interop matrix/release enforcement.
+- Repository quality workflow already covers soak, benchmark, static analysis, dependency scan, fuzz, and scheduled runs.
+- Closing protocol-governance gaps now reduces churn for later safety/security milestones.
+
+Issue-ready implementation slice:
+
+1. Define and publish protocol compatibility contract
+	- Create `docs/PROTOCOL_COMPATIBILITY_POLICY.md`.
+	- Include wire major/minor semantics, accepted/blocked combinations, fail-fast mismatch behavior, and deprecation lifecycle.
+2. Add compatibility matrix artifact and CI check
+	- Add `tools/quality/protocol_compatibility_matrix.sh` to generate `artifacts/quality/protocol_compatibility_matrix.md`.
+	- Add a `protocol-compatibility` job in `.github/workflows/quality-gates.yml` and upload artifact.
+3. Add README compatibility/deprecation policy section
+	- Add a short section in `README.md` linking policy and matrix artifact location.
+4. Add release-note template statement
+	- Add `docs/templates/RELEASE_NOTES_TEMPLATE.md` with mandatory compatibility declaration fields:
+	  - API compatibility status
+	  - Wire compatibility status
+	  - Breaking changes
+	  - Deprecation notices
+
+Definition of done for this slice:
+
+- Policy document merged and referenced in README.
+- Compatibility matrix artifact generated in CI for pull requests.
+- Release notes template includes required compatibility statement fields.
+- `docs/ARCHITECTURE_REQUIREMENTS_ASSESSMENT.md` updated to reflect reduced gap for REQ-COMP-002 and REQ-COMP-003.
+
 ## Milestone M1: Core Hardening
 
 ### Issue 1: Freeze wire protocol v1
@@ -16,10 +63,10 @@ Goal: publish a stable protocol contract and compatibility policy.
 
 Checklist:
 
-- [ ] Define protocol version header and backward compatibility rules
-- [ ] Add protocol compatibility test matrix
-- [ ] Add semantic versioning and deprecation policy section to README
-- [ ] Publish compatibility statement in release notes template
+- [x] Define protocol version header and backward compatibility rules
+- [x] Add protocol compatibility test matrix
+- [x] Add semantic versioning and deprecation policy section to README
+- [x] Publish compatibility statement in release notes template
 
 Exit evidence:
 
@@ -32,10 +79,10 @@ Goal: provide bounded memory mode for runtime hot path.
 
 Checklist:
 
-- [ ] Add runtime config option for bounded memory behavior
-- [ ] Remove unbounded allocations from critical message path
-- [ ] Add memory watermark metrics
-- [ ] Add long-run memory stability test
+- [x] Add runtime config option for bounded memory behavior
+- [x] Remove unbounded allocations from critical message path
+- [x] Add memory watermark metrics
+- [x] Add long-run memory stability test
 
 Exit evidence:
 
@@ -50,10 +97,10 @@ Goal: detect long-run stability regressions before release.
 
 Checklist:
 
-- [ ] Add soak test job in CI
-- [ ] Add repeated test execution until-fail gate
-- [ ] Archive soak logs and summary artifacts
-- [ ] Add weekly scheduled reliability run
+- [x] Add soak test job in CI
+- [x] Add repeated test execution until-fail gate
+- [x] Archive soak logs and summary artifacts
+- [x] Add weekly scheduled reliability run
 
 Exit evidence:
 
@@ -66,10 +113,15 @@ Goal: publish reproducible performance baselines.
 
 Checklist:
 
-- [ ] Add benchmark script for throughput and latency sampling
-- [ ] Persist benchmark history as CI artifacts
-- [ ] Define regression thresholds per message size profile
-- [ ] Publish benchmark methodology doc
+- [x] Add benchmark script for throughput and latency sampling
+- [x] Persist benchmark history as CI artifacts
+- [x] Define regression thresholds per message size profile
+- [x] Publish benchmark methodology doc
+
+Current status note:
+
+- CI benchmark workflow, rebuildable benchmark target, throughput comparison script, methodology document, and calibrated per-payload throughput baseline files now exist.
+- Latency percentile and jitter enforcement are now active after bench6 pub/sub negotiation stabilization and repeated successful captures.
 
 Exit evidence:
 
@@ -84,10 +136,16 @@ Goal: trace requirements to implementation and tests.
 
 Checklist:
 
-- [ ] Create requirements catalog with unique IDs
-- [ ] Tag tests with requirement IDs
-- [ ] Generate requirements-to-test matrix artifact in CI
-- [ ] Add review gate for traceability completeness
+- [x] Create requirements catalog with unique IDs
+- [x] Tag tests with requirement IDs
+- [x] Generate requirements-to-test matrix artifact in CI
+- [x] Add review gate for traceability completeness
+
+Current status note:
+
+- Requirements catalog, traceability matrix generation, and audit-sample gate are active in CI.
+- SMB integration tests, SMB unit tests, and benchmark/performance verification sources now include requirement IDs.
+- `tools/quality/traceability_gate.sh` enforces linked evidence and required test coverage for critical verification requirements.
 
 Exit evidence:
 
@@ -100,10 +158,16 @@ Goal: operationalize security case for higher grades.
 
 Checklist:
 
-- [ ] Maintain threat model for protocol and control plane
-- [ ] Add continuous static analysis and dependency scan jobs
-- [ ] Add protocol fuzz entry points and coverage reports
-- [ ] Track vulnerability remediation SLA
+- [x] Maintain threat model for protocol and control plane
+- [x] Add continuous static analysis and dependency scan jobs
+- [x] Add protocol fuzz entry points and coverage reports
+- [x] Track vulnerability remediation SLA
+
+Current status note:
+
+- Static analysis, dependency scan, fuzz, and vulnerability-SLA workflow artifacts are active in repository CI.
+- `docs/THREAT_MODEL.md` provides the maintained threat-model baseline for protocol, control plane, and release surfaces.
+- `docs/VULNERABILITY_REMEDIATION_SLA.md` and `docs/VULNERABILITY_REMEDIATION_LOG.csv` provide tracked remediation evidence, and CI generates an SLA summary artifact.
 
 Exit evidence:
 

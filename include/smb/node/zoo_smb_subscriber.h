@@ -4,8 +4,8 @@
  * Product: ZOO
  * Module: Soft Message Bus
  * Component id: ZOO_SMB_NODE
- * File name: zoo_smb_subsciber.h
- * Description: subsciber node header file
+ * File name: zoo_smb_subscriber.h
+ * Description: Subscriber node interface for ZOO Soft Message Bus (SMB)
  * History recorder:
  * Version   date           author            context
  * 1.0       2025-05-23     weiwang.sun         created
@@ -56,17 +56,17 @@ extern "C"
     void zoo_smb_destroy_subscriber(IN ZOO_SMB_SUBSCRIBER_HANDLE subscriber);
 
     /**
-     * @brief Subscribe to a message topic.
+     * @brief Registers or reactivates subscription intent for a message id.
      *
-     * This function allows a subscriber node to subscribe to a specific message topic.
-     * When a message is published on the specified topic, the provided event handler will be called.
+     * The API accepts intent immediately and triggers asynchronous SUB/SUBACK
+     * reconciliation in background worker flow.
      *
-     * @param subscriber A handle to the subscriber node that wants to subscribe to the topic.
-     * @param topic A pointer to a null-terminated string representing the topic to subscribe to.
-     * @param handler A pointer to the event handler function that will be called when a message is received.
-     * @param user_data A pointer to user-defined data that will be passed to the event handler.
-     * @param handle A pointer to an unsigned 32-bit integer where the subscription handle will be stored.
-     *               This handle can be used later to unsubscribe from the topic.
+     * @param subscriber Subscriber handle.
+     * @param msg_id Message identifier to receive.
+     * @param message_handler Callback invoked on matching PUB messages.
+     * @param user_data User context passed to message_handler.
+     * @param handle Output stable session handle used by unsubscribe.
+     * @return ZOO_SMB_OK when intent is accepted; otherwise an error code.
      */
     ZOO_ERROR_TYPE zoo_smb_subscribe_message(
         IN ZOO_SMB_SUBSCRIBER_HANDLE subscriber,
@@ -76,13 +76,10 @@ extern "C"
         OUT int32_t* handle);
 
     /**
-     * @brief Unsubscribe from a message topic.
+     * @brief Cancels and removes one subscription session.
      *
-     * This function allows a subscriber node to unsubscribe from a previously subscribed topic.
-     * The subscription is identified by the provided handle.
-     *
-     * @param node A handle to the subscriber node that wants to unsubscribe.
-     * @param handle A pointer to an integer representing the subscription handle.
+     * @param subscriber Subscriber handle.
+     * @param handle Session handle returned by zoo_smb_subscribe_message().
      */
     void zoo_smb_unsubscribe_message(IN ZOO_SMB_SUBSCRIBER_HANDLE subscriber, IN int32_t handle);
 

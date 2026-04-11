@@ -6,6 +6,8 @@
  * Component id: test_error_
  * File name: test_error.c
  * Description: Unity-based error handling tests (converted from GTest)
+ * Traceability coverage:
+ * - REQ-SAFE-003: requirement-linked unit evidence for SMB error reporting primitives.
  * History recorder:
  * Version   date           author            context
  * 1.0       2025-08-05     AI                converted from GTest

@@ -6,6 +6,10 @@
  * Component id: ZOO_DISPATCHER
  * File name: test_zoo_dispatcher_performance.c
  * Description: Specialized performance test suite for ZOO dispatcher module
+ * Traceability coverage:
+ * - REQ-PERF-001: dispatcher throughput evidence for high-volume scheduling path.
+ * - REQ-PERF-002: dispatcher latency and jitter measurement support.
+ * - REQ-PERF-003: regression threshold candidate for dispatcher performance path.
  * History recorder:
  * Version   date           author            context
  * 1.0       2025-08-04     AI Assistant      created

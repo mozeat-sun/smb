@@ -113,7 +113,7 @@ extern "C"
      * @enum ZOO_SMB_MSG_ST_ENUM
      * @brief Enumerates the possible states of an SMB message in the Zoo system.
      *
-     * This enumeration defines the various states that an SMB (Server Message Block) message
+     * This enumeration defines the various states that an SMB (Soft Message Bus) message
      * can be in during its lifecycle within the Zoo system.
      *
      * @var ZOO_SMB_MSG_ST_CREATED

@@ -274,7 +274,7 @@ static void clean_up_resource(IN ZOO_SMB_QOS_CTX_HANDLE qos_ctx)
  * @brief Creates and initializes a new QoS (Quality of Service) context handle for SMB operations.
  *
  * This function allocates and sets up a new ZOO_SMB_QOS_CTX_HANDLE, which can be used to manage
- * and track QoS parameters for SMB (Server Message Block) services.
+ * and track QoS parameters for SMB (Soft Message Bus) services.
  *
  * @return ZOO_SMB_QOS_CTX_HANDLE
  *         A handle to the newly created QoS context, or NULL if creation fails.
@@ -400,7 +400,7 @@ ZOO_SMB_QOS_STATE_STRUCT* qos_ctx_new_state(IN uint64_t request_id, IN ZOO_SMB_M
  * @brief Sets the status of the specified SMB QoS handle.
  *
  * This function updates the status of the given Quality of Service (QoS) handle
- * for SMB (Server Message Block) operations to the provided status value.
+ * for SMB (Soft Message Bus) operations to the provided status value.
  *
  * @param qos    The handle to the SMB QoS instance whose status is to be set.
  * @param status The new status to assign to the QoS handle. This should be a value

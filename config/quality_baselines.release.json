@@ -1,14 +1,20 @@
 {
   "schema_version": 1,
   "owner": "zoo-release-board",
-  "updated_at_utc": "2026-04-08T00:00:00Z",
+  "updated_at_utc": "2026-04-11T00:00:00Z",
   "notes": "Release baseline profile for controlled reference environment.",
   "benchmark_profiles": {
     "release": {
-      "p99_latency_ms_max": null,
-      "throughput_ops_min": 0.01,
-      "jitter_ms_max": null,
-      "notes": "Initial guardrail before release calibration; replace with measured release-host thresholds."
+      "p99_latency_ms_max": 3150,
+      "throughput_ops_min": 220,
+      "jitter_ms_max": 3150,
+      "message_size_throughput_ops_min": {
+        "64": 520,
+        "256": 45,
+        "1024": 11,
+        "4096": 2
+      },
+      "notes": "Release-host throughput guardrails derived from the approved isolated benchmark capture path, with bench6 latency thresholds enabled after pub/sub negotiation stabilization."
     }
   }
 }

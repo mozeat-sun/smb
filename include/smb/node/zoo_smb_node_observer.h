@@ -31,13 +31,12 @@ extern "C"
     /**
      * @brief Callback function type for handling SMB events.
      *
-     * This function pointer type defines the signature for event handler callbacks
-     * that process SMB (Server Message Block) messages.
+    * This function pointer type defines the signature for event handler callbacks
+    * that process SMB (Soft Message Bus) messages.
      *
      * @param context      Pointer to user-defined context data passed to the handler.
-     * @param header       Pointer to the SMB message header structure.
-     * @param payload      Pointer to the message payload data.
-     * @param payload_len  Length of the payload data in bytes.
+    * @param msg          Pointer to the encoded message object.
+    * @param msg_len      Length of message content in bytes.
      */
     typedef void (*ZOO_NODE_MSG_HANDLER)(IN void* context, IN const void* msg, IN size_t msg_len);
 
@@ -56,8 +55,8 @@ extern "C"
     /**
      * @brief Structure representing an observer in the ZOO SMB module.
      *
-     * This struct is used to define the properties and behaviors of an observer
-     * within the ZOO SMB (Server Message Block) core system. Observers are typically
+    * This struct is used to define the properties and behaviors of an observer
+    * within the ZOO SMB (Soft Message Bus) core system. Observers are typically
      * used to monitor or react to specific events or changes within the SMB subsystem.
      *
     * Fields store observer identity, message matching keys, callback target, and user context.

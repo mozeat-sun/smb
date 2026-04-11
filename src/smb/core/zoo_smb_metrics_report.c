@@ -12,6 +12,8 @@
  ******************************************************************************/
 
 #include "zoo_smb_metrics_report.h"
+#include "zoo_memory_pool.h"
+#include "zoo_smb_config.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -40,6 +42,28 @@ ZOO_ERROR_TYPE zoo_smb_collect_metrics_snapshot(
         (void)zoo_smb_routing_engine_get_metrics(routing_engine,
                                                  &out_snapshot->routing);
     }
+
+       {
+              ZOO_MEMORY_USAGE_T usage;
+              const ZOO_SMB_CONFIG_STRUCT* config = zoo_smb_config_peek();
+
+              memset(&usage, 0, sizeof(usage));
+              zoo_memory_pool_get_usage(&usage);
+
+              out_snapshot->memory.pool_size_bytes = usage.pool_size;
+              out_snapshot->memory.used_size_bytes = usage.used_size;
+              out_snapshot->memory.free_size_bytes = usage.free_size;
+              out_snapshot->memory.max_free_pages = usage.max_free_pages;
+              out_snapshot->memory.used_pct = (uint32_t)usage.used_pct;
+              out_snapshot->memory.high_watermark_pct = config
+                     ? config->sys.memory_high_watermark_pct
+                     : ZOO_SMB_MEMORY_HIGH_WATERMARK_PCT_DEFAULT;
+              out_snapshot->memory.low_watermark_pct = config
+                     ? config->sys.memory_low_watermark_pct
+                     : ZOO_SMB_MEMORY_LOW_WATERMARK_PCT_DEFAULT;
+              out_snapshot->memory.high_watermark_active =
+                     out_snapshot->memory.used_pct >= out_snapshot->memory.high_watermark_pct;
+       }
 
     return ZOO_SMB_OK;
 }
@@ -99,6 +123,17 @@ void zoo_smb_print_metrics_report(
            snap.routing.ingress_low_watermark);
     printf("    backpressure_active   : %s\n",
            snap.routing.ingress_backpressure_active ? "YES" : "no");
+
+    printf("  [MEMORY POOL]\n");
+    printf("    pool_size_bytes       : %zu\n", snap.memory.pool_size_bytes);
+    printf("    used_size_bytes       : %zu\n", snap.memory.used_size_bytes);
+    printf("    free_size_bytes       : %zu\n", snap.memory.free_size_bytes);
+    printf("    used_pct              : %u  (high=%u low=%u)\n",
+           snap.memory.used_pct,
+           snap.memory.high_watermark_pct,
+           snap.memory.low_watermark_pct);
+    printf("    high_watermark_active : %s\n",
+           snap.memory.high_watermark_active ? "YES" : "no");
 
     printf("=================================================\n");
     fflush(stdout);

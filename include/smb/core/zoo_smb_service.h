@@ -232,7 +232,7 @@ extern "C"
     /**
      * @brief Sets the online status for the SMB service information.
      *
-     * This function updates the online status of the SMB (Server Message Block) service,
+     * This function updates the online status of the SMB (Soft Message Bus) service,
      * indicating whether the service is currently online or offline.
      *
     * @param service Service handle to update.
@@ -265,7 +265,7 @@ extern "C"
     /**
      * @brief Sets the type for the SMB service.
      *
-     * This function configures the type of the SMB (Server Message Block) service.
+     * This function configures the type of the SMB (Soft Message Bus) service.
      *
      * @param type The type to set for the SMB service.
      */

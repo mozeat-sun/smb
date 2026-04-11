@@ -6,6 +6,9 @@
  * Component id: UNIT_TEST
  * File name: test_zoo_dispatcher_smb.c
  * Description: Unit tests for generic dispatcher usage in SMB context
+ * Traceability coverage:
+ * - REQ-SAFE-001: deterministic dispatch and handler execution on safety-relevant paths.
+ * - REQ-SAFE-003: requirement-linked unit evidence for dispatcher behavior used by SMB flows.
  ******************************************************************************/
 
 #include "unity.h"

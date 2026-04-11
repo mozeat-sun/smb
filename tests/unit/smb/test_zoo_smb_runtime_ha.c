@@ -6,6 +6,11 @@
  * Component id: UNIT_TEST_HA_RUNTIME
  * File name: test_zoo_smb_runtime_ha.c
  * Description: Unit tests for HA runtime, peer monitoring, and failover
+ * Traceability coverage:
+ * - REQ-REL-001: runtime startup and operational entry validation.
+ * - REQ-REL-002: peer-monitoring and failover behavior after restart/fault scenarios.
+ * - REQ-REL-004: ready/live/degraded runtime state transition evidence.
+ * - REQ-SAFE-003: requirement-linked unit evidence for HA runtime logic.
  * History recorder:
  * Version   date           author            context
  * 1.0       2026-04-01     AI Assistant      created

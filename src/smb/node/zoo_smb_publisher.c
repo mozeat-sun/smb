@@ -3,7 +3,7 @@
  * All rights reserved.
  * Product: ZOO
  * Module: Soft Message Bus
- * Component id: zoo_smb_
+ * Component id: ZOO_SMB_PUBLISHER
  * File name: zoo_smb_publisher.c
  * Description: Implementation of publisher node for ZOO Soft Message Bus (SMB)
  * History recorder:
@@ -45,6 +45,9 @@ typedef struct ZOO_SMB_PUBLISHER_STRUCT
     ZOO_LIST_HANDLE subscriber_index_buckets[SUBSCRIBER_INDEX_BUCKET_COUNT];
 } ZOO_SMB_PUBLISHER_STRUCT;
 
+/**
+ * @brief Computes hash bucket for subscriber name index.
+ */
 static ZOO_USIZE subscriber_index_hash(const char* name)
 {
     if (!name)
@@ -62,6 +65,9 @@ static ZOO_USIZE subscriber_index_hash(const char* name)
     return hash % SUBSCRIBER_INDEX_BUCKET_COUNT;
 }
 
+/**
+ * @brief Predicate used to compare an index entry to a subscriber name.
+ */
 static ZOO_BOOL compare_subscriber_index_entry_by_name(const void* data, const void* target)
 {
     const ZOO_SMB_SUBSCRIBER_INDEX_ENTRY_STRUCT* entry = (const ZOO_SMB_SUBSCRIBER_INDEX_ENTRY_STRUCT*)data;
@@ -75,6 +81,9 @@ static ZOO_BOOL compare_subscriber_index_entry_by_name(const void* data, const v
     return strcmp(entry->subscriber_name, name) == 0;
 }
 
+/**
+ * @brief Finds cached subscriber QoS context by subscriber name.
+ */
 static ZOO_SMB_SUBSCRIBER_QOS_CTX_STRUCT* subscriber_index_find(
     ZOO_SMB_PUBLISHER_STRUCT* publisher,
     const char* name)
@@ -98,6 +107,9 @@ static ZOO_SMB_SUBSCRIBER_QOS_CTX_STRUCT* subscriber_index_find(
     return entry ? entry->subscriber_ctx : NULL;
 }
 
+/**
+ * @brief Inserts or updates subscriber name to context mapping.
+ */
 static ZOO_ERROR_TYPE subscriber_index_upsert(
     ZOO_SMB_PUBLISHER_STRUCT* publisher,
     const char* name,
@@ -144,6 +156,9 @@ static ZOO_ERROR_TYPE subscriber_index_upsert(
     return ret;
 }
 
+/**
+ * @brief Removes one subscriber name mapping from the index.
+ */
 static void subscriber_index_remove(
     ZOO_SMB_PUBLISHER_STRUCT* publisher,
     const char* name)
@@ -170,6 +185,9 @@ static void subscriber_index_remove(
     }
 }
 
+/**
+ * @brief Destroys all index buckets and index entries.
+ */
 static void subscriber_index_destroy(ZOO_SMB_PUBLISHER_STRUCT* publisher)
 {
     if (!publisher)
@@ -485,9 +503,12 @@ static void publisher_on_handle_PUBACK_msg_cb(IN void* context, IN const void* m
  *
  * This function creates a new publisher node for the Soft Message Bus.
  *
- * @param name  Name of the publisher node.
+ * @param name Name of the publisher node.
+ * @param target Target service or receiver identity.
  * @param topic Name of the topic to publish.
- * @return ZOO_SMB_NODE_HANDLE Handle to the newly created publisher node, or NULL on error.
+ * @param transport_type Transport backend selection.
+ * @param policy Optional QoS policy; default policy is used when NULL.
+ * @return ZOO_SMB_PUBLISHER_HANDLE Handle to the newly created publisher, or NULL on error.
  */
 ZOO_SMB_PUBLISHER_HANDLE zoo_smb_create_publisher(IN const char* name,
                                                   IN const char* target,
@@ -603,7 +624,7 @@ ZOO_SMB_PUBLISHER_HANDLE zoo_smb_create_publisher(IN const char* name,
  * This function cleans up and deallocates all resources associated with the
  * specified SMB publisher node. The node handle becomes invalid after this call.
  *
- * @param[in] node Handle to the SMB publisher node to destroy
+ * @param[in] publisher Handle to the SMB publisher node to destroy.
  */
 void zoo_smb_destroy_publisher(IN ZOO_SMB_PUBLISHER_HANDLE publisher)
 {
@@ -621,15 +642,16 @@ void zoo_smb_destroy_publisher(IN ZOO_SMB_PUBLISHER_HANDLE publisher)
 }
 
 /**
- * @brief Publish a message to a topic.
+ * @brief Publishes one PUB message from publisher context.
  *
- * This function publishes a message to the specified topic using the given publisher node.
+ * When reliability is enabled and subscriber state exists, QoS state tracking
+ * is initialized before send and message ownership may be retained until ACK.
  *
- * @param node  Handle to the publisher node.
- * @param topic Name of the message topic.
- * @param msg   Pointer to the message data.
- * @param size  Size of the message in bytes.
- * @return ZOO_ERROR_TYPE Error code indicating the result of the operation.
+ * @param publisher Handle to the publisher node.
+ * @param msg_id Application message identifier.
+ * @param payload Pointer to message data.
+ * @param payload_size Size of message data in bytes.
+ * @return ZOO_SMB_OK on send success; otherwise a module error code.
  */
 ZOO_ERROR_TYPE zoo_smb_publish_message(
     IN ZOO_SMB_PUBLISHER_HANDLE publisher,

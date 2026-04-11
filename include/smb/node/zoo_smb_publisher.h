@@ -26,11 +26,14 @@ extern "C"
     typedef struct ZOO_SMB_PUBLISHER_STRUCT* ZOO_SMB_PUBLISHER_HANDLE;
 
     /**
-     * @brief Create a new publisher node.
+     * @brief Creates a publisher node.
      *
-     * @param name Name of the publisher node.
-     * @param topic Name of the topic to publish.
-     * @return ZOO_SMB_NODE_HANDLE Handle to the newly created publisher node, or NULL on error.
+     * @param name Publisher node name.
+     * @param target Target service or receiver identity.
+     * @param topic Topic namespace for publication.
+     * @param transport_type Transport backend selection.
+     * @param profile Optional QoS profile; default profile is used when NULL in implementation.
+     * @return Publisher handle on success; NULL on allocation or initialization failure.
      */
     ZOO_SMB_PUBLISHER_HANDLE zoo_smb_create_publisher(IN const char* name,
                                                       IN const char* target,
@@ -43,20 +46,21 @@ extern "C"
      *
      * Destroys and cleans up resources associated with a ZOO SMB publisher node.
      *
-     * @param[in] node The handle to the ZOO SMB node to be destroyed
+    * @param[in] publisher Publisher handle to destroy.
      *
      * @note After calling this function, the node handle becomes invalid and should not be used.
      */
     void zoo_smb_destroy_publisher(IN ZOO_SMB_PUBLISHER_HANDLE publisher);
 
     /**
-     * @brief Publish a message to a topic.
+     * @brief Publishes one message from publisher context.
      *
-     * @param node Handle to the publisher node.
-     * @param topic Name of the message topic.
-     * @param payload Pointer to the message data.
-     * @param payload_size Size of the message in bytes.
-     * @return ZOO_ERROR_TYPE Error code indicating the result of the operation.
+     * @param publisher Publisher handle.
+     * @param msg_id Application message identifier.
+     * @param payload Message payload pointer.
+     * @param payload_size Payload size in bytes.
+     * @return ZOO_SMB_OK on send success; module error code on validation,
+     *         allocation, QoS, or transport failure.
      */
     ZOO_ERROR_TYPE zoo_smb_publish_message(
         IN ZOO_SMB_PUBLISHER_HANDLE publisher,

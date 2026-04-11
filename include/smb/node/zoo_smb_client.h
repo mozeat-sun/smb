@@ -32,7 +32,8 @@ extern "C"
      * @param name   The name to assign to the SMB client node.
      * @param target The target address or identifier for the SMB client connection.
      * @param topic  The topic string to associate with the SMB client node.
-     * @return ZOO_SMB_NODE  The created SMB client node.
+    * @param policy Optional QoS policy. Implementation uses default policy when NULL.
+    * @return ZOO_SMB_CLIENT_HANDLE The created SMB client handle, or NULL on failure.
      */
     ZOO_SMB_CLIENT_HANDLE zoo_smb_create_client(
         IN const char* name,
@@ -63,17 +64,18 @@ extern "C"
     void zoo_smb_destroy_client(IN ZOO_SMB_CLIENT_HANDLE client);
 
     /**
-     * @brief Sends a request to a specified SMB node with the given topic and payload.
+     * @brief Sends one request message from client context.
      *
-     * This function sends a request message to the specified SMB node, using the provided topic and payload data.
-     * The function assigns or updates the request ID and waits for a response up to the specified timeout.
+     * The function validates service availability, allocates/requests an id when
+     * needed, tracks QoS state, and dispatches a REQ message.
      *
-     * @param node         The target SMB node to which the request will be sent.
-     * @param topic        The topic string identifying the type or category of the request.
-     * @param payload      Pointer to the payload data to be sent with the request.
-     * @param payload_size Size of the payload data in bytes.
-     * @param request_id   Pointer to an int64_t variable. On input, may specify a request ID; on output, receives the assigned request ID.
-     * @return             ZOO_ERROR_TYPE indicating the result of the operation.
+     * @param client Client handle.
+     * @param msg_id Application message identifier.
+     * @param payload Request payload pointer.
+     * @param payload_size Request payload size in bytes.
+     * @param request_id Input/output request id. If *request_id is 0, a new id is generated.
+     * @return ZOO_SMB_OK on send success; otherwise error (for example invalid
+     *         parameter, service unavailable, allocation failure, or send failure).
      */
     ZOO_ERROR_TYPE zoo_smb_client_send_request(ZOO_SMB_CLIENT_HANDLE client,
                                                   IN uint32_t msg_id,
@@ -82,18 +84,19 @@ extern "C"
                                                   INOUT int64_t* request_id);
 
     /**
-     * @brief Retrieves the reply message for a previously sent SMB request.
+     * @brief Waits for a reply that matches message id and request id.
      *
-     * This function waits for a reply to a request identified by `request_id` on the specified `node`.
-     * The reply message and its size are returned via output parameters. The function will wait up to
-     * `timeout_ms` milliseconds for the reply before timing out.
+     * This call may block up to timeout_ms while waiting for buffered REPL data.
+     * On success, ownership of payload buffer is transferred to caller.
      *
-     * @param node           The SMB node handle from which to retrieve the reply.
-     * @param request_id     The unique identifier of the request whose reply is to be fetched.
-     * @param payload        [out] Pointer to a buffer that will receive the reply message.
-     * @param payload_size   [out] Pointer to a variable that will receive the size of the reply message.
-     * @param timeout_ms     The maximum time to wait for the reply, in milliseconds.
-     * @return ZOO_ERROR_TYPE  Error code indicating the result of the operation.
+     * @param client Client handle.
+     * @param msg_id Application message identifier expected in reply.
+     * @param request_id Request identifier to match.
+     * @param payload Output pointer receiving allocated reply payload.
+     * @param payload_size Output payload size in bytes.
+     * @param timeout_ms Maximum wait duration in milliseconds.
+     * @return ZOO_SMB_OK on success; timeout/not-found/invalid-param or other
+     *         module error code on failure.
      */
     ZOO_ERROR_TYPE zoo_smb_client_recv_reply(ZOO_SMB_CLIENT_HANDLE client,
                                                  IN uint32_t msg_id,

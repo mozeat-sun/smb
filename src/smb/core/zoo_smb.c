@@ -92,7 +92,7 @@ static void destroy_smb(ZOO_SMB_STRUCT* smb, IN ZOO_BOOL force);
  * @def ZOO_SMB_STRUCT_INITIALIZER
  * @brief Macro to provide a default initializer for SMB-related structures.
  *
- * This macro is intended to be used for initializing structures related to SMB (Server Message Block)
+ * This macro is intended to be used for initializing structures related to SMB (Soft Message Bus)
  * functionality within the zoo_smb module. The specific initialization values or behavior should be
  * defined where the macro is implemented.
  */
@@ -149,7 +149,7 @@ ZOO_SMB_DESTRUCTOR void terminate_smb()
 /**
  * @brief Initializes a ZOO SMB handle.
  *
- * This function sets up and returns a handle for interacting with the SMB (Server Message Block) protocol
+ * This function sets up and returns a handle for interacting with the SMB (Soft Message Bus) protocol
  * in the ZOO system. It prepares the necessary resources and configurations for SMB operations.
  *
  * @return ZOO_SMB_HANDLE A handle to the initialized SMB instance.
@@ -159,6 +159,36 @@ static ZOO_SMB_HANDLE smb_sys_init(const ZOO_SMB_CONFIG_STRUCT* cfg)
 {
     ZOO_LOG_TRACE("Initializing SMB instance...");
     ZOO_SMB_STRUCT* smb = NULL;
+
+    if (cfg && cfg->sys.enable_deterministic_memory_profile)
+    {
+        if (cfg->sys.max_transport_buffer_size == 0 ||
+            cfg->sys.max_transport_buffer_size > cfg->sys.mem_pool_size)
+        {
+            ZOO_LOG_ERROR("Deterministic memory profile invalid: transport buffer=%u pool=%u",
+                          cfg->sys.max_transport_buffer_size,
+                          cfg->sys.mem_pool_size);
+            return NULL;
+        }
+
+        if (cfg->sys.max_thread_queue_size > 0 &&
+            cfg->sys.send_high_watermark > cfg->sys.max_thread_queue_size)
+        {
+            ZOO_LOG_ERROR("Deterministic memory profile invalid: send high watermark=%u exceeds thread queue=%u",
+                          cfg->sys.send_high_watermark,
+                          cfg->sys.max_thread_queue_size);
+            return NULL;
+        }
+
+        if (cfg->sys.max_queue_size > 0 &&
+            cfg->sys.ingress_high_watermark > cfg->sys.max_queue_size)
+        {
+            ZOO_LOG_ERROR("Deterministic memory profile invalid: ingress high watermark=%u exceeds queue=%u",
+                          cfg->sys.ingress_high_watermark,
+                          cfg->sys.max_queue_size);
+            return NULL;
+        }
+    }
 #if defined(ZOO_SMB_AUTO_INIT)
     if (ZOO_SMB_OK != zoo_create_memory_pool(cfg->sys.mem_pool_size))
     {
@@ -209,7 +239,7 @@ static ZOO_SMB_HANDLE smb_sys_init(const ZOO_SMB_CONFIG_STRUCT* cfg)
 }
 
 /**
- * @brief Starts the SMB (Server Message Block) service for the zoo application.
+ * @brief Starts the SMB (Soft Message Bus) service for the zoo application.
  *
  * This function initializes and starts the SMB service, allowing network file sharing
  * capabilities within the zoo application context. It sets up necessary resources and
@@ -236,7 +266,7 @@ static void start_smb(ZOO_SMB_STRUCT* smb)
 }
 
 /**
- * @brief Stops the specified SMB (Server Message Block) handle.
+ * @brief Stops the specified SMB (Soft Message Bus) handle.
  *
  * This function is responsible for stopping or shutting down the SMB handle
  * represented by the given ZOO_SMB_HANDLE. It should perform any necessary
@@ -313,8 +343,8 @@ static ZOO_ERROR_TYPE make_node_associate_with_bus(ZOO_SMB_STRUCT* smb, const ZO
         service = zoo_smb_service_manager_get_service_wait(_SERVICE_MANAGER_, node->target, timeout_ms);
         if (!service)
         {
-            ZOO_LOG_ERROR("Service '%s' not found within timeout:%d", node->target, timeout_ms);
-            return ZOO_SMB_ERROR_INVALID_PARAM;
+            ZOO_LOG_WARN("Service '%s' not found within timeout:%d", node->target, timeout_ms);
+            return ZOO_SMB_ERROR_SERVICE_NOT_FOUND;
         }
     }
 
@@ -377,11 +407,6 @@ ZOO_ERROR_TYPE zoo_smb_register_node(IN ZOO_SMB_NODE_HANDLE node)
         return ZOO_SMB_OK;
     }
 
-    if (!node->active)
-    {
-        make_node_associate_with_bus(g_smb_instance, node);  // don't need to check the return value here,
-    }
-
     zoo_list_push_back(_NODE_LIST_, node);
     ZOO_LOG_INFO("Node registered successfully: %s, topic: %s, transport type: %d",
                      node->target,
@@ -422,6 +447,39 @@ ZOO_BOOL zoo_smb_service_is_online(const char* service_name)
     return service != NULL && service->is_online;
 }
 
+ZOO_BOOL zoo_smb_service_is_available(const char* service_name)
+{
+    if (!g_smb_instance || !service_name)
+    {
+        return ZOO_FALSE;
+    }
+
+    ZOO_SMB_SERVICE_HANDLE service =
+        zoo_smb_service_manager_get_service(_SERVICE_MANAGER_, service_name, ZOO_SMB_SERVICE_TYPE_REGISTRATION);
+    return service != NULL && service->is_online;
+}
+
+ZOO_ERROR_TYPE zoo_smb_add_service_observer(IN ZOO_SMB_SERVICE_OBSERVER_HANDLE observer)
+{
+    if (!g_smb_instance || !observer)
+    {
+        return ZOO_SMB_ERROR_INVALID_PARAM;
+    }
+
+    zoo_smb_service_manager_register_observer(_SERVICE_MANAGER_, observer);
+    return ZOO_SMB_OK;
+}
+
+void zoo_smb_remove_service_observer(IN ZOO_SMB_SERVICE_OBSERVER_HANDLE observer)
+{
+    if (!g_smb_instance || !observer)
+    {
+        return;
+    }
+
+    zoo_smb_service_manager_unregister_observer(_SERVICE_MANAGER_, observer);
+}
+
 /**
  * @brief Routes a message to the specified SMB node and consumer.
  *
@@ -451,10 +509,18 @@ ZOO_ERROR_TYPE zoo_smb_send_message(IN const ZOO_SMB_NODE_HANDLE node,
 
     if (!node->active)
     {
-        if (make_node_associate_with_bus(g_smb_instance, node) != ZOO_SMB_OK)
+        ZOO_ERROR_TYPE associate_result = make_node_associate_with_bus(g_smb_instance, node);
+        if (associate_result != ZOO_SMB_OK)
         {
-            ZOO_LOG_ERROR("Failed to associate node with SMB bus: %p", node);
-            return ZOO_SMB_ERROR_INVALID_PARAM;
+            if (associate_result == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_SERVICE_NOT_FOUND)
+            {
+                ZOO_LOG_WARN("Target service not available yet for node: %s", node->name);
+            }
+            else
+            {
+                ZOO_LOG_ERROR("Failed to associate node with SMB bus: %p", node);
+            }
+            return associate_result;
         }
     }
 

@@ -467,14 +467,14 @@ void zoo_smb_destroy_service_manager(ZOO_SMB_SERVICE_MANAGER_HANDLE manager)
 }
 
 /**
- * @brief Creates or initializes a new SMB service within the Zoo SMB Service Manager.
+ * @brief Creates or reuses a service entry associated with node role.
  *
- * This function is responsible for setting up a new service instance, configuring
- * necessary parameters, and registering it with the service manager. The exact
- * behavior and required parameters depend on the implementation details.
+ * Server/publisher nodes map to broadcast services, client/subscriber nodes map
+ * to registration services. Existing matching service is reused when present.
  *
- * @param ... Parameters required to create the SMB service (to be specified).
- * @return void
+ * @param manager Service manager handle.
+ * @param node Node handle used to derive service type/identity.
+ * @return Service handle on success, or NULL on unsupported node type or creation failure.
  */
 ZOO_SMB_SERVICE_HANDLE zoo_smb_service_manager_make_service(
     ZOO_SMB_SERVICE_MANAGER_HANDLE manager,
@@ -769,4 +769,17 @@ void zoo_smb_service_manager_unregister_observer(
 
     zoo_list_remove(manager->observer_list, observer);
     ZOO_LOG_INFO("observer unregistered");
+}
+
+void zoo_smb_service_manager_notify_observers(
+    ZOO_SMB_SERVICE_MANAGER_HANDLE manager,
+    ZOO_SMB_SERVICE_HANDLE service)
+{
+    if (!manager || !service)
+    {
+        ZOO_LOG_WARN("invalid parameters");
+        return;
+    }
+
+    (void)notify_service_observers(manager->observer_list, service);
 }

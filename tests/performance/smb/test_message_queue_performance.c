@@ -1,3 +1,10 @@
+/*
+ * Traceability coverage:
+ * - REQ-PERF-001: queue throughput benchmark for SMB buffering path.
+ * - REQ-PERF-002: latency-sensitive push/pop timing evidence.
+ * - REQ-PERF-003: regression threshold candidate for queue path performance.
+ */
+
 #include "unity.h"
 #include "../common/test_utils.h"
 #include "zoo_smb_ring_buffer.h"

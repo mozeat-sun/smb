@@ -64,6 +64,7 @@ typedef struct
 {
     ZOO_SMB_RULE_HANDLE rule;     // Handle to the routing rule
     ZOO_STRING_T receiver;        // Receiver for the message
+    char* receiver_owned;         // Owned receiver copy for async lifetime safety
     ZOO_BOOL delete_message_flag; // Flag to indicate if the message should be deleted after processing
     ZOO_SMB_MSG_STRUCT* message;  // Pointer to the message being routed
 } ROUTING_CONTEXT_STRUCT;
@@ -228,10 +229,11 @@ static void process_message_and_notify_observer(IN void* rule_handle,
  * by the SMB routing engine. It is typically invoked when new data arrives
  * on a transport connection.
  *
- * @param ... Parameters depend on the function signature (not shown in selection).
+ * @param user_data Routing rule pointer associated with the observer callback.
+ * @param message Incoming message object produced by transport layer.
  *
- * @note Ensure that all buffer management and error handling are performed
- *       within this function to maintain stability and security.
+ * The function validates security/header constraints, applies ingress
+ * backpressure policy, and enqueues accepted messages for route dispatch.
  */
 static void handle_transport_incoming_data(
     IN void* user_data,
@@ -623,8 +625,23 @@ static ROUTING_CONTEXT_STRUCT* create_routing_context(
         ZOO_LOG_ERROR("Failed to allocate routing context");
         return NULL;
     }
+    memset(context, 0, sizeof(ROUTING_CONTEXT_STRUCT));
+
+    if (receiver)
+    {
+        ZOO_USIZE_T receiver_len = strlen(receiver) + 1;
+        context->receiver_owned = (char*)zoo_allocate_from_pool(receiver_len);
+        if (!context->receiver_owned)
+        {
+            ZOO_LOG_ERROR("Failed to allocate routing receiver");
+            zoo_free_to_pool(context);
+            return NULL;
+        }
+        memcpy(context->receiver_owned, receiver, receiver_len);
+        context->receiver = context->receiver_owned;
+    }
+
     context->rule = rule;
-    context->receiver = receiver;
     context->message = message;
     context->delete_message_flag = delete_message_after_send;
     return context;
@@ -639,6 +656,10 @@ static void destroy_routing_context(ROUTING_CONTEXT_STRUCT* context)
 {
     if (context)
     {
+        if (context->receiver_owned)
+        {
+            zoo_free_to_pool(context->receiver_owned);
+        }
         zoo_free_to_pool(context);
     }
 }

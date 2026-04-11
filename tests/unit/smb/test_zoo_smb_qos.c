@@ -6,6 +6,9 @@
  * Component id: test_zoo_smb_qos_
  * File name: test_zoo_smb_qos.c
  * Description: Unity-based QoS tests (converted from GTest)
+ * Traceability coverage:
+ * - REQ-SAFE-001: deterministic QoS policy validation behavior.
+ * - REQ-SAFE-003: requirement-linked unit evidence for QoS policy primitives.
  * History recorder:
  * Version   date           author            context
  * 1.0       2025-08-05     AI                converted from GTest

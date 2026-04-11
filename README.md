@@ -96,11 +96,23 @@ Benchmark/performance sources are in:
 
 If you run local benchmark experiments, store reports under `reporters/` (repository-local convention).
 
+## Compatibility And Deprecation
+
+API releases follow semantic versioning.
+
+Wire protocol compatibility rules, fail-fast mismatch behavior, and the deprecation lifecycle are defined in `docs/PROTOCOL_COMPATIBILITY_POLICY.md`.
+
+The CI-generated compatibility matrix is published as the workflow artifact `protocol-compatibility-artifacts` and generated locally at `artifacts/quality/protocol_compatibility_matrix.md` by `tools/quality/protocol_compatibility_matrix.sh`.
+
+Use `docs/templates/RELEASE_NOTES_TEMPLATE.md` for release declarations covering API compatibility status, wire compatibility status, breaking changes, and deprecation notices.
+
 ## Documentation Index
 
 Primary project documents:
 
+- `docs/ARCHITECTURE_DESIGN_SPECIFICATION.md`
 - `docs/ARCHITECTURE_REQUIREMENTS_ASSESSMENT.md`
+- `docs/PROTOCOL_COMPATIBILITY_POLICY.md`
 - `docs/REQUIREMENTS_CATALOG.md`
 - `docs/GRADE_ROADMAP.md`
 - `docs/RELEASE_QUALITY_SCORECARD.md`
@@ -113,6 +125,7 @@ Additional entry points:
 - `tests/README.md`
 - `examples/README.md`
 - `docker/README.md`
+- `docs/templates/RELEASE_NOTES_TEMPLATE.md`
 
 ## Development Notes
 

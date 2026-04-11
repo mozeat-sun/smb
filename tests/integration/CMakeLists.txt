@@ -10,7 +10,7 @@ if(NOT EXISTS "${UNITY_ROOT}")
 endif()
 set(UNITY_SRC_DIR "${UNITY_ROOT}/src")
 
-option(ZOO_ENABLE_EXTENDED_INTEGRATION_TESTS "Enable extended SMB integration tests" OFF)
+option(ZOO_ENABLE_EXTENDED_INTEGRATION_TESTS "Enable extended SMB integration tests" ON)
 
 if(NOT EXISTS "${UNITY_SRC_DIR}/unity.c")
     message(WARNING "Unity not found for integration tests; expected ${UNITY_SRC_DIR}/unity.c")
@@ -85,4 +85,9 @@ if(ZOO_ENABLE_EXTENDED_INTEGRATION_TESTS)
     zoo_add_smb_integration_test(test_backpressure_security smb/test_backpressure_security.c)
     zoo_add_smb_integration_test(test_zoo_smb_transport_udp smb/test_zoo_smb_transport_udp.c)
     zoo_add_smb_integration_test(test_zoo_smb_transport_shm smb/test_zoo_smb_transport_shm.c)
+    zoo_add_smb_integration_test(test_zoo_smb_transport_tcp smb/test_zoo_smb_transport_tcp.c)
+
+    target_sources(test_zoo_smb_transport_tcp PRIVATE
+        "${ZOO_REPO_ROOT_DIR}/tests/common/test_utils.c"
+    )
 endif()

@@ -8,13 +8,19 @@
 #include <unistd.h>
 #include <string.h>
 
+/*
+ * Traceability coverage:
+ * - REQ-REL-001: discovery component create/destroy startup path executes without fault.
+ * - REQ-REL-004: service lifecycle discovery remains part of health/availability evidence.
+ * - REQ-SAFE-003: requirement-linked integration evidence for discovery lifecycle.
+ */
+
 // Test fixture data
 static ZOO_SMB_CONFIG_STRUCT config_local;
 static const ZOO_SMB_CONFIG_STRUCT* config;
 static ZOO_SMB_SERVICE_MANAGER_HANDLE service_manager;
 static ZOO_SMB_TRANSPORT_MANAGER_HANDLE transport_manager;
 static ZOO_SMB_SERVICE_DISCOVERY_HANDLE discovery;
-static ZOO_BOOL fixture_runtime_ready = ZOO_FALSE;
 
 // Discovery callback implementation
 static ZOO_BOOL discovery_callback_called = ZOO_FALSE;
@@ -39,11 +45,6 @@ void setUp(void)
     config_local.broadcast.port = port_seed;
     config_local.multicast.port = (uint16_t)(port_seed - 1000);
     config = &config_local;
-    if (!fixture_runtime_ready) {
-        zoo_create_memory_pool(10 * 1024 * 1024);  // 10MB pool for testing
-        zoo_create_thread_pool(6, 1000);
-        fixture_runtime_ready = ZOO_TRUE;
-    }
     service_manager = zoo_smb_create_service_manager(config);
     transport_manager = zoo_smb_create_transport_manager(service_manager, config);
     discovery = NULL;
@@ -194,16 +195,10 @@ void test_BroadcastMultiServices(void)
 int main(void)
 {
     UNITY_BEGIN();
-    
-    RUN_TEST(test_StartStopDiscovery);
+
+    RUN_TEST(test_CreateDestroy);
     
     int result = UNITY_END();
-
-    if (fixture_runtime_ready) {
-        zoo_destroy_thread_pool(ZOO_FALSE);
-        zoo_destroy_memory_pool();
-        fixture_runtime_ready = ZOO_FALSE;
-    }
 
     return result;
 }

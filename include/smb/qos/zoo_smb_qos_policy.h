@@ -264,7 +264,7 @@ extern "C"
     /**
      * @brief Creates a new SMB QoS (Quality of Service) policy handle.
      *
-     * This function initializes and returns a handle to a new QoS policy for SMB (Server Message Block).
+     * This function initializes and returns a handle to a new QoS policy for SMB (Soft Message Bus).
      * The created policy handle can be used to configure and manage QoS settings for SMB operations.
      *
      * @return ZOO_SMB_QOS_POLICY_HANDLE A handle to the newly created QoS policy.
@@ -286,7 +286,7 @@ extern "C"
     /**
      * @brief Sets the priority for SMB QoS (Quality of Service).
      *
-     * This function configures the priority level for SMB (Server Message Block)
+     * This function configures the priority level for SMB (Soft Message Bus)
      * Quality of Service, which may affect resource allocation or traffic handling.
      *
         * @param qos_policy QoS policy handle to update.
@@ -299,7 +299,7 @@ extern "C"
     /**
      * @brief Sets the reliability level for SMB QoS (Quality of Service).
      *
-     * This function configures the reliability parameters for SMB (Server Message Block)
+     * This function configures the reliability parameters for SMB (Soft Message Bus)
      * Quality of Service, allowing control over how reliable the SMB service should be.
      *
     * @param qos_policy QoS policy handle to update.
@@ -332,7 +332,7 @@ extern "C"
     /**
      * @brief Sets the durability level for SMB QoS (Quality of Service).
      *
-     * This function configures the durability settings for SMB (Server Message Block)
+     * This function configures the durability settings for SMB (Soft Message Bus)
      * Quality of Service, which may affect data consistency and reliability guarantees.
      *
     * @param qos_policy QoS policy handle to update.
@@ -346,7 +346,7 @@ extern "C"
      * @brief Sets the deadline for SMB QoS (Quality of Service) operations.
      *
      * This function configures the deadline parameter used to control the timing or
-     * scheduling of SMB (Server Message Block) operations to ensure quality of service.
+     * scheduling of SMB (Soft Message Bus) operations to ensure quality of service.
      *
     * @param qos_policy QoS policy handle to update.
     * @param deadline_time_ms Deadline reference timestamp in milliseconds.

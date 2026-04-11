@@ -23,6 +23,11 @@ Include the following details:
 Maintainers will acknowledge reports within 5 business days and provide a
 status update after triage.
 
+Remediation targets and the tracked vulnerability log are maintained in:
+
+- `docs/VULNERABILITY_REMEDIATION_SLA.md`
+- `docs/VULNERABILITY_REMEDIATION_LOG.csv`
+
 If a report is sent to a public channel by mistake, maintainers may redact
 details and continue discussion in a private channel.
 

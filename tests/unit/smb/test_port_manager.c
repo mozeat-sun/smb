@@ -6,6 +6,9 @@
  * Component id: test_port_manager_
  * File name: test_port_manager.c
  * Description: Unity-based port manager tests (converted from GTest)
+ * Traceability coverage:
+ * - REQ-REL-001: transport port allocation and release lifecycle validation.
+ * - REQ-SAFE-003: requirement-linked unit evidence for port resource management.
  * History recorder:
  * Version   date           author            context
  * 1.0       2025-08-05     AI                converted from GTest
