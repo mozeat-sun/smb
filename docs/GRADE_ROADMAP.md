@@ -19,6 +19,21 @@ Each level has mandatory architecture controls, process controls, verification t
 - Claims are backed by reproducible evidence and audit-ready artifacts.
 - Upward compatibility is controlled through strict API and wire-version policy.
 
+## Current Grade Statement
+
+Current repository claim as of 2026-04-11:
+
+- The repository is operating in pre-Grade-1 completion territory.
+- The current implementation and evidence set support late Milestone M3 with repository-level M4 scaffolding, but do not yet satisfy the full Grade 1 Industrial exit gates.
+- Grade 1 hardening progress is substantial in benchmark governance, reliability scaffolding, traceability, and security workflow evidence, but Grade 1 remains unachieved until the remaining industrial exit criteria are met.
+- Grade 2 Automotive and Grade 3 Military/Aerospace claims are not currently supportable from repository evidence.
+
+Evidence basis for this statement:
+
+- `docs/ROADMAP_EXECUTION_BACKLOG.md` records the current repository status as late M3 with M4 scaffolding in place.
+- `docs/ARCHITECTURE_REQUIREMENTS_ASSESSMENT.md` states that the architecture is sufficient for next industrial-grade hardening iterations, but not yet sufficient for later automotive-grade and military/aerospace-grade iterations.
+- Grade 1 exit gates below still require completion of longer-duration reliability, recovery, and field-use evidence.
+
 ## Grade 1: Industrial
 
 ### Target profile

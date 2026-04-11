@@ -9,6 +9,12 @@ Complete this scorecard for every release candidate.
 - Date: 2026-04-11
 - Release owner: zoo-release-board
 
+## Current grade claim
+
+- Current grade status: Pre-Grade-1 completion.
+- Repository maturity statement: Late Milestone M3 with repository-level M4 scaffolding in place; this release candidate does not claim that Grade 1 Industrial exit gates have been fully achieved.
+- Unsupported grade claims: Grade 2 Automotive and Grade 3 Military/Aerospace are not claimed for this release candidate.
+
 ## Reliability
 
 - Availability target met: Yes for Milestone 3 release-gate scope; latest soak artifact completed 40 of 40 passing CI iterations with 0 failures.
