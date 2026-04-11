@@ -112,10 +112,13 @@ Primary project documents:
 
 - `docs/ARCHITECTURE_DESIGN_SPECIFICATION.md`
 - `docs/ARCHITECTURE_REQUIREMENTS_ASSESSMENT.md`
+- `docs/SAFETY_CASE_SKELETON.md`
 - `docs/PROTOCOL_COMPATIBILITY_POLICY.md`
+- `docs/TOOLCHAIN_BASELINE_AND_CHANGE_CONTROL.md`
 - `docs/REQUIREMENTS_CATALOG.md`
 - `docs/GRADE_ROADMAP.md`
 - `docs/RELEASE_QUALITY_SCORECARD.md`
+- `docs/RELEASE_EVIDENCE_FREEZE_PROCEDURE.md`
 - `docs/TRACEABILITY_GUIDE.md`
 
 Additional entry points:
@@ -125,6 +128,9 @@ Additional entry points:
 - `tests/README.md`
 - `examples/README.md`
 - `docker/README.md`
+- `docs/INDEPENDENT_SAFETY_REVIEW_CHECKLIST.md`
+- `docs/PRE_ASSESSMENT_PLAN.md`
+- `docs/PRE_ASSESSMENT_READINESS_SUMMARY.md`
 - `docs/templates/RELEASE_NOTES_TEMPLATE.md`
 
 ## Development Notes

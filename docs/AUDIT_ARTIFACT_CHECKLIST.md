@@ -6,6 +6,7 @@ Use this checklist to prepare evidence packages for grade reviews.
 
 - [ ] Quality policy and release authority sign-off record
 - [ ] Change control and branch protection policy
+- [ ] Toolchain baseline and change control record
 - [ ] Risk register and mitigation status
 
 ## Requirements and traceability
@@ -40,6 +41,7 @@ Use this checklist to prepare evidence packages for grade reviews.
 ## Release and operations
 
 - [ ] Release quality scorecard
+- [ ] Release evidence freeze record
 - [ ] Deployment and rollback procedure
 - [ ] Operational monitoring and alerting evidence
 - [ ] Known issues and accepted risk register
@@ -47,4 +49,5 @@ Use this checklist to prepare evidence packages for grade reviews.
 ## Independent review
 
 - [ ] Internal review sign-off
+- [ ] Independent safety review checklist
 - [ ] External assessor findings and closure evidence

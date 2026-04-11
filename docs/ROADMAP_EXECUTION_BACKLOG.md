@@ -15,11 +15,13 @@ Current execution position:
 - Milestone M1 is effectively complete in repository artifacts and CI scaffolding.
 - Milestone M2 is complete in repository artifacts and CI gating for reliability, throughput governance, and stabilized bench6 latency enforcement.
 - Milestone M3 repository-level traceability and security evidence are now in place.
+- Milestone M4 repository-side certification-readiness scaffolding is now in place for safety case packaging, change control, review workflow, and evidence freeze procedure.
 
 Current practical milestone call:
 
-- Late M3, with early M4 scaffolding already in place.
+- Late M3, with repository-level M4 scaffolding in place.
 - M3 implementation slice is complete in repository artifacts and quality gates; remaining gaps are higher-grade follow-on work rather than Milestone M3 blockers.
+- M4 still requires execution-time assessor engagement, findings closure, and controlled-baseline discipline beyond the repository templates added here.
 
 ## Prepared Next Step (2026-04-09)
 
@@ -182,10 +184,15 @@ Goal: prepare cert-ready structure for automotive and beyond.
 
 Checklist:
 
-- [ ] Define safety argument structure and evidence mapping
-- [ ] Define toolchain baseline and change control policy
-- [ ] Add independent review checklist for safety artifacts
-- [ ] Create release evidence freeze procedure
+- [x] Define safety argument structure and evidence mapping
+- [x] Define toolchain baseline and change control policy
+- [x] Add independent review checklist for safety artifacts
+- [x] Create release evidence freeze procedure
+
+Current status note:
+
+- Repository now includes a safety case skeleton, toolchain and change-control policy, independent safety review checklist, and release evidence freeze procedure.
+- These artifacts complete the repository-side Milestone 4 Issue 7 scaffolding, but do not replace formal assessor review or certified baseline governance execution.
 
 Exit evidence:
 
@@ -202,6 +209,11 @@ Checklist:
 - [ ] Record findings and remediation plan
 - [ ] Re-run pre-assessment after remediation
 - [ ] Publish readiness summary for stakeholders
+
+Current status note:
+
+- Repository now includes the pre-assessment plan, findings log template, and readiness summary template.
+- The actual advisor-led pre-assessment and findings closure remain execution-time work outside the repository.
 
 Exit evidence:
 
