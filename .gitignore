@@ -27,12 +27,26 @@
 /stage/packages/_CPack_Packages/**/bin/
 /stage/packages/_CPack_Packages/**/lib/
 
+
 # CMake and build system artifacts (in-source builds)
 CMakeCache.txt
 CMakeFiles/
 cmake_install.cmake
 CTestTestfile.cmake
 compile_commands.json
+Makefile
+Makefile.*
+cmake_install.cmake*
+CMakeScripts/
+CMakeTmp/
+CMakeFiles*/
+cmake-*
+_deps/
+_build/
+build.ninja
+rules.ninja
+.ninja_deps
+.ninja_log
 
 # Logs and temporary files
 *.log
