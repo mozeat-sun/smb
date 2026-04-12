@@ -1,3 +1,18 @@
+#if 0
+/**
+ * @file client.c
+ * @brief Example SMB client for Zoo project (transport-agnostic).
+ *
+ * Demonstrates how to create a generic SMB client, send a request to a server,
+ * and receive a reply. Includes retry logic and configurable log level.
+ *
+ * Usage:
+ *   ./zoo_example_client -t <server_name> -p <payload> -l <log_level>
+ *
+ * Author: Zoo Project Contributors
+ * Date: 2026-04-12
+ */
+#endif
 #include "zoo_smb_client.h"
 #include "parser.h"
 #include <stdio.h>
@@ -29,7 +44,14 @@ static volatile ZOO_BOOL g_running = ZOO_TRUE;
 static char client_name[128];
 
 /**
- * @brief Main entry point.
+ * @brief Main entry point for the SMB client example.
+ *
+ * Parses command-line arguments, creates an SMB client, sends a request,
+ * and waits for a reply. Retries sending if necessary.
+ *
+ * @param argc Number of command-line arguments.
+ * @param argv Array of command-line argument strings.
+ * @return 0 on success, non-zero on failure.
  */
 int main(int argc, char* argv[])
 {

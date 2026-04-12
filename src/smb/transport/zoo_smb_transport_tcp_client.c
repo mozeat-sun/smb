@@ -28,6 +28,15 @@
 #include <fcntl.h>
 #include <time.h>
 
+/**
+ * @brief Copy a sockaddr_in structure to a ZOO_SOCKADDR_UNION.
+ *
+ * Converts and copies the address and port from a standard sockaddr_in to the
+ * internal ZOO_SOCKADDR_UNION representation, handling byte order conversion.
+ *
+ * @param dst Pointer to destination ZOO_SOCKADDR_UNION.
+ * @param src Pointer to source sockaddr_in.
+ */
 static void copy_sockaddr_to_union(
     ZOO_SOCKADDR_UNION* dst,
     const struct sockaddr_in* src)

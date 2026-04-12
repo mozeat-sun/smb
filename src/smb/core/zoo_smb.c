@@ -247,6 +247,14 @@ static ZOO_SMB_HANDLE smb_sys_init(const ZOO_SMB_CONFIG_STRUCT* cfg)
  *
  * @return ZOO_TRUE if the SMB service started successfully, ZOO_FALSE otherwise.
  */
+/**
+ * @brief Starts the SMB (Soft Message Bus) instance if not already running.
+ *
+ * Initializes and starts service discovery and routing engine if auto-init is enabled.
+ * Sets the is_running flag to ZOO_TRUE.
+ *
+ * @param smb Pointer to the SMB instance structure.
+ */
 static void start_smb(ZOO_SMB_STRUCT* smb)
 {
     if (!smb)
@@ -274,6 +282,13 @@ static void start_smb(ZOO_SMB_STRUCT* smb)
  *
  * @param smb The handle to the SMB session to be stopped.
  */
+/**
+ * @brief Stops the SMB (Soft Message Bus) instance if running.
+ *
+ * Stops service discovery if auto-init is enabled and sets is_running to ZOO_FALSE.
+ *
+ * @param smb Pointer to the SMB instance structure.
+ */
 static void stop_smb(ZOO_SMB_STRUCT* smb)
 {
     if (!smb)
@@ -299,6 +314,14 @@ static void stop_smb(ZOO_SMB_STRUCT* smb)
  *
  * @param[in] smb   The SMB handle to be destroyed.
  * @param[in] force If ZOO_TRUE, forces destruction regardless of pending operations.
+ */
+/**
+ * @brief Destroys the SMB instance and releases all associated resources.
+ *
+ * Cleans up all managers, pools, and services. If force is ZOO_TRUE, destruction proceeds regardless of pending operations.
+ *
+ * @param smb   Pointer to the SMB instance structure.
+ * @param force If ZOO_TRUE, forces destruction regardless of pending operations.
  */
 static void destroy_smb(ZOO_SMB_STRUCT* smb, IN ZOO_BOOL force)
 {
@@ -331,6 +354,16 @@ static void destroy_smb(ZOO_SMB_STRUCT* smb, IN ZOO_BOOL force)
  *
  * @param smb Pointer to the ZOO_SMB_STRUCT representing the SMB bus.
  * @param node Handle to the node to be associated with the bus.
+ */
+/**
+ * @brief Associates a node with the SMB bus, creating service, transport, and rule as needed.
+ *
+ * Attempts to create or retrieve the service and transport for the node, then creates a routing rule and prepares it in the routing engine.
+ * Marks the node as active and sets its rule name on success.
+ *
+ * @param smb  Pointer to the SMB instance structure.
+ * @param node Handle to the node to associate.
+ * @return ZOO_SMB_OK on success, error code on failure.
  */
 static ZOO_ERROR_TYPE make_node_associate_with_bus(ZOO_SMB_STRUCT* smb, const ZOO_SMB_NODE_HANDLE node)
 {

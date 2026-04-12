@@ -1,3 +1,18 @@
+#if 0
+/**
+ * @file server.c
+ * @brief Example SMB server for Zoo project (transport-agnostic).
+ *
+ * Demonstrates how to create a generic SMB server, handle incoming requests,
+ * and send replies. Includes signal handling for graceful shutdown.
+ *
+ * Usage:
+ *   ./zoo_example_server -t <server_name> -l <log_level>
+ *
+ * Author: Zoo Project Contributors
+ * Date: 2026-04-12
+ */
+#endif
 #include "zoo_smb_server.h"
 #include "parser.h"
 #include <stdio.h>
@@ -30,14 +45,18 @@ static int setup_signals(void)
 }
 
 /**
- * @brief Event handler callback function for server events
+ * @brief Server event handler for incoming SMB requests.
  *
- * This function is called when server events occur and needs to be implemented
- * to handle various server-side events such as client connections, disconnections,
- * data reception, or other server state changes.
+ * Logs request details and sends a reply to the client.
  *
- * @param user_data Pointer to user-defined data that was passed during handler registration.
- *                  This allows the handler to access context-specific information.
+ * @param user_data Pointer to server handle.
+ * @param msg_id Message ID.
+ * @param request_id Request ID.
+ * @param timestamp Timestamp of the request.
+ * @param sender Name of the sender/client.
+ * @param payload Pointer to request payload.
+ * @param payload_size Size of the payload.
+ * @return 0 always.
  */
 int server_event_handler(void* user_data,
                          uint32_t msg_id,

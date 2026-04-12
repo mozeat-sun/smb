@@ -1,3 +1,18 @@
+#if 0
+/**
+ * @file client_udp.c
+ * @brief Example UDP SMB client for Zoo project.
+ *
+ * Demonstrates how to create a UDP-based SMB client, send a request to a server,
+ * and receive a reply. Includes retry logic and configurable log level.
+ *
+ * Usage:
+ *   ./zoo_example_udp_client -t <server_name> -p <payload> -l <log_level>
+ *
+ * Author: Zoo Project Contributors
+ * Date: 2026-04-12
+ */
+#endif
 #include "zoo_smb_client.h"
 #include "parser.h"
 #include <stdio.h>
@@ -13,6 +28,16 @@
 
 static char client_name[128];
 
+/**
+ * @brief Main entry point for the UDP SMB client example.
+ *
+ * Parses command-line arguments, creates a UDP SMB client, sends a request,
+ * and waits for a reply. Retries sending if necessary.
+ *
+ * @param argc Number of command-line arguments.
+ * @param argv Array of command-line argument strings.
+ * @return 0 on success, non-zero on failure.
+ */
 int main(int argc, char* argv[])
 {
     COMMAND_OPTIONS_STRUCT options;

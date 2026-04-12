@@ -38,6 +38,14 @@ typedef struct ZOO_SMB_RULE_MANAGER_STRUCT
     ZOO_LIST_HANDLE rule_index_buckets[RULE_INDEX_BUCKET_COUNT];
 } ZOO_SMB_RULE_MANAGER_STRUCT;
 
+/**
+ * @brief Computes a hash value for a rule name key.
+ *
+ * Uses the djb2 algorithm to hash the rule name for bucket indexing.
+ *
+ * @param key The rule name string to hash.
+ * @return Hash value in the range [0, RULE_INDEX_BUCKET_COUNT-1].
+ */
 static ZOO_USIZE rule_index_hash(const char* key)
 {
     if (!key)
@@ -54,6 +62,15 @@ static ZOO_USIZE rule_index_hash(const char* key)
     return hash % RULE_INDEX_BUCKET_COUNT;
 }
 
+/**
+ * @brief Compares a rule index entry's key to a target key.
+ *
+ * Used as a predicate for list search operations.
+ *
+ * @param data   Pointer to a ZOO_SMB_RULE_INDEX_ENTRY_STRUCT.
+ * @param target Pointer to the target key string.
+ * @return ZOO_TRUE if keys match, ZOO_FALSE otherwise.
+ */
 static ZOO_BOOL compare_rule_index_entry_by_key(const void* data, const void* target)
 {
     const ZOO_SMB_RULE_INDEX_ENTRY_STRUCT* entry = (const ZOO_SMB_RULE_INDEX_ENTRY_STRUCT*)data;
@@ -65,6 +82,13 @@ static ZOO_BOOL compare_rule_index_entry_by_key(const void* data, const void* ta
     return strcmp(entry->key, key) == 0;
 }
 
+/**
+ * @brief Finds a rule in the index by name (must hold lock).
+ *
+ * @param manager   Rule manager handle.
+ * @param rule_name Name of the rule to find.
+ * @return Rule handle if found, NULL otherwise.
+ */
 static ZOO_SMB_RULE_HANDLE rule_index_find_locked(
     ZOO_SMB_RULE_MANAGER_HANDLE manager,
     const char* rule_name)
@@ -88,6 +112,14 @@ static ZOO_SMB_RULE_HANDLE rule_index_find_locked(
     return entry ? entry->rule : NULL;
 }
 
+/**
+ * @brief Inserts or updates a rule in the index (must hold lock).
+ *
+ * @param manager   Rule manager handle.
+ * @param rule_name Name of the rule.
+ * @param rule      Rule handle to insert or update.
+ * @return ZOO_SMB_OK on success, error code on failure.
+ */
 static ZOO_ERROR_TYPE rule_index_upsert_locked(
     ZOO_SMB_RULE_MANAGER_HANDLE manager,
     const char* rule_name,
@@ -135,6 +167,12 @@ static ZOO_ERROR_TYPE rule_index_upsert_locked(
     return ZOO_SMB_OK;
 }
 
+/**
+ * @brief Removes a rule from the index by name (must hold lock).
+ *
+ * @param manager   Rule manager handle.
+ * @param rule_name Name of the rule to remove.
+ */
 static void rule_index_remove_locked(
     ZOO_SMB_RULE_MANAGER_HANDLE manager,
     const char* rule_name)
@@ -161,6 +199,11 @@ static void rule_index_remove_locked(
     }
 }
 
+/**
+ * @brief Destroys all rule index buckets and frees their entries.
+ *
+ * @param manager Rule manager handle.
+ */
 static void destroy_rule_index(ZOO_SMB_RULE_MANAGER_HANDLE manager)
 {
     if (!manager)
@@ -198,6 +241,15 @@ static void destroy_rule_index(ZOO_SMB_RULE_MANAGER_HANDLE manager)
  *
  * @param name The name of the rule to search for.
  * @return ZOO_SMB_RULE_HANDLE Handle to the found rule, or NULL/invalid handle if not found.
+ */
+/**
+ * @brief Finds a rule by name, using index and fallback to list scan.
+ *
+ * If not found in the index, scans the rule list and updates the index if found.
+ *
+ * @param manager   Rule manager handle.
+ * @param rule_name Name of the rule to find.
+ * @return Rule handle if found, NULL otherwise.
  */
 static ZOO_SMB_RULE_HANDLE find_rule_by_name(
     IN ZOO_SMB_RULE_MANAGER_HANDLE manager,

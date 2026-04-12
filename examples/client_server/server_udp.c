@@ -1,3 +1,18 @@
+#if 0
+/**
+ * @file server_udp.c
+ * @brief Example UDP SMB server for Zoo project.
+ *
+ * Demonstrates how to create a UDP-based SMB server, handle incoming requests,
+ * and send replies. Includes signal handling for graceful shutdown.
+ *
+ * Usage:
+ *   ./zoo_example_udp_server -t <server_name> -l <log_level>
+ *
+ * Author: Zoo Project Contributors
+ * Date: 2026-04-12
+ */
+#endif
 #include "zoo_smb_server.h"
 #include "parser.h"
 #include <stdio.h>
@@ -29,6 +44,20 @@ static int setup_signals(void)
     return 0;
 }
 
+/**
+ * @brief UDP server event handler for incoming SMB requests.
+ *
+ * Logs request details and sends a reply to the client.
+ *
+ * @param user_data Pointer to server handle.
+ * @param msg_id Message ID.
+ * @param request_id Request ID.
+ * @param timestamp Timestamp of the request.
+ * @param sender Name of the sender/client.
+ * @param payload Pointer to request payload.
+ * @param payload_size Size of the payload.
+ * @return 0 always.
+ */
 int udp_server_event_handler(void* user_data,
                              uint32_t msg_id,
                              uint64_t request_id,
@@ -63,6 +92,16 @@ int udp_server_event_handler(void* user_data,
     return 0;
 }
 
+/**
+ * @brief Main entry point for the UDP SMB server example.
+ *
+ * Parses command-line arguments, creates a UDP SMB server, sets up the event handler,
+ * and enters the main loop until interrupted.
+ *
+ * @param argc Number of command-line arguments.
+ * @param argv Array of command-line argument strings.
+ * @return 0 on success, non-zero on failure.
+ */
 int main(int argc, char* argv[])
 {
     COMMAND_OPTIONS_STRUCT options;

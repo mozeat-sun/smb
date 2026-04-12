@@ -19,10 +19,21 @@
 
 /* -------------------------------------------------------------------------- */
 
+/**
+ * @brief Collects a unified snapshot of SMB metrics.
+ *
+ * Gathers metrics from the transport manager, routing engine, and memory pool,
+ * and populates the provided snapshot structure with the latest values.
+ *
+ * @param transport_manager Handle to the transport manager (may be NULL).
+ * @param routing_engine    Handle to the routing engine (may be NULL).
+ * @param out_snapshot      Pointer to the snapshot struct to fill (must not be NULL).
+ * @return ZOO_SMB_OK on success, ZOO_SMB_ERROR_INVALID_PARAM if out_snapshot is NULL.
+ */
 ZOO_ERROR_TYPE zoo_smb_collect_metrics_snapshot(
-    ZOO_SMB_TRANSPORT_MANAGER_HANDLE  transport_manager,
-    ZOO_SMB_ROUTING_ENGINE_HANDLE     routing_engine,
-    ZOO_SMB_METRICS_SNAPSHOT_STRUCT*  out_snapshot)
+       ZOO_SMB_TRANSPORT_MANAGER_HANDLE  transport_manager,
+       ZOO_SMB_ROUTING_ENGINE_HANDLE     routing_engine,
+       ZOO_SMB_METRICS_SNAPSHOT_STRUCT*  out_snapshot)
 {
     if (!out_snapshot)
     {
@@ -70,10 +81,20 @@ ZOO_ERROR_TYPE zoo_smb_collect_metrics_snapshot(
 
 /* -------------------------------------------------------------------------- */
 
+/**
+ * @brief Prints a formatted metrics report to stdout.
+ *
+ * Collects a metrics snapshot and prints a human-readable report including
+ * transport, routing, and memory pool statistics. Useful for diagnostics and monitoring.
+ *
+ * @param tag              Optional label for the report (NULL or empty for default).
+ * @param transport_manager Handle to the transport manager (may be NULL).
+ * @param routing_engine    Handle to the routing engine (may be NULL).
+ */
 void zoo_smb_print_metrics_report(
-    const char*                       tag,
-    ZOO_SMB_TRANSPORT_MANAGER_HANDLE  transport_manager,
-    ZOO_SMB_ROUTING_ENGINE_HANDLE     routing_engine)
+       const char*                       tag,
+       ZOO_SMB_TRANSPORT_MANAGER_HANDLE  transport_manager,
+       ZOO_SMB_ROUTING_ENGINE_HANDLE     routing_engine)
 {
     ZOO_SMB_METRICS_SNAPSHOT_STRUCT snap;
     zoo_smb_collect_metrics_snapshot(transport_manager, routing_engine, &snap);
@@ -141,9 +162,18 @@ void zoo_smb_print_metrics_report(
 
 /* -------------------------------------------------------------------------- */
 
+/**
+ * @brief Resets all metrics for transport manager and routing engine.
+ *
+ * Calls the reset function for both the transport manager and routing engine,
+ * clearing all counters and statistics. Safe to call with NULL handles.
+ *
+ * @param transport_manager Handle to the transport manager (may be NULL).
+ * @param routing_engine    Handle to the routing engine (may be NULL).
+ */
 void zoo_smb_reset_all_metrics(
-    ZOO_SMB_TRANSPORT_MANAGER_HANDLE transport_manager,
-    ZOO_SMB_ROUTING_ENGINE_HANDLE    routing_engine)
+       ZOO_SMB_TRANSPORT_MANAGER_HANDLE transport_manager,
+       ZOO_SMB_ROUTING_ENGINE_HANDLE    routing_engine)
 {
     if (transport_manager)
     {

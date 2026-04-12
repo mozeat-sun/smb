@@ -91,11 +91,31 @@ ZOO_SMB_CONSUMER_HANDLE zoo_smb_consumer_find_by_name(ZOO_LIST_HANDLE list, cons
     return NULL;
 }
 
+
+/**
+ * @brief Alias for zoo_smb_consumer_find_by_name.
+ *
+ * Provided for API compatibility and code clarity.
+ *
+ * @param list List of consumer handles.
+ * @param name Name of the consumer to find.
+ * @return Handle to the consumer if found, NULL otherwise.
+ */
 ZOO_SMB_CONSUMER_HANDLE zoo_smb_find_consumer_by_name(ZOO_LIST_HANDLE list, const char* name)
 {
     return zoo_smb_consumer_find_by_name(list, name);
 }
 
+
+/**
+ * @brief Finds a SMB consumer handle in the linked list by its file descriptor.
+ *
+ * Searches the provided list for a consumer with the specified file descriptor.
+ *
+ * @param list List of consumer handles.
+ * @param fd   File descriptor to search for.
+ * @return Handle to the consumer if found, NULL otherwise.
+ */
 ZOO_SMB_CONSUMER_HANDLE zoo_smb_find_consumer_by_fd(ZOO_LIST_HANDLE list, int32_t fd)
 {
     if (!list)

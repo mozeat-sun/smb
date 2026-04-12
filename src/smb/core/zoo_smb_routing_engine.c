@@ -751,6 +751,16 @@ ZOO_ERROR_T zoo_smb_routing_engine_handle_route_message(ZOO_SMB_ROUTING_ENGINE_H
     return ZOO_SMB_OK;
 }
 
+/**
+ * @brief Retrieves current routing engine metrics.
+ *
+ * Populates the provided metrics structure with the latest counters and state
+ * from the routing engine, including ingress counts, drops, watermarks, and backpressure status.
+ *
+ * @param engine      Handle to the routing engine instance.
+ * @param out_metrics Pointer to metrics struct to be filled with current values.
+ * @return ZOO_SMB_OK on success, ZOO_SMB_ERROR_INVALID_PARAM if arguments are invalid.
+ */
 ZOO_ERROR_TYPE zoo_smb_routing_engine_get_metrics(
     IN ZOO_SMB_ROUTING_ENGINE_HANDLE engine,
     OUT ZOO_SMB_ROUTING_ENGINE_METRICS_STRUCT* out_metrics)
@@ -777,6 +787,15 @@ ZOO_ERROR_TYPE zoo_smb_routing_engine_get_metrics(
     return ZOO_SMB_OK;
 }
 
+/**
+ * @brief Resets all routing engine metrics to zero.
+ *
+ * Sets all ingress counters and drop statistics in the routing engine to zero.
+ * Useful for benchmarking, monitoring, or clearing state between test runs.
+ *
+ * @param engine Handle to the routing engine instance.
+ * @return ZOO_SMB_OK on success, ZOO_SMB_ERROR_INVALID_PARAM if engine is NULL.
+ */
 ZOO_ERROR_TYPE zoo_smb_routing_engine_reset_metrics(
     IN ZOO_SMB_ROUTING_ENGINE_HANDLE engine)
 {

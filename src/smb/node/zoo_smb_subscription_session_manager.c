@@ -24,6 +24,15 @@ typedef struct ZOO_SMB_SUBSCRIPTION_SESSION_MANAGER_STRUCT
 /**
  * @brief Returns retry interval configured by QoS, or a safe default.
  */
+/**
+ * @brief Get the retry interval (ms) for subscription negotiation from QoS policy.
+ *
+ * Returns the retry interval as configured in the QoS policy for the given entity.
+ * If not set, returns a safe default (1000 ms).
+ *
+ * @param qos_entity Handle to the QoS entity.
+ * @return Retry interval in milliseconds.
+ */
 static uint32_t manager_get_retry_interval_ms(IN ZOO_SMB_QOS_ENTITY_HANDLE qos_entity)
 {
     ZOO_SMB_QOS_POLICY_HANDLE qos_policy = zoo_smb_qos_get_policy(qos_entity);
@@ -36,6 +45,15 @@ static uint32_t manager_get_retry_interval_ms(IN ZOO_SMB_QOS_ENTITY_HANDLE qos_e
 
 /**
  * @brief Returns SUBACK wait timeout configured by QoS, or a safe default.
+ */
+/**
+ * @brief Get the SUBACK wait timeout (ms) from QoS policy.
+ *
+ * Returns the maximum blocking time for SUBACK as configured in the QoS policy for the given entity.
+ * If not set, returns a safe default (5000 ms).
+ *
+ * @param qos_entity Handle to the QoS entity.
+ * @return Wait timeout in milliseconds.
  */
 static uint32_t manager_get_wait_timeout_ms(IN ZOO_SMB_QOS_ENTITY_HANDLE qos_entity)
 {
@@ -51,6 +69,15 @@ static uint32_t manager_get_wait_timeout_ms(IN ZOO_SMB_QOS_ENTITY_HANDLE qos_ent
  * @brief Computes capped exponential retry delay from QoS policy.
  *
  * Delay growth is capped to avoid unbounded backoff and preserve responsiveness.
+ */
+/**
+ * @brief Compute capped exponential backoff delay for retries.
+ *
+ * Calculates the retry delay using exponential backoff, capped by the SUBACK wait timeout.
+ *
+ * @param qos_entity    Handle to the QoS entity.
+ * @param retry_attempts Number of retry attempts so far.
+ * @return Delay in milliseconds before next retry.
  */
 static uint32_t manager_get_backoff_delay_ms(
     IN ZOO_SMB_QOS_ENTITY_HANDLE qos_entity,
@@ -77,6 +104,14 @@ static uint32_t manager_get_backoff_delay_ms(
 /**
  * @brief Clears QoS request tracking and resets session in-flight request id.
  */
+/**
+ * @brief Reset the in-flight request state for a session.
+ *
+ * Removes any request state from the QoS context and clears the session's request_id.
+ *
+ * @param qos_entity Handle to the QoS entity.
+ * @param session    Handle to the subscription session.
+ */
 static void manager_reset_session_request(
     IN ZOO_SMB_QOS_ENTITY_HANDLE qos_entity,
     IN ZOO_SMB_SUBSCRIPTION_SESSION_HANDLE session)
@@ -96,6 +131,18 @@ static void manager_reset_session_request(
  *
  * On success the session moves to WAITING_SUBACK. On failure the session is
  * degraded or pending-service, and next retry time is scheduled.
+ */
+/**
+ * @brief Send a SUB negotiation message for a session and update its state.
+ *
+ * Allocates a new request_id, builds and sends a SUB message, and updates the session state.
+ * Handles error and retry logic, including degraded and pending-service states.
+ *
+ * @param node        Handle to the node.
+ * @param qos_entity  Handle to the QoS entity.
+ * @param session     Handle to the subscription session.
+ * @param now_ms      Current time in milliseconds.
+ * @return ZOO_TRUE on success, ZOO_FALSE on failure.
  */
 static ZOO_BOOL manager_send_subscription(
     IN ZOO_SMB_NODE_HANDLE node,
@@ -441,9 +488,11 @@ void zoo_smb_subscription_session_manager_reconcile(
     ZOO_BOOL pending = ZOO_FALSE;
 
     /* Reconcile always starts by aligning session state with latest service availability. */
-    zoo_smb_subscription_session_manager_on_service_change(manager, qos_entity, service_available, now_ms, node);
+    zoo_smb_subscription_session_manager_on_service_change(
+        manager, qos_entity, service_available, now_ms, node);
 
-    for (size_t i = 0; i < zoo_list_size(manager->sessions); ++i)
+    size_t session_count = zoo_list_size(manager->sessions);
+    for (size_t i = 0; i < session_count; ++i)
     {
         ZOO_SMB_SUBSCRIPTION_SESSION_HANDLE session =
             (ZOO_SMB_SUBSCRIPTION_SESSION_HANDLE)zoo_list_at(manager->sessions, i);
@@ -465,10 +514,12 @@ void zoo_smb_subscription_session_manager_reconcile(
 
                 if (session->next_retry_at_ms <= now_ms)
                 {
-                    (void)manager_send_subscription(node, qos_entity, session, now_ms);
+                    (void)manager_send_subscription(
+                        node, qos_entity, session, now_ms);
                 }
-                pending = (session->state != ZOO_SMB_SUBSCRIPTION_SESSION_STATE_ACTIVE &&
-                           session->state != ZOO_SMB_SUBSCRIPTION_SESSION_STATE_FAILED);
+                pending = (
+                    session->state != ZOO_SMB_SUBSCRIPTION_SESSION_STATE_ACTIVE &&
+                    session->state != ZOO_SMB_SUBSCRIPTION_SESSION_STATE_FAILED);
                 break;
 
             case ZOO_SMB_SUBSCRIPTION_SESSION_STATE_WAITING_SUBACK:
@@ -481,7 +532,8 @@ void zoo_smb_subscription_session_manager_reconcile(
                 if (session->request_id == 0)
                 {
                     session->state = ZOO_SMB_SUBSCRIPTION_SESSION_STATE_DEGRADED;
-                    session->next_retry_at_ms = now_ms + manager_get_retry_interval_ms(qos_entity);
+                    session->next_retry_at_ms =
+                        now_ms + manager_get_retry_interval_ms(qos_entity);
                     pending = ZOO_TRUE;
                     break;
                 }
@@ -496,7 +548,9 @@ void zoo_smb_subscription_session_manager_reconcile(
 
                     case ZOO_SMB_MSG_ST_FAILED:
                     {
-                        uint32_t incompatibility_mask = zoo_smb_qos_ctx_get_incompatibility_mask(qos_ctx, session->request_id);
+                        uint32_t incompatibility_mask =
+                            zoo_smb_qos_ctx_get_incompatibility_mask(
+                                qos_ctx, session->request_id);
                         manager_reset_session_request(qos_entity, session);
                         if (incompatibility_mask != 0U)
                         {
@@ -505,7 +559,9 @@ void zoo_smb_subscription_session_manager_reconcile(
                         else
                         {
                             session->state = ZOO_SMB_SUBSCRIPTION_SESSION_STATE_DEGRADED;
-                            session->next_retry_at_ms = now_ms + manager_get_backoff_delay_ms(qos_entity, session->retry_attempts);
+                            session->next_retry_at_ms =
+                                now_ms + manager_get_backoff_delay_ms(
+                                    qos_entity, session->retry_attempts);
                             pending = ZOO_TRUE;
                         }
                         break;
@@ -516,9 +572,12 @@ void zoo_smb_subscription_session_manager_reconcile(
                         if (session->next_retry_at_ms <= now_ms)
                         {
                             manager_reset_session_request(qos_entity, session);
-                            session->state = service_available ? ZOO_SMB_SUBSCRIPTION_SESSION_STATE_DEGRADED
-                                                               : ZOO_SMB_SUBSCRIPTION_SESSION_STATE_PENDING_SERVICE;
-                            session->next_retry_at_ms = now_ms + manager_get_backoff_delay_ms(qos_entity, session->retry_attempts);
+                            session->state = service_available
+                                ? ZOO_SMB_SUBSCRIPTION_SESSION_STATE_DEGRADED
+                                : ZOO_SMB_SUBSCRIPTION_SESSION_STATE_PENDING_SERVICE;
+                            session->next_retry_at_ms =
+                                now_ms + manager_get_backoff_delay_ms(
+                                    qos_entity, session->retry_attempts);
                         }
                         pending = ZOO_TRUE;
                         break;

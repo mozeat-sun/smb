@@ -22,6 +22,15 @@
 #include <stdlib.h>
 #include <time.h>
 
+/**
+ * @brief Calculates the effective maximum payload size for SMB messages.
+ *
+ * Determines the maximum payload size that can be sent in a single SMB message,
+ * accounting for the configured transport buffer size and the protocol header size.
+ *
+ * @return The maximum payload size in bytes that can be safely used for a message.
+ *         Returns 0 if the transport budget is insufficient for a header.
+ */
 static size_t smb_effective_max_payload_size(void)
 {
     size_t transport_budget = ZOO_SMB_DEFAULT_MAX_TRANSPORT_BUFFER_SIZE;

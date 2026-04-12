@@ -24,6 +24,17 @@ extern "C"
     /**
      * @brief TCP Server Transport Structure
      */
+
+    /**
+     * @brief Callback type for received messages on the server.
+     *
+     * @param server Pointer to the server transport struct.
+     * @param client Pointer to the client info struct.
+     * @param msg Pointer to the received message struct (ownership not transferred).
+     * @param user_data User-provided context pointer.
+     */
+    typedef void (*tcp_server_message_callback_t)(TCP_SERVER_TRANSPORT_STRUCT* server, TCP_CLIENT_INFO_STRUCT* client, const ZOO_SMB_MSG_STRUCT* msg, void* user_data);
+
     typedef struct
     {
         ZOO_SMB_TCP_TRANSPORT_COMMON common; /**< Common TCP transport base */
@@ -36,7 +47,22 @@ extern "C"
         // Server configuration
         int listen_backlog;          /**< Listen socket backlog */
         ZOO_BOOL accept_new_connections; /**< Flag to control new connection acceptance */
+
+        // Message receive callback
+        tcp_server_message_callback_t message_callback; /**< Callback for received messages */
+        void* message_callback_user_data; /**< User data for callback */
     } TCP_SERVER_TRANSPORT_STRUCT;
+
+    /**
+     * @brief Register a callback for received messages on the server.
+     *
+     * The callback will be invoked for each successfully parsed message received from any client.
+     *
+     * @param server TCP server transport structure
+     * @param callback Function pointer to the callback (NULL to unregister)
+     * @param user_data User data pointer to pass to callback
+     */
+    void tcp_server_register_message_callback(TCP_SERVER_TRANSPORT_STRUCT* server, tcp_server_message_callback_t callback, void* user_data);
 
     // ==============================================================================
     // SERVER LIFECYCLE FUNCTIONS
