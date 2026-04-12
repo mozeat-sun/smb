@@ -1,21 +1,4 @@
-/**
- * @brief Register a callback for received messages on the server.
- *
- * The callback will be invoked for each successfully parsed message received from any client.
- * Thread-safety: This function is not thread-safe. Register callbacks before starting the event loop.
- *
- * @param server TCP server transport structure
- * @param callback Function pointer to the callback (NULL to unregister)
- * @param user_data User data pointer to pass to callback
- */
-void tcp_server_register_message_callback(TCP_SERVER_TRANSPORT_STRUCT *server, tcp_server_message_callback_t callback, void *user_data)
-{
-    if (!server)
-        return;
-    server->message_callback = callback;
-    server->message_callback_user_data = user_data;
-}
-/*******************************************************************************
+/*
  * Copyright (C) 2025, Basic Software Research Institute ltd
  * All rights reserved.
  * Product: ZOO
@@ -23,27 +6,30 @@ void tcp_server_register_message_callback(TCP_SERVER_TRANSPORT_STRUCT *server, t
  * Component id: ZOO_SMB_TRANSPORT_TCP_SERVER
  * File name: zoo_smb_transport_tcp_server.c
  * Description: TCP server transport implementation
- ******************************************************************************/
+ */
+
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <time.h>
+#include <sys/epoll.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <errno.h>
 
 #include "zoo_smb_transport_tcp_server.h"
 #include "zoo_smb_error.h"
 #include "zoo_memory_pool.h"
-#include <errno.h>
+void tcp_server_register_message_callback(TCP_SERVER_TRANSPORT_STRUCT *server, tcp_server_message_callback_t callback, void *user_data)
+{
+    if (!server)
+        return;
+    server->message_callback = callback;
+    server->message_callback_user_data = user_data;
+}
 
-/**
- * @brief Initializes TCP server transport implementation storage.
- *
- * @param transport Transport instance with valid TCP server configuration.
- * @return ZOO_SMB_OK on success, or an error code when validation/allocation fails.
- */
-/**
- * @brief Initialize TCP server transport implementation storage.
- *
- * Allocates and initializes the TCP server transport structure and its client list.
- *
- * @param transport Transport instance with valid TCP server configuration.
- * @return ZOO_SMB_OK on success, or an error code when validation/allocation fails.
- */
 ZOO_ERROR_TYPE tcp_server_init(const ZOO_SMB_TRANSPORT_STRUCT *transport)
 {
     if (!transport || !transport->config)
@@ -80,14 +66,7 @@ ZOO_ERROR_TYPE tcp_server_init(const ZOO_SMB_TRANSPORT_STRUCT *transport)
     return ZOO_SMB_OK;
 }
 
-/**
- * @brief Destroy TCP server transport and release resources.
- *
- * Frees the TCP server transport structure and destroys its client list.
- *
- * @param impl Server transport pointer.
- * @return ZOO_SMB_OK on success, error code on failure.
- */
+// Destroy TCP server transport and release resources.
 ZOO_ERROR_TYPE tcp_server_destroy(void *impl)
 {
     if (!impl)
@@ -103,14 +82,7 @@ ZOO_ERROR_TYPE tcp_server_destroy(void *impl)
     return ZOO_SMB_OK;
 }
 
-/**
- * @brief Start TCP server transport.
- *
- * Sets the running and connection state flags to indicate the server is started.
- *
- * @param impl Server transport pointer.
- * @return ZOO_SMB_OK on success, error code on failure.
- */
+// Start TCP server transport.
 ZOO_ERROR_TYPE tcp_server_start(void *impl)
 {
     if (!impl)
@@ -149,14 +121,7 @@ ZOO_ERROR_TYPE tcp_server_start(void *impl)
     return ZOO_SMB_OK;
 }
 
-/**
- * @brief Stop TCP server transport.
- *
- * Sets the running and connection state flags to indicate the server is stopped.
- *
- * @param impl Server transport pointer.
- * @return ZOO_SMB_OK on success, error code on failure.
- */
+// Stop TCP server transport.
 ZOO_ERROR_TYPE tcp_server_stop(void *impl)
 {
     if (!impl)
@@ -186,16 +151,7 @@ ZOO_ERROR_TYPE tcp_server_stop(void *impl)
     return ZOO_SMB_OK;
 }
 
-/**
- * @brief Send a message through TCP server transport (not supported).
- *
- * This function is a stub and always returns not supported.
- *
- * @param impl Server transport pointer.
- * @param msg  Message data pointer.
- * @param receiver Target receiver (unused).
- * @return ZOO_SMB_ERROR_NOT_SUPPORTED always.
- */
+// Send a message through TCP server transport (not supported).
 ZOO_ERROR_TYPE tcp_server_send(void *impl, const ZOO_SMB_MSG_STRUCT *msg, const char *receiver)
 {
     if (!impl || !msg)
@@ -327,16 +283,7 @@ ZOO_ERROR_TYPE tcp_server_accept_client(TCP_SERVER_TRANSPORT_STRUCT *server)
     return ZOO_SMB_OK;
 }
 
-/**
- * @brief Add a client to the TCP server (not supported).
- *
- * This function is a stub and always returns not supported.
- *
- * @param server      Server transport pointer.
- * @param client_fd   Client file descriptor.
- * @param client_addr Client address pointer.
- * @return ZOO_SMB_ERROR_NOT_SUPPORTED always.
- */
+// Add a client to the TCP server (not supported).
 ZOO_ERROR_TYPE tcp_server_add_client(TCP_SERVER_TRANSPORT_STRUCT *server, int client_fd, struct sockaddr_in *client_addr)
 {
     if (!server || !client_addr)
@@ -356,15 +303,7 @@ ZOO_ERROR_TYPE tcp_server_add_client(TCP_SERVER_TRANSPORT_STRUCT *server, int cl
     return ZOO_SMB_OK;
 }
 
-/**
- * @brief Remove a client from the TCP server (not supported).
- *
- * This function is a stub and always returns not supported.
- *
- * @param server    Server transport pointer.
- * @param client_fd Client file descriptor.
- * @return ZOO_SMB_ERROR_NOT_SUPPORTED always.
- */
+// Remove a client from the TCP server (not supported).
 ZOO_ERROR_TYPE tcp_server_remove_client(TCP_SERVER_TRANSPORT_STRUCT *server, int client_fd)
 {
     if (!server)
@@ -376,7 +315,7 @@ ZOO_ERROR_TYPE tcp_server_remove_client(TCP_SERVER_TRANSPORT_STRUCT *server, int
         if (client && client->socket_info.fd == client_fd)
         {
             zoo_socket_close(&client->socket_info);
-            zoo_list_remove_at(server->clients, i);
+            zoo_list_remove(server->clients, client);
             zoo_free_to_pool(client);
             return ZOO_SMB_OK;
         }
@@ -384,15 +323,7 @@ ZOO_ERROR_TYPE tcp_server_remove_client(TCP_SERVER_TRANSPORT_STRUCT *server, int
     return ZOO_SMB_ERROR_INVALID_PARAM;
 }
 
-/**
- * @brief Find a client by file descriptor (not supported).
- *
- * This function is a stub and always returns NULL.
- *
- * @param server    Server transport pointer.
- * @param client_fd Client file descriptor.
- * @return NULL always.
- */
+// Find a client by file descriptor (not supported).
 TCP_CLIENT_INFO_STRUCT *tcp_server_find_client(TCP_SERVER_TRANSPORT_STRUCT *server, int client_fd)
 {
     if (!server)
@@ -407,15 +338,7 @@ TCP_CLIENT_INFO_STRUCT *tcp_server_find_client(TCP_SERVER_TRANSPORT_STRUCT *serv
     return NULL;
 }
 
-/**
- * @brief Broadcast a message to all clients (not supported).
- *
- * This function is a stub and always returns not supported.
- *
- * @param server Server transport pointer.
- * @param msg    Message pointer.
- * @return ZOO_SMB_ERROR_NOT_SUPPORTED always.
- */
+// Broadcast a message to all clients (not supported).
 ZOO_ERROR_TYPE tcp_server_broadcast_message(TCP_SERVER_TRANSPORT_STRUCT *server, const ZOO_SMB_MSG_STRUCT *msg)
 {
     if (!server || !msg)
@@ -436,17 +359,7 @@ ZOO_ERROR_TYPE tcp_server_broadcast_message(TCP_SERVER_TRANSPORT_STRUCT *server,
     return last_err;
 }
 
-/**
- * @brief Send a message to a specific client (not supported).
- *
- * This function is a stub and always returns not supported.
- *
- * @param server    Server transport pointer.
- * @param client_fd Client file descriptor.
- * @param msg       Message pointer.
- * @param size      Message size.
- * @return ZOO_SMB_ERROR_NOT_SUPPORTED always.
- */
+// Send a message to a specific client (not supported).
 ZOO_ERROR_TYPE tcp_server_send_to_client(TCP_SERVER_TRANSPORT_STRUCT *server, int client_fd, const void *msg, size_t size)
 {
     if (!server || !msg || size == 0)
@@ -459,13 +372,7 @@ ZOO_ERROR_TYPE tcp_server_send_to_client(TCP_SERVER_TRANSPORT_STRUCT *server, in
     return err;
 }
 
-/**
- * @brief Clean up disconnected clients (not supported).
- *
- * This function is a stub and does nothing.
- *
- * @param server Server transport pointer.
- */
+// Clean up disconnected clients (not supported).
 void tcp_server_cleanup_disconnected_clients(TCP_SERVER_TRANSPORT_STRUCT *server)
 {
     if (!server || !server->clients)
@@ -477,8 +384,9 @@ void tcp_server_cleanup_disconnected_clients(TCP_SERVER_TRANSPORT_STRUCT *server
         if (client && !client->active)
         {
             zoo_socket_close(&client->socket_info);
-            zoo_list_remove_at(server->clients, i);
+            zoo_list_remove(server->clients, client);
             zoo_free_to_pool(client);
+            // Do not increment i, list has shifted
         }
         else
         {
@@ -487,14 +395,7 @@ void tcp_server_cleanup_disconnected_clients(TCP_SERVER_TRANSPORT_STRUCT *server
     }
 }
 
-/**
- * @brief Main server event loop (not supported).
- *
- * This function is a stub and always returns not supported.
- *
- * @param server Server transport pointer.
- * @return ZOO_SMB_ERROR_NOT_SUPPORTED always.
- */
+// Main server event loop (not supported).
 ZOO_ERROR_TYPE tcp_server_event_loop(TCP_SERVER_TRANSPORT_STRUCT *server)
 {
     if (!server || !server->common.running)
@@ -555,15 +456,7 @@ ZOO_ERROR_TYPE tcp_server_event_loop(TCP_SERVER_TRANSPORT_STRUCT *server)
     return ZOO_SMB_OK;
 }
 
-/**
- * @brief Process epoll events for the server (not supported).
- *
- * This function is a stub and does nothing.
- *
- * @param server      Server transport pointer.
- * @param events      Array of epoll events.
- * @param event_count Number of events.
- */
+// Process epoll events for the server (not supported).
 void tcp_server_process_events(TCP_SERVER_TRANSPORT_STRUCT *server, struct epoll_event *events, int event_count)
 {
     // TODO: Iterate over epoll events and dispatch to listen/client handlers
@@ -572,14 +465,7 @@ void tcp_server_process_events(TCP_SERVER_TRANSPORT_STRUCT *server, struct epoll
     (void)event_count;
 }
 
-/**
- * @brief Handle listen socket events (not supported).
- *
- * This function is a stub and does nothing.
- *
- * @param server Server transport pointer.
- * @param events Epoll event flags.
- */
+// Handle listen socket events (not supported).
 void tcp_server_handle_listen_events(TCP_SERVER_TRANSPORT_STRUCT *server, uint32_t events)
 {
     // TODO: Handle new incoming connections on the listen socket
@@ -587,23 +473,7 @@ void tcp_server_handle_listen_events(TCP_SERVER_TRANSPORT_STRUCT *server, uint32
     (void)events;
 }
 
-/**
- * @brief Handle events for a client socket (epoll-driven, non-blocking).
- *
- * This function processes epoll events for a client socket, performing non-blocking reads,
- * message framing, deserialization, and callback/observer notification. It follows the ZOO code
- * specifications for error handling, state management, and documentation.
- *
- * Blocking: Non-blocking. All socket operations are non-blocking; no thread is blocked.
- * State: Updates client->active and removes client on disconnect or protocol error.
- * Ownership: Message struct passed to callback/observers is stack-allocated; payload ownership is not transferred.
- * Error handling: All errors are logged and mapped to state transitions. Invalid messages cause disconnect.
- * Thread safety: This function is not thread-safe; must be called from the event loop thread only.
- *
- * @param server    TCP server transport pointer (must not be NULL)
- * @param client_fd Client socket file descriptor
- * @param events    Epoll event flags (EPOLLIN, EPOLLRDHUP, etc.)
- */
+// Handle events for a client socket (epoll-driven, non-blocking).
 void tcp_server_handle_client_events(TCP_SERVER_TRANSPORT_STRUCT *server, int client_fd, uint32_t events)
 {
     if (!server)
@@ -693,5 +563,5 @@ void tcp_server_handle_client_events(TCP_SERVER_TRANSPORT_STRUCT *server, int cl
     {
         tcp_server_remove_client(server, client_fd);
     }
-}
+// Removed extra closing brace at end of file
 }

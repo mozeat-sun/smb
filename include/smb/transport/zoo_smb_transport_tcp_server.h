@@ -25,6 +25,13 @@ extern "C"
      * @brief TCP Server Transport Structure
      */
 
+
+
+    /* Forward declarations for type compatibility */
+    typedef struct TCP_SERVER_TRANSPORT_STRUCT TCP_SERVER_TRANSPORT_STRUCT;
+    /* Forward declaration only; do not typedef, already defined in common header */
+    struct TCP_CLIENT_INFO_STRUCT;
+
     /**
      * @brief Callback type for received messages on the server.
      *
@@ -35,8 +42,8 @@ extern "C"
      */
     typedef void (*tcp_server_message_callback_t)(TCP_SERVER_TRANSPORT_STRUCT* server, TCP_CLIENT_INFO_STRUCT* client, const ZOO_SMB_MSG_STRUCT* msg, void* user_data);
 
-    typedef struct
-    {
+
+    struct TCP_SERVER_TRANSPORT_STRUCT {
         ZOO_SMB_TCP_TRANSPORT_COMMON common; /**< Common TCP transport base */
 
         // Server-specific fields
@@ -51,7 +58,7 @@ extern "C"
         // Message receive callback
         tcp_server_message_callback_t message_callback; /**< Callback for received messages */
         void* message_callback_user_data; /**< User data for callback */
-    } TCP_SERVER_TRANSPORT_STRUCT;
+    };
 
     /**
      * @brief Register a callback for received messages on the server.
