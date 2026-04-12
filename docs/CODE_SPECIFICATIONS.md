@@ -178,3 +178,7 @@ These specifications apply to:
 - 2026-04-05: Initial repository-level code specifications.
 - 2026-04-05: Added repository-wide comments specifications section.
 - 2026-04-11: Strengthened comment contract rules for API behavior, async semantics, and review gate criteria.
+
+## 12. Code Structure and Nesting
+
+1. Nested curly braces shall not exceed 4 levels. If exceeded, functional decomposition and functional atomization are required. Refactor code to maintain readability and modularity.

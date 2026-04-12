@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <stdbool.h>
+#include <time.h>
 
 /**
  * @file client.c
@@ -34,9 +35,14 @@ int main(int argc, char* argv[])
 {
     COMMAND_OPTIONS_STRUCT options;
     memset(&options, 0x0, sizeof(COMMAND_OPTIONS_STRUCT));
-    if (0 != parse_arguments(argc, argv, &options))
+    int parse_result = parse_arguments(argc, argv, &options);
+    if (parse_result > 0)
     {
-        printf("Invalid argumenst,please use --help for details");
+        return EXIT_SUCCESS;
+    }
+    if (parse_result < 0)
+    {
+        printf("Invalid arguments, please use --help for details\n");
         return EXIT_FAILURE;
     }
 
@@ -45,18 +51,11 @@ int main(int argc, char* argv[])
     // zoo_log_set_target(ZOO_LOG_TARGET_BOTH);
 
     memset(client_name, 0x0, sizeof(client_name));
-    // Use target identity so server reply routing resolves this client in demo mode.
-    if (options.target && options.target[0] != '\0')
-    {
-        snprintf(client_name, sizeof(client_name), "%s", options.target);
-    }
-    else
-    {
-        snprintf(client_name, sizeof(client_name), "DemoClient_%d", getpid());
-    }
+    // Client identity must be unique from the server identity.
+    snprintf(client_name, sizeof(client_name), "DemoClient_%d", getpid());
     ZOO_LOG_INFO("Starting SMB client: %s -> %s (topic: %s)", client_name, options.target, options.topic);
 
-    // Create client
+    // Client transport is resolved from discovered server service metadata.
     ZOO_SMB_CLIENT_HANDLE client = zoo_smb_create_client(client_name, options.target, options.topic, NULL);
     if (client == NULL)
     {

@@ -87,9 +87,14 @@ int main(int argc, char* argv[])
 {
     COMMAND_OPTIONS_STRUCT options;
     memset(&options, 0x0, sizeof(COMMAND_OPTIONS_STRUCT));
-    if (0 != parse_arguments(argc, argv, &options))
+    int parse_result = parse_arguments(argc, argv, &options);
+    if (parse_result > 0)
     {
-        printf("Invalid argumenst,please use --help for details");
+        return EXIT_SUCCESS;
+    }
+    if (parse_result < 0)
+    {
+        printf("Invalid arguments, please use --help for details\n");
         return EXIT_FAILURE;
     }
 
@@ -103,7 +108,8 @@ int main(int argc, char* argv[])
     }
 
     memset(server_name, 0x0, sizeof(server_name));
-    sprintf(server_name, "DemoServer_%d", getpid());
+    // Use the target as the server name so the client can find the service
+    snprintf(server_name, sizeof(server_name), "%s", options.target);
     ZOO_SMB_TRANSPORT_TYPE_ENUM transport_type = options.transport_type == 0 ? ZOO_SMB_TRANSPORT_TYPE_UDP : (ZOO_SMB_TRANSPORT_TYPE_ENUM)options.transport_type;
     ZOO_SMB_SERVER_HANDLE server = zoo_smb_create_server(server_name, options.target, options.topic, transport_type, NULL);
     if (server == NULL)

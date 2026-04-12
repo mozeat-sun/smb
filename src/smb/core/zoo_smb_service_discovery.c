@@ -80,45 +80,59 @@ static ZOO_BOOL is_multicast_transport(ZOO_SMB_TRANSPORT_TYPE_ENUM transport_typ
 }
 
 /**
+ * @brief Parsed discovery fields from heartbeat payload.
+ */
+typedef struct DISCOVERY_PARSED_SERVICE_STRUCT
+{
+    char name[MAX_SERVICE_NAME_LENGTH];
+    char topic[MAX_SERVICE_TOPIC_LENGTH];
+    char address[MAX_SERVICE_ADDRESS_LENGTH];
+    char multicast_addr[MAX_SERVICE_ADDRESS_LENGTH];
+    ZOO_U16 port;
+    ZOO_U16 multicast_port;
+    ZOO_SMB_TRANSPORT_TYPE_ENUM transport_type;
+} DISCOVERY_PARSED_SERVICE_STRUCT;
+
+/**
  * @brief Parses a raw message and extracts service information with multicast support
  *
  * @param message Pointer to the message structure to be parsed
  * @param broadcast_interval_ms Default broadcast interval in milliseconds
  * @return Parsed service structure or NULL on failure
  */
-ZOO_SMB_SERVICE_STRUCT* parse_payload_message(const ZOO_SMB_MSG_STRUCT* message, ZOO_U32 broadcast_interval_ms)
+static ZOO_BOOL parse_payload_message(const ZOO_SMB_MSG_STRUCT* message, DISCOVERY_PARSED_SERVICE_STRUCT* parsed)
 {
-    ZOO_SMB_VALIDATE_PTR(message, NULL);
-    ZOO_SMB_SERVICE_STRUCT* service = NULL;
-    char name[MAX_SERVICE_NAME_LENGTH];                                          /**< Service name */
-    char topic[MAX_SERVICE_TOPIC_LENGTH];                                        /**< Service topic */
-    char address[MAX_SERVICE_ADDRESS_LENGTH];                                    /**< Service address */
-    char multicast_addr[MAX_SERVICE_ADDRESS_LENGTH] = {0};                       /**< Multicast group address */
-    ZOO_U16 port = 0;                                                           /**< Service port */
-    ZOO_U16 multicast_port = 0;                                                 /**< Multicast group port */
-    ZOO_SMB_TRANSPORT_TYPE_ENUM transport_type = ZOO_SMB_TRANSPORT_TYPE_DEFAULT; /**< Transport type. */
+    ZOO_SMB_VALIDATE_PTR(message, ZOO_FALSE);
+    ZOO_SMB_VALIDATE_PTR(parsed, ZOO_FALSE);
+
+    memset(parsed, 0, sizeof(*parsed));
+    parsed->transport_type = ZOO_SMB_TRANSPORT_TYPE_DEFAULT;
 
     // Try to parse with extended multicast support first
     ZOO_BOOL parse_success = zoo_smb_protocol_parse_discovery_payload_message_ex(
-        message, name, address, &port, topic, &transport_type, multicast_addr, &multicast_port);
+        message,
+        parsed->name,
+        parsed->address,
+        &parsed->port,
+        parsed->topic,
+        &parsed->transport_type,
+        parsed->multicast_addr,
+        &parsed->multicast_port);
 
-    if (parse_success)
+    if (!parse_success)
     {
-        service = zoo_smb_create_service(
-            ZOO_SMB_SERVICE_TYPE_REGISTRATION, name, topic, address, port, multicast_addr, multicast_port, transport_type, broadcast_interval_ms);
-
-        // Set multicast information if available and applicable
-        if (service && is_multicast_transport(transport_type) && strlen(multicast_addr) > 0)
-        {
-            // Store multicast information in service (you may need to extend ZOO_SMB_SERVICE_STRUCT)
-            // For now, we'll log it
-            ZOO_LOG_DEBUG("[DISC] Service '%s' uses multicast group %s:%d",
-                              name,
-                              multicast_addr,
-                              multicast_port);
-        }
+        return ZOO_FALSE;
     }
-    return service;
+
+    if (is_multicast_transport(parsed->transport_type) && strlen(parsed->multicast_addr) > 0)
+    {
+        ZOO_LOG_DEBUG("[DISC] Service '%s' uses multicast group %s:%d",
+                          parsed->name,
+                          parsed->multicast_addr,
+                          parsed->multicast_port);
+    }
+
+    return ZOO_TRUE;
 }
 
 /**
@@ -145,24 +159,71 @@ static void handle_received_message_cb(
         return;
     }
 
-    ZOO_SMB_SERVICE_STRUCT* service = parse_payload_message(message, discover->config->interval_ms);
-    ZOO_SMB_SERVICE_HANDLE exist_service = zoo_smb_service_manager_get_service(discover->service_manager, service->name, ZOO_SMB_SERVICE_TYPE_REGISTRATION);
+    DISCOVERY_PARSED_SERVICE_STRUCT parsed;
+    if (!parse_payload_message(message, &parsed))
+    {
+        ZOO_LOG_ERROR("[DISC] Failed to parse discovery payload");
+        return;
+    }
+
+    ZOO_SMB_SERVICE_HANDLE exist_service =
+        zoo_smb_service_manager_get_service(discover->service_manager, parsed.name, ZOO_SMB_SERVICE_TYPE_REGISTRATION);
     if (!exist_service)
     {
+        ZOO_U32 interval_ms = discover->config->interval_ms < 1000 ? 1000 : discover->config->interval_ms;
+        ZOO_SMB_SERVICE_HANDLE service = zoo_smb_create_service(
+            ZOO_SMB_SERVICE_TYPE_REGISTRATION,
+            parsed.name,
+            parsed.topic,
+            parsed.address,
+            parsed.port,
+            parsed.multicast_addr,
+            parsed.multicast_port,
+            parsed.transport_type,
+            interval_ms);
+        if (!service)
+        {
+            ZOO_LOG_ERROR("[DISC] Failed to create service from parsed payload: %s", parsed.name);
+            return;
+        }
+
         zoo_smb_service_manager_register_service(discover->service_manager, ZOO_SMB_SERVICE_TYPE_REGISTRATION, service);
+        zoo_smb_destroy_service(service);
     }
     else
     {
         ZOO_BOOL was_online = exist_service->is_online;
-        zoo_smb_service_set_last_seen(exist_service, service->last_seen);
-        zoo_smb_service_set_online_status(exist_service, ZOO_TRUE);
-        if (!was_online)
+        ZOO_BOOL service_changed =
+            strcmp(exist_service->topic, parsed.topic) != 0 ||
+            strcmp(exist_service->address, parsed.address) != 0 ||
+            strcmp(exist_service->multicast_address, parsed.multicast_addr) != 0 ||
+            exist_service->port != parsed.port ||
+            exist_service->multicast_port != parsed.multicast_port ||
+            exist_service->transport_type != parsed.transport_type;
+
+        snprintf(exist_service->topic, sizeof(exist_service->topic), "%s", parsed.topic);
+        exist_service->topic[sizeof(exist_service->topic) - 1] = '\0';
+        snprintf(exist_service->address, sizeof(exist_service->address), "%s", parsed.address);
+        exist_service->address[sizeof(exist_service->address) - 1] = '\0';
+        snprintf(exist_service->multicast_address, sizeof(exist_service->multicast_address), "%s", parsed.multicast_addr);
+        exist_service->multicast_address[sizeof(exist_service->multicast_address) - 1] = '\0';
+        exist_service->port = parsed.port;
+        exist_service->multicast_port = parsed.multicast_port;
+        exist_service->transport_type = parsed.transport_type;
+        exist_service->is_online = ZOO_TRUE;
+        exist_service->last_seen = time(NULL);
+        exist_service->broadcast_interval_ms = discover->config->interval_ms < 1000 ? 1000 : discover->config->interval_ms;
+
+        if (!was_online || service_changed)
         {
-            ZOO_LOG_INFO("[DISC] Service online again: %s at %s:%d", exist_service->name, exist_service->address, exist_service->port);
+            ZOO_LOG_INFO("[DISC] Service online: %s at %s:%d transport=%d",
+                exist_service->name,
+                exist_service->address,
+                exist_service->port,
+                exist_service->transport_type);
             zoo_smb_service_manager_notify_observers(discover->service_manager, exist_service);
         }
     }
-    zoo_smb_destroy_service(service);
 }
 
 /**

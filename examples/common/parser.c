@@ -3,6 +3,18 @@
 #include <stdlib.h>
 #include <string.h>
 
+static void print_client_server_usage(const char* program_name)
+{
+    printf("Usage: %s [options]\n", program_name);
+    printf("Options:\n");
+    printf("  -t, --target <name>     Target server name (default: 127.0.0.1:8080)\n");
+    printf("  --topic <topic>         Message topic (default: default_topic)\n");
+    printf("  -p, --payload <text>    Payload text (default: Hello, World!)\n");
+    printf("  -l, --log-level <0-6>   TRACE..OFF (default: 2)\n");
+    printf("  --transport <type>      0=UDP, 1=TCP, 2=UDP_BROADCAST, 3=UDP_MULTICAST, 4=SHM\n");
+    printf("  -h, --help              Show this help message\n");
+}
+
 // Parse command line arguments (legacy function name)
 /**
  * @brief Test or example function parse_arguments.
@@ -37,7 +49,12 @@ int parse_arguments(int argc, char* argv[], COMMAND_OPTIONS_STRUCT* options) {
                 options->transport_type = atoi(argv[++i]);
             }
         } else if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
-            return -1; // Indicate help was requested
+            print_client_server_usage(argv[0]);
+            return 1; // Indicate help was requested
+        } else {
+            fprintf(stderr, "Unknown argument: %s\n", argv[i]);
+            print_client_server_usage(argv[0]);
+            return -1;
         }
     }
     

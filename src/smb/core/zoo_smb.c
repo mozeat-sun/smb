@@ -401,6 +401,12 @@ ZOO_BOOL zoo_smb_is_ready()
  */
 ZOO_ERROR_TYPE zoo_smb_register_node(IN ZOO_SMB_NODE_HANDLE node)
 {
+    if (node == NULL)
+    {
+        ZOO_LOG_ERROR("Invalid node handle");
+        return ZOO_SMB_ERROR_INVALID_PARAM;
+    }
+
     if (zoo_smb_find_node(_NODE_LIST_, node) != NULL)
     {
         ZOO_LOG_WARN("Node is already registered: %p", node);
@@ -412,6 +418,17 @@ ZOO_ERROR_TYPE zoo_smb_register_node(IN ZOO_SMB_NODE_HANDLE node)
                      node->target,
                      node->topic,
                      node->transport_type);
+
+    if (node->node_type == ZOO_SMB_NODE_TYPE_SERVER)
+    {
+        ZOO_ERROR_TYPE associate_result = make_node_associate_with_bus(g_smb_instance, node);
+        if (associate_result != ZOO_SMB_OK)
+        {
+            zoo_list_remove(_NODE_LIST_, node);
+            ZOO_LOG_ERROR("Failed to activate server node '%s': %d", node->name, associate_result);
+            return associate_result;
+        }
+    }
 
     return ZOO_SMB_OK;
 }

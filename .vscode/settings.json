@@ -13,6 +13,8 @@
         "zoo_memory_pool.h": "c",
         "stdint.h": "c"
     },
-    "C_Cpp.default.compilerPath": "D:/Mingw/bin/gcc.exe",
-    "cmake.sourceDirectory": "/home/mozeat/zoo/socket/tests"
+    "C_Cpp.default.compilerPath": "/usr/bin/gcc",
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+    "editor.multiCursorModifier": "alt",
+    "cmake.sourceDirectory": "${workspaceFolder}"
 }

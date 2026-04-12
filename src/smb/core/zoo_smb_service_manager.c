@@ -260,7 +260,8 @@ static ZOO_SMB_SERVICE_HANDLE manager_find_service(
     for (size_t i = 0; i < zoo_list_size(service_list); i++)
     {
         ZOO_SMB_SERVICE_STRUCT* service = (ZOO_SMB_SERVICE_STRUCT*)zoo_list_at(service_list, i);
-        if (service && strcmp(service->name, service_name) == 0 && service->transport_type == transport_type && strcmp(service->topic, topic) == 0)
+        ZOO_BOOL transport_match = (transport_type == ZOO_SMB_TRANSPORT_TYPE_MIN) || (service && service->transport_type == transport_type);
+        if (service && strcmp(service->name, service_name) == 0 && transport_match && strcmp(service->topic, topic) == 0)
         {
             return (ZOO_SMB_SERVICE_HANDLE)service;
         }
@@ -481,6 +482,7 @@ ZOO_SMB_SERVICE_HANDLE zoo_smb_service_manager_make_service(
     ZOO_SMB_NODE_HANDLE node)
 {
     ZOO_SMB_SERVICE_TYPE_ENUM service_type = ZOO_SMB_SERVICE_TYPE_MAX;
+    ZOO_SMB_TRANSPORT_TYPE_ENUM lookup_transport = node->transport_type;
     if (node->node_type == ZOO_SMB_NODE_TYPE_SERVER || node->node_type == ZOO_SMB_NODE_TYPE_PUBLISHER)
     {
         service_type = ZOO_SMB_SERVICE_TYPE_BROADCAST;
@@ -488,6 +490,8 @@ ZOO_SMB_SERVICE_HANDLE zoo_smb_service_manager_make_service(
     else if (node->node_type == ZOO_SMB_NODE_TYPE_SUBSCRIBER || node->node_type == ZOO_SMB_NODE_TYPE_CLIENT)
     {
         service_type = ZOO_SMB_SERVICE_TYPE_REGISTRATION;
+        // Client/subscriber should follow discovered service transport instead of pre-binding one.
+        lookup_transport = ZOO_SMB_TRANSPORT_TYPE_MIN;
     }
     else
     {
@@ -496,7 +500,7 @@ ZOO_SMB_SERVICE_HANDLE zoo_smb_service_manager_make_service(
     }
 
     ZOO_LOG_DEBUG("Creating service for node: %s, target:%s type: %d", node->name, node->target, service_type);
-    ZOO_SMB_SERVICE_HANDLE service = manager_find_service(manager->service_list[service_type], node->target, node->topic, node->transport_type);
+    ZOO_SMB_SERVICE_HANDLE service = manager_find_service(manager->service_list[service_type], node->target, node->topic, lookup_transport);
     if (!service && service_type == ZOO_SMB_SERVICE_TYPE_BROADCAST)
     {
         const char * multicast_address = manager->config->multicast.address;

@@ -221,6 +221,7 @@ static void client_on_handle_REQACK_message_cb(IN void* context, IN const void* 
  * @param target The target address or identifier for the SMB client connection.
  * @return ZOO_SMB_CLIENT_HANDLE  The created SMB client node.
  */
+
 ZOO_SMB_CLIENT_HANDLE zoo_smb_create_client(
     IN const char* name,
     IN const char* target,

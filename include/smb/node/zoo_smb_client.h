@@ -24,16 +24,18 @@ extern "C"
 
     typedef struct ZOO_SMB_CLIENT_STRUCT* ZOO_SMB_CLIENT_HANDLE;
 
+
     /**
      * @brief Creates a new SMB client node.
      *
-     * This function initializes and returns a new SMB client node with the specified name and target.
+     * Client routing is discovery-driven; the effective transport is resolved from
+     * discovered server/service information when the client associates and sends.
      *
      * @param name   The name to assign to the SMB client node.
      * @param target The target address or identifier for the SMB client connection.
      * @param topic  The topic string to associate with the SMB client node.
-    * @param policy Optional QoS policy. Implementation uses default policy when NULL.
-    * @return ZOO_SMB_CLIENT_HANDLE The created SMB client handle, or NULL on failure.
+     * @param policy Optional QoS policy. Implementation uses default policy when NULL.
+     * @return ZOO_SMB_CLIENT_HANDLE The created SMB client handle, or NULL on failure.
      */
     ZOO_SMB_CLIENT_HANDLE zoo_smb_create_client(
         IN const char* name,

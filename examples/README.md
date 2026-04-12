@@ -21,24 +21,44 @@ cmake --build build -j"$(nproc)"
 
 - zoo_example_client
 - zoo_example_server
+- zoo_example_udp_client
+- zoo_example_udp_server
 - zoo_example_publisher
 - zoo_example_subscriber
 - zoo_example_shm_server
 - zoo_example_shm_client
 
-Executables are generated in the repository root bin directory.
+Executables are generated in the repository root stage/bin directory.
 
 ## Run
 
 From repository root:
 
 ```bash
-./bin/zoo_example_server
-./bin/zoo_example_client
-./bin/zoo_example_publisher
-./bin/zoo_example_subscriber
-./bin/zoo_example_shm_server
-./bin/zoo_example_shm_client
+./stage/bin/zoo_example_server
+./stage/bin/zoo_example_client
+./stage/bin/zoo_example_udp_server
+./stage/bin/zoo_example_udp_client
+./stage/bin/zoo_example_publisher
+./stage/bin/zoo_example_subscriber
+./stage/bin/zoo_example_shm_server
+./stage/bin/zoo_example_shm_client
+```
+
+## UDP Transport Demo
+
+Run server and client in separate terminals.
+
+Terminal 1:
+
+```bash
+./stage/bin/zoo_example_udp_server -t demo_udp -l 2
+```
+
+Terminal 2:
+
+```bash
+./stage/bin/zoo_example_udp_client -t demo_udp -p "hello udp" -l 2
 ```
 
 ## SHM Transport Demo
@@ -48,13 +68,13 @@ Run server and client in separate terminals.
 Terminal 1:
 
 ```bash
-./bin/zoo_example_shm_server --channel zoo_shm_demo --server-name shm_demo_server
+./stage/bin/zoo_example_shm_server --channel zoo_shm_demo --server-name shm_demo_server
 ```
 
 Terminal 2:
 
 ```bash
-./bin/zoo_example_shm_client --channel zoo_shm_demo --server-name shm_demo_server --payload "hello shm"
+./stage/bin/zoo_example_shm_client --channel zoo_shm_demo --server-name shm_demo_server --payload "hello shm"
 ```
 
 Useful flags:

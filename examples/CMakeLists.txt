@@ -72,6 +72,22 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/client_server/server.c")
     zoo_configure_example(zoo_example_server)
 endif()
 
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/client_server/client_udp.c")
+    add_executable(zoo_example_udp_client
+        ${CMAKE_CURRENT_SOURCE_DIR}/client_server/client_udp.c
+        ${EXAMPLES_COMMON_SOURCES}
+    )
+    zoo_configure_example(zoo_example_udp_client)
+endif()
+
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/client_server/server_udp.c")
+    add_executable(zoo_example_udp_server
+        ${CMAKE_CURRENT_SOURCE_DIR}/client_server/server_udp.c
+        ${EXAMPLES_COMMON_SOURCES}
+    )
+    zoo_configure_example(zoo_example_udp_server)
+endif()
+
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/pub_sub/publisher.c")
     add_executable(zoo_example_publisher
         ${CMAKE_CURRENT_SOURCE_DIR}/pub_sub/publisher.c
