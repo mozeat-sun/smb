@@ -5,6 +5,7 @@
 /bin/
 /lib/
 /artifacts/
+.vscode/
 
 # Per-module generated build/report folders
 /buffer/build/
