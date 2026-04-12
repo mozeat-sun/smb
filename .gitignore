@@ -48,6 +48,24 @@ rules.ninja
 .ninja_deps
 .ninja_log
 
+# Ignore Makefile and CMake/cmake process files in src and all subdirectories
+src/**/Makefile
+src/**/Makefile.*
+src/**/cmake_install.cmake*
+src/**/CMakeFiles/
+src/**/CMakeScripts/
+src/**/CMakeTmp/
+src/**/cmake-*
+src/**/_deps/
+src/**/_build/
+src/**/build.ninja
+src/**/rules.ninja
+src/**/.ninja_deps
+src/**/.ninja_log
+src/**/CTestTestfile.cmake
+src/**/CMakeCache.txt
+src/**/compile_commands.json
+
 # Logs and temporary files
 *.log
 *.tmp
