@@ -412,7 +412,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
     set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "ZOO Util Module")
     set(CPACK_PACKAGE_VENDOR "Basic Software Research Institute ltd")
-    set(CPACK_PACKAGE_CONTACT "weiwang.sun@niopower.com")
+    set(CPACK_PACKAGE_CONTACT "weiwang.sun@gmail.com")
 
     set(CPACK_SOURCE_GENERATOR "TGZ")
     set(CPACK_GENERATOR "TGZ;DEB;RPM")

@@ -6,7 +6,7 @@ includedir=${prefix}/include
 Name: ZooDispatcher
 Description: ZOO Framework Message Dispatcher Library
 Version: @PROJECT_VERSION@
-URL: https://github.com/niopower/zoo-dispatcher
+URL: 
 Requires: 
 Requires.private: 
 Conflicts:
