@@ -22,7 +22,7 @@ fi
 export LD_LIBRARY_PATH="$PWD/stage/lib:$PWD/${BUILD_DIR}/hidden_shared_libs:${LD_LIBRARY_PATH:-}"
 
 {
-  echo "Benchmark execution path: isolated modes 1, 2, and 6"
+  echo "Benchmark execution path: isolated modes 1, 2, 5, and 6"
   echo "Date: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
   echo
   echo "[mode 1]"
@@ -31,6 +31,10 @@ export LD_LIBRARY_PATH="$PWD/stage/lib:$PWD/${BUILD_DIR}/hidden_shared_libs:${LD
   echo
   echo "[mode 2]"
   "${BENCHMARK_BIN}" 2 2>&1 | grep '\[bench' || true
+  sleep 6
+  echo
+  echo "[mode 5]"
+  "${BENCHMARK_BIN}" 5 2>&1 | grep '\[bench' || true
   sleep 6
   echo
   echo "[mode 6]"
@@ -47,6 +51,11 @@ metrics = {
   "p99_latency_ms": None,
   "throughput_ops": None,
   "jitter_ms": None,
+  "bench5_throughput_ops": None,
+  "bench5_p50_latency_ms": None,
+  "bench5_p95_latency_ms": None,
+  "bench5_p99_latency_ms": None,
+  "bench5_jitter_ms": None,
   "message_size_throughput_ops": {},
   "bench6_throughput_ops": None,
   "p50_latency_ms": None,
@@ -63,6 +72,19 @@ try:
 
   for payload_size, throughput in re.findall(r"\[bench2\]\s+payload=([0-9]+)B\s+success=[0-9]+/[0-9]+\s+throughput=([0-9]+(?:\.[0-9]+)?)\s+msg/s", content):
     metrics["message_size_throughput_ops"][payload_size] = float(throughput)
+
+  bench5 = re.search(
+    r"\[bench5\].*?throughput=([0-9]+(?:\.[0-9]+)?)\s+msg/s\s+avg=([0-9]+(?:\.[0-9]+)?)\s+us\s+p50=([0-9]+(?:\.[0-9]+)?)\s+us\s+p95=([0-9]+(?:\.[0-9]+)?)\s+us\s+p99=([0-9]+(?:\.[0-9]+)?)\s+us\s+min=([0-9]+(?:\.[0-9]+)?)\s+us\s+max=([0-9]+(?:\.[0-9]+)?)\s+us",
+    content,
+  )
+  if bench5:
+    metrics["bench5_throughput_ops"] = float(bench5.group(1))
+    metrics["bench5_p50_latency_ms"] = round(float(bench5.group(3)) / 1000.0, 3)
+    metrics["bench5_p95_latency_ms"] = round(float(bench5.group(4)) / 1000.0, 3)
+    metrics["bench5_p99_latency_ms"] = round(float(bench5.group(5)) / 1000.0, 3)
+    bench5_min_ms = float(bench5.group(6)) / 1000.0
+    bench5_max_ms = float(bench5.group(7)) / 1000.0
+    metrics["bench5_jitter_ms"] = round(bench5_max_ms - bench5_min_ms, 3)
 
   bench6 = re.search(
     r"\[bench6\].*?throughput=([0-9]+(?:\.[0-9]+)?)\s+msg/s\s+avg=([0-9]+(?:\.[0-9]+)?)\s+us\s+p50=([0-9]+(?:\.[0-9]+)?)\s+us\s+p95=([0-9]+(?:\.[0-9]+)?)\s+us\s+p99=([0-9]+(?:\.[0-9]+)?)\s+us\s+min=([0-9]+(?:\.[0-9]+)?)\s+us\s+max=([0-9]+(?:\.[0-9]+)?)\s+us",
@@ -95,6 +117,11 @@ summary = {
     "source": "isolated-e2e-benchmark-modes",
     "profile": profile_name,
     "throughput_ops": metrics.get("throughput_ops"),
+  "bench5_throughput_ops": metrics.get("bench5_throughput_ops"),
+  "bench5_p50_latency_ms": metrics.get("bench5_p50_latency_ms"),
+  "bench5_p95_latency_ms": metrics.get("bench5_p95_latency_ms"),
+  "bench5_p99_latency_ms": metrics.get("bench5_p99_latency_ms"),
+  "bench5_jitter_ms": metrics.get("bench5_jitter_ms"),
     "bench6_throughput_ops": metrics.get("bench6_throughput_ops"),
     "p50_latency_ms": metrics.get("p50_latency_ms"),
     "p95_latency_ms": metrics.get("p95_latency_ms"),
@@ -103,6 +130,59 @@ summary = {
     "message_size_throughput_ops": metrics.get("message_size_throughput_ops", {}),
 }
 print(json.dumps(summary))
+PY
+
+python3 - "${ARTIFACT_DIR}/benchmark_metrics.json" > "${ARTIFACT_DIR}/latency_scenario_matrix.json" <<'PY'
+import json
+import sys
+
+with open(sys.argv[1], "r", encoding="utf-8") as f:
+  metrics = json.load(f)
+
+matrix = {
+  "scenarios": [
+    {
+      "name": "rpc_round_trip",
+      "source": "bench5",
+      "throughput_ops": metrics.get("bench5_throughput_ops"),
+      "p50_latency_ms": metrics.get("bench5_p50_latency_ms"),
+      "p95_latency_ms": metrics.get("bench5_p95_latency_ms"),
+      "p99_latency_ms": metrics.get("bench5_p99_latency_ms"),
+      "jitter_ms": metrics.get("bench5_jitter_ms"),
+    },
+    {
+      "name": "pubsub_one_way",
+      "source": "bench6",
+      "throughput_ops": metrics.get("bench6_throughput_ops"),
+      "p50_latency_ms": metrics.get("p50_latency_ms"),
+      "p95_latency_ms": metrics.get("p95_latency_ms"),
+      "p99_latency_ms": metrics.get("p99_latency_ms"),
+      "jitter_ms": metrics.get("jitter_ms"),
+    },
+  ]
+}
+
+print(json.dumps(matrix))
+PY
+
+python3 - "${ARTIFACT_DIR}/latency_scenario_matrix.json" > "${ARTIFACT_DIR}/latency_scenario_matrix.md" <<'PY'
+import json
+import sys
+
+with open(sys.argv[1], "r", encoding="utf-8") as f:
+  matrix = json.load(f)
+
+print("# Latency Scenario Matrix")
+print()
+print("| Scenario | Source | Throughput (msg/s) | p50 (ms) | p95 (ms) | p99 (ms) | Jitter (ms) |")
+print("|---|---|---:|---:|---:|---:|---:|")
+for row in matrix.get("scenarios", []):
+  print(
+    f"| {row.get('name')} | {row.get('source')} | "
+    f"{row.get('throughput_ops')} | {row.get('p50_latency_ms')} | "
+    f"{row.get('p95_latency_ms')} | {row.get('p99_latency_ms')} | "
+    f"{row.get('jitter_ms')} |"
+  )
 PY
 
 QUALITY_REQUIRE_METRICS="${QUALITY_REQUIRE_METRICS}" \

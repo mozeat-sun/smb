@@ -28,6 +28,8 @@ Candidate focus areas:
 - release scorecard and release notes for the candidate baseline
 - threat model and vulnerability SLA records
 - benchmark, soak, reliability, fuzz, and compatibility artifacts
+- pre-assessment readiness gate artifacts (`artifacts/quality/pre_assessment_readiness_report.md` and `artifacts/quality/pre_assessment_readiness_summary.json`)
+- remediation plan artifacts (`artifacts/quality/pre_assessment_remediation_plan.md` and `artifacts/quality/pre_assessment_remediation_plan_summary.json`)
 
 ## 3. External review questions
 
@@ -52,6 +54,8 @@ Candidate focus areas:
 - remediation plan linked to findings
 - re-assessment status note
 - stakeholder readiness summary
+- repository-generated readiness gate report and summary for the assessed baseline
+- repository-generated remediation plan report and summary for open findings
 
 ## 6. Repository limitations
 

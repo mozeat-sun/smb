@@ -13,7 +13,8 @@ Use this checklist at release execution time for the M3-RC1 candidate.
 ## CI execution
 
 - [ ] Run the `Quality Gates` workflow from [.github/workflows/quality-gates.yml](.github/workflows/quality-gates.yml) on the release commit.
-- [ ] Verify successful jobs for traceability, protocol-compatibility, static-analysis, dependency-scan, vulnerability-sla, soak, reliability-until-fail, fault-injection, fuzz, and benchmark.
+- [ ] Verify successful jobs for traceability, protocol-compatibility, static-analysis, dependency-scan, vulnerability-sla, pre-assessment-readiness, soak, reliability-until-fail, recovery-rto, fault-injection, fuzz, and benchmark.
+- [ ] Verify successful jobs for traceability, protocol-compatibility, static-analysis, dependency-scan, vulnerability-sla, pre-assessment-readiness, soak, reliability-until-fail, recovery-rto, fault-injection, fuzz, benchmark, and grade1-exit-status.
 - [ ] Preserve the uploaded workflow artifacts for the release record.
 	Current note: local artifact evidence is present under `artifacts/quality/`; remote workflow verification is still pending from this environment.
 
@@ -26,6 +27,20 @@ Use this checklist at release execution time for the M3-RC1 candidate.
 - [x] Archive `artifacts/quality/vulnerability_sla_summary.json`.
 - [x] Archive `artifacts/quality/fuzz_summary.json`.
 - [x] Archive `artifacts/quality/protocol_compatibility_matrix.md`.
+- [x] Archive `artifacts/quality/pre_assessment_readiness_report.md`.
+- [x] Archive `artifacts/quality/pre_assessment_readiness_summary.json`.
+- [x] Archive `artifacts/quality/pre_assessment_remediation_plan.md`.
+- [x] Archive `artifacts/quality/pre_assessment_remediation_plan_summary.json`.
+- [x] Archive `artifacts/quality/static_analysis_summary.json`.
+- [x] Archive `artifacts/quality/dependency_scan_summary.json`.
+- [x] Archive `artifacts/quality/recovery_rto_report.md`.
+- [x] Archive `artifacts/quality/recovery_rto_summary.json`.
+- [x] Archive `artifacts/quality/latency_scenario_matrix.md`.
+- [x] Archive `artifacts/quality/latency_scenario_matrix.json`.
+- [x] Archive `artifacts/quality/grade1_exit_report.md`.
+- [x] Archive `artifacts/quality/grade1_exit_summary.json`.
+- [x] Archive `docs/releases/GRADE1_LONG_SOAK_EVIDENCE.json`.
+- [x] Archive `docs/releases/GRADE1_PRODUCTION_PILOT_EVIDENCE.md`.
 	Archive record: [docs/releases/M3-RC1_ASSESSOR_PACKAGE_MANIFEST.md](docs/releases/M3-RC1_ASSESSOR_PACKAGE_MANIFEST.md)
 
 ## Approval record

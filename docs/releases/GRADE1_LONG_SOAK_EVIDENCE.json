@@ -1,0 +1,10 @@
+{
+  "status": "pending",
+  "duration_minutes": 0,
+  "environment": "reference-deployment",
+  "deployment_id": "",
+  "window_start_utc": "",
+  "window_end_utc": "",
+  "source_artifact": "",
+  "verification_notes": "Populate with independently collected 30-day soak evidence for Grade 1 gate G1-REL-001."
+}

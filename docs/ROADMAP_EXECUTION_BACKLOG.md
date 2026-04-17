@@ -8,7 +8,7 @@ This file contains issue-ready epics and milestones aligned with the grade roadm
 - Copy each issue title and checklist into a GitHub issue.
 - Link pull requests to these issues and track evidence artifacts.
 
-## Current Repository Status (2026-04-11)
+## Current Repository Status (2026-04-16)
 
 Current execution position:
 
@@ -16,46 +16,42 @@ Current execution position:
 - Milestone M2 is complete in repository artifacts and CI gating for reliability, throughput governance, and stabilized bench6 latency enforcement.
 - Milestone M3 repository-level traceability and security evidence are now in place.
 - Milestone M4 repository-side certification-readiness scaffolding is now in place for safety case packaging, change control, review workflow, and evidence freeze procedure.
+- Milestone M4 Issue 8 now includes a repository-enforced readiness reporting gate that validates findings-log quality and emits assessor-facing readiness artifacts.
+- Grade 1 closure evidence now includes a recovery-RTO gate artifact and a multi-scenario latency matrix artifact generated in quality automation.
+- Grade 1 closure tracking now includes explicit intake files for independently operated 30-day soak evidence and external-user pilot evidence.
 
 Current practical milestone call:
 
 - Late M3, with repository-level M4 scaffolding in place.
 - M3 implementation slice is complete in repository artifacts and quality gates; remaining gaps are higher-grade follow-on work rather than Milestone M3 blockers.
-- M4 still requires execution-time assessor engagement, findings closure, and controlled-baseline discipline beyond the repository templates added here.
+- M4 still requires execution-time assessor engagement, findings closure, and controlled-baseline discipline beyond repository-side templates and gates.
 
-## Prepared Next Step (2026-04-09)
+## Prepared Next Step (2026-04-16)
 
-Execution focus: Milestone M1, Issue 1 (Freeze wire protocol v1).
+Execution focus: Grade 1 closure and evidentiary gate tracking, while keeping Milestone M4 Issue 8 in controlled progress.
 
 Reason for prioritization:
 
-- Architecture assessment marks compatibility requirements as partial and calls out missing interop matrix/release enforcement.
-- Repository quality workflow already covers soak, benchmark, static analysis, dependency scan, fuzz, and scheduled runs.
-- Closing protocol-governance gaps now reduces churn for later safety/security milestones.
+- Grade 1 remains the required predecessor before any Grade 2 claim.
+- Repository-side Grade 1 automation is now broad enough to support objective gate tracking.
+- Remaining blockers are now concentrated in long-duration operational evidence and external pilot execution.
 
 Issue-ready implementation slice:
 
-1. Define and publish protocol compatibility contract
-	- Create `docs/PROTOCOL_COMPATIBILITY_POLICY.md`.
-	- Include wire major/minor semantics, accepted/blocked combinations, fail-fast mismatch behavior, and deprecation lifecycle.
-2. Add compatibility matrix artifact and CI check
-	- Add `tools/quality/protocol_compatibility_matrix.sh` to generate `artifacts/quality/protocol_compatibility_matrix.md`.
-	- Add a `protocol-compatibility` job in `.github/workflows/quality-gates.yml` and upload artifact.
-3. Add README compatibility/deprecation policy section
-	- Add a short section in `README.md` linking policy and matrix artifact location.
-4. Add release-note template statement
-	- Add `docs/templates/RELEASE_NOTES_TEMPLATE.md` with mandatory compatibility declaration fields:
-	  - API compatibility status
-	  - Wire compatibility status
-	  - Breaking changes
-	  - Deprecation notices
+1. Add Grade 1 exit status automation
+	- Add `tools/quality/grade1_exit_gate.sh`.
+	- Generate `artifacts/quality/grade1_exit_report.md` and `artifacts/quality/grade1_exit_summary.json`.
+2. Add Grade 1 checklist baseline
+	- Add `docs/GRADE1_EXIT_CHECKLIST.md` with gate IDs and required evidence paths.
+3. Wire Grade 1 status into CI artifacts
+	- Add `grade1-exit-status` job in `.github/workflows/quality-gates.yml`.
+	- Publish Grade 1 status artifacts on pull requests and protected-branch builds.
 
 Definition of done for this slice:
 
-- Policy document merged and referenced in README.
-- Compatibility matrix artifact generated in CI for pull requests.
-- Release notes template includes required compatibility statement fields.
-- `docs/ARCHITECTURE_REQUIREMENTS_ASSESSMENT.md` updated to reflect reduced gap for REQ-COMP-002 and REQ-COMP-003.
+- Grade 1 status report is generated from repository evidence artifacts.
+- Grade 1 checklist maps every exit gate to explicit evidence locations.
+- CI publishes Grade 1 status artifacts for release and assessor review.
 
 ## Milestone M1: Core Hardening
 
@@ -124,11 +120,17 @@ Current status note:
 
 - CI benchmark workflow, rebuildable benchmark target, throughput comparison script, methodology document, and calibrated per-payload throughput baseline files now exist.
 - Latency percentile and jitter enforcement are now active after bench6 pub/sub negotiation stabilization and repeated successful captures.
+- Benchmark quality artifacts now include a latency scenario matrix covering both bench5 RPC round-trip and bench6 pub/sub one-way paths.
 
 Exit evidence:
 
 - Baseline benchmark report
 - Regression gate active in CI
+
+Additional evidence now produced:
+
+- `artifacts/quality/latency_scenario_matrix.md`
+- `artifacts/quality/latency_scenario_matrix.json`
 
 ## Milestone M3: Safety and Assurance
 
@@ -206,16 +208,33 @@ Goal: validate readiness with external advisors.
 Checklist:
 
 - [ ] Run pre-assessment for target standard profile
-- [ ] Record findings and remediation plan
+- [x] Record findings and remediation plan
 - [ ] Re-run pre-assessment after remediation
-- [ ] Publish readiness summary for stakeholders
+- [x] Publish readiness summary for stakeholders
 
 Current status note:
 
 - Repository now includes the pre-assessment plan, findings log template, and readiness summary template.
+- Repository now includes `tools/quality/pre_assessment_readiness_gate.sh` and CI artifact publication for pre-assessment readiness evidence quality.
+- Repository now includes `tools/quality/pre_assessment_remediation_plan.sh` and CI artifact publication for findings-linked remediation plan evidence.
+- Initial internal round findings and stakeholder readiness summary are now recorded in `docs/PRE_ASSESSMENT_FINDINGS_LOG.csv` and `docs/PRE_ASSESSMENT_READINESS_SUMMARY.md`.
 - The actual advisor-led pre-assessment and findings closure remain execution-time work outside the repository.
 
 Exit evidence:
 
 - Pre-assessment report
 - Closed corrective actions list
+
+## Grade 1 Remaining Gaps (Repository Scope)
+
+These are the remaining Grade 1 blockers after current repository automation updates:
+
+- 30-day soak and 90-day MTBF evidence from reference deployment operation
+- Production pilot evidence with at least two external industrial users
+- Formal release execution record with reviewer sign-off on CI baseline artifacts
+
+Operational tracking artifacts:
+
+- `docs/GRADE1_EXIT_CHECKLIST.md`
+- `artifacts/quality/grade1_exit_report.md`
+- `artifacts/quality/grade1_exit_summary.json`

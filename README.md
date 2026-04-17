@@ -96,6 +96,13 @@ Benchmark/performance sources are in:
 
 If you run local benchmark experiments, store reports under `reporters/` (repository-local convention).
 
+Quality benchmark artifacts include `artifacts/quality/benchmark_summary.json` and the cross-scenario latency matrix files `artifacts/quality/latency_scenario_matrix.md` and `artifacts/quality/latency_scenario_matrix.json`.
+
+Use `tools/quality/recovery_rto.sh` to generate restart-cycle evidence artifacts: `artifacts/quality/recovery_rto_report.md`, `artifacts/quality/recovery_rto_summary.json`, and `artifacts/quality/recovery_rto_runs.json`.
+
+Use `tools/quality/grade1_exit_gate.sh` to generate Grade 1 exit status artifacts: `artifacts/quality/grade1_exit_report.md` and `artifacts/quality/grade1_exit_summary.json`.
+For Grade 1 long-duration and external-deployment intake, maintain `docs/releases/GRADE1_LONG_SOAK_EVIDENCE.json` and `docs/releases/GRADE1_PRODUCTION_PILOT_EVIDENCE.md`.
+
 ## Compatibility And Deprecation
 
 API releases follow semantic versioning.
@@ -105,6 +112,14 @@ Wire protocol compatibility rules, fail-fast mismatch behavior, and the deprecat
 The CI-generated compatibility matrix is published as the workflow artifact `protocol-compatibility-artifacts` and generated locally at `artifacts/quality/protocol_compatibility_matrix.md` by `tools/quality/protocol_compatibility_matrix.sh`.
 
 Use `docs/templates/RELEASE_NOTES_TEMPLATE.md` for release declarations covering API compatibility status, wire compatibility status, breaking changes, and deprecation notices.
+
+## Pre-Assessment Readiness
+
+Use `tools/quality/pre_assessment_readiness_gate.sh` to validate `docs/PRE_ASSESSMENT_FINDINGS_LOG.csv` and generate readiness artifacts at `artifacts/quality/pre_assessment_readiness_report.md` and `artifacts/quality/pre_assessment_readiness_summary.json`.
+
+Use `tools/quality/pre_assessment_remediation_plan.sh` to generate remediation tracking artifacts at `artifacts/quality/pre_assessment_remediation_plan.md` and `artifacts/quality/pre_assessment_remediation_plan_summary.json`.
+
+The CI workflow publishes these outputs in the `pre-assessment-readiness-artifacts` bundle.
 
 ## Documentation Index
 
@@ -120,6 +135,7 @@ Primary project documents:
 - `docs/RELEASE_QUALITY_SCORECARD.md`
 - `docs/RELEASE_EVIDENCE_FREEZE_PROCEDURE.md`
 - `docs/TRACEABILITY_GUIDE.md`
+- `docs/GRADE1_EXIT_CHECKLIST.md`
 
 Additional entry points:
 
@@ -130,7 +146,10 @@ Additional entry points:
 - `docker/README.md`
 - `docs/INDEPENDENT_SAFETY_REVIEW_CHECKLIST.md`
 - `docs/PRE_ASSESSMENT_PLAN.md`
+- `docs/PRE_ASSESSMENT_FINDINGS_LOG.csv`
 - `docs/PRE_ASSESSMENT_READINESS_SUMMARY.md`
+- `docs/releases/GRADE1_LONG_SOAK_EVIDENCE.json`
+- `docs/releases/GRADE1_PRODUCTION_PILOT_EVIDENCE.md`
 - `docs/templates/RELEASE_NOTES_TEMPLATE.md`
 
 ## Development Notes

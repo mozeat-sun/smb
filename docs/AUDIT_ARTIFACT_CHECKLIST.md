@@ -50,4 +50,7 @@ Use this checklist to prepare evidence packages for grade reviews.
 
 - [ ] Internal review sign-off
 - [ ] Independent safety review checklist
+- [ ] Pre-assessment readiness report and summary artifact bundle
+- [ ] Pre-assessment findings log with owners and target dates
+- [ ] Pre-assessment remediation plan and overdue-action summary
 - [ ] External assessor findings and closure evidence

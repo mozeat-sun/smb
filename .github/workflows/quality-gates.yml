@@ -98,6 +98,22 @@ jobs:
           name: vulnerability-sla-artifacts
           path: artifacts/quality/
 
+  pre-assessment-readiness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Generate pre-assessment readiness report
+        run: |
+          bash tools/quality/pre_assessment_readiness_gate.sh
+          bash tools/quality/pre_assessment_remediation_plan.sh
+      - name: Upload pre-assessment readiness artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pre-assessment-readiness-artifacts
+          path: artifacts/quality/
+
   soak:
     runs-on: ubuntu-latest
     timeout-minutes: 120
@@ -138,6 +154,24 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: reliability-artifacts
+          path: artifacts/quality/
+
+  recovery-rto:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run recovery RTO gate
+        env:
+          RTO_RUNS: "5"
+          RTO_MAX_MS: "5000"
+          RTO_ENFORCE_THRESHOLD: "1"
+        run: bash tools/quality/recovery_rto.sh
+      - name: Upload recovery RTO artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: recovery-rto-artifacts
           path: artifacts/quality/
 
   fault-injection:
@@ -184,4 +218,20 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: benchmark-artifacts
+          path: artifacts/quality/
+
+  grade1-exit-status:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Generate Grade 1 exit status report
+        env:
+          GRADE1_FAIL_ON_BLOCKED: "0"
+        run: bash tools/quality/grade1_exit_gate.sh
+      - name: Upload Grade 1 exit status artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: grade1-exit-status-artifacts
           path: artifacts/quality/
