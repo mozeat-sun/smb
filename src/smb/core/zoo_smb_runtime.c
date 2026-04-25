@@ -22,7 +22,6 @@
 #include <string.h>
 #include <time.h>
 #include <stdio.h>
-#include <stdlib.h>
 
 #define ZOO_SMB_RUNTIME_OBSERVER_CAPACITY 8
 #define ZOO_SMB_RUNTIME_PEER_CAPACITY 8
@@ -75,30 +74,6 @@ static ZOO_BOOL is_valid_role(ZOO_SMB_RUNTIME_ROLE_ENUM role)
 static uint64_t runtime_now_ms(void)
 {
     return (uint64_t)time(NULL) * 1000ULL;
-}
-
-/**
- * @brief Resolve peer wire minor from environment override.
- * @details Override is optional and used for deterministic compatibility tests.
- * @param default_minor Default peer wire minor when override is not present
- * @return uint16_t Effective peer wire minor
- */
-static uint16_t runtime_get_peer_wire_minor(uint16_t default_minor)
-{
-    const char* env_minor = getenv("ZOO_SMB_EXPECTED_PEER_WIRE_MINOR");
-    if (!env_minor || env_minor[0] == '\0')
-    {
-        return default_minor;
-    }
-
-    char* end_ptr = NULL;
-    unsigned long parsed = strtoul(env_minor, &end_ptr, 10);
-    if (end_ptr == env_minor || *end_ptr != '\0' || parsed > 65535UL)
-    {
-        return default_minor;
-    }
-
-    return (uint16_t)parsed;
 }
 
 /**
@@ -344,12 +319,24 @@ ZOO_SMB_RUNTIME_HANDLE zoo_smb_runtime_create_ex(
     runtime->options.enable_ha = ZOO_FALSE;
     runtime->options.heartbeat_interval_ms = 1000;
     runtime->options.failover_timeout_ms = 3000;
+    runtime->options.local_wire_major = 1U;
+    runtime->options.local_wire_minor = 0U;
+    runtime->options.peer_wire_major = 1U;
+    runtime->options.peer_wire_minor = 0U;
     memset(runtime->options.local_peer_id, 0, sizeof(runtime->options.local_peer_id));
     runtime->ha_monitor_running = ZOO_FALSE;
 
     if (options)
     {
         runtime->options = *options;
+        if (runtime->options.local_wire_major == 0U)
+        {
+            runtime->options.local_wire_major = 1U;
+        }
+        if (runtime->options.peer_wire_major == 0U)
+        {
+            runtime->options.peer_wire_major = 1U;
+        }
     }
     else
     {
@@ -391,13 +378,26 @@ ZOO_ERROR_TYPE zoo_smb_runtime_start(ZOO_SMB_RUNTIME_HANDLE runtime)
     }
 
     ZOO_DOMAIN_PROFILE_ENUM active_profile = zoo_domain_profile_get_active();
+    ZOO_ASSURANCE_POLICY_SNAPSHOT_STRUCT policy_snapshot;
     ZOO_ASSURANCE_STARTUP_CONTEXT_STRUCT assurance_context;
     memset(&assurance_context, 0, sizeof(assurance_context));
     assurance_context.domain_profile = active_profile;
-    assurance_context.protocol.local_wire_major = 1U;
-    assurance_context.protocol.local_wire_minor = 0U;
-    assurance_context.protocol.peer_wire_major = 1U;
-    assurance_context.protocol.peer_wire_minor = runtime_get_peer_wire_minor(0U);
+    assurance_context.protocol.local_wire_major = runtime->options.local_wire_major;
+    assurance_context.protocol.local_wire_minor = runtime->options.local_wire_minor;
+    assurance_context.protocol.peer_wire_major = runtime->options.peer_wire_major;
+    assurance_context.protocol.peer_wire_minor = runtime->options.peer_wire_minor;
+
+    if (zoo_assurance_resolve_policy(active_profile, &policy_snapshot) != ZOO_SMB_OK)
+    {
+        set_runtime_state(runtime, ZOO_SMB_RUNTIME_STATE_FAULTED);
+        return ZOO_SMB_ERROR_OPERATION_FAILED;
+    }
+
+    ZOO_LOG_INFO("Runtime assurance policy: profile=%s decision=%u class=%u partition=%u",
+                 zoo_domain_profile_to_string(active_profile),
+                 (unsigned)policy_snapshot.startup_decision,
+                 (unsigned)policy_snapshot.assurance_class,
+                 (unsigned)policy_snapshot.partition_id);
 
     ZOO_ERROR_TYPE assurance_result = zoo_assurance_evaluate_startup(&assurance_context);
     if (assurance_result != ZOO_SMB_OK)

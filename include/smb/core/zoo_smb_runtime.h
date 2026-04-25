@@ -64,6 +64,10 @@ extern "C"
         uint32_t heartbeat_interval_ms;   /**< Peer heartbeat interval in milliseconds */
         uint32_t failover_timeout_ms;     /**< Peer timeout threshold in milliseconds */
         char local_peer_id[32];           /**< Local peer identifier */
+        uint16_t local_wire_major;        /**< Local protocol wire major version */
+        uint16_t local_wire_minor;        /**< Local protocol wire minor version */
+        uint16_t peer_wire_major;         /**< Expected peer protocol wire major version */
+        uint16_t peer_wire_minor;         /**< Expected peer protocol wire minor version */
     } ZOO_SMB_RUNTIME_OPTIONS_STRUCT;
 
     /**

@@ -2,6 +2,7 @@ set(CMAKE_C_STANDARD 11)
 
 add_library(zoo_domain_static STATIC
     zoo_domain_profile.c
+    zoo_domain_policy.c
 )
 set_target_properties(zoo_domain_static PROPERTIES OUTPUT_NAME zoo_domain)
 target_compile_definitions(zoo_domain_static PRIVATE
@@ -18,6 +19,7 @@ target_link_libraries(zoo_domain_static PUBLIC
 
 add_library(zoo_domain_shared SHARED
     zoo_domain_profile.c
+    zoo_domain_policy.c
 )
 set_target_properties(zoo_domain_shared PROPERTIES OUTPUT_NAME zoo_domain)
 target_compile_definitions(zoo_domain_shared PRIVATE

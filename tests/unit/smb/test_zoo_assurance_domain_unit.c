@@ -13,7 +13,9 @@
  ******************************************************************************/
 
 #include "unity.h"
+#include <string.h>
 #include "domain/zoo_domain_profile.h"
+#include "domain/zoo_domain_policy.h"
 #include "assurance/zoo_assurance_mesh.h"
 
 void setUp(void)
@@ -84,6 +86,41 @@ void test_assurance_startup_allows_generic_profile_without_mesh(void)
     TEST_ASSERT_EQUAL(ZOO_SMB_OK, zoo_assurance_evaluate_startup(&startup));
 }
 
+void test_domain_policy_startup_decision_by_profile(void)
+{
+    TEST_ASSERT_EQUAL(
+        ZOO_DOMAIN_STARTUP_DECISION_ALLOW,
+        zoo_domain_policy_get_startup_decision(ZOO_DOMAIN_PROFILE_GENERIC));
+
+    TEST_ASSERT_EQUAL(
+        ZOO_DOMAIN_STARTUP_DECISION_REQUIRE_PROTOCOL_COMPATIBILITY,
+        zoo_domain_policy_get_startup_decision(ZOO_DOMAIN_PROFILE_INDUSTRIAL));
+}
+
+void test_domain_policy_partition_ids_are_stable(void)
+{
+    TEST_ASSERT_EQUAL(0U, zoo_domain_policy_get_partition_id(ZOO_DOMAIN_PROFILE_GENERIC));
+    TEST_ASSERT_EQUAL(10U, zoo_domain_policy_get_partition_id(ZOO_DOMAIN_PROFILE_INDUSTRIAL));
+    TEST_ASSERT_EQUAL(20U, zoo_domain_policy_get_partition_id(ZOO_DOMAIN_PROFILE_AUTOMOTIVE));
+    TEST_ASSERT_EQUAL(30U, zoo_domain_policy_get_partition_id(ZOO_DOMAIN_PROFILE_MILITARY));
+}
+
+void test_assurance_policy_snapshot_resolution(void)
+{
+    ZOO_ASSURANCE_POLICY_SNAPSHOT_STRUCT snapshot;
+    memset(&snapshot, 0, sizeof(snapshot));
+
+    TEST_ASSERT_EQUAL(
+        ZOO_SMB_OK,
+        zoo_assurance_resolve_policy(ZOO_DOMAIN_PROFILE_AUTOMOTIVE, &snapshot));
+
+    TEST_ASSERT_EQUAL(
+        ZOO_DOMAIN_STARTUP_DECISION_REQUIRE_PROTOCOL_COMPATIBILITY,
+        snapshot.startup_decision);
+    TEST_ASSERT_EQUAL(ZOO_DOMAIN_ASSURANCE_CLASS_CONTROL, snapshot.assurance_class);
+    TEST_ASSERT_EQUAL(20U, snapshot.partition_id);
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -93,6 +130,9 @@ int main(void)
     RUN_TEST(test_assurance_protocol_incompatible_for_higher_peer_minor);
     RUN_TEST(test_assurance_startup_rejects_incompatible_protocol_for_industrial);
     RUN_TEST(test_assurance_startup_allows_generic_profile_without_mesh);
+    RUN_TEST(test_domain_policy_startup_decision_by_profile);
+    RUN_TEST(test_domain_policy_partition_ids_are_stable);
+    RUN_TEST(test_assurance_policy_snapshot_resolution);
 
     return UNITY_END();
 }

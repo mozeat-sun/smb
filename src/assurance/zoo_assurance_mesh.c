@@ -10,6 +10,21 @@
 
 #include "assurance/zoo_assurance_mesh.h"
 
+ZOO_ERROR_TYPE zoo_assurance_resolve_policy(
+    ZOO_DOMAIN_PROFILE_ENUM profile,
+    ZOO_ASSURANCE_POLICY_SNAPSHOT_STRUCT* snapshot)
+{
+    if (!snapshot)
+    {
+        return ZOO_SMB_ERROR_INVALID_PARAM;
+    }
+
+    snapshot->startup_decision = zoo_domain_policy_get_startup_decision(profile);
+    snapshot->assurance_class = zoo_domain_policy_classify_startup(profile);
+    snapshot->partition_id = zoo_domain_policy_get_partition_id(profile);
+    return ZOO_SMB_OK;
+}
+
 ZOO_ASSURANCE_PROTOCOL_COMPATIBILITY_ENUM zoo_assurance_check_protocol_compatibility(
     const ZOO_ASSURANCE_PROTOCOL_CONTEXT_STRUCT* context)
 {
@@ -33,12 +48,19 @@ ZOO_ASSURANCE_PROTOCOL_COMPATIBILITY_ENUM zoo_assurance_check_protocol_compatibi
 
 ZOO_ERROR_TYPE zoo_assurance_evaluate_startup(const ZOO_ASSURANCE_STARTUP_CONTEXT_STRUCT* context)
 {
+    ZOO_ASSURANCE_POLICY_SNAPSHOT_STRUCT snapshot;
+
     if (!context)
     {
         return ZOO_SMB_ERROR_INVALID_PARAM;
     }
 
-    if (!zoo_domain_profile_uses_assurance_mesh(context->domain_profile))
+    if (zoo_assurance_resolve_policy(context->domain_profile, &snapshot) != ZOO_SMB_OK)
+    {
+        return ZOO_SMB_ERROR_OPERATION_FAILED;
+    }
+
+    if (snapshot.startup_decision == ZOO_DOMAIN_STARTUP_DECISION_ALLOW)
     {
         return ZOO_SMB_OK;
     }
