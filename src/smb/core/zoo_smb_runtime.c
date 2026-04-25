@@ -14,6 +14,7 @@
 #include "zoo_smb_runtime.h"
 #include "zoo_smb_error.h"
 #include "domain/zoo_domain_profile.h"
+#include "domain/zoo_domain_policy.h"
 #include "assurance/zoo_assurance_mesh.h"
 #include "zoo_log.h"
 #include "zoo_memory_pool.h"
@@ -398,6 +399,15 @@ ZOO_ERROR_TYPE zoo_smb_runtime_start(ZOO_SMB_RUNTIME_HANDLE runtime)
                  (unsigned)policy_snapshot.startup_decision,
                  (unsigned)policy_snapshot.assurance_class,
                  (unsigned)policy_snapshot.partition_id);
+
+    if (zoo_domain_policy_requires_identity(active_profile) &&
+        runtime->options.local_peer_id[0] == '\0')
+    {
+        set_runtime_state(runtime, ZOO_SMB_RUNTIME_STATE_FAULTED);
+        ZOO_LOG_ERROR("Runtime startup blocked: identity required for profile=%s",
+                      zoo_domain_profile_to_string(active_profile));
+        return ZOO_SMB_ERROR_INVALID_STATE;
+    }
 
     ZOO_ERROR_TYPE assurance_result = zoo_assurance_evaluate_startup(&assurance_context);
     if (assurance_result != ZOO_SMB_OK)

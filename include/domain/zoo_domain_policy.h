@@ -41,6 +41,9 @@ ZOO_DOMAIN_ASSURANCE_CLASS_ENUM zoo_domain_policy_classify_startup(
 uint32_t zoo_domain_policy_get_partition_id(
     ZOO_DOMAIN_PROFILE_ENUM profile);
 
+bool zoo_domain_policy_requires_identity(
+    ZOO_DOMAIN_PROFILE_ENUM profile);
+
 #ifdef __cplusplus
 }
 #endif

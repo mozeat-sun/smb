@@ -45,6 +45,7 @@ void test_runtime_startup_with_compatible_protocol_succeeds(void)
 
     ZOO_SMB_RUNTIME_OPTIONS_STRUCT options;
     memset(&options, 0, sizeof(options));
+    (void)strncpy(options.local_peer_id, "unit-node", sizeof(options.local_peer_id) - 1U);
     options.local_wire_major = 1U;
     options.local_wire_minor = 3U;
     options.peer_wire_major = 1U;
@@ -70,6 +71,7 @@ void test_runtime_startup_incompatible_protocol_is_profile_gated(void)
 
     ZOO_SMB_RUNTIME_OPTIONS_STRUCT options;
     memset(&options, 0, sizeof(options));
+    (void)strncpy(options.local_peer_id, "unit-node", sizeof(options.local_peer_id) - 1U);
     options.local_wire_major = 1U;
     options.local_wire_minor = 0U;
     options.peer_wire_major = 1U;

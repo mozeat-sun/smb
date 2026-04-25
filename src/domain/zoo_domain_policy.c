@@ -58,3 +58,11 @@ uint32_t zoo_domain_policy_get_partition_id(
             return 0U;
     }
 }
+
+bool zoo_domain_policy_requires_identity(
+    ZOO_DOMAIN_PROFILE_ENUM profile)
+{
+    return profile == ZOO_DOMAIN_PROFILE_INDUSTRIAL ||
+           profile == ZOO_DOMAIN_PROFILE_AUTOMOTIVE ||
+           profile == ZOO_DOMAIN_PROFILE_MILITARY;
+}

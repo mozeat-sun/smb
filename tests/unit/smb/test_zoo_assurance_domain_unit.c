@@ -140,6 +140,14 @@ void test_assurance_policy_snapshot_validation(void)
         (uint32_t)zoo_assurance_validate_policy_snapshot(ZOO_DOMAIN_PROFILE_INDUSTRIAL, &snapshot));
 }
 
+void test_domain_policy_identity_requirement(void)
+{
+    TEST_ASSERT_FALSE(zoo_domain_policy_requires_identity(ZOO_DOMAIN_PROFILE_GENERIC));
+    TEST_ASSERT_TRUE(zoo_domain_policy_requires_identity(ZOO_DOMAIN_PROFILE_INDUSTRIAL));
+    TEST_ASSERT_TRUE(zoo_domain_policy_requires_identity(ZOO_DOMAIN_PROFILE_AUTOMOTIVE));
+    TEST_ASSERT_TRUE(zoo_domain_policy_requires_identity(ZOO_DOMAIN_PROFILE_MILITARY));
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -153,6 +161,7 @@ int main(void)
     RUN_TEST(test_domain_policy_partition_ids_are_stable);
     RUN_TEST(test_assurance_policy_snapshot_resolution);
     RUN_TEST(test_assurance_policy_snapshot_validation);
+    RUN_TEST(test_domain_policy_identity_requirement);
 
     return UNITY_END();
 }
