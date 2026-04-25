@@ -55,6 +55,10 @@ ZOO_ERROR_TYPE zoo_assurance_resolve_policy(
     ZOO_DOMAIN_PROFILE_ENUM profile,
     ZOO_ASSURANCE_POLICY_SNAPSHOT_STRUCT* snapshot);
 
+ZOO_ERROR_TYPE zoo_assurance_validate_policy_snapshot(
+    ZOO_DOMAIN_PROFILE_ENUM profile,
+    const ZOO_ASSURANCE_POLICY_SNAPSHOT_STRUCT* snapshot);
+
 ZOO_ERROR_TYPE zoo_assurance_evaluate_startup(const ZOO_ASSURANCE_STARTUP_CONTEXT_STRUCT* context);
 
 #ifdef __cplusplus

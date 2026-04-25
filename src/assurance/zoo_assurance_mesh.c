@@ -25,6 +25,31 @@ ZOO_ERROR_TYPE zoo_assurance_resolve_policy(
     return ZOO_SMB_OK;
 }
 
+ZOO_ERROR_TYPE zoo_assurance_validate_policy_snapshot(
+    ZOO_DOMAIN_PROFILE_ENUM profile,
+    const ZOO_ASSURANCE_POLICY_SNAPSHOT_STRUCT* snapshot)
+{
+    if (!snapshot)
+    {
+        return ZOO_SMB_ERROR_INVALID_PARAM;
+    }
+
+    if (profile != ZOO_DOMAIN_PROFILE_GENERIC)
+    {
+        if (snapshot->partition_id == 0U)
+        {
+            return ZOO_SMB_ERROR_INVALID_STATE;
+        }
+
+        if (snapshot->assurance_class == ZOO_DOMAIN_ASSURANCE_CLASS_BEST_EFFORT)
+        {
+            return ZOO_SMB_ERROR_INVALID_STATE;
+        }
+    }
+
+    return ZOO_SMB_OK;
+}
+
 ZOO_ASSURANCE_PROTOCOL_COMPATIBILITY_ENUM zoo_assurance_check_protocol_compatibility(
     const ZOO_ASSURANCE_PROTOCOL_CONTEXT_STRUCT* context)
 {
@@ -58,6 +83,11 @@ ZOO_ERROR_TYPE zoo_assurance_evaluate_startup(const ZOO_ASSURANCE_STARTUP_CONTEX
     if (zoo_assurance_resolve_policy(context->domain_profile, &snapshot) != ZOO_SMB_OK)
     {
         return ZOO_SMB_ERROR_OPERATION_FAILED;
+    }
+
+    if (zoo_assurance_validate_policy_snapshot(context->domain_profile, &snapshot) != ZOO_SMB_OK)
+    {
+        return ZOO_SMB_ERROR_INVALID_STATE;
     }
 
     if (snapshot.startup_decision == ZOO_DOMAIN_STARTUP_DECISION_ALLOW)

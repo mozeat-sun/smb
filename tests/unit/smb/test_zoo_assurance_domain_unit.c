@@ -121,6 +121,25 @@ void test_assurance_policy_snapshot_resolution(void)
     TEST_ASSERT_EQUAL(20U, snapshot.partition_id);
 }
 
+void test_assurance_policy_snapshot_validation(void)
+{
+    ZOO_ASSURANCE_POLICY_SNAPSHOT_STRUCT snapshot;
+    memset(&snapshot, 0, sizeof(snapshot));
+
+    snapshot.startup_decision = ZOO_DOMAIN_STARTUP_DECISION_REQUIRE_PROTOCOL_COMPATIBILITY;
+    snapshot.assurance_class = ZOO_DOMAIN_ASSURANCE_CLASS_CONTROL;
+    snapshot.partition_id = 10U;
+
+    TEST_ASSERT_EQUAL(
+        ZOO_SMB_OK,
+        zoo_assurance_validate_policy_snapshot(ZOO_DOMAIN_PROFILE_INDUSTRIAL, &snapshot));
+
+    snapshot.partition_id = 0U;
+    TEST_ASSERT_EQUAL_HEX32(
+        (uint32_t)ZOO_SMB_ERROR_INVALID_STATE,
+        (uint32_t)zoo_assurance_validate_policy_snapshot(ZOO_DOMAIN_PROFILE_INDUSTRIAL, &snapshot));
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -133,6 +152,7 @@ int main(void)
     RUN_TEST(test_domain_policy_startup_decision_by_profile);
     RUN_TEST(test_domain_policy_partition_ids_are_stable);
     RUN_TEST(test_assurance_policy_snapshot_resolution);
+    RUN_TEST(test_assurance_policy_snapshot_validation);
 
     return UNITY_END();
 }
