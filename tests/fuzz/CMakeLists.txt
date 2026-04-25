@@ -10,13 +10,13 @@ add_executable(fuzz_zoo_smb_protocol
 
 target_include_directories(fuzz_zoo_smb_protocol PRIVATE
     "${CMAKE_SOURCE_DIR}/include"
-    "${CMAKE_SOURCE_DIR}/include/smb"
-    "${CMAKE_SOURCE_DIR}/include/smb/core"
-    "${CMAKE_SOURCE_DIR}/include/smb/transport"
-    "${CMAKE_SOURCE_DIR}/include/smb/utility"
-    "${CMAKE_SOURCE_DIR}/include/memory_pool"
-    "${CMAKE_SOURCE_DIR}/include/log"
-    "${CMAKE_SOURCE_DIR}/include/util"
+    "${CMAKE_SOURCE_DIR}/include/kernal"
+    "${CMAKE_SOURCE_DIR}/include/kernal/core"
+    "${CMAKE_SOURCE_DIR}/include/kernal/transport"
+    "${CMAKE_SOURCE_DIR}/include/kernal/utility"
+    "${CMAKE_SOURCE_DIR}/include/platform/memory_pool"
+    "${CMAKE_SOURCE_DIR}/include/platform/log"
+    "${CMAKE_SOURCE_DIR}/include/platform/util"
     "${CMAKE_SOURCE_DIR}/include/platform"
 )
 

@@ -77,10 +77,10 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR ZOO_BUFFER_BUILD_TESTS)
     # Test include directories
     target_include_directories(zoo_buffer_tests
         PRIVATE
-            ${ZOO_REPO_ROOT_DIR}/include/buffer
+            ${ZOO_REPO_ROOT_DIR}/include/platform/buffer
             ${ZOO_REPO_ROOT_DIR}/include/platform
-            ${ZOO_REPO_ROOT_DIR}/include/log
-            ${ZOO_REPO_ROOT_DIR}/include/memory_pool
+            ${ZOO_REPO_ROOT_DIR}/include/platform/log
+            ${ZOO_REPO_ROOT_DIR}/include/platform/memory_pool
             ${Unity_INCLUDE_DIR}
     )
     

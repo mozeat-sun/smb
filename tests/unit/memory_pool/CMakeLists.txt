@@ -51,7 +51,7 @@ if(EXISTS "${UNITY_DIR}" AND EXISTS "${CMOCK_DIR}")
     
     # Include directories for the test
     target_include_directories(zoo_memory_pool_tests PRIVATE
-        ${ZOO_REPO_ROOT_DIR}/include/memory_pool
+        ${ZOO_REPO_ROOT_DIR}/include/platform/memory_pool
         ${ZOO_REPO_ROOT_DIR}/include/platform
         ${ZOO_REPO_ROOT_DIR}/util
         ${UNITY_DIR}

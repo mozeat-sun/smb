@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ARTIFACT_DIR="${ARTIFACT_DIR:-artifacts/quality}"
-POLICY_FILE="docs/PROTOCOL_COMPATIBILITY_POLICY.md"
+POLICY_FILE="docs/requirements/PROTOCOL_COMPATIBILITY_POLICY.md"
 README_FILE="README.md"
 RELEASE_TEMPLATE="docs/templates/RELEASE_NOTES_TEMPLATE.md"
 LOCAL_MAJOR="${PROTOCOL_MAJOR:-1}"
@@ -141,7 +141,7 @@ peer_majors=($((LOCAL_MAJOR - 1)) "${LOCAL_MAJOR}" $((LOCAL_MAJOR + 1)))
   echo "## Release Requirements"
   echo
   echo '- Publish release declarations using `docs/templates/RELEASE_NOTES_TEMPLATE.md`.'
-  echo '- Update `docs/PROTOCOL_COMPATIBILITY_POLICY.md` if the local baseline or support window changes.'
+  echo '- Update `docs/requirements/PROTOCOL_COMPATIBILITY_POLICY.md` if the local baseline or support window changes.'
   echo "- Preserve this matrix as a CI artifact for pull requests and protected-branch builds."
 } > "${output_file}"
 

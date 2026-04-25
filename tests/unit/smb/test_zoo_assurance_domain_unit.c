@@ -148,6 +148,42 @@ void test_domain_policy_identity_requirement(void)
     TEST_ASSERT_TRUE(zoo_domain_policy_requires_identity(ZOO_DOMAIN_PROFILE_MILITARY));
 }
 
+void test_domain_policy_partition_ranges(void)
+{
+    TEST_ASSERT_TRUE(zoo_domain_policy_is_partition_allowed(ZOO_DOMAIN_PROFILE_GENERIC, 0U));
+    TEST_ASSERT_FALSE(zoo_domain_policy_is_partition_allowed(ZOO_DOMAIN_PROFILE_GENERIC, 1U));
+
+    TEST_ASSERT_TRUE(zoo_domain_policy_is_partition_allowed(ZOO_DOMAIN_PROFILE_INDUSTRIAL, 10U));
+    TEST_ASSERT_TRUE(zoo_domain_policy_is_partition_allowed(ZOO_DOMAIN_PROFILE_INDUSTRIAL, 19U));
+    TEST_ASSERT_FALSE(zoo_domain_policy_is_partition_allowed(ZOO_DOMAIN_PROFILE_INDUSTRIAL, 20U));
+
+    TEST_ASSERT_TRUE(zoo_domain_policy_is_partition_allowed(ZOO_DOMAIN_PROFILE_AUTOMOTIVE, 20U));
+    TEST_ASSERT_TRUE(zoo_domain_policy_is_partition_allowed(ZOO_DOMAIN_PROFILE_AUTOMOTIVE, 29U));
+    TEST_ASSERT_FALSE(zoo_domain_policy_is_partition_allowed(ZOO_DOMAIN_PROFILE_AUTOMOTIVE, 30U));
+
+    TEST_ASSERT_TRUE(zoo_domain_policy_is_partition_allowed(ZOO_DOMAIN_PROFILE_MILITARY, 30U));
+    TEST_ASSERT_TRUE(zoo_domain_policy_is_partition_allowed(ZOO_DOMAIN_PROFILE_MILITARY, 39U));
+    TEST_ASSERT_FALSE(zoo_domain_policy_is_partition_allowed(ZOO_DOMAIN_PROFILE_MILITARY, 40U));
+}
+
+void test_assurance_admission_requires_identity_for_assurance_profiles(void)
+{
+    ZOO_ASSURANCE_ADMISSION_CONTEXT_STRUCT admission = {0};
+    admission.domain_profile = ZOO_DOMAIN_PROFILE_INDUSTRIAL;
+    admission.partition_id = 10U;
+
+    TEST_ASSERT_EQUAL_HEX32(
+        (uint32_t)ZOO_SMB_ERROR_INVALID_STATE,
+        (uint32_t)zoo_assurance_evaluate_admission(&admission));
+
+    admission.local_peer_id = "node-a";
+    admission.remote_peer_id = "node-b";
+
+    TEST_ASSERT_EQUAL(
+        ZOO_SMB_OK,
+        zoo_assurance_evaluate_admission(&admission));
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -162,6 +198,8 @@ int main(void)
     RUN_TEST(test_assurance_policy_snapshot_resolution);
     RUN_TEST(test_assurance_policy_snapshot_validation);
     RUN_TEST(test_domain_policy_identity_requirement);
+    RUN_TEST(test_domain_policy_partition_ranges);
+    RUN_TEST(test_assurance_admission_requires_identity_for_assurance_profiles);
 
     return UNITY_END();
 }

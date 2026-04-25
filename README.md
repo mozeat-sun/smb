@@ -101,13 +101,13 @@ Quality benchmark artifacts include `artifacts/quality/benchmark_summary.json` a
 Use `tools/quality/recovery_rto.sh` to generate restart-cycle evidence artifacts: `artifacts/quality/recovery_rto_report.md`, `artifacts/quality/recovery_rto_summary.json`, and `artifacts/quality/recovery_rto_runs.json`.
 
 Use `tools/quality/grade1_exit_gate.sh` to generate Grade 1 exit status artifacts: `artifacts/quality/grade1_exit_report.md` and `artifacts/quality/grade1_exit_summary.json`.
-For Grade 1 long-duration and external-deployment intake, maintain `docs/releases/GRADE1_LONG_SOAK_EVIDENCE.json` and `docs/releases/GRADE1_PRODUCTION_PILOT_EVIDENCE.md`.
+For Grade 1 long-duration and external-deployment intake, maintain `docs/release/records/GRADE1_LONG_SOAK_EVIDENCE.json` and `docs/release/records/GRADE1_PRODUCTION_PILOT_EVIDENCE.md`.
 
 ## Compatibility And Deprecation
 
 API releases follow semantic versioning.
 
-Wire protocol compatibility rules, fail-fast mismatch behavior, and the deprecation lifecycle are defined in `docs/PROTOCOL_COMPATIBILITY_POLICY.md`.
+Wire protocol compatibility rules, fail-fast mismatch behavior, and the deprecation lifecycle are defined in `docs/requirements/PROTOCOL_COMPATIBILITY_POLICY.md`.
 
 The CI-generated compatibility matrix is published as the workflow artifact `protocol-compatibility-artifacts` and generated locally at `artifacts/quality/protocol_compatibility_matrix.md` by `tools/quality/protocol_compatibility_matrix.sh`.
 
@@ -115,7 +115,7 @@ Use `docs/templates/RELEASE_NOTES_TEMPLATE.md` for release declarations covering
 
 ## Pre-Assessment Readiness
 
-Use `tools/quality/pre_assessment_readiness_gate.sh` to validate `docs/PRE_ASSESSMENT_FINDINGS_LOG.csv` and generate readiness artifacts at `artifacts/quality/pre_assessment_readiness_report.md` and `artifacts/quality/pre_assessment_readiness_summary.json`.
+Use `tools/quality/pre_assessment_readiness_gate.sh` to validate `docs/readiness/PRE_ASSESSMENT_FINDINGS_LOG.csv` and generate readiness artifacts at `artifacts/quality/pre_assessment_readiness_report.md` and `artifacts/quality/pre_assessment_readiness_summary.json`.
 
 Use `tools/quality/pre_assessment_remediation_plan.sh` to generate remediation tracking artifacts at `artifacts/quality/pre_assessment_remediation_plan.md` and `artifacts/quality/pre_assessment_remediation_plan_summary.json`.
 
@@ -125,17 +125,17 @@ The CI workflow publishes these outputs in the `pre-assessment-readiness-artifac
 
 Primary project documents:
 
-- `docs/ARCHITECTURE_DESIGN_SPECIFICATION.md`
-- `docs/ARCHITECTURE_REQUIREMENTS_ASSESSMENT.md`
-- `docs/SAFETY_CASE_SKELETON.md`
-- `docs/PROTOCOL_COMPATIBILITY_POLICY.md`
-- `docs/TOOLCHAIN_BASELINE_AND_CHANGE_CONTROL.md`
-- `docs/REQUIREMENTS_CATALOG.md`
-- `docs/GRADE_ROADMAP.md`
-- `docs/RELEASE_QUALITY_SCORECARD.md`
-- `docs/RELEASE_EVIDENCE_FREEZE_PROCEDURE.md`
-- `docs/TRACEABILITY_GUIDE.md`
-- `docs/GRADE1_EXIT_CHECKLIST.md`
+- `docs/architecture/ARCHITECTURE_DESIGN_SPECIFICATION.md`
+- `docs/readiness/ARCHITECTURE_REQUIREMENTS_ASSESSMENT.md`
+- `docs/assurance/SAFETY_CASE_SKELETON.md`
+- `docs/requirements/PROTOCOL_COMPATIBILITY_POLICY.md`
+- `docs/requirements/TOOLCHAIN_BASELINE_AND_CHANGE_CONTROL.md`
+- `docs/requirements/REQUIREMENTS_CATALOG.md`
+- `docs/readiness/GRADE_ROADMAP.md`
+- `docs/release/process/RELEASE_QUALITY_SCORECARD.md`
+- `docs/release/process/RELEASE_EVIDENCE_FREEZE_PROCEDURE.md`
+- `docs/assurance/TRACEABILITY_GUIDE.md`
+- `docs/assurance/GRADE1_EXIT_CHECKLIST.md`
 
 Additional entry points:
 
@@ -144,12 +144,12 @@ Additional entry points:
 - `tests/README.md`
 - `examples/README.md`
 - `docker/README.md`
-- `docs/INDEPENDENT_SAFETY_REVIEW_CHECKLIST.md`
-- `docs/PRE_ASSESSMENT_PLAN.md`
-- `docs/PRE_ASSESSMENT_FINDINGS_LOG.csv`
-- `docs/PRE_ASSESSMENT_READINESS_SUMMARY.md`
-- `docs/releases/GRADE1_LONG_SOAK_EVIDENCE.json`
-- `docs/releases/GRADE1_PRODUCTION_PILOT_EVIDENCE.md`
+- `docs/assurance/INDEPENDENT_SAFETY_REVIEW_CHECKLIST.md`
+- `docs/readiness/PRE_ASSESSMENT_PLAN.md`
+- `docs/readiness/PRE_ASSESSMENT_FINDINGS_LOG.csv`
+- `docs/readiness/PRE_ASSESSMENT_READINESS_SUMMARY.md`
+- `docs/release/records/GRADE1_LONG_SOAK_EVIDENCE.json`
+- `docs/release/records/GRADE1_PRODUCTION_PILOT_EVIDENCE.md`
 - `docs/templates/RELEASE_NOTES_TEMPLATE.md`
 
 ## Development Notes

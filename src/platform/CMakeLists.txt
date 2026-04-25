@@ -103,3 +103,36 @@ message(STATUS "  Build type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "  C Standard: ${CMAKE_C_STANDARD}")
 message(STATUS "  Build tests: ${BUILD_TESTS}")
 message(STATUS "  Install prefix: ${CMAKE_INSTALL_PREFIX}")
+
+# Build platform-scoped runtime modules.
+if(ZOO_BUILD_UTIL)
+    add_subdirectory(util)
+endif()
+
+if(ZOO_BUILD_LOG)
+    add_subdirectory(log)
+endif()
+
+if(ZOO_BUILD_MEMORY_POOL)
+    add_subdirectory(memory_pool)
+endif()
+
+if(ZOO_BUILD_BUFFER)
+    add_subdirectory(buffer)
+endif()
+
+if(ZOO_BUILD_SOCKET)
+    add_subdirectory(socket)
+endif()
+
+if(ZOO_BUILD_THREAD_POOL)
+    add_subdirectory(thread_pool)
+endif()
+
+if(ZOO_BUILD_DISPATCHER)
+    add_subdirectory(dispatcher)
+endif()
+
+if(ZOO_BUILD_TIMER)
+    add_subdirectory(timer)
+endif()

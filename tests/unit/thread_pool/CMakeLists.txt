@@ -47,7 +47,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR ZOO_THREAD_POOL_BUILD_TESTS OR ZO
     
     target_include_directories(test_thread_pool_basic_unity
         PRIVATE
-            ${ZOO_REPO_ROOT_DIR}/include/thread_pool
+            ${ZOO_REPO_ROOT_DIR}/include/platform/thread_pool
             ${ZOO_REPO_ROOT_DIR}/include/platform
             ${UNITY_INCLUDE_DIR}
     )
@@ -74,7 +74,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR ZOO_THREAD_POOL_BUILD_TESTS OR ZO
     
     target_include_directories(test_thread_pool_stress_unity
         PRIVATE
-            ${ZOO_REPO_ROOT_DIR}/include/thread_pool
+            ${ZOO_REPO_ROOT_DIR}/include/platform/thread_pool
             ${ZOO_REPO_ROOT_DIR}/include/platform
             ${UNITY_INCLUDE_DIR}
     )

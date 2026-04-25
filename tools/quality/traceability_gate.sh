@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ARTIFACT_DIR="${ARTIFACT_DIR:-artifacts/quality}"
-CATALOG="docs/REQUIREMENTS_CATALOG.md"
+CATALOG="docs/requirements/REQUIREMENTS_CATALOG.md"
 TRACEABILITY_TEST_REQUIRED_REQS="${TRACEABILITY_TEST_REQUIRED_REQS:-REQ-REL-001,REQ-REL-002,REQ-REL-003,REQ-REL-004,REQ-PERF-001,REQ-PERF-002,REQ-PERF-003,REQ-SAFE-001,REQ-SAFE-002,REQ-SAFE-003,REQ-COMP-001}"
 
 mkdir -p "${ARTIFACT_DIR}"
@@ -25,7 +25,7 @@ missing_test_links=()
   while IFS= read -r req_id; do
     [[ -z "${req_id}" ]] && continue
 
-    repo_count=$({ grep -R -I -n --exclude-dir=.git --exclude-dir=build --exclude-dir=build-monorepo --exclude="traceability_matrix.csv" --exclude="traceability_test_matrix.csv" "${req_id}" . || true; } | grep -v "docs/REQUIREMENTS_CATALOG.md" | wc -l)
+    repo_count=$({ grep -R -I -n --exclude-dir=.git --exclude-dir=build --exclude-dir=build-monorepo --exclude="traceability_matrix.csv" --exclude="traceability_test_matrix.csv" "${req_id}" . || true; } | grep -v "docs/requirements/REQUIREMENTS_CATALOG.md" | wc -l)
     design_match=$(grep -R -I -n --exclude-dir=.git --exclude-dir=build --exclude-dir=build-monorepo "${req_id}" docs include src tools 2>/dev/null | head -n 1 || true)
     verification_match=$(grep -R -I -n --exclude-dir=.git --exclude-dir=build --exclude-dir=build-monorepo "${req_id}" tests tools/quality 2>/dev/null | head -n 1 || true)
     test_count=$({ grep -R -I -n --exclude-dir=.git --exclude-dir=build --exclude-dir=build-monorepo "${req_id}" tests 2>/dev/null || true; } | wc -l)

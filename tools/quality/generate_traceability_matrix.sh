@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ARTIFACT_DIR="${ARTIFACT_DIR:-artifacts/quality}"
-CATALOG="docs/REQUIREMENTS_CATALOG.md"
+CATALOG="docs/requirements/REQUIREMENTS_CATALOG.md"
 mkdir -p "${ARTIFACT_DIR}"
 
 if [[ ! -f "${CATALOG}" ]]; then

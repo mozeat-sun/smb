@@ -1,0 +1,10 @@
+prefix=/home/ubuntu/workspace/zoo/stage
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: zoo-platform
+Description: ZOO Cross-Platform Foundation Library
+Version: 1.2.2
+Libs: -L${libdir} -lzoo_platform
+Cflags: -I${includedir}/zoo

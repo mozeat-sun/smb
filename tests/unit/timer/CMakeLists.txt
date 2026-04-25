@@ -67,8 +67,8 @@ endif()
 # ==============================================================================
 
 include_directories(
-    ${ZOO_REPO_ROOT_DIR}/include/timer
-    ${ZOO_REPO_ROOT_DIR}/src/timer
+    ${ZOO_REPO_ROOT_DIR}/include/platform/timer
+    ${ZOO_REPO_ROOT_DIR}/src/platform/timer
     ${ZOO_REPO_ROOT_DIR}/include/platform
     ${CMAKE_CURRENT_SOURCE_DIR}/unit
     ${CMAKE_CURRENT_SOURCE_DIR}/mocks
@@ -110,7 +110,7 @@ set(TEST_SOURCES
 # ==============================================================================
 
 set(SOURCE_UNDER_TEST
-    ${ZOO_REPO_ROOT_DIR}/src/timer/zoo_timer.c
+    ${ZOO_REPO_ROOT_DIR}/src/platform/timer/zoo_timer.c
 )
 
 # ==============================================================================

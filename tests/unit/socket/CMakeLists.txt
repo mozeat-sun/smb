@@ -58,7 +58,7 @@ endif()
 # Include directories
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${ZOO_REPO_ROOT_DIR}/include/socket
+    ${ZOO_REPO_ROOT_DIR}/include/platform/socket
     ${UNITY_INCLUDE_DIR}
     ${ZOO_PLATFORM_INCLUDE}
     ${ZOO_UTIL_INCLUDE}

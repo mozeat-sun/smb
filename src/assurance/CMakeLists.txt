@@ -13,7 +13,7 @@ target_include_directories(zoo_assurance_static PUBLIC
     ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/include/assurance
     ${CMAKE_SOURCE_DIR}/include/domain
-    ${CMAKE_SOURCE_DIR}/include/smb/utility
+    ${CMAKE_SOURCE_DIR}/include/kernal/utility
 )
 target_link_libraries(zoo_assurance_static PUBLIC
     zoo_domain_static
@@ -32,7 +32,7 @@ target_include_directories(zoo_assurance_shared PUBLIC
     ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/include/assurance
     ${CMAKE_SOURCE_DIR}/include/domain
-    ${CMAKE_SOURCE_DIR}/include/smb/utility
+    ${CMAKE_SOURCE_DIR}/include/kernal/utility
 )
 target_link_libraries(zoo_assurance_shared PUBLIC
     zoo_domain_shared

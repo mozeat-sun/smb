@@ -38,8 +38,15 @@ ZOO_DOMAIN_STARTUP_DECISION_ENUM zoo_domain_policy_get_startup_decision(
 ZOO_DOMAIN_ASSURANCE_CLASS_ENUM zoo_domain_policy_classify_startup(
     ZOO_DOMAIN_PROFILE_ENUM profile);
 
+ZOO_DOMAIN_ASSURANCE_CLASS_ENUM zoo_domain_policy_get_min_assurance_class(
+    ZOO_DOMAIN_PROFILE_ENUM profile);
+
 uint32_t zoo_domain_policy_get_partition_id(
     ZOO_DOMAIN_PROFILE_ENUM profile);
+
+bool zoo_domain_policy_is_partition_allowed(
+    ZOO_DOMAIN_PROFILE_ENUM profile,
+    uint32_t partition_id);
 
 bool zoo_domain_policy_requires_identity(
     ZOO_DOMAIN_PROFILE_ENUM profile);

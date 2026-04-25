@@ -34,6 +34,27 @@
         "-DZOO_BUILD_EXAMPLES=OFF"
       ],
       "toolchain_file": null
+    },
+    "ci-industrial-linux-gcc": {
+      "generator": "Ninja",
+      "cmake_options": [
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DZOO_BUILD_TESTS=ON",
+        "-DZOO_BUILD_EXAMPLES=OFF",
+        "-DZOO_DOMAIN_PROFILE=industrial",
+        "-DZOO_ENABLE_RUNTIME_ASSURANCE_TEST=ON"
+      ],
+      "toolchain_file": null
+    },
+    "release-industrial-linux-gcc": {
+      "generator": "Ninja",
+      "cmake_options": [
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DZOO_BUILD_TESTS=OFF",
+        "-DZOO_BUILD_EXAMPLES=OFF",
+        "-DZOO_DOMAIN_PROFILE=industrial"
+      ],
+      "toolchain_file": null
     }
   }
 }

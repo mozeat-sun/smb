@@ -48,6 +48,14 @@ typedef struct
     uint32_t partition_id;
 } ZOO_ASSURANCE_POLICY_SNAPSHOT_STRUCT;
 
+typedef struct
+{
+    ZOO_DOMAIN_PROFILE_ENUM domain_profile;
+    const char* local_peer_id;
+    const char* remote_peer_id;
+    uint32_t partition_id;
+} ZOO_ASSURANCE_ADMISSION_CONTEXT_STRUCT;
+
 ZOO_ASSURANCE_PROTOCOL_COMPATIBILITY_ENUM zoo_assurance_check_protocol_compatibility(
     const ZOO_ASSURANCE_PROTOCOL_CONTEXT_STRUCT* context);
 
@@ -60,6 +68,9 @@ ZOO_ERROR_TYPE zoo_assurance_validate_policy_snapshot(
     const ZOO_ASSURANCE_POLICY_SNAPSHOT_STRUCT* snapshot);
 
 ZOO_ERROR_TYPE zoo_assurance_evaluate_startup(const ZOO_ASSURANCE_STARTUP_CONTEXT_STRUCT* context);
+
+ZOO_ERROR_TYPE zoo_assurance_evaluate_admission(
+    const ZOO_ASSURANCE_ADMISSION_CONTEXT_STRUCT* context);
 
 #ifdef __cplusplus
 }

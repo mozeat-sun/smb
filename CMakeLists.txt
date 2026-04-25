@@ -159,39 +159,6 @@ if(ZOO_BUILD_PLATFORM)
     add_subdirectory(src/platform)
 endif()
 
-# Build core modules (dependency-aware order)
-if(ZOO_BUILD_UTIL)
-    add_subdirectory(src/util)
-endif()
-
-if(ZOO_BUILD_LOG)
-    add_subdirectory(src/log)
-endif()
-
-if(ZOO_BUILD_MEMORY_POOL)
-    add_subdirectory(src/memory_pool)
-endif()
-
-if(ZOO_BUILD_BUFFER)
-    add_subdirectory(src/buffer)
-endif()
-
-if(ZOO_BUILD_SOCKET)
-    add_subdirectory(src/socket)
-endif()
-
-if(ZOO_BUILD_THREAD_POOL)
-    add_subdirectory(src/thread_pool)
-endif()
-
-if(ZOO_BUILD_DISPATCHER)
-    add_subdirectory(src/dispatcher)
-endif()
-
-if(ZOO_BUILD_TIMER)
-    add_subdirectory(src/timer)
-endif()
-
 if(ZOO_BUILD_DOMAIN)
     add_subdirectory(src/domain)
 endif()
@@ -201,7 +168,10 @@ if(ZOO_BUILD_ASSURANCE)
 endif()
 
 if(ZOO_BUILD_SMB)
-    add_subdirectory(src/smb)
+    add_subdirectory(src/kernal)
+endif()
+
+if(ZOO_BUILD_SMB)
     if(ZOO_BUILD_TESTS)
         if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/unit/smb/CMakeLists.txt")
             add_subdirectory(tests/unit/smb ${CMAKE_CURRENT_BINARY_DIR}/smb/tests)

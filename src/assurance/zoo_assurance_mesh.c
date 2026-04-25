@@ -29,22 +29,22 @@ ZOO_ERROR_TYPE zoo_assurance_validate_policy_snapshot(
     ZOO_DOMAIN_PROFILE_ENUM profile,
     const ZOO_ASSURANCE_POLICY_SNAPSHOT_STRUCT* snapshot)
 {
+    ZOO_DOMAIN_ASSURANCE_CLASS_ENUM min_class;
+
     if (!snapshot)
     {
         return ZOO_SMB_ERROR_INVALID_PARAM;
     }
 
-    if (profile != ZOO_DOMAIN_PROFILE_GENERIC)
+    if (!zoo_domain_policy_is_partition_allowed(profile, snapshot->partition_id))
     {
-        if (snapshot->partition_id == 0U)
-        {
-            return ZOO_SMB_ERROR_INVALID_STATE;
-        }
+        return ZOO_SMB_ERROR_INVALID_STATE;
+    }
 
-        if (snapshot->assurance_class == ZOO_DOMAIN_ASSURANCE_CLASS_BEST_EFFORT)
-        {
-            return ZOO_SMB_ERROR_INVALID_STATE;
-        }
+    min_class = zoo_domain_policy_get_min_assurance_class(profile);
+    if (snapshot->assurance_class < min_class)
+    {
+        return ZOO_SMB_ERROR_INVALID_STATE;
     }
 
     return ZOO_SMB_OK;
@@ -98,6 +98,34 @@ ZOO_ERROR_TYPE zoo_assurance_evaluate_startup(const ZOO_ASSURANCE_STARTUP_CONTEX
     if (zoo_assurance_check_protocol_compatibility(&context->protocol) != ZOO_ASSURANCE_PROTOCOL_COMPATIBLE)
     {
         return ZOO_SMB_ERROR_VERSION_MISMATCH;
+    }
+
+    return ZOO_SMB_OK;
+}
+
+ZOO_ERROR_TYPE zoo_assurance_evaluate_admission(
+    const ZOO_ASSURANCE_ADMISSION_CONTEXT_STRUCT* context)
+{
+    if (!context)
+    {
+        return ZOO_SMB_ERROR_INVALID_PARAM;
+    }
+
+    if (!zoo_domain_policy_is_partition_allowed(context->domain_profile, context->partition_id))
+    {
+        return ZOO_SMB_ERROR_INVALID_STATE;
+    }
+
+    if (zoo_domain_policy_requires_identity(context->domain_profile))
+    {
+        if (!context->local_peer_id || context->local_peer_id[0] == '\0')
+        {
+            return ZOO_SMB_ERROR_INVALID_STATE;
+        }
+        if (!context->remote_peer_id || context->remote_peer_id[0] == '\0')
+        {
+            return ZOO_SMB_ERROR_INVALID_STATE;
+        }
     }
 
     return ZOO_SMB_OK;

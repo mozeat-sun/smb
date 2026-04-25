@@ -8,16 +8,16 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 get_filename_component(ZOO_REPO_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOLUTE)
 
 set(EXAMPLES_INCLUDE_DIRS
-    ${ZOO_REPO_ROOT_DIR}/include/smb
-    ${ZOO_REPO_ROOT_DIR}/include/smb/core
-    ${ZOO_REPO_ROOT_DIR}/include/smb/node
-    ${ZOO_REPO_ROOT_DIR}/include/smb/qos
-    ${ZOO_REPO_ROOT_DIR}/include/smb/transport
-    ${ZOO_REPO_ROOT_DIR}/include/smb/utility
-    ${ZOO_REPO_ROOT_DIR}/include/log
-    ${ZOO_REPO_ROOT_DIR}/include/memory_pool
-    ${ZOO_REPO_ROOT_DIR}/include/thread_pool
-    ${ZOO_REPO_ROOT_DIR}/include/util
+    ${ZOO_REPO_ROOT_DIR}/include/kernal
+    ${ZOO_REPO_ROOT_DIR}/include/kernal/core
+    ${ZOO_REPO_ROOT_DIR}/include/kernal/node
+    ${ZOO_REPO_ROOT_DIR}/include/kernal/qos
+    ${ZOO_REPO_ROOT_DIR}/include/kernal/transport
+    ${ZOO_REPO_ROOT_DIR}/include/kernal/utility
+    ${ZOO_REPO_ROOT_DIR}/include/platform/log
+    ${ZOO_REPO_ROOT_DIR}/include/platform/memory_pool
+    ${ZOO_REPO_ROOT_DIR}/include/platform/thread_pool
+    ${ZOO_REPO_ROOT_DIR}/include/platform/util
     ${ZOO_REPO_ROOT_DIR}/include/platform
     ${CMAKE_CURRENT_SOURCE_DIR}/common
 )

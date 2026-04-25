@@ -15,7 +15,7 @@ endif()
 set(UNITY_SRC_DIR "${UNITY_ROOT}/src")
 
 # Include directories
-include_directories(${ZOO_REPO_ROOT_DIR}/include/util)
+include_directories(${ZOO_REPO_ROOT_DIR}/include/platform/util)
 include_directories(${ZOO_REPO_ROOT_DIR}/include/platform)
 include_directories(${UNITY_SRC_DIR})
 

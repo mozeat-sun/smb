@@ -35,9 +35,9 @@ endif()
 
 # Include directories
 set(TEST_INCLUDE_DIRS
-    ${ZOO_REPO_ROOT_DIR}/include/log
+    ${ZOO_REPO_ROOT_DIR}/include/platform/log
     ${ZOO_REPO_ROOT_DIR}/include/platform
-    ${ZOO_REPO_ROOT_DIR}/include/util
+    ${ZOO_REPO_ROOT_DIR}/include/platform/util
     ${UNITY_ROOT}
     ${UNITY_ROOT}/src
 )

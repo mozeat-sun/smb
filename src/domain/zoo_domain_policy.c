@@ -42,6 +42,12 @@ ZOO_DOMAIN_ASSURANCE_CLASS_ENUM zoo_domain_policy_classify_startup(
     }
 }
 
+ZOO_DOMAIN_ASSURANCE_CLASS_ENUM zoo_domain_policy_get_min_assurance_class(
+    ZOO_DOMAIN_PROFILE_ENUM profile)
+{
+    return zoo_domain_policy_classify_startup(profile);
+}
+
 uint32_t zoo_domain_policy_get_partition_id(
     ZOO_DOMAIN_PROFILE_ENUM profile)
 {
@@ -65,4 +71,22 @@ bool zoo_domain_policy_requires_identity(
     return profile == ZOO_DOMAIN_PROFILE_INDUSTRIAL ||
            profile == ZOO_DOMAIN_PROFILE_AUTOMOTIVE ||
            profile == ZOO_DOMAIN_PROFILE_MILITARY;
+}
+
+bool zoo_domain_policy_is_partition_allowed(
+    ZOO_DOMAIN_PROFILE_ENUM profile,
+    uint32_t partition_id)
+{
+    switch (profile)
+    {
+        case ZOO_DOMAIN_PROFILE_INDUSTRIAL:
+            return partition_id >= 10U && partition_id < 20U;
+        case ZOO_DOMAIN_PROFILE_AUTOMOTIVE:
+            return partition_id >= 20U && partition_id < 30U;
+        case ZOO_DOMAIN_PROFILE_MILITARY:
+            return partition_id >= 30U && partition_id < 40U;
+        case ZOO_DOMAIN_PROFILE_GENERIC:
+        default:
+            return partition_id == 0U;
+    }
 }

@@ -5,8 +5,8 @@ project(ZooSmbNodeUnitTests C)
 enable_testing()
 
 option(ZOO_ENABLE_RUNTIME_ASSURANCE_TEST
-    "Enable runtime assurance unit test in CTest (disabled by default due known shutdown hang in non-interactive test runners)"
-    OFF)
+    "Enable runtime assurance unit test in CTest"
+    ON)
 
 if(NOT Unity_FOUND)
     message(WARNING "Unity testing framework not found. SMB node unit tests are skipped.")
@@ -30,27 +30,27 @@ add_executable(test_zoo_smb_runtime_assurance_unit
 
 target_include_directories(test_zoo_smb_subscription_session_manager_unit PRIVATE
     "${CMAKE_SOURCE_DIR}/include"
-    "${CMAKE_SOURCE_DIR}/include/smb"
-    "${CMAKE_SOURCE_DIR}/include/smb/utility"
-    "${CMAKE_SOURCE_DIR}/include/smb/core"
-    "${CMAKE_SOURCE_DIR}/include/smb/node"
-    "${CMAKE_SOURCE_DIR}/include/smb/transport"
-    "${CMAKE_SOURCE_DIR}/include/smb/qos"
-    "${CMAKE_SOURCE_DIR}/include/memory_pool"
-    "${CMAKE_SOURCE_DIR}/include/thread_pool"
-    "${CMAKE_SOURCE_DIR}/include/buffer"
-    "${CMAKE_SOURCE_DIR}/include/socket"
-    "${CMAKE_SOURCE_DIR}/include/log"
-    "${CMAKE_SOURCE_DIR}/include/util"
+    "${CMAKE_SOURCE_DIR}/include/kernal"
+    "${CMAKE_SOURCE_DIR}/include/kernal/utility"
+    "${CMAKE_SOURCE_DIR}/include/kernal/core"
+    "${CMAKE_SOURCE_DIR}/include/kernal/node"
+    "${CMAKE_SOURCE_DIR}/include/kernal/transport"
+    "${CMAKE_SOURCE_DIR}/include/kernal/qos"
+    "${CMAKE_SOURCE_DIR}/include/platform/memory_pool"
+    "${CMAKE_SOURCE_DIR}/include/platform/thread_pool"
+    "${CMAKE_SOURCE_DIR}/include/platform/buffer"
+    "${CMAKE_SOURCE_DIR}/include/platform/socket"
+    "${CMAKE_SOURCE_DIR}/include/platform/log"
+    "${CMAKE_SOURCE_DIR}/include/platform/util"
     "${CMAKE_SOURCE_DIR}/include/platform"
     "${Unity_INCLUDE_DIR}"
 )
 
 target_include_directories(test_zoo_assurance_domain_unit PRIVATE
     "${CMAKE_SOURCE_DIR}/include"
-    "${CMAKE_SOURCE_DIR}/include/smb"
-    "${CMAKE_SOURCE_DIR}/include/smb/utility"
-    "${CMAKE_SOURCE_DIR}/include/smb/core"
+    "${CMAKE_SOURCE_DIR}/include/kernal"
+    "${CMAKE_SOURCE_DIR}/include/kernal/utility"
+    "${CMAKE_SOURCE_DIR}/include/kernal/core"
     "${CMAKE_SOURCE_DIR}/include/domain"
     "${CMAKE_SOURCE_DIR}/include/assurance"
     "${Unity_INCLUDE_DIR}"
@@ -58,9 +58,9 @@ target_include_directories(test_zoo_assurance_domain_unit PRIVATE
 
 target_include_directories(test_zoo_smb_runtime_assurance_unit PRIVATE
     "${CMAKE_SOURCE_DIR}/include"
-    "${CMAKE_SOURCE_DIR}/include/smb"
-    "${CMAKE_SOURCE_DIR}/include/smb/utility"
-    "${CMAKE_SOURCE_DIR}/include/smb/core"
+    "${CMAKE_SOURCE_DIR}/include/kernal"
+    "${CMAKE_SOURCE_DIR}/include/kernal/utility"
+    "${CMAKE_SOURCE_DIR}/include/kernal/core"
     "${CMAKE_SOURCE_DIR}/include/domain"
     "${CMAKE_SOURCE_DIR}/include/assurance"
     "${Unity_INCLUDE_DIR}"
@@ -146,6 +146,7 @@ if(ZOO_ENABLE_RUNTIME_ASSURANCE_TEST)
     set_tests_properties(test_zoo_smb_runtime_assurance_unit PROPERTIES
         LABELS "unit;smb;runtime;assurance"
         TIMEOUT 120
+        ENVIRONMENT "LD_LIBRARY_PATH=${_zoo_smb_unit_ld_path}:$ENV{LD_LIBRARY_PATH}"
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     )
 endif()
