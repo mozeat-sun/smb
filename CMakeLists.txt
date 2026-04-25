@@ -62,14 +62,37 @@ option(ZOO_BUILD_LOG "Build log module" ${ZOO_BUILD_ALL})
 option(ZOO_BUILD_MEMORY_POOL "Build memory pool module" ${ZOO_BUILD_ALL})
 option(ZOO_BUILD_PLATFORM "Build platform module" ${ZOO_BUILD_ALL})
 option(ZOO_BUILD_SMB "Build SMB module" ${ZOO_BUILD_ALL})
+option(ZOO_BUILD_DOMAIN "Build domain module" ${ZOO_BUILD_SMB})
+option(ZOO_BUILD_ASSURANCE "Build assurance module" ${ZOO_BUILD_SMB})
 option(ZOO_BUILD_SOCKET "Build socket module" ${ZOO_BUILD_ALL})
 option(ZOO_BUILD_THREAD_POOL "Build thread pool module" ${ZOO_BUILD_ALL})
 option(ZOO_BUILD_TIMER "Build timer module" ${ZOO_BUILD_ALL})
 option(ZOO_BUILD_UTIL "Build util module" ${ZOO_BUILD_ALL})
 
+if(ZOO_BUILD_SMB)
+    if(NOT ZOO_BUILD_DOMAIN)
+        message(STATUS "Enabling ZOO_BUILD_DOMAIN because SMB depends on domain profile services")
+        set(ZOO_BUILD_DOMAIN ON CACHE BOOL "Build domain module" FORCE)
+    endif()
+    if(NOT ZOO_BUILD_ASSURANCE)
+        message(STATUS "Enabling ZOO_BUILD_ASSURANCE because SMB depends on assurance mesh policies")
+        set(ZOO_BUILD_ASSURANCE ON CACHE BOOL "Build assurance module" FORCE)
+    endif()
+endif()
+
 # Option to build examples and tests
 option(ZOO_BUILD_EXAMPLES "Build example programs" OFF)
 option(ZOO_BUILD_TESTS "Build unit tests" ON)
+
+# Domain profile selection for architecture composition.
+set(ZOO_DOMAIN_PROFILE "generic" CACHE STRING "Domain profile for SMB composition (generic|industrial|automotive|military)")
+set_property(CACHE ZOO_DOMAIN_PROFILE PROPERTY STRINGS generic industrial automotive military)
+
+if(NOT ZOO_DOMAIN_PROFILE MATCHES "^(generic|industrial|automotive|military)$")
+    message(FATAL_ERROR "Invalid ZOO_DOMAIN_PROFILE='${ZOO_DOMAIN_PROFILE}'. Allowed values: generic, industrial, automotive, military")
+endif()
+
+message(STATUS "ZOO_DOMAIN_PROFILE=${ZOO_DOMAIN_PROFILE}")
 
 # ==============================================================================
 # GLOBAL COMPILER FLAGS AND DEFINITIONS
@@ -167,6 +190,14 @@ endif()
 
 if(ZOO_BUILD_TIMER)
     add_subdirectory(src/timer)
+endif()
+
+if(ZOO_BUILD_DOMAIN)
+    add_subdirectory(src/domain)
+endif()
+
+if(ZOO_BUILD_ASSURANCE)
+    add_subdirectory(src/assurance)
 endif()
 
 if(ZOO_BUILD_SMB)

@@ -13,12 +13,26 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
     ${CMAKE_CURRENT_SOURCE_DIR}/*.c
 )
 
+# Domain implementation sources are selected explicitly by profile and are
+# excluded from the baseline source glob to prevent accidental cross-domain
+# linkage when domain folders are introduced.
+list(FILTER SOURCES EXCLUDE REGEX ".*/domain/.*\\.c$")
+
+# Optional future profile-scoped implementation sources.
+if(DEFINED ZOO_DOMAIN_PROFILE)
+    file(GLOB_RECURSE DOMAIN_PROFILE_SOURCES CONFIGURE_DEPENDS
+        ${CMAKE_CURRENT_SOURCE_DIR}/domain/${ZOO_DOMAIN_PROFILE}/*.c
+    )
+    list(APPEND SOURCES ${DOMAIN_PROFILE_SOURCES})
+endif()
+
 # Build static library (excluding bridge sources)
 add_library(zoo_smb_static STATIC ${SOURCES})
 set_target_properties(zoo_smb_static PROPERTIES OUTPUT_NAME zoo_smb)
 target_compile_definitions(zoo_smb_static PRIVATE
     _GNU_SOURCE
     _POSIX_C_SOURCE=200809L
+    ZOO_DOMAIN_PROFILE_${ZOO_DOMAIN_PROFILE}=1
 )
 target_compile_options(zoo_smb_static PRIVATE -Wno-pedantic -Wno-unused-value)
 target_include_directories(zoo_smb_static PUBLIC
@@ -36,6 +50,8 @@ target_include_directories(zoo_smb_static PUBLIC
     ${CMAKE_SOURCE_DIR}/include/log
     ${CMAKE_SOURCE_DIR}/include/util
     ${CMAKE_SOURCE_DIR}/include/platform
+    ${CMAKE_SOURCE_DIR}/include/domain
+    ${CMAKE_SOURCE_DIR}/include/assurance
 )
 target_link_libraries(zoo_smb_static PUBLIC
     Threads::Threads
@@ -48,6 +64,8 @@ target_link_libraries(zoo_smb_static PUBLIC
     zoo_memory_pool_static
     zoo_util_static
     zoo_platform_static
+    zoo_domain_static
+    zoo_assurance_static
 )
 
 # Build shared library (excluding bridge sources)
@@ -56,6 +74,7 @@ set_target_properties(zoo_smb_shared PROPERTIES OUTPUT_NAME smb)
 target_compile_definitions(zoo_smb_shared PRIVATE
     _GNU_SOURCE
     _POSIX_C_SOURCE=200809L
+    ZOO_DOMAIN_PROFILE_${ZOO_DOMAIN_PROFILE}=1
 )
 target_compile_options(zoo_smb_shared PRIVATE -Wno-pedantic -Wno-unused-value)
 target_include_directories(zoo_smb_shared PUBLIC
@@ -73,6 +92,8 @@ target_include_directories(zoo_smb_shared PUBLIC
     ${CMAKE_SOURCE_DIR}/include/log
     ${CMAKE_SOURCE_DIR}/include/util
     ${CMAKE_SOURCE_DIR}/include/platform
+    ${CMAKE_SOURCE_DIR}/include/domain
+    ${CMAKE_SOURCE_DIR}/include/assurance
 )
 target_link_libraries(zoo_smb_shared PUBLIC
     Threads::Threads
@@ -85,6 +106,8 @@ target_link_libraries(zoo_smb_shared PUBLIC
     zoo_memory_pool_shared
     zoo_util_shared
     zoo_platform_shared
+    zoo_domain_static
+    zoo_assurance_static
 )
 
 # Install libraries and header files

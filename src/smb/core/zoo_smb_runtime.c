@@ -13,6 +13,8 @@
 
 #include "zoo_smb_runtime.h"
 #include "zoo_smb_error.h"
+#include "domain/zoo_domain_profile.h"
+#include "assurance/zoo_assurance_mesh.h"
 #include "zoo_log.h"
 #include "zoo_memory_pool.h"
 #include "zoo_thread_pool.h"
@@ -20,6 +22,7 @@
 #include <string.h>
 #include <time.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #define ZOO_SMB_RUNTIME_OBSERVER_CAPACITY 8
 #define ZOO_SMB_RUNTIME_PEER_CAPACITY 8
@@ -72,6 +75,30 @@ static ZOO_BOOL is_valid_role(ZOO_SMB_RUNTIME_ROLE_ENUM role)
 static uint64_t runtime_now_ms(void)
 {
     return (uint64_t)time(NULL) * 1000ULL;
+}
+
+/**
+ * @brief Resolve peer wire minor from environment override.
+ * @details Override is optional and used for deterministic compatibility tests.
+ * @param default_minor Default peer wire minor when override is not present
+ * @return uint16_t Effective peer wire minor
+ */
+static uint16_t runtime_get_peer_wire_minor(uint16_t default_minor)
+{
+    const char* env_minor = getenv("ZOO_SMB_EXPECTED_PEER_WIRE_MINOR");
+    if (!env_minor || env_minor[0] == '\0')
+    {
+        return default_minor;
+    }
+
+    char* end_ptr = NULL;
+    unsigned long parsed = strtoul(env_minor, &end_ptr, 10);
+    if (end_ptr == env_minor || *end_ptr != '\0' || parsed > 65535UL)
+    {
+        return default_minor;
+    }
+
+    return (uint16_t)parsed;
 }
 
 /**
@@ -361,6 +388,29 @@ ZOO_ERROR_TYPE zoo_smb_runtime_start(ZOO_SMB_RUNTIME_HANDLE runtime)
     {
         set_runtime_state(runtime, ZOO_SMB_RUNTIME_STATE_FAULTED);
         return ZOO_SMB_ERROR_NOT_INITIALIZED;
+    }
+
+    ZOO_DOMAIN_PROFILE_ENUM active_profile = zoo_domain_profile_get_active();
+    ZOO_ASSURANCE_STARTUP_CONTEXT_STRUCT assurance_context;
+    memset(&assurance_context, 0, sizeof(assurance_context));
+    assurance_context.domain_profile = active_profile;
+    assurance_context.protocol.local_wire_major = 1U;
+    assurance_context.protocol.local_wire_minor = 0U;
+    assurance_context.protocol.peer_wire_major = 1U;
+    assurance_context.protocol.peer_wire_minor = runtime_get_peer_wire_minor(0U);
+
+    ZOO_ERROR_TYPE assurance_result = zoo_assurance_evaluate_startup(&assurance_context);
+    if (assurance_result != ZOO_SMB_OK)
+    {
+        set_runtime_state(runtime, ZOO_SMB_RUNTIME_STATE_FAULTED);
+        ZOO_LOG_ERROR("Runtime startup blocked by assurance mesh: profile=%s local=%u.%u peer=%u.%u err=%d",
+                      zoo_domain_profile_to_string(active_profile),
+                      (unsigned)assurance_context.protocol.local_wire_major,
+                      (unsigned)assurance_context.protocol.local_wire_minor,
+                      (unsigned)assurance_context.protocol.peer_wire_major,
+                      (unsigned)assurance_context.protocol.peer_wire_minor,
+                      assurance_result);
+        return assurance_result;
     }
 
     runtime->started = ZOO_TRUE;
