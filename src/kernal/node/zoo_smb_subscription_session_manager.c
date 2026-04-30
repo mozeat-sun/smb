@@ -403,7 +403,8 @@ size_t zoo_smb_subscription_session_manager_count_active(
     }
 
     size_t count = 0;
-    for (size_t i = 0; i < zoo_list_size(manager->sessions); ++i)
+    size_t session_count = zoo_list_size(manager->sessions);
+    for (size_t i = 0; i < session_count; ++i)
     {
         ZOO_SMB_SUBSCRIPTION_SESSION_HANDLE session =
             (ZOO_SMB_SUBSCRIPTION_SESSION_HANDLE)zoo_list_at(manager->sessions, i);
