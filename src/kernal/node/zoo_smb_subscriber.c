@@ -591,3 +591,23 @@ void zoo_smb_unsubscribe_message(IN ZOO_SMB_SUBSCRIBER_HANDLE subscriber, IN int
 
     ZOO_LOG_INFO("Unsubscribed from topic: %s, handle: %d", subscriber->node->topic, handle);
 }
+
+/**
+ * @brief Returns the number of subscription sessions currently in the ACTIVE state.
+ *
+ * Each active session represents one "available model" — a message subscription
+ * that has completed QoS negotiation and is ready to receive published messages.
+ */
+size_t zoo_smb_subscriber_get_active_subscription_count(IN ZOO_SMB_SUBSCRIBER_HANDLE subscriber)
+{
+    if (!subscriber)
+    {
+        return 0;
+    }
+
+    ZOO_MUTEX_LOCK(&subscriber->mutex);
+    size_t count = zoo_smb_subscription_session_manager_count_active(subscriber->session_manager);
+    ZOO_MUTEX_UNLOCK(&subscriber->mutex);
+
+    return count;
+}

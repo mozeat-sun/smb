@@ -1,0 +1,12 @@
+prefix=/home/runner/work/smb/smb/stage
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: ZooUtil
+Description: ZOO Util Module
+Version: 1.0.0
+Requires: 
+Libs: -L${libdir} -lzoo_util
+Libs.private: -lm -lrt
+Cflags: -I${includedir}

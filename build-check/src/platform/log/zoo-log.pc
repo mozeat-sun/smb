@@ -1,0 +1,12 @@
+prefix=/home/runner/work/smb/smb/stage
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: ZooLog
+Description: Logging module for the ZOO library
+Version: 1.0.0
+Requires: 
+Libs: -L${libdir} -lzoo_log
+Libs.private: -pthread
+Cflags: -I${includedir}

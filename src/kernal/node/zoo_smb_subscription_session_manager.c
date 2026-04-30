@@ -388,6 +388,34 @@ void zoo_smb_subscription_session_manager_visit(
 }
 
 /**
+ * @brief Counts sessions that are currently in the ACTIVE state.
+ *
+ * An ACTIVE session has completed QoS negotiation and is receiving published
+ * messages. This count reflects the number of "available models" for the
+ * owning subscriber.
+ */
+size_t zoo_smb_subscription_session_manager_count_active(
+    IN ZOO_SMB_SUBSCRIPTION_SESSION_MANAGER_HANDLE manager)
+{
+    if (!manager)
+    {
+        return 0;
+    }
+
+    size_t count = 0;
+    for (size_t i = 0; i < zoo_list_size(manager->sessions); ++i)
+    {
+        ZOO_SMB_SUBSCRIPTION_SESSION_HANDLE session =
+            (ZOO_SMB_SUBSCRIPTION_SESSION_HANDLE)zoo_list_at(manager->sessions, i);
+        if (session && session->state == ZOO_SMB_SUBSCRIPTION_SESSION_STATE_ACTIVE)
+        {
+            ++count;
+        }
+    }
+    return count;
+}
+
+/**
  * @brief Applies service availability changes to desired-active sessions.
  *
  * Service loss clears in-flight request ownership and marks sessions degraded.

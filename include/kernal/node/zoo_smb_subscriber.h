@@ -83,6 +83,18 @@ extern "C"
      */
     void zoo_smb_unsubscribe_message(IN ZOO_SMB_SUBSCRIBER_HANDLE subscriber, IN int32_t handle);
 
+    /**
+     * @brief Returns the number of subscription sessions that are currently active.
+     *
+     * An active session has successfully completed QoS negotiation and is ready
+     * to receive published messages. This is the count of "available models" for
+     * this subscriber.
+     *
+     * @param subscriber Subscriber handle.
+     * @return Number of active sessions, or 0 if subscriber is NULL.
+     */
+    size_t zoo_smb_subscriber_get_active_subscription_count(IN ZOO_SMB_SUBSCRIBER_HANDLE subscriber);
+
 #ifdef __cplusplus
 }
 #endif

@@ -135,6 +135,19 @@ void zoo_smb_subscription_session_manager_on_suback(
     IN ZOO_BOOL matched);
 
 /**
+ * @brief Returns the number of sessions currently in the ACTIVE state.
+ *
+ * An ACTIVE session has completed QoS negotiation and is ready to receive
+ * published messages. Use this to query how many subscribed models are
+ * available for the owning subscriber.
+ *
+ * @param manager Manager handle.
+ * @return Count of ACTIVE sessions, or 0 when manager is NULL.
+ */
+size_t zoo_smb_subscription_session_manager_count_active(
+    IN ZOO_SMB_SUBSCRIPTION_SESSION_MANAGER_HANDLE manager);
+
+/**
  * @brief Reconciles session intent to runtime state.
  *
  * @param manager Manager handle.
