@@ -231,6 +231,32 @@ void test_memory_pool_validation(void) {
     TEST_ASSERT_EQUAL_INT(0, validation_result);
 }
 
+void test_memory_pool_auto_growth_under_pressure(void) {
+    TEST_ASSERT_TRUE(ensure_pool_exists());
+
+    const int NUM_BLOCKS = 48;
+    const size_t BLOCK_SIZE = 32 * 1024;
+    void *ptrs[NUM_BLOCKS];
+    ZOO_MEMORY_USAGE usage_before;
+    ZOO_MEMORY_USAGE usage_after;
+
+    memset(ptrs, 0, sizeof(ptrs));
+    zoo_memory_pool_get_usage(&usage_before);
+
+    for (int i = 0; i < NUM_BLOCKS; i++) {
+        ptrs[i] = zoo_allocate_from_pool(BLOCK_SIZE);
+        TEST_ASSERT_NOT_NULL(ptrs[i]);
+    }
+
+    zoo_memory_pool_get_usage(&usage_after);
+    TEST_ASSERT_GREATER_THAN_size_t(usage_before.pool_size, usage_after.pool_size);
+    TEST_ASSERT_EQUAL_INT(0, zoo_validate_memory_pool());
+
+    for (int i = 0; i < NUM_BLOCKS; i++) {
+        zoo_free_to_pool(ptrs[i]);
+    }
+}
+
 void test_allocation_patterns(void) {
     TEST_ASSERT_TRUE(ensure_pool_exists());
     

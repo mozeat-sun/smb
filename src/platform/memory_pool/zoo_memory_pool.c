@@ -130,8 +130,8 @@ static ZOO_UINTPTR_T smb_slab_exact_size;
 static ZOO_UINTPTR_T smb_slab_exact_shift;
 static ZOO_UINTPTR_T smb_pagesize;
 static ZOO_UINTPTR_T smb_pagesize_shift;
-static ZOO_UINTPTR_T smb_real_pages;
 typedef struct ZOO_SLAB_PAGE_STRUCT ZOO_SLAB_PAGE_STRUCT;
+typedef struct ZOO_MEMORY_POOL_STRUCT ZOO_MEMORY_POOL_STRUCT;
 
 /**
  * @struct ZOO_SLAB_PAGE_STRUCT
@@ -160,7 +160,7 @@ struct ZOO_SLAB_PAGE_STRUCT
  *
  * Members of this structure should be documented individually where defined.
  */
-typedef struct
+struct ZOO_MEMORY_POOL_STRUCT
 {
     ZOO_SIZE_T min_size;
     ZOO_SIZE_T min_shift;
@@ -169,7 +169,10 @@ typedef struct
     ZOO_UINT8 *start;
     ZOO_UINT8 *end;
     zoo_pool_mutex_t mutex;
-} ZOO_MEMORY_POOL_STRUCT;
+    ZOO_SIZE_T total_size;
+    ZOO_SIZE_T real_pages;
+    ZOO_MEMORY_POOL_STRUCT *next;
+};
 
 /**
  * @brief Static pointer to the memory pool structure.
@@ -178,6 +181,17 @@ typedef struct
  * It is initialized to NULL and should be assigned during memory pool creation.
  */
 static ZOO_MEMORY_POOL_STRUCT *smb_memory_pool = NULL;
+static ZOO_MEMORY_POOL_STRUCT *smb_memory_pool_tail = NULL;
+static zoo_pool_mutex_t smb_memory_pool_list_mutex;
+static ZOO_BOOL smb_memory_pool_list_mutex_ready = ZOO_FALSE;
+
+static ZOO_MEMORY_POOL_STRUCT *smb_memory_pool_create_segment(ZOO_SIZE_T total_size);
+static ZOO_MEMORY_POOL_STRUCT *smb_memory_pool_find_segment_for_ptr(ZOO_MEMORY_POOL_STRUCT *pool, const void *ptr);
+static ZOO_SIZE_T smb_memory_pool_segment_size(ZOO_SIZE_T request_size, ZOO_SIZE_T reference_size);
+static void *smb_memory_pool_alloc_locked(ZOO_MEMORY_POOL_STRUCT *pool, ZOO_SIZE_T size);
+static void smb_memory_pool_free_locked(ZOO_MEMORY_POOL_STRUCT *pool, void *p);
+static void *smb_slab_alloc_locked(ZOO_MEMORY_POOL_STRUCT *pool, ZOO_SIZE_T size);
+static void smb_slab_free_locked(ZOO_MEMORY_POOL_STRUCT *pool, void *p);
 
 /**
  * Allocates one or more slab pages from the specified memory pool.
@@ -205,12 +219,7 @@ static void smb_slab_free_pages(ZOO_MEMORY_POOL_STRUCT *pool, ZOO_SLAB_PAGE_STRU
 // ==============================================================================
 
 /**
- * @brief Retrieves the system's memory page size.
- *
- * This function returns the size of a memory page as defined by the operating system.
- * The page size is typically used for memory allocation and management purposes.
- *
- * @return The size of a memory page in bytes.
+ * @brief Returns the OS page size used to lay out slab metadata and payload pages.
  */
 static ZOO_SIZE_T zoo_get_page_size(void)
 {
@@ -226,14 +235,7 @@ static ZOO_SIZE_T zoo_get_page_size(void)
 }
 
 /**
- * @brief Initializes a zoo pool mutex.
- *
- * This function sets up the given zoo_pool_mutex_t structure for use as a mutex
- * within the memory pool system. It should be called before the mutex is used
- * for synchronization.
- *
- * @param mutex Pointer to a zoo_pool_mutex_t structure to initialize.
- * @return 0 on success, non-zero error code on failure.
+ * @brief Initializes one allocator mutex using the active platform backend.
  */
 static int zoo_pool_mutex_init(zoo_pool_mutex_t *mutex)
 {
@@ -255,13 +257,7 @@ static int zoo_pool_mutex_init(zoo_pool_mutex_t *mutex)
 }
 
 /**
- * @brief Locks the specified memory pool mutex.
- *
- * This function attempts to acquire a lock on the given zoo_pool_mutex_t object.
- * It is typically used to ensure thread-safe access to resources managed by the memory pool.
- *
- * @param mutex Pointer to the zoo_pool_mutex_t structure to be locked.
- * @return int Returns 0 on success, or a negative error code on failure.
+ * @brief Acquires one allocator mutex.
  */
 static int zoo_pool_mutex_lock(zoo_pool_mutex_t *mutex)
 {
@@ -285,14 +281,7 @@ static int zoo_pool_mutex_lock(zoo_pool_mutex_t *mutex)
 }
 
 /**
- * @brief Unlocks the specified memory pool mutex.
- *
- * This function releases the lock held by the given zoo_pool_mutex_t object.
- * It should be called after the critical section is completed to allow other
- * threads to acquire the mutex.
- *
- * @param mutex Pointer to the zoo_pool_mutex_t to be unlocked.
- * @return 0 on success, or a negative error code on failure.
+ * @brief Releases one allocator mutex.
  */
 static int zoo_pool_mutex_unlock(zoo_pool_mutex_t *mutex)
 {
@@ -312,14 +301,7 @@ static int zoo_pool_mutex_unlock(zoo_pool_mutex_t *mutex)
 }
 
 /**
- * @brief Destroys a memory pool mutex.
- *
- * This function releases any resources associated with the specified
- * memory pool mutex. After calling this function, the mutex should not
- * be used.
- *
- * @param mutex Pointer to the zoo_pool_mutex_t structure to be destroyed.
- * @return 0 on success, or a negative error code on failure.
+ * @brief Destroys one allocator mutex.
  */
 static int zoo_pool_mutex_destroy(zoo_pool_mutex_t *mutex)
 {
@@ -344,14 +326,10 @@ static int zoo_pool_mutex_destroy(zoo_pool_mutex_t *mutex)
 // ==============================================================================
 
 /**
- * @brief Initializes a memory slab pool
+ * @brief Initializes slab metadata for a single pool segment.
  *
- * Initializes the slab pool structure and prepares it for allocating memory.
- * This function must be called before any memory allocation operations on the pool.
- *
- * @param pool Pointer to the memory pool structure to be initialized
- *
- * @note The pool structure should be allocated before calling this function
+ * This lays out slot headers, page descriptors, the segment free-page list,
+ * and the aligned payload start for one growable segment.
  */
 static void smb_slab_init(ZOO_MEMORY_POOL_STRUCT *pool)
 {
@@ -359,9 +337,6 @@ static void smb_slab_init(ZOO_MEMORY_POOL_STRUCT *pool)
     ZOO_SIZE_T size;
     ZOO_UINTPTR_T i, n, pages;
     ZOO_SLAB_PAGE_STRUCT *slots;
-
-    // Initialize mutex
-    zoo_pool_mutex_init(&pool->mutex);
 
     /*pagesize*/
     smb_pagesize = zoo_get_page_size();
@@ -408,50 +383,489 @@ static void smb_slab_init(ZOO_MEMORY_POOL_STRUCT *pool)
     pool->free.prev = (ZOO_UINTPTR_T)pool->pages;
     pool->free.next = pool->pages;
 
-    pool->pages->slab = smb_real_pages;
     pool->pages->next = &pool->free;
     pool->pages->prev = (ZOO_UINTPTR_T)&pool->free;
 
     pool->start = (ZOO_UINT8 *)
         SMB_ALIGN_PTR((ZOO_UINTPTR_T)p + pages * sizeof(ZOO_SLAB_PAGE_STRUCT), smb_pagesize);
 
-    smb_real_pages = (ZOO_SIZE_T)(pool->end - pool->start) / smb_pagesize;
-    pool->pages->slab = smb_real_pages;
+    pool->real_pages = (ZOO_SIZE_T)(pool->end - pool->start) / smb_pagesize;
+    pool->pages->slab = pool->real_pages;
 }
 
 /**
- * @brief Allocates memory from a slab within the memory pool with locking
+ * @brief Allocates and initializes one pool segment.
  *
- * This function allocates a block of memory of the specified size from the given memory pool.
- * The allocation is performed with proper locking mechanisms to ensure thread safety.
+ * Each segment owns its own slab metadata, backing storage, and mutex while
+ * remaining linked into the global segment chain.
+ */
+static ZOO_MEMORY_POOL_STRUCT *smb_memory_pool_create_segment(ZOO_SIZE_T total_size)
+{
+    ZOO_UINT8 *buffer;
+    ZOO_MEMORY_POOL_STRUCT *pool;
+
+    if (total_size <= sizeof(ZOO_MEMORY_POOL_STRUCT))
+    {
+        return NULL;
+    }
+
+    buffer = (ZOO_UINT8 *)malloc(total_size);
+    if (!buffer)
+    {
+        return NULL;
+    }
+
+    memset(buffer, 0, total_size);
+    pool = (ZOO_MEMORY_POOL_STRUCT *)buffer;
+    pool->start = buffer + sizeof(ZOO_MEMORY_POOL_STRUCT);
+    pool->end = buffer + total_size;
+    pool->min_shift = 3;
+    pool->total_size = total_size;
+    pool->next = NULL;
+
+    if (zoo_pool_mutex_init(&pool->mutex) != 0)
+    {
+        free(buffer);
+        return NULL;
+    }
+
+    smb_slab_init(pool);
+    return pool;
+}
+
+/**
+ * @brief Returns the segment that owns a previously allocated pointer.
+ */
+static ZOO_MEMORY_POOL_STRUCT *smb_memory_pool_find_segment_for_ptr(ZOO_MEMORY_POOL_STRUCT *pool, const void *ptr)
+{
+    ZOO_MEMORY_POOL_STRUCT *segment;
+    const ZOO_UINT8 *address = (const ZOO_UINT8 *)ptr;
+
+    for (segment = pool; segment != NULL; segment = segment->next)
+    {
+        if (address >= segment->start && address < segment->end)
+        {
+            return segment;
+        }
+    }
+
+    return NULL;
+}
+
+/**
+ * @brief Chooses the size of a new segment for a growth allocation.
  *
- * @param pool Handle to the memory pool from which to allocate
- * @param size Size of the memory block to allocate in bytes
- * @return void* Pointer to the allocated memory block, or NULL if allocation fails
+ * The result is large enough for the requested block plus the segment's slab
+ * bookkeeping, and grows from the previous segment size when possible.
+ */
+static ZOO_SIZE_T smb_memory_pool_segment_size(ZOO_SIZE_T request_size, ZOO_SIZE_T reference_size)
+{
+    ZOO_SIZE_T page_size = smb_pagesize ? (ZOO_SIZE_T)smb_pagesize : zoo_get_page_size();
+    ZOO_UINTPTR_T page_shift = 0;
+    ZOO_UINTPTR_T slot_count;
+    ZOO_SIZE_T requested_pages;
+    ZOO_SIZE_T min_total;
+    ZOO_SIZE_T candidate_size;
+
+    for (ZOO_SIZE_T n = page_size; n >>= 1; page_shift++)
+    {
+        /* void */
+    }
+
+    slot_count = page_shift > 3 ? page_shift - 3 : 1;
+    requested_pages = (request_size + page_size - 1) / page_size;
+    if (requested_pages == 0)
+    {
+        requested_pages = 1;
+    }
+
+    min_total = sizeof(ZOO_MEMORY_POOL_STRUCT) +
+                (slot_count + requested_pages + 2) * sizeof(ZOO_SLAB_PAGE_STRUCT) +
+                (requested_pages + 2) * page_size;
+
+    candidate_size = reference_size > 0 ? reference_size : min_total;
+    while (candidate_size < min_total)
+    {
+        if (candidate_size > (SIZE_MAX / 2))
+        {
+            candidate_size = min_total;
+            break;
+        }
+        candidate_size *= 2;
+    }
+
+    if (candidate_size % page_size != 0)
+    {
+        candidate_size += page_size - (candidate_size % page_size);
+    }
+
+    return candidate_size;
+}
+
+/**
+ * @brief Allocates from the segment chain while coordinating list and segment locks.
+ *
+ * The caller enters with the global segment-list mutex held. This function may
+ * walk existing segments, grow the chain with a new segment, and always releases
+ * the list mutex before it returns.
+ */
+static void *smb_memory_pool_alloc_locked(ZOO_MEMORY_POOL_STRUCT *pool, ZOO_SIZE_T size)
+{
+    ZOO_MEMORY_POOL_STRUCT *segment;
+    ZOO_MEMORY_POOL_STRUCT *next_segment;
+    ZOO_MEMORY_POOL_STRUCT *new_segment;
+    void *ptr;
+
+    segment = pool;
+    while (segment != NULL)
+    {
+        next_segment = segment->next;
+        zoo_pool_mutex_lock(&segment->mutex);
+        zoo_pool_mutex_unlock(&smb_memory_pool_list_mutex);
+        ptr = smb_slab_alloc_locked(segment, size);
+        zoo_pool_mutex_unlock(&segment->mutex);
+        if (ptr)
+        {
+            return ptr;
+        }
+
+        zoo_pool_mutex_lock(&smb_memory_pool_list_mutex);
+        segment = next_segment;
+    }
+
+    if (!smb_memory_pool_tail)
+    {
+        zoo_pool_mutex_unlock(&smb_memory_pool_list_mutex);
+        return NULL;
+    }
+
+    new_segment = smb_memory_pool_create_segment(
+        smb_memory_pool_segment_size(size, smb_memory_pool_tail->total_size));
+    if (!new_segment)
+    {
+        zoo_pool_mutex_unlock(&smb_memory_pool_list_mutex);
+        return NULL;
+    }
+
+    smb_memory_pool_tail->next = new_segment;
+    smb_memory_pool_tail = new_segment;
+
+    zoo_pool_mutex_lock(&smb_memory_pool_tail->mutex);
+    zoo_pool_mutex_unlock(&smb_memory_pool_list_mutex);
+    ptr = smb_slab_alloc_locked(smb_memory_pool_tail, size);
+    zoo_pool_mutex_unlock(&smb_memory_pool_tail->mutex);
+
+    return ptr;
+}
+
+/**
+ * @brief Returns a pointer to its owning segment and frees it there.
+ *
+ * The caller enters with the global segment-list mutex held. This function
+ * locates the owning segment, hands off to the segment mutex, and releases the
+ * list mutex before it returns.
+ */
+static void smb_memory_pool_free_locked(ZOO_MEMORY_POOL_STRUCT *pool, void *p)
+{
+    ZOO_MEMORY_POOL_STRUCT *segment = smb_memory_pool_find_segment_for_ptr(pool, p);
+
+    if (segment)
+    {
+        zoo_pool_mutex_lock(&segment->mutex);
+        zoo_pool_mutex_unlock(&smb_memory_pool_list_mutex);
+        smb_slab_free_locked(segment, p);
+        zoo_pool_mutex_unlock(&segment->mutex);
+        return;
+    }
+
+    zoo_pool_mutex_unlock(&smb_memory_pool_list_mutex);
+}
+
+/**
+ * @brief Returns the payload base address mapped by a page descriptor.
+ */
+static ZOO_UINTPTR_T smb_slab_page_addr(const ZOO_MEMORY_POOL_STRUCT *pool,
+                                        const ZOO_SLAB_PAGE_STRUCT *page)
+{
+    ZOO_UINTPTR_T address = (ZOO_UINTPTR_T)(page - pool->pages) << smb_pagesize_shift;
+    return address + (ZOO_UINTPTR_T)pool->start;
+}
+
+/**
+ * @brief Removes a fully consumed slab page from its slot list.
+ */
+static void smb_slab_detach_full_page(ZOO_SLAB_PAGE_STRUCT *page, ZOO_UINTPTR_T slab_type)
+{
+    ZOO_SLAB_PAGE_STRUCT *prev = (ZOO_SLAB_PAGE_STRUCT *)(page->prev & ~SMB_SLAB_PAGE_MASK);
+
+    prev->next = page->next;
+    page->next->prev = page->prev;
+    page->next = NULL;
+    page->prev = slab_type;
+}
+
+/**
+ * @brief Returns the number of bitmap words required for one small-slab page.
+ */
+static ZOO_UINTPTR_T smb_slab_small_map_words(ZOO_UINTPTR_T shift)
+{
+    return (1 << (smb_pagesize_shift - shift)) / (sizeof(ZOO_UINTPTR_T) * 8);
+}
+
+/**
+ * @brief Returns the summary bit that tracks availability for one bitmap word.
+ */
+static ZOO_UINTPTR_T smb_slab_small_summary_bit(ZOO_UINTPTR_T word_index)
+{
+    return (ZOO_UINTPTR_T)1 << (SMB_SLAB_MAP_SHIFT + word_index);
+}
+
+/**
+ * @brief Returns the mask of all summary bits used by one small-slab page.
+ */
+static ZOO_UINTPTR_T smb_slab_small_summary_mask(ZOO_UINTPTR_T shift)
+{
+    ZOO_UINTPTR_T map_words = smb_slab_small_map_words(shift);
+    return (((ZOO_UINTPTR_T)1 << map_words) - 1) << SMB_SLAB_MAP_SHIFT;
+}
+
+/**
+ * @brief Allocates from an existing small-slab page list.
+ *
+ * Small slabs store summary bits in page->slab so allocation can skip bitmap
+ * words that are already full and detach a page without rescanning the whole map.
+ */
+static ZOO_UINTPTR_T smb_slab_try_alloc_small(ZOO_MEMORY_POOL_STRUCT *pool,
+                                              ZOO_SLAB_PAGE_STRUCT *page,
+                                              ZOO_UINTPTR_T shift)
+{
+    ZOO_UINTPTR_T n;
+    ZOO_UINTPTR_T m;
+    ZOO_UINTPTR_T i;
+    ZOO_UINTPTR_T map = smb_slab_small_map_words(shift);
+    ZOO_UINTPTR_T summary_mask = smb_slab_small_summary_mask(shift);
+    ZOO_UINTPTR_T *bitmap;
+
+    do
+    {
+        if ((page->slab & summary_mask) == 0)
+        {
+            page = page->next;
+            continue;
+        }
+
+        bitmap = (ZOO_UINTPTR_T *)(pool->start + ((ZOO_UINTPTR_T)(page - pool->pages) << smb_pagesize_shift));
+
+        for (n = 0; n < map; n++)
+        {
+            ZOO_UINTPTR_T summary_bit = smb_slab_small_summary_bit(n);
+
+            if ((page->slab & summary_bit) == 0)
+            {
+                continue;
+            }
+
+            for (m = 1, i = 0; m; m <<= 1, i++)
+            {
+                if (bitmap[n] & m)
+                {
+                    continue;
+                }
+
+                bitmap[n] |= m;
+                i = ((n * sizeof(ZOO_UINTPTR_T) * 8) << shift) + (i << shift);
+
+                if (bitmap[n] == SMB_SLAB_BUSY)
+                {
+                    page->slab &= ~summary_bit;
+
+                    if ((page->slab & summary_mask) == 0)
+                    {
+                        smb_slab_detach_full_page(page, SMB_SLAB_SMALL);
+                    }
+                }
+
+                return (ZOO_UINTPTR_T)bitmap + i;
+            }
+        }
+
+        page = page->next;
+    } while (page);
+
+    return 0;
+}
+
+/**
+ * @brief Allocates from an existing exact-size slab page list.
+ */
+static ZOO_UINTPTR_T smb_slab_try_alloc_exact(ZOO_MEMORY_POOL_STRUCT *pool,
+                                              ZOO_SLAB_PAGE_STRUCT *page,
+                                              ZOO_UINTPTR_T shift)
+{
+    ZOO_UINTPTR_T m;
+    ZOO_UINTPTR_T i;
+
+    do
+    {
+        if (page->slab != SMB_SLAB_BUSY)
+        {
+            for (m = 1, i = 0; m; m <<= 1, i++)
+            {
+                if (page->slab & m)
+                {
+                    continue;
+                }
+
+                page->slab |= m;
+                if (page->slab == SMB_SLAB_BUSY)
+                {
+                    smb_slab_detach_full_page(page, SMB_SLAB_EXACT);
+                }
+
+                return smb_slab_page_addr(pool, page) + (i << shift);
+            }
+        }
+
+        page = page->next;
+    } while (page);
+
+    return 0;
+}
+
+/**
+ * @brief Allocates from an existing big-slab page list.
+ */
+static ZOO_UINTPTR_T smb_slab_try_alloc_big(ZOO_MEMORY_POOL_STRUCT *pool,
+                                            ZOO_SLAB_PAGE_STRUCT *page,
+                                            ZOO_UINTPTR_T shift)
+{
+    ZOO_UINTPTR_T n = smb_pagesize_shift - (page->slab & SMB_SLAB_SHIFT_MASK);
+    ZOO_UINTPTR_T mask;
+    ZOO_UINTPTR_T m;
+    ZOO_UINTPTR_T i;
+
+    n = 1 << n;
+    n = ((ZOO_UINTPTR_T)1 << n) - 1;
+    mask = n << SMB_SLAB_MAP_SHIFT;
+
+    do
+    {
+        if ((page->slab & SMB_SLAB_MAP_MASK) != mask)
+        {
+            for (m = (ZOO_UINTPTR_T)1 << SMB_SLAB_MAP_SHIFT, i = 0; m & mask; m <<= 1, i++)
+            {
+                if (page->slab & m)
+                {
+                    continue;
+                }
+
+                page->slab |= m;
+                if ((page->slab & SMB_SLAB_MAP_MASK) == mask)
+                {
+                    smb_slab_detach_full_page(page, SMB_SLAB_BIG);
+                }
+
+                return smb_slab_page_addr(pool, page) + (i << shift);
+            }
+        }
+
+        page = page->next;
+    } while (page);
+
+    return 0;
+}
+
+/**
+ * @brief Initializes a fresh page as a small-slab page and returns its first chunk.
+ */
+static ZOO_UINTPTR_T smb_slab_init_small_page(ZOO_MEMORY_POOL_STRUCT *pool,
+                                              ZOO_SLAB_PAGE_STRUCT *page,
+                                              ZOO_SLAB_PAGE_STRUCT *slot,
+                                              ZOO_UINTPTR_T shift)
+{
+    ZOO_UINTPTR_T p = smb_slab_page_addr(pool, page);
+    ZOO_UINTPTR_T *bitmap = (ZOO_UINTPTR_T *)p;
+    ZOO_SIZE_T unit_size = 1 << shift;
+    ZOO_SIZE_T reserved_words = (ZOO_SIZE_T)((1 << (smb_pagesize_shift - shift)) / 8 / unit_size);
+    ZOO_UINTPTR_T map = smb_slab_small_map_words(shift);
+    ZOO_UINTPTR_T summary = smb_slab_small_summary_mask(shift);
+    ZOO_UINTPTR_T i;
+
+    if (reserved_words == 0)
+    {
+        reserved_words = 1;
+    }
+
+    bitmap[0] = (ZOO_UINTPTR_T)((2 << reserved_words) - 1);
+    for (i = 1; i < map; i++)
+    {
+        bitmap[i] = 0;
+    }
+
+    if (bitmap[0] == SMB_SLAB_BUSY)
+    {
+        summary &= ~smb_slab_small_summary_bit(0);
+    }
+
+    page->slab = shift | summary;
+    page->next = slot;
+    page->prev = (ZOO_UINTPTR_T)slot | SMB_SLAB_SMALL;
+    slot->next = page;
+
+    return p + unit_size * reserved_words;
+}
+
+/**
+ * @brief Initializes a fresh page as an exact-size slab page and returns its first chunk.
+ */
+static ZOO_UINTPTR_T smb_slab_init_exact_page(ZOO_MEMORY_POOL_STRUCT *pool,
+                                              ZOO_SLAB_PAGE_STRUCT *page,
+                                              ZOO_SLAB_PAGE_STRUCT *slot)
+{
+    page->slab = 1;
+    page->next = slot;
+    page->prev = (ZOO_UINTPTR_T)slot | SMB_SLAB_EXACT;
+    slot->next = page;
+
+    return smb_slab_page_addr(pool, page);
+}
+
+/**
+ * @brief Initializes a fresh page as a big-slab page and returns its first chunk.
+ */
+static ZOO_UINTPTR_T smb_slab_init_big_page(ZOO_MEMORY_POOL_STRUCT *pool,
+                                            ZOO_SLAB_PAGE_STRUCT *page,
+                                            ZOO_SLAB_PAGE_STRUCT *slot,
+                                            ZOO_UINTPTR_T shift)
+{
+    page->slab = ((ZOO_UINTPTR_T)1 << SMB_SLAB_MAP_SHIFT) | shift;
+    page->next = slot;
+    page->prev = (ZOO_UINTPTR_T)slot | SMB_SLAB_BIG;
+    slot->next = page;
+
+    return smb_slab_page_addr(pool, page);
+}
+
+/**
+ * @brief Allocates one block from a single segment.
+ *
+ * Large requests are satisfied from whole pages. Smaller requests are served
+ * from the slot list for the computed shift, or by converting a new page into
+ * the required slab class when no reusable page exists.
  */
 static void *smb_slab_alloc_locked(ZOO_MEMORY_POOL_STRUCT *pool, ZOO_SIZE_T size)
 {
     ZOO_SIZE_T s;
-    ZOO_UINTPTR_T p, n, m, mask, *bitmap;
-    ZOO_UINTPTR_T i, slot, shift, map;
-    ZOO_SLAB_PAGE_STRUCT *page, *prev, *slots;
+    ZOO_UINTPTR_T p;
+    ZOO_UINTPTR_T slot;
+    ZOO_UINTPTR_T shift;
+    ZOO_SLAB_PAGE_STRUCT *page;
+    ZOO_SLAB_PAGE_STRUCT *slots;
 
     if (size >= smb_slab_max_size)
     {
-        // Logging removed
-
         page = smb_slab_alloc_pages(pool, (size >> smb_pagesize_shift) + ((size % smb_pagesize) ? 1 : 0));
-        if (page)
-        {
-            p = (ZOO_UINTPTR_T)(page - pool->pages) << smb_pagesize_shift;
-            p += (ZOO_UINTPTR_T)pool->start;
-        }
-        else
-        {
-            p = 0;
-        }
-
-        goto done;
+        return page ? (void *)smb_slab_page_addr(pool, page) : NULL;
     }
 
     if (size > pool->min_size)
@@ -476,140 +890,20 @@ static void *smb_slab_alloc_locked(ZOO_MEMORY_POOL_STRUCT *pool, ZOO_SIZE_T size
     {
         if (shift < smb_slab_exact_shift)
         {
-            do
-            {
-                p = (ZOO_UINTPTR_T)(page - pool->pages) << smb_pagesize_shift;
-                bitmap = (ZOO_UINTPTR_T *)(pool->start + p);
-
-                map = (1 << (smb_pagesize_shift - shift)) / (sizeof(ZOO_UINTPTR_T) * 8);
-
-                for (n = 0; n < map; n++)
-                {
-                    if (bitmap[n] != SMB_SLAB_BUSY)
-                    {
-                        for (m = 1, i = 0; m; m <<= 1, i++)
-                        {
-                            if ((bitmap[n] & m))
-                            {
-                                continue;
-                            }
-
-                            bitmap[n] |= m;
-
-                            i = ((n * sizeof(ZOO_UINTPTR_T) * 8) << shift) + (i << shift);
-
-                            if (bitmap[n] == SMB_SLAB_BUSY)
-                            {
-                                for (n = n + 1; n < map; n++)
-                                {
-                                    if (bitmap[n] != SMB_SLAB_BUSY)
-                                    {
-                                        p = (ZOO_UINTPTR_T)bitmap + i;
-
-                                        goto done;
-                                    }
-                                }
-
-                                prev = (ZOO_SLAB_PAGE_STRUCT *)(page->prev & ~SMB_SLAB_PAGE_MASK);
-                                prev->next = page->next;
-                                page->next->prev = page->prev;
-
-                                page->next = NULL;
-                                page->prev = SMB_SLAB_SMALL;
-                            }
-
-                            p = (ZOO_UINTPTR_T)bitmap + i;
-
-                            goto done;
-                        }
-                    }
-                }
-
-                page = page->next;
-
-            } while (page);
+            p = smb_slab_try_alloc_small(pool, page, shift);
         }
         else if (shift == smb_slab_exact_shift)
         {
-            do
-            {
-                if (page->slab != SMB_SLAB_BUSY)
-                {
-                    for (m = 1, i = 0; m; m <<= 1, i++)
-                    {
-                        if ((page->slab & m))
-                        {
-                            continue;
-                        }
-
-                        page->slab |= m;
-
-                        if (page->slab == SMB_SLAB_BUSY)
-                        {
-                            prev = (ZOO_SLAB_PAGE_STRUCT *)(page->prev & ~SMB_SLAB_PAGE_MASK);
-                            prev->next = page->next;
-                            page->next->prev = page->prev;
-
-                            page->next = NULL;
-                            page->prev = SMB_SLAB_EXACT;
-                        }
-
-                        p = (ZOO_UINTPTR_T)(page - pool->pages) << smb_pagesize_shift;
-                        p += i << shift;
-                        p += (ZOO_UINTPTR_T)pool->start;
-
-                        goto done;
-                    }
-                }
-
-                page = page->next;
-
-            } while (page);
+            p = smb_slab_try_alloc_exact(pool, page, shift);
         }
         else
-        { /* shift > smb_slab_exact_shift */
+        {
+            p = smb_slab_try_alloc_big(pool, page, shift);
+        }
 
-            n = smb_pagesize_shift - (page->slab & SMB_SLAB_SHIFT_MASK);
-            n = 1 << n;
-            n = ((ZOO_UINTPTR_T)1 << n) - 1;
-            mask = n << SMB_SLAB_MAP_SHIFT;
-
-            do
-            {
-                if ((page->slab & SMB_SLAB_MAP_MASK) != mask)
-                {
-                    for (m = (ZOO_UINTPTR_T)1 << SMB_SLAB_MAP_SHIFT, i = 0;
-                         m & mask;
-                         m <<= 1, i++)
-                    {
-                        if ((page->slab & m))
-                        {
-                            continue;
-                        }
-
-                        page->slab |= m;
-
-                        if ((page->slab & SMB_SLAB_MAP_MASK) == mask)
-                        {
-                            prev = (ZOO_SLAB_PAGE_STRUCT *)(page->prev & ~SMB_SLAB_PAGE_MASK);
-                            prev->next = page->next;
-                            page->next->prev = page->prev;
-
-                            page->next = NULL;
-                            page->prev = SMB_SLAB_BIG;
-                        }
-
-                        p = (ZOO_UINTPTR_T)(page - pool->pages) << smb_pagesize_shift;
-                        p += i << shift;
-                        p += (ZOO_UINTPTR_T)pool->start;
-
-                        goto done;
-                    }
-                }
-
-                page = page->next;
-
-            } while (page);
+        if (p != 0)
+        {
+            return (void *)p;
         }
     }
 
@@ -619,83 +913,26 @@ static void *smb_slab_alloc_locked(ZOO_MEMORY_POOL_STRUCT *pool, ZOO_SIZE_T size
     {
         if (shift < smb_slab_exact_shift)
         {
-            p = (ZOO_UINTPTR_T)(page - pool->pages) << smb_pagesize_shift;
-            bitmap = (ZOO_UINTPTR_T *)(pool->start + p);
-
-            s = 1 << shift;
-            n = (ZOO_SIZE_T)((1 << (smb_pagesize_shift - shift)) / 8 / s);
-
-            if (n == 0)
-            {
-                n = 1;
-            }
-
-            bitmap[0] = (ZOO_UINTPTR_T)((2 << n) - 1);
-
-            map = (1 << (smb_pagesize_shift - shift)) / (sizeof(ZOO_UINTPTR_T) * 8);
-
-            for (i = 1; i < map; i++)
-            {
-                bitmap[i] = 0;
-            }
-
-            page->slab = shift;
-            page->next = &slots[slot];
-            page->prev = (ZOO_UINTPTR_T)&slots[slot] | SMB_SLAB_SMALL;
-
-            slots[slot].next = page;
-
-            p = (ZOO_UINTPTR_T)((page - pool->pages) << smb_pagesize_shift) + s * n;
-            p += (ZOO_UINTPTR_T)pool->start;
-
-            goto done;
+            return (void *)smb_slab_init_small_page(pool, page, &slots[slot], shift);
         }
         else if (shift == smb_slab_exact_shift)
         {
-            page->slab = 1;
-            page->next = &slots[slot];
-            page->prev = (ZOO_UINTPTR_T)&slots[slot] | SMB_SLAB_EXACT;
-
-            slots[slot].next = page;
-
-            p = (ZOO_UINTPTR_T)(page - pool->pages) << smb_pagesize_shift;
-            p += (ZOO_UINTPTR_T)pool->start;
-
-            goto done;
+            return (void *)smb_slab_init_exact_page(pool, page, &slots[slot]);
         }
         else
-        { /* shift > smb_slab_exact_shift */
-
-            page->slab = ((ZOO_UINTPTR_T)1 << SMB_SLAB_MAP_SHIFT) | shift;
-            page->next = &slots[slot];
-            page->prev = (ZOO_UINTPTR_T)&slots[slot] | SMB_SLAB_BIG;
-
-            slots[slot].next = page;
-
-            p = (ZOO_UINTPTR_T)(page - pool->pages) << smb_pagesize_shift;
-            p += (ZOO_UINTPTR_T)pool->start;
-
-            goto done;
+        {
+            return (void *)smb_slab_init_big_page(pool, page, &slots[slot], shift);
         }
     }
 
-    p = 0;
-
-done:
-
-    // // Logging removed
-
-    return (void *)p;
+    return NULL;
 }
 
 /**
- * Frees memory back to the slab allocator while holding the lock.
- * This function assumes the memory pool lock is already acquired.
+ * @brief Frees one allocation back into a single segment.
  *
- * @param pool Pointer to the memory pool structure
- * @param p Pointer to the memory block to be freed
- *
- * @warning This function must be called with the pool lock held
+ * This restores slot-list membership when a previously full slab page becomes
+ * reusable and returns whole pages to the free-page list when a slab page becomes empty.
  */
 static void smb_slab_free_locked(ZOO_MEMORY_POOL_STRUCT *pool, void *p)
 {
@@ -734,6 +971,8 @@ static void smb_slab_free_locked(ZOO_MEMORY_POOL_STRUCT *pool, void *p)
 
         if (bitmap[n] & m)
         {
+            ZOO_UINTPTR_T summary_bit = smb_slab_small_summary_bit(n);
+
             if (page->next == NULL)
             {
                 slots = (ZOO_SLAB_PAGE_STRUCT *)((ZOO_UINT8 *)pool + sizeof(ZOO_MEMORY_POOL_STRUCT));
@@ -744,6 +983,11 @@ static void smb_slab_free_locked(ZOO_MEMORY_POOL_STRUCT *pool, void *p)
 
                 page->prev = (ZOO_UINTPTR_T)&slots[slot] | SMB_SLAB_SMALL;
                 page->next->prev = (ZOO_UINTPTR_T)page | SMB_SLAB_SMALL;
+            }
+
+            if (bitmap[n] == SMB_SLAB_BUSY)
+            {
+                page->slab |= summary_bit;
             }
 
             bitmap[n] &= ~m;
@@ -906,10 +1150,7 @@ fail:
 }
 
 /**
- * @brief Create a memory pool with preallocated memory.
- * @param total_size Total size of the memory pool in bytes.
- * @param[out] error Error code output (optional).
- * @return Memory pool handle, NULL on failure.
+ * @brief Creates the root memory-pool segment and shared list mutex.
  */
 ZOO_INT32 zoo_create_memory_pool(ZOO_SIZE_T total_size)
 {
@@ -917,48 +1158,31 @@ ZOO_INT32 zoo_create_memory_pool(ZOO_SIZE_T total_size)
 
     if (smb_memory_pool == NULL)
     {
-        ZOO_UINT8 *buffer = (ZOO_UINT8 *)malloc(sizeof(char) * total_size);
-        if (!buffer)
+        if (!smb_memory_pool_list_mutex_ready)
         {
-            // Logging removed
-            return ZOO_ERROR_MEM_POOL_ALLOCATION_FAILED;
+            if (zoo_pool_mutex_init(&smb_memory_pool_list_mutex) != 0)
+            {
+                return ZOO_ERROR_MEM_POOL_ALLOCATION_FAILED;
+            }
+            smb_memory_pool_list_mutex_ready = ZOO_TRUE;
         }
 
-        // Clear memory
-        // memset(smb_memory_pool, 0, sizeof(ZOO_MEMORY_POOL_STRUCT));
-        memset(buffer, 0, sizeof(char) * total_size);
-        smb_memory_pool = (ZOO_MEMORY_POOL_STRUCT *)buffer;
-        // Initialize pool structure
-        smb_memory_pool->start = buffer + sizeof(ZOO_MEMORY_POOL_STRUCT);
-        smb_memory_pool->end = buffer + total_size;
-        smb_memory_pool->min_shift = 3;
-
-        // Initialize mutex
-        if (zoo_pool_mutex_init(&smb_memory_pool->mutex) != 0)
+        smb_memory_pool = smb_memory_pool_create_segment(total_size);
+        if (!smb_memory_pool)
         {
-            // Logging removed
-            free(buffer);
-            smb_memory_pool = NULL;
             return ZOO_ERROR_MEM_POOL_ALLOCATION_FAILED;
         }
-
-        // Initialize slab allocator
-        smb_slab_init(smb_memory_pool);
+        smb_memory_pool_tail = smb_memory_pool;
     }
 
     return ZOO_OK;
 }
 
 /**
- * @brief Allocates memory from a memory pool
+ * @brief Allocates zeroed memory from the segmented pool.
  *
- * @param pool Pointer to the memory pool to allocate from
- * @param size Size of the memory block to allocate in bytes
- * @return void* Pointer to the allocated memory block, or NULL if allocation fails
- *
- * This function attempts to allocate a block of memory from the specified memory pool.
- * The allocation is done in a thread-safe manner if the pool was created with thread
- * safety enabled.
+ * The allocator may satisfy the request from an existing segment or grow the
+ * pool by appending a new segment when existing segments cannot satisfy it.
  */
 void *zoo_allocate_from_pool(
     ZOO_SIZE_T size)
@@ -969,9 +1193,8 @@ void *zoo_allocate_from_pool(
         return NULL;
     }
     void *ptr = NULL;
-    zoo_pool_mutex_lock(&smb_memory_pool->mutex);
-    ptr = smb_slab_alloc_locked(smb_memory_pool, size);
-    zoo_pool_mutex_unlock(&smb_memory_pool->mutex);
+    zoo_pool_mutex_lock(&smb_memory_pool_list_mutex);
+    ptr = smb_memory_pool_alloc_locked(smb_memory_pool, size);
     if (ptr)
     {
         memset(ptr, 0, size);
@@ -980,47 +1203,49 @@ void *zoo_allocate_from_pool(
 }
 
 /**
- * @brief Destroy a memory pool and release all resources.
- * @param pool Memory pool handle.
+ * @brief Destroys all segments and the shared list mutex.
  */
 void zoo_destroy_memory_pool(void)
 {
     // Logging removed
     if (smb_memory_pool)
     {
-        zoo_pool_mutex_destroy(&smb_memory_pool->mutex);
-        free(smb_memory_pool);
+        ZOO_MEMORY_POOL_STRUCT *segment = smb_memory_pool;
+
+        smb_memory_pool = NULL;
+        smb_memory_pool_tail = NULL;
+        while (segment)
+        {
+            ZOO_MEMORY_POOL_STRUCT *next = segment->next;
+            zoo_pool_mutex_destroy(&segment->mutex);
+            free(segment);
+            segment = next;
+        }
+
+        if (smb_memory_pool_list_mutex_ready)
+        {
+            zoo_pool_mutex_destroy(&smb_memory_pool_list_mutex);
+            smb_memory_pool_list_mutex_ready = ZOO_FALSE;
+        }
+
         smb_memory_pool = NULL;
     }
 }
 
 /**
- * @brief Frees memory back to the specified memory pool
- *
- * @param pool Handle to the memory pool where memory will be returned
- * @param p Pointer to the memory block to be freed
- *
- * This function releases previously allocated memory back to the specified memory pool.
- * The memory block pointed to by p will be made available for future allocations from
- * the same pool.
+ * @brief Returns a previously allocated block to the segmented pool.
  */
 void zoo_free_to_pool(void *p)
 {
     if (p && smb_memory_pool)
     {
-        zoo_pool_mutex_lock(&smb_memory_pool->mutex);
-        smb_slab_free_locked(smb_memory_pool, p);
-        zoo_pool_mutex_unlock(&smb_memory_pool->mutex);
+        zoo_pool_mutex_lock(&smb_memory_pool_list_mutex);
+        smb_memory_pool_free_locked(smb_memory_pool, p);
     }
 }
 
 /**
- * @brief Allocates a specified number of slab pages from the memory pool
- *
- * @param pool Handle to the memory pool to allocate pages from
- * @param pages Number of pages to allocate
- *
- * @return Pointer to the allocated slab page structure if successful, NULL if allocation fails
+ * @brief Carves a contiguous run of pages from one segment's free-page list.
  */
 static ZOO_SLAB_PAGE_STRUCT *smb_slab_alloc_pages(ZOO_MEMORY_POOL_STRUCT *pool, ZOO_UINTPTR_T pages)
 {
@@ -1073,14 +1298,7 @@ static ZOO_SLAB_PAGE_STRUCT *smb_slab_alloc_pages(ZOO_MEMORY_POOL_STRUCT *pool, 
 }
 
 /**
- * @brief Frees pages from a slab allocator back to the memory pool
- *
- * @param pool Handle to the memory pool
- * @param page Pointer to the slab page structure to be freed
- * @param pages Number of pages to free
- *
- * This function releases previously allocated slab pages back to the memory pool.
- * It handles the deallocation of contiguous pages starting from the given page address.
+ * @brief Returns a contiguous page run to one segment's free-page list.
  */
 static void smb_slab_free_pages(ZOO_MEMORY_POOL_STRUCT *pool, ZOO_SLAB_PAGE_STRUCT *page, ZOO_UINTPTR_T pages)
 {
@@ -1107,15 +1325,7 @@ static void smb_slab_free_pages(ZOO_MEMORY_POOL_STRUCT *pool, ZOO_SLAB_PAGE_STRU
 }
 
 /**
- * @brief Get detailed memory usage statistics with deadlock prevention
- *
- * This function traverses the memory pool pages safely and collects statistics
- * about memory usage including allocated blocks, free pages, and fragmentation info.
- *
- * @param stat Pointer to structure to store usage statistics
- *
- * @note This function includes protection against infinite loops and validates
- *       all page traversal operations to prevent deadlocks
+ * @brief Aggregates usage statistics across all pool segments.
  */
 void zoo_memory_pool_get_usage(ZOO_MEMORY_USAGE_T *stat)
 {
@@ -1125,23 +1335,31 @@ void zoo_memory_pool_get_usage(ZOO_MEMORY_USAGE_T *stat)
     }
 
     memset(stat, 0, sizeof(ZOO_MEMORY_USAGE_T));
-    zoo_pool_mutex_lock(&smb_memory_pool->mutex);
+    zoo_pool_mutex_lock(&smb_memory_pool_list_mutex);
 
-    stat->pool_size = (ZOO_SIZE_T)(smb_memory_pool->end - smb_memory_pool->start);
-    stat->pages = stat->pool_size / smb_pagesize;
-
-    ZOO_SLAB_PAGE_STRUCT *page = smb_memory_pool->free.next;
-    while (page != &smb_memory_pool->free)
+    for (ZOO_MEMORY_POOL_STRUCT *segment = smb_memory_pool; segment != NULL; segment = segment->next)
     {
-        ZOO_UINTPTR_T free_pages = page->slab;
-        stat->free_page += free_pages;
-        stat->free_size += free_pages * smb_pagesize;
+        ZOO_SLAB_PAGE_STRUCT *page = segment->free.next;
 
-        if (free_pages > stat->max_free_pages)
+        zoo_pool_mutex_lock(&segment->mutex);
+
+        stat->pool_size += (ZOO_SIZE_T)(segment->end - segment->start);
+        stat->pages += segment->real_pages;
+
+        while (page != &segment->free)
         {
-            stat->max_free_pages = free_pages;
+            ZOO_UINTPTR_T free_pages = page->slab;
+            stat->free_page += free_pages;
+            stat->free_size += free_pages * smb_pagesize;
+
+            if (free_pages > stat->max_free_pages)
+            {
+                stat->max_free_pages = free_pages;
+            }
+            page = page->next;
         }
-        page = page->next;
+
+        zoo_pool_mutex_unlock(&segment->mutex);
     }
 
     stat->used_size = stat->pool_size - stat->free_size;
@@ -1151,12 +1369,11 @@ void zoo_memory_pool_get_usage(ZOO_MEMORY_USAGE_T *stat)
         stat->used_pct = (stat->used_size * 100) / stat->pool_size;
     }
 
-    zoo_pool_mutex_unlock(&smb_memory_pool->mutex);
+    zoo_pool_mutex_unlock(&smb_memory_pool_list_mutex);
 }
 
 /**
- * @brief Validate memory pool integrity
- * Fixed validation logic to correctly check free list
+ * @brief Validates free-list linkage and free-page accounting for every segment.
  */
 ZOO_INT32 zoo_validate_memory_pool(void)
 {
@@ -1165,51 +1382,56 @@ ZOO_INT32 zoo_validate_memory_pool(void)
         return -1;
     }
 
-    zoo_pool_mutex_lock(&smb_memory_pool->mutex);
-    ZOO_SIZE_T free_accounted = 0;
+    zoo_pool_mutex_lock(&smb_memory_pool_list_mutex);
 
-    ZOO_SLAB_PAGE_STRUCT *page = smb_memory_pool->free.next;
-    ZOO_SLAB_PAGE_STRUCT *prev = &smb_memory_pool->free;
-
-    while (page != &smb_memory_pool->free)
+    for (ZOO_MEMORY_POOL_STRUCT *segment = smb_memory_pool; segment != NULL; segment = segment->next)
     {
-        if (page->next == NULL)
+        ZOO_SIZE_T free_accounted = 0;
+        ZOO_SLAB_PAGE_STRUCT *page = segment->free.next;
+        ZOO_SLAB_PAGE_STRUCT *prev = &segment->free;
+
+        zoo_pool_mutex_lock(&segment->mutex);
+
+        while (page != &segment->free)
         {
-            // Logging removed
-            zoo_pool_mutex_unlock(&smb_memory_pool->mutex);
+            if (page->next == NULL)
+            {
+                zoo_pool_mutex_unlock(&segment->mutex);
+                zoo_pool_mutex_unlock(&smb_memory_pool_list_mutex);
+                return -1;
+            }
+
+            ZOO_SLAB_PAGE_STRUCT *prev_from_node = (ZOO_SLAB_PAGE_STRUCT *)(page->prev & ~SMB_SLAB_PAGE_MASK);
+            if (prev_from_node != prev)
+            {
+                zoo_pool_mutex_unlock(&segment->mutex);
+                zoo_pool_mutex_unlock(&smb_memory_pool_list_mutex);
+                return -1;
+            }
+
+            free_accounted += page->slab;
+
+            prev = page;
+            page = page->next;
+
+            if (page == segment->free.next)
+            {
+                zoo_pool_mutex_unlock(&segment->mutex);
+                zoo_pool_mutex_unlock(&smb_memory_pool_list_mutex);
+                return -1;
+            }
+        }
+
+        if (free_accounted > segment->real_pages)
+        {
+            zoo_pool_mutex_unlock(&segment->mutex);
+            zoo_pool_mutex_unlock(&smb_memory_pool_list_mutex);
             return -1;
         }
 
-        ZOO_SLAB_PAGE_STRUCT *prev_from_node = (ZOO_SLAB_PAGE_STRUCT *)(page->prev & ~SMB_SLAB_PAGE_MASK);
-        if (prev_from_node != prev)
-        {
-            // Logging removed
-            zoo_pool_mutex_unlock(&smb_memory_pool->mutex);
-            return -1;
-        }
-
-        free_accounted += page->slab;
-
-        prev = page;
-        page = page->next;
-
-        if (page == smb_memory_pool->free.next)
-        {
-            // Logging removed
-            zoo_pool_mutex_unlock(&smb_memory_pool->mutex);
-            return -1;
-        }
+        zoo_pool_mutex_unlock(&segment->mutex);
     }
 
-    ZOO_SIZE_T total_accounted = smb_real_pages;
-
-    if (free_accounted > total_accounted)
-    {
-        // Page count mismatch error
-        zoo_pool_mutex_unlock(&smb_memory_pool->mutex);
-        return -1;
-    }
-
-    zoo_pool_mutex_unlock(&smb_memory_pool->mutex);
+    zoo_pool_mutex_unlock(&smb_memory_pool_list_mutex);
     return 0;
 }

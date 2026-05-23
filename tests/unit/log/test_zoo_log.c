@@ -207,7 +207,7 @@ static void *log_thread_worker(void *arg)
     {
         ZOO_LOG_INFO("Thread %d message %d", data->thread_id, i);
         // Small delay to increase chance of thread interleaving
-        usleep(100);
+        ZOO_SLEEP_US(100);
     }
 
     return NULL;

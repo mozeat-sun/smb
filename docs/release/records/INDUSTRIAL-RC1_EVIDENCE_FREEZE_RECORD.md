@@ -3,9 +3,9 @@
 ## Freeze metadata
 
 - Candidate version: INDUSTRIAL-RC1
-- Candidate tag: Pending (not assigned yet)
-- Candidate commit: ea4d810e7a7807f588ba17dc4f74dc6623dc0aaf
-- Freeze timestamp (UTC): 2026-04-25T03:19:56Z
+- Candidate tag: INDUSTRIAL-RC1
+- Candidate commit: a3fa41191b26e327630cc4002db63e61228b059a
+- Freeze timestamp (UTC): 2026-04-25T04:16:01Z
 - Freeze initiator: repository automation preparation
 - Freeze scope: Industrial domain and kernal assurance validation candidate
 
@@ -26,16 +26,15 @@
 - Focused assurance-domain test: passed (`test_zoo_assurance_domain_unit`).
 - Focused runtime assurance test: passed (`test_zoo_smb_runtime_assurance_unit`).
 - Test result summary: `2/2 passed`, `0 failed`, total real time `2.01 sec`.
+- Local quality job summary: traceability/protocol/vulnerability gates passed; fuzz gate passed; benchmark artifacts regenerated; short soak evidence generated with `failures=0`.
 
 ## Known limitations at freeze time
 
-- Candidate tag and branch publication are still pending.
 - Full Grade 1 Industrial gate artifacts (long soak and production pilot evidence) are not part of this focused candidate run.
 - Release owner, quality gate owner, and security reviewer approvals are pending.
 
 ## Freeze status
 
-- Freeze state: Thawed (invalidated)
-- Thaw reason: Source and documentation changes continued after initial freeze, and release evidence was refreshed at 2026-04-25T04:00:59Z.
+- Freeze state: Prepared at clean tagged baseline.
 - Thaw required if: source changes, workflow changes, or evidence is regenerated from a different baseline.
-- Next freeze action: Re-freeze from a clean tagged baseline after approvals and full CI artifact archival.
+- Next freeze action: Refresh freeze after full CI artifact archival and approval signatures are attached.

@@ -157,13 +157,11 @@ extern "C"
     static ZOO_FORCE_INLINE ZOO_UINT64 zoo_get_timestamp_nanoseconds(void)
     {
 #if defined(ZOO_PLATFORM_X86_64) || defined(ZOO_PLATFORM_ARM_CORTEX_A64) || defined(ZOO_PLATFORM_ARM_CORTEX_A32)
-#ifdef _POSIX_C_SOURCE
         struct timespec ts;
-        if (clock_gettime(CLOCK_REALTIME, &ts) == 0)
+        if (zoo_platform_get_realtime_timespec(&ts) == 0)
         {
             return (ZOO_UINT64)(ts.tv_sec) * 1000000000ULL + (ZOO_UINT64)(ts.tv_nsec);
         }
-#endif
         return zoo_get_timestamp_microseconds() * 1000;
 #elif defined(ZOO_PLATFORM_ARM_CORTEX_M)
     // For ARM Cortex-M, implement based on your timer/RTOS
@@ -187,15 +185,13 @@ extern "C"
         }
 
 #if defined(ZOO_PLATFORM_X86_64) || defined(ZOO_PLATFORM_ARM_CORTEX_A64) || defined(ZOO_PLATFORM_ARM_CORTEX_A32)
-#ifdef _POSIX_C_SOURCE
         struct timespec ts;
-        if (clock_gettime(CLOCK_REALTIME, &ts) == 0)
+    if (zoo_platform_get_realtime_timespec(&ts) == 0)
         {
             timestamp->seconds = (ZOO_UINT64)ts.tv_sec;
             timestamp->nanoseconds = (ZOO_UINT32)ts.tv_nsec;
             return ZOO_OK;
         }
-#endif
 
         // Fallback to gettimeofday
         struct timeval tv;

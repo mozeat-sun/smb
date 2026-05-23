@@ -56,19 +56,46 @@ typedef struct
     uint32_t partition_id;
 } ZOO_ASSURANCE_ADMISSION_CONTEXT_STRUCT;
 
+/**
+ * @brief Check protocol compatibility between local and peer wire versions.
+ * @param context Protocol version context.
+ * @return ZOO_ASSURANCE_PROTOCOL_COMPATIBILITY_ENUM Compatibility result.
+ */
 ZOO_ASSURANCE_PROTOCOL_COMPATIBILITY_ENUM zoo_assurance_check_protocol_compatibility(
     const ZOO_ASSURANCE_PROTOCOL_CONTEXT_STRUCT* context);
 
+/**
+ * @brief Resolve policy snapshot for a specific domain profile.
+ * @param profile Domain profile.
+ * @param snapshot Output policy snapshot.
+ * @return ZOO_ERROR_TYPE ZOO_SMB_OK on success, error otherwise.
+ */
 ZOO_ERROR_TYPE zoo_assurance_resolve_policy(
     ZOO_DOMAIN_PROFILE_ENUM profile,
     ZOO_ASSURANCE_POLICY_SNAPSHOT_STRUCT* snapshot);
 
+/**
+ * @brief Validate a policy snapshot against domain policy constraints.
+ * @param profile Domain profile.
+ * @param snapshot Policy snapshot to validate.
+ * @return ZOO_ERROR_TYPE ZOO_SMB_OK when valid, error otherwise.
+ */
 ZOO_ERROR_TYPE zoo_assurance_validate_policy_snapshot(
     ZOO_DOMAIN_PROFILE_ENUM profile,
     const ZOO_ASSURANCE_POLICY_SNAPSHOT_STRUCT* snapshot);
 
+/**
+ * @brief Evaluate startup allowance according to policy and protocol checks.
+ * @param context Startup context.
+ * @return ZOO_ERROR_TYPE ZOO_SMB_OK when startup is allowed.
+ */
 ZOO_ERROR_TYPE zoo_assurance_evaluate_startup(const ZOO_ASSURANCE_STARTUP_CONTEXT_STRUCT* context);
 
+/**
+ * @brief Evaluate admission policy for runtime peer communication.
+ * @param context Admission context.
+ * @return ZOO_ERROR_TYPE ZOO_SMB_OK when admission is allowed.
+ */
 ZOO_ERROR_TYPE zoo_assurance_evaluate_admission(
     const ZOO_ASSURANCE_ADMISSION_CONTEXT_STRUCT* context);
 

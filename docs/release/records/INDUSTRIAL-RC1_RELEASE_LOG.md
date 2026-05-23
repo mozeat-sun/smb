@@ -2,8 +2,8 @@
 
 ## Release identity
 
-- Candidate tag: INDUSTRIAL-RC1 (pending)
-- Candidate commit: ea4d810e7a7807f588ba17dc4f74dc6623dc0aaf
+- Candidate tag: INDUSTRIAL-RC1
+- Candidate commit: a3fa41191b26e327630cc4002db63e61228b059a
 
 ## Execution events
 
@@ -13,12 +13,14 @@
 - 2026-04-25T04:00:59Z: industrial profile revalidated (configure/build + focused assurance tests `2/2` passed)
 - 2026-04-25T04:00:59Z: quality evidence refresh passed (protocol compatibility matrix, traceability gate, vulnerability SLA gate)
 - 2026-04-25T04:00:59Z: release readiness decision updated to No-Go for external publication; internal candidate validation remains Go
+- 2026-04-25T04:07:32Z: clean baseline verified (`CHANGED=0`) and candidate tag `INDUSTRIAL-RC1` published to origin
+- 2026-04-25T04:16:01Z: local quality jobs refreshed (fuzz pass, benchmark artifacts generated, short soak run completed with no failures)
 
 ## Publication status
 
-- Git refs published: Pending
+- Git refs published: Tag published (`INDUSTRIAL-RC1`)
 - Release notes published in repository docs: Yes
-- External release publication: Blocked (pending approvals, full CI artifact archive, and clean tagged baseline)
+- External release publication: Blocked (pending approvals and full CI artifact archive)
 
 ## Approvals
 

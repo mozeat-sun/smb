@@ -32,7 +32,6 @@
 #include <string.h>
 #include <stdatomic.h>
 #include <stdlib.h>
-#include <unistd.h>
 
 /* ========== Internal Macros ========== */
 

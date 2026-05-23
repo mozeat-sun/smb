@@ -110,6 +110,7 @@ endif()
 add_definitions(${PLATFORM_DEFINITIONS})
 
 # ==============================================================================
+include(CheckCCompilerFlag)
 # ENHANCED COMPILER CONFIGURATION
 # ==============================================================================
 
@@ -122,8 +123,9 @@ if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
     
     # Linux-specific optimizations
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fstack-protector-strong")
-        if(CMAKE_C_COMPILER_VERSION VERSION_GREATER_EQUAL "4.9")
-            set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fstack-clash-protection")
+        check_c_compiler_flag("-fstack-clash-protection" ZOO_HAS_STACK_CLASH_PROTECTION_FLAG)
+        if(ZOO_HAS_STACK_CLASH_PROTECTION_FLAG)
+            set(CMAKE_C_FLAGS " -fstack-clash-protection")
         endif()
     
     # ARM-specific flags

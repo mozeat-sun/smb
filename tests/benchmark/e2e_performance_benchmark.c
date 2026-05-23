@@ -26,20 +26,28 @@
 #include <string.h>
 #include <time.h>
 #include <stdint.h>
+#include <limits.h>
 #include <unistd.h>
 #include <pthread.h>
 #include <signal.h>
 #include <sys/wait.h>
+
 #include "zoo_smb_publisher.h"
 #include "zoo_smb_server.h"
 #include "zoo_smb_client.h"
 #include "zoo_smb_subscriber.h"
+#include "zoo_smb_config.h"
+#include "zoo_log.h"
 
 #define BENCH_RPC_MSG_ID 1U
 #define BENCH_PUBSUB_MSG_ID 1U
 #define BENCH_RPC_ROUNDS 200
 #define BENCH_PUBSUB_ROUNDS 200
 #define BENCH_WAIT_TIMEOUT_MS 5000U
+#define BENCH_SUBSCRIPTION_SETTLE_US 500000U
+#define BENCH_THROUGHPUT_WARMUP_MESSAGES 16
+#define BENCH_STARTUP_DELIVERY_THRESHOLD 4
+#define BENCH_THROUGHPUT_SMALL_PAYLOAD_SIZE 64U
 
 typedef struct
 {
@@ -47,8 +55,120 @@ typedef struct
     uint32_t seq;
 } BENCH_PUBSUB_PAYLOAD_STRUCT;
 
+typedef enum
+{
+    BENCH_RUNTIME_MODE_GUARANTEED_DELIVERY = 0,
+    BENCH_RUNTIME_MODE_MAX_THROUGHPUT = 1
+} BENCH_RUNTIME_MODE_ENUM;
+
+typedef struct
+{
+    BENCH_RUNTIME_MODE_ENUM mode;
+    const char* mode_name;
+    int bench1_message_count;
+    int bench2_rounds;
+    uint32_t bench1_measurement_ms;
+    uint32_t bench2_measurement_ms;
+    int publish_retry_attempts;
+    useconds_t inter_send_delay_us;
+} BENCH_RUNTIME_CONFIG_STRUCT;
+
 static volatile sig_atomic_t g_child_running = 1;
 static const char* g_program_path = NULL;
+static BENCH_RUNTIME_CONFIG_STRUCT g_bench_runtime_config = {
+    BENCH_RUNTIME_MODE_GUARANTEED_DELIVERY,
+    "guaranteed-delivery",
+    20000,
+    5000,
+    0U,
+    0U,
+    32,
+    200U
+};
+
+/*
+ * The SMB config defaults to 127.0.0.1 when libconfig is unavailable.
+ * For cross-machine benchmarks we need each process to advertise its real
+ * interface address so discovery and routing work across hosts.
+ */
+static void bench_apply_network_overrides(void)
+{
+    const char* local_addr = getenv("ZOO_BENCH_LOCAL_ADDRESS");
+    const char* mcast_interface = getenv("ZOO_BENCH_MULTICAST_INTERFACE");
+    ZOO_SMB_CONFIG_STRUCT* cfg;
+
+    if ((!local_addr || local_addr[0] == '\0') &&
+        (!mcast_interface || mcast_interface[0] == '\0'))
+    {
+        return;
+    }
+
+    cfg = (ZOO_SMB_CONFIG_STRUCT*)zoo_smb_config_init();
+    if (!cfg)
+    {
+        return;
+    }
+
+    if (local_addr && local_addr[0] != '\0')
+    {
+        snprintf(cfg->local_machine.address,
+                 sizeof(cfg->local_machine.address),
+                 "%s",
+                 local_addr);
+    }
+
+    if (mcast_interface && mcast_interface[0] != '\0')
+    {
+        snprintf(cfg->multicast.interface,
+                 sizeof(cfg->multicast.interface),
+                 "%s",
+                 mcast_interface);
+    }
+
+    // printf removed
+}
+
+static void bench_runtime_set_mode(BENCH_RUNTIME_MODE_ENUM mode)
+{
+    if (mode == BENCH_RUNTIME_MODE_MAX_THROUGHPUT)
+    {
+        g_bench_runtime_config.mode = mode;
+        g_bench_runtime_config.mode_name = "max-throughput";
+        g_bench_runtime_config.bench1_message_count = 100000;
+        g_bench_runtime_config.bench2_rounds = 20000;
+        g_bench_runtime_config.bench1_measurement_ms = 10000U;
+        g_bench_runtime_config.bench2_measurement_ms = 4000U;
+        g_bench_runtime_config.publish_retry_attempts = 8;
+        g_bench_runtime_config.inter_send_delay_us = 0U;
+        return;
+    }
+
+    g_bench_runtime_config.mode = BENCH_RUNTIME_MODE_GUARANTEED_DELIVERY;
+    g_bench_runtime_config.mode_name = "guaranteed-delivery";
+    g_bench_runtime_config.bench1_message_count = 20000;
+    g_bench_runtime_config.bench2_rounds = 5000;
+    g_bench_runtime_config.bench1_measurement_ms = 0U;
+    g_bench_runtime_config.bench2_measurement_ms = 0U;
+    g_bench_runtime_config.publish_retry_attempts = 32;
+    g_bench_runtime_config.inter_send_delay_us = 200U;
+}
+
+static BENCH_RUNTIME_MODE_ENUM bench_runtime_parse_mode(const char* arg)
+{
+    if (arg && (strcmp(arg, "max-throughput") == 0 || strcmp(arg, "throughput") == 0 || strcmp(arg, "fast") == 0))
+    {
+        return BENCH_RUNTIME_MODE_MAX_THROUGHPUT;
+    }
+
+    return BENCH_RUNTIME_MODE_GUARANTEED_DELIVERY;
+}
+
+static void print_benchmark_usage(const char* program)
+{
+    (void)program;
+
+    // printf removed
+}
 
 /*
  * Stop helper child loops on termination signals.
@@ -69,7 +189,178 @@ typedef struct
     int received;
     int capacity;
     int64_t* latency_us;
+    uint64_t first_receive_ns;
+    uint64_t last_receive_ns;
 } BENCH_PUBSUB_CONTEXT_STRUCT;
+
+typedef struct
+{
+    uint64_t calls;
+    uint64_t successes;
+    uint64_t failed_calls;
+    uint64_t total_attempts;
+    uint64_t queue_full_failures;
+    uint64_t other_failures;
+    uint64_t non_retryable_failures;
+    uint32_t first_non_retryable_error;
+    uint64_t timeout_failures;
+    uint64_t service_unavailable_failures;
+    uint64_t service_not_found_failures;
+    uint64_t not_initialized_failures;
+    uint64_t operation_failed_failures;
+    uint64_t shm_buffer_full_failures;
+    uint64_t allocation_failed_failures;
+    uint64_t busy_again_failures;
+    uint64_t total_duration_ns;
+    uint64_t max_duration_ns;
+} BENCH_CALL_TIMING_STATS_STRUCT;
+
+static int wait_for_server_ready(const char* target, uint32_t timeout_ms);
+static int wait_for_pubsub_messages(BENCH_PUBSUB_CONTEXT_STRUCT* ctx, int expected, uint32_t timeout_ms);
+static int publish_with_retry(
+    ZOO_SMB_PUBLISHER_HANDLE publisher,
+    uint32_t msg_id,
+    const void* payload,
+    size_t payload_size,
+    int max_attempts,
+    BENCH_CALL_TIMING_STATS_STRUCT* stats);
+
+static void bench_call_timing_record_error(
+    BENCH_CALL_TIMING_STATS_STRUCT* stats,
+    ZOO_ERROR_TYPE err)
+{
+    if (!stats)
+    {
+        return;
+    }
+
+    if (err == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_TIMEOUT)
+    {
+        stats->timeout_failures++;
+    }
+    else if (err == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_SERVICE_UNAVAILABLE)
+    {
+        stats->service_unavailable_failures++;
+    }
+    else if (err == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_SERVICE_NOT_FOUND)
+    {
+        stats->service_not_found_failures++;
+    }
+    else if (err == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_NOT_INITIALIZED)
+    {
+        stats->not_initialized_failures++;
+    }
+    else if (err == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_OPERATION_FAILED)
+    {
+        stats->operation_failed_failures++;
+    }
+    else if (err == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_SHM_BUFFER_FULL)
+    {
+        stats->shm_buffer_full_failures++;
+    }
+    else if (err == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_OUT_OF_MEMORY ||
+             err == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_ALLOCATION_FAILED ||
+             err == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_POOL_EXHAUSTED)
+    {
+        stats->allocation_failed_failures++;
+    }
+    else if (err == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_BUSY ||
+             err == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_AGAIN)
+    {
+        stats->busy_again_failures++;
+    }
+}
+
+static void bench_call_timing_record(
+    BENCH_CALL_TIMING_STATS_STRUCT* stats,
+    ZOO_BOOL success,
+    uint64_t attempts,
+    uint64_t queue_full_failures,
+    uint64_t other_failures,
+    uint64_t duration_ns)
+{
+    if (!stats)
+    {
+        return;
+    }
+
+    stats->calls++;
+    stats->total_attempts += attempts;
+    stats->queue_full_failures += queue_full_failures;
+    stats->other_failures += other_failures;
+    stats->total_duration_ns += duration_ns;
+    if (duration_ns > stats->max_duration_ns)
+    {
+        stats->max_duration_ns = duration_ns;
+    }
+
+    if (success)
+    {
+        stats->successes++;
+    }
+    else
+    {
+        stats->failed_calls++;
+    }
+}
+
+static void bench_call_timing_print(
+    const char* label,
+    const BENCH_CALL_TIMING_STATS_STRUCT* stats)
+{
+    double avg_attempts;
+    double avg_call_us;
+    double max_call_us;
+
+    if (!label || !stats || stats->calls == 0)
+    {
+        return;
+    }
+
+    avg_attempts = (double)stats->total_attempts / (double)stats->calls;
+    avg_call_us = ((double)stats->total_duration_ns / (double)stats->calls) / 1000.0;
+    max_call_us = (double)stats->max_duration_ns / 1000.0;
+
+    printf("[%s] calls=%llu success=%llu failed=%llu avg_attempts=%.2f avg_call=%.2f us max_call=%.2f us queue_full=%llu other_retryable=%llu\n",
+           label,
+           (unsigned long long)stats->calls,
+           (unsigned long long)stats->successes,
+           (unsigned long long)stats->failed_calls,
+           avg_attempts,
+           avg_call_us,
+           max_call_us,
+           (unsigned long long)stats->queue_full_failures,
+           (unsigned long long)stats->other_failures);
+
+    if (stats->non_retryable_failures > 0)
+    {
+        printf("[%s] non_retryable_failures=%llu first_error=%u\n",
+               label,
+               (unsigned long long)stats->non_retryable_failures,
+               stats->first_non_retryable_error);
+    }
+
+    if (stats->timeout_failures > 0 ||
+        stats->service_unavailable_failures > 0 ||
+        stats->service_not_found_failures > 0 ||
+        stats->not_initialized_failures > 0 ||
+        stats->operation_failed_failures > 0 ||
+        stats->shm_buffer_full_failures > 0 ||
+        stats->allocation_failed_failures > 0 ||
+        stats->busy_again_failures > 0)
+    {
+        printf("[%s] timeout=%llu service_unavailable=%llu service_not_found=%llu not_initialized=%llu operation_failed=%llu shm_buffer_full=%llu allocation_failed=%llu busy_again=%llu\n",
+               label,
+               (unsigned long long)stats->timeout_failures,
+               (unsigned long long)stats->service_unavailable_failures,
+               (unsigned long long)stats->service_not_found_failures,
+               (unsigned long long)stats->not_initialized_failures,
+               (unsigned long long)stats->operation_failed_failures,
+               (unsigned long long)stats->shm_buffer_full_failures,
+               (unsigned long long)stats->allocation_failed_failures,
+               (unsigned long long)stats->busy_again_failures);
+    }
+}
 
 /*
  * Compute elapsed seconds between two monotonic timestamps.
@@ -190,19 +481,116 @@ static void print_latency_stats(const char* prefix, const int64_t* values, int c
     avg_us = (double)sum_us / (double)count;
     throughput = elapsed_sec > 0.0 ? (double)count / elapsed_sec : 0.0;
 
-    printf(
-        "%s success=%d throughput=%.0f msg/s avg=%.0f us p50=%lld us p95=%lld us p99=%lld us min=%lld us max=%lld us\n",
-        prefix,
-        count,
-        throughput,
-        avg_us,
-        (long long)p50_us,
-        (long long)p95_us,
-        (long long)p99_us,
-        (long long)min_us,
-        (long long)max_us);
+    printf("%s success=%d throughput=%.0f msg/s avg=%.0f us p50=%lld us p95=%lld us p99=%lld us min=%lld us max=%lld us\n",
+           prefix,
+           count,
+           throughput,
+           avg_us,
+           (long long)p50_us,
+           (long long)p95_us,
+           (long long)p99_us,
+           (long long)min_us,
+           (long long)max_us);
 
     free(sorted_values);
+}
+
+/*
+ * Reset the shared pub/sub benchmark context between warmup and measurement phases.
+ */
+static void reset_pubsub_context(BENCH_PUBSUB_CONTEXT_STRUCT* ctx)
+{
+    if (!ctx)
+    {
+        return;
+    }
+
+    pthread_mutex_lock(&ctx->mutex);
+    ctx->received = 0;
+    ctx->first_receive_ns = 0;
+    ctx->last_receive_ns = 0;
+    if (ctx->latency_us && ctx->capacity > 0)
+    {
+        memset(ctx->latency_us, 0, (size_t)ctx->capacity * sizeof(int64_t));
+    }
+    pthread_mutex_unlock(&ctx->mutex);
+}
+
+/*
+ * Fill a benchmark payload buffer with the timestamp/sequence header expected by the subscriber.
+ */
+static void fill_pubsub_payload(void* payload, size_t payload_size, uint32_t seq)
+{
+    BENCH_PUBSUB_PAYLOAD_STRUCT* header = (BENCH_PUBSUB_PAYLOAD_STRUCT*)payload;
+
+    if (!payload || payload_size < sizeof(BENCH_PUBSUB_PAYLOAD_STRUCT))
+    {
+        return;
+    }
+
+    memset(payload, 'A', payload_size);
+    header->send_ns = monotonic_time_ns();
+    header->seq = seq;
+}
+
+/*
+ * Create a unique benchmark resource name so repeated runs do not discover stale prior instances.
+ */
+static void make_benchmark_name(char* buffer, size_t buffer_size, const char* prefix, uint32_t run_id)
+{
+    if (!buffer || buffer_size == 0U)
+    {
+        return;
+    }
+
+    snprintf(buffer, buffer_size, "%s_%u", prefix, run_id);
+}
+
+/*
+ * Wait for the pub/sub delivery path to become live and observable before starting the measured phase.
+ */
+static int prepare_pubsub_measurement_window(BENCH_PUBSUB_CONTEXT_STRUCT* ctx, uint32_t timeout_ms)
+{
+    if (!ctx)
+    {
+        return 0;
+    }
+
+    if (wait_for_pubsub_messages(ctx, BENCH_STARTUP_DELIVERY_THRESHOLD, timeout_ms) < BENCH_STARTUP_DELIVERY_THRESHOLD)
+    {
+        return 0;
+    }
+    return 1;
+}
+
+/*
+ * Snapshot receive counters and timestamps from the shared pub/sub context.
+ */
+static int snapshot_pubsub_context(
+    BENCH_PUBSUB_CONTEXT_STRUCT* ctx,
+    uint64_t* first_receive_ns,
+    uint64_t* last_receive_ns)
+{
+    int received = 0;
+
+    if (!ctx)
+    {
+        return 0;
+    }
+
+    pthread_mutex_lock(&ctx->mutex);
+    received = ctx->received;
+    if (first_receive_ns)
+    {
+        *first_receive_ns = ctx->first_receive_ns;
+    }
+    if (last_receive_ns)
+    {
+        *last_receive_ns = ctx->last_receive_ns;
+    }
+    pthread_mutex_unlock(&ctx->mutex);
+
+    return received;
 }
 
 /*
@@ -273,21 +661,128 @@ static int publish_with_retry(
     uint32_t msg_id,
     const void* payload,
     size_t payload_size,
-    int max_attempts)
+    int max_attempts,
+    BENCH_CALL_TIMING_STATS_STRUCT* stats)
 {
-    for (int attempt = 0; attempt < max_attempts; ++attempt)
+    uint64_t start_ns = monotonic_time_ns();
+    uint64_t attempts = 0;
+    uint64_t queue_full_failures = 0;
+    uint64_t other_failures = 0;
+    int attempt_limit = max_attempts;
+
+    if (attempt_limit < 1)
     {
-        if (zoo_smb_publish_message(publisher, msg_id, payload, payload_size) == ZOO_SMB_OK)
+        attempt_limit = 1;
+    }
+
+    for (int attempt = 0; attempt < attempt_limit; ++attempt)
+    {
+        ZOO_ERROR_TYPE ret;
+        ZOO_BOOL retryable;
+        attempts++;
+
+        ret = zoo_smb_publish_message(publisher, msg_id, payload, payload_size);
+        if (ret == ZOO_SMB_OK)
         {
+            bench_call_timing_record(stats,
+                                     ZOO_TRUE,
+                                     attempts,
+                                     queue_full_failures,
+                                     other_failures,
+                                     monotonic_time_ns() - start_ns);
             return 1;
         }
 
-        if (attempt + 1 < max_attempts)
+        if (ret == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_QUEUE_FULL)
         {
-            usleep(100);
+            queue_full_failures++;
+        }
+        else
+        {
+            other_failures++;
+        }
+
+        bench_call_timing_record_error(stats, ret);
+
+        retryable = (ret == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_QUEUE_FULL) ||
+                    (ret == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_TIMEOUT) ||
+                    (ret == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_NOT_INITIALIZED) ||
+                    (ret == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_SERVICE_NOT_FOUND) ||
+                    (ret == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_SERVICE_UNAVAILABLE) ||
+                    (ret == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_OPERATION_FAILED) ||
+                    (ret == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_SHM_BUFFER_FULL) ||
+                    (ret == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_OUT_OF_MEMORY) ||
+                    (ret == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_ALLOCATION_FAILED) ||
+                    (ret == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_POOL_EXHAUSTED) ||
+                    (ret == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_BUSY) ||
+                    (ret == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_AGAIN);
+
+        if (!retryable)
+        {
+            if (stats)
+            {
+                stats->non_retryable_failures++;
+                if (stats->first_non_retryable_error == 0U)
+                {
+                    stats->first_non_retryable_error = (uint32_t)ret;
+                }
+            }
+            break;
+        }
+
+        if (attempt + 1 < attempt_limit)
+        {
+            /* Exponential backoff on queue pressure avoids immediate re-rejection storms. */
+            useconds_t backoff_us;
+            if (ret == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_QUEUE_FULL)
+            {
+                useconds_t base_us = (payload_size <= 64U) ? 100U :
+                                     (payload_size <= 256U) ? 150U :
+                                     (payload_size <= 1024U) ? 250U :
+                                     400U;
+                useconds_t max_us = (payload_size <= 64U) ? 20000U :
+                                    (payload_size <= 256U) ? 25000U :
+                                    (payload_size <= 1024U) ? 30000U :
+                                    40000U;
+                backoff_us = (useconds_t)(base_us << (attempt < 5 ? attempt : 5));
+                if (backoff_us > max_us)
+                {
+                    backoff_us = max_us;
+                }
+            }
+            else if (ret == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_OUT_OF_MEMORY ||
+                     ret == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_ALLOCATION_FAILED ||
+                     ret == (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_POOL_EXHAUSTED)
+            {
+                /* Allocation pressure needs longer drain time than queue pressure. */
+                useconds_t base_us = (payload_size <= 64U) ? 300U :
+                                     (payload_size <= 256U) ? 500U :
+                                     (payload_size <= 1024U) ? 800U :
+                                     1000U;
+                useconds_t max_us = (payload_size <= 64U) ? 30000U :
+                                    (payload_size <= 256U) ? 35000U :
+                                    (payload_size <= 1024U) ? 40000U :
+                                    50000U;
+                backoff_us = (useconds_t)(base_us * (unsigned int)(attempt + 1));
+                if (backoff_us > max_us)
+                {
+                    backoff_us = max_us;
+                }
+            }
+            else
+            {
+                backoff_us = (payload_size <= 64U) ? 50U : 200U;
+            }
+            usleep(backoff_us);
         }
     }
 
+    bench_call_timing_record(stats,
+                             ZOO_FALSE,
+                             attempts,
+                             queue_full_failures,
+                             other_failures,
+                             monotonic_time_ns() - start_ns);
     return 0;
 }
 
@@ -346,11 +841,21 @@ static int benchmark_pubsub_handler(
         return -1;
     }
 
+    if (msg->seq <= BENCH_THROUGHPUT_WARMUP_MESSAGES)
+    {
+        return ZOO_SMB_OK;
+    }
+
     pthread_mutex_lock(&ctx->mutex);
     index = ctx->received;
     if (index < ctx->capacity)
     {
+        if (ctx->received == 0)
+        {
+            ctx->first_receive_ns = now_ns;
+        }
         ctx->latency_us[index] = (int64_t)((now_ns - msg->send_ns) / 1000ULL);
+        ctx->last_receive_ns = now_ns;
         ctx->received++;
     }
     pthread_mutex_unlock(&ctx->mutex);
@@ -410,11 +915,20 @@ static int run_pubsub_publisher_child(
     int rounds,
     const char* publisher_name,
     const char* target_name,
-    const char* topic_name)
+    const char* topic_name,
+    size_t payload_size,
+    useconds_t inter_send_delay_us)
 {
     ZOO_SMB_PUBLISHER_HANDLE publisher;
+    uint8_t* payload;
     int publish_ok = 0;
     int publish_fail = 0;
+    BENCH_CALL_TIMING_STATS_STRUCT call_stats = {0};
+
+    if (payload_size < sizeof(BENCH_PUBSUB_PAYLOAD_STRUCT))
+    {
+        payload_size = sizeof(BENCH_PUBSUB_PAYLOAD_STRUCT);
+    }
 
     signal(SIGTERM, benchmark_child_stop_handler);
     signal(SIGINT, benchmark_child_stop_handler);
@@ -430,27 +944,47 @@ static int run_pubsub_publisher_child(
         return 2;
     }
 
-    // Force lazy publisher association/registration before measured traffic.
+    payload = (uint8_t*)malloc(payload_size);
+    if (!payload)
     {
-        BENCH_PUBSUB_PAYLOAD_STRUCT warmup_payload;
-        warmup_payload.send_ns = monotonic_time_ns();
-        warmup_payload.seq = 0U;
-        (void)zoo_smb_publish_message(publisher, BENCH_PUBSUB_MSG_ID, &warmup_payload, sizeof(warmup_payload));
+        zoo_smb_destroy_publisher(publisher);
+        return 3;
     }
+
+    // Force lazy publisher association/registration before measured traffic.
+    fill_pubsub_payload(payload, payload_size, 0U);
+    (void)zoo_smb_publish_message(publisher, BENCH_PUBSUB_MSG_ID, payload, payload_size);
 
     // Ensure publisher service is discoverable before measured traffic.
     (void)wait_for_server_ready(publisher_name, BENCH_WAIT_TIMEOUT_MS * 3U);
 
-    // Give subscriber reconcile flow time to complete SUB/SUBACK negotiation.
-    usleep(2500000);
+    // Drive subscription negotiation with an explicit warmup burst, then pause before measurement.
+    for (int i = 0; i < BENCH_THROUGHPUT_WARMUP_MESSAGES && g_child_running; ++i)
+    {
+        fill_pubsub_payload(payload, payload_size, (uint32_t)(i + 1));
+        (void)publish_with_retry(
+            publisher,
+            BENCH_PUBSUB_MSG_ID,
+            payload,
+            payload_size,
+            g_bench_runtime_config.publish_retry_attempts,
+            &call_stats);
+        usleep(1000);
+    }
+
+    usleep(500000);
 
     // Publish timestamped payloads so subscriber can compute one-way latency.
     for (int i = 0; i < rounds && g_child_running; ++i)
     {
-        BENCH_PUBSUB_PAYLOAD_STRUCT payload;
-        payload.send_ns = monotonic_time_ns();
-        payload.seq = (uint32_t)(i + 1);
-        if (zoo_smb_publish_message(publisher, BENCH_PUBSUB_MSG_ID, &payload, sizeof(payload)) == ZOO_SMB_OK)
+        fill_pubsub_payload(payload, payload_size, (uint32_t)(i + 1 + BENCH_THROUGHPUT_WARMUP_MESSAGES));
+        if (publish_with_retry(
+                publisher,
+                BENCH_PUBSUB_MSG_ID,
+                payload,
+                payload_size,
+                g_bench_runtime_config.publish_retry_attempts,
+            &call_stats))
         {
             publish_ok++;
         }
@@ -458,12 +992,17 @@ static int run_pubsub_publisher_child(
         {
             publish_fail++;
         }
-        usleep(1000);
+        if (inter_send_delay_us > 0U)
+        {
+            usleep(inter_send_delay_us);
+        }
     }
 
     printf("[bench6-helper] publish_ok=%d publish_fail=%d\n", publish_ok, publish_fail);
+    bench_call_timing_print("bench6-helper", &call_stats);
     usleep(1500000);
 
+    free(payload);
     zoo_smb_destroy_publisher(publisher);
     return 0;
 }
@@ -483,10 +1022,12 @@ static pid_t spawn_helper_process_args(
     const char* arg1,
     const char* arg2,
     const char* arg3,
-    const char* arg4)
+    const char* arg4,
+    const char* arg5,
+    const char* arg6)
 {
     pid_t pid;
-    char* argv_exec[8];
+    char* argv_exec[10];
     int index = 0;
 
     if (!g_program_path || !mode)
@@ -511,6 +1052,10 @@ static pid_t spawn_helper_process_args(
         argv_exec[index++] = (char*)arg3;
     if (arg4)
         argv_exec[index++] = (char*)arg4;
+    if (arg5)
+        argv_exec[index++] = (char*)arg5;
+    if (arg6)
+        argv_exec[index++] = (char*)arg6;
     argv_exec[index] = NULL;
 
     execv(g_program_path, argv_exec);
@@ -527,44 +1072,177 @@ static pid_t spawn_helper_process_args(
  */
 static void benchmark1_publish_throughput(void)
 {
+    uint32_t run_id = (uint32_t)(monotonic_time_ns() & 0xffffffffu);
     struct timespec start, end;
-    const int message_count = 100000;
-    int success = 0;
+    const int message_count = g_bench_runtime_config.bench1_message_count;
+    const ZOO_BOOL time_window_mode = g_bench_runtime_config.bench1_measurement_ms > 0U;
+    int received = 0;
+    int status = 0;
+    int sub_handle = -1;
+    pid_t publisher_pid = -1;
+    int helper_rounds;
+    char publisher_name[64];
+    char subscriber_name[64];
+    char topic_name[64];
+    char rounds_arg[32];
+    char payload_arg[32];
+    char delay_arg[32];
+    double startup_ms;
+    double sec;
+    BENCH_PUBSUB_CONTEXT_STRUCT ctx;
+    ZOO_ERROR_TYPE subscribe_result = ZOO_SMB_ERROR_INVALID_PARAM;
+    ZOO_SMB_SUBSCRIBER_HANDLE subscriber = NULL;
 
-    ZOO_SMB_PUBLISHER_HANDLE publisher = zoo_smb_create_publisher(
-        "bench_pub",
-        "bench_pub",
-        "bench/topic",
-        ZOO_SMB_TRANSPORT_TYPE_DEFAULT,
-        NULL);
+    memset(&ctx, 0, sizeof(ctx));
+    make_benchmark_name(publisher_name, sizeof(publisher_name), "bench1_pub", run_id);
+    make_benchmark_name(subscriber_name, sizeof(subscriber_name), "bench1_sub", run_id);
+    make_benchmark_name(topic_name, sizeof(topic_name), "bench1/topic", run_id);
 
-    if (!publisher)
+    ctx.capacity = message_count;
+    ctx.latency_us = (int64_t*)calloc((size_t)message_count, sizeof(int64_t));
+    if (!ctx.latency_us || pthread_mutex_init(&ctx.mutex, NULL) != 0)
     {
-        printf("benchmark1: create publisher failed\n");
+        free(ctx.latency_us);
+        // printf removed
         return;
     }
 
-    usleep(50000);
+    for (int attempt = 0; attempt < 3 && !subscriber; ++attempt)
+    {
+        subscriber = zoo_smb_create_subscriber(subscriber_name, publisher_name, topic_name, NULL);
+        if (!subscriber)
+        {
+            usleep(200000);
+        }
+    }
+
+    if (!subscriber)
+    {
+        // printf removed
+        pthread_mutex_destroy(&ctx.mutex);
+        free(ctx.latency_us);
+        return;
+    }
+
+    for (int attempt = 0; attempt < 3; ++attempt)
+    {
+        subscribe_result = zoo_smb_subscribe_message(subscriber, BENCH_PUBSUB_MSG_ID, benchmark_pubsub_handler, &ctx, &sub_handle);
+        if (subscribe_result == ZOO_SMB_OK)
+        {
+            break;
+        }
+
+        if (attempt + 1 < 3)
+        {
+            usleep(200000);
+        }
+    }
+
+    if (subscribe_result != ZOO_SMB_OK)
+    {
+        // printf removed
+        zoo_smb_destroy_subscriber(subscriber);
+        pthread_mutex_destroy(&ctx.mutex);
+        free(ctx.latency_us);
+        return;
+    }
+
+    helper_rounds = time_window_mode ? INT_MAX : message_count;
+
+    usleep(BENCH_SUBSCRIPTION_SETTLE_US);
+
+    snprintf(rounds_arg, sizeof(rounds_arg), "%d", helper_rounds);
+    snprintf(payload_arg, sizeof(payload_arg), "%u", (unsigned int)BENCH_THROUGHPUT_SMALL_PAYLOAD_SIZE);
+    snprintf(delay_arg, sizeof(delay_arg), "%u", (unsigned int)g_bench_runtime_config.inter_send_delay_us);
+
+    uint64_t startup_begin_ns = monotonic_time_ns();
+    publisher_pid = spawn_helper_process_args(
+        "bench6-publisher",
+        rounds_arg,
+        publisher_name,
+        publisher_name,
+        topic_name,
+        payload_arg,
+        delay_arg);
+    if (publisher_pid <= 0)
+    {
+        printf("benchmark1: create publisher helper failed\n");
+        if (sub_handle >= 0)
+        {
+            zoo_smb_unsubscribe_message(subscriber, sub_handle);
+        }
+        zoo_smb_destroy_subscriber(subscriber);
+        pthread_mutex_destroy(&ctx.mutex);
+        free(ctx.latency_us);
+        return;
+    }
+
+    if (!prepare_pubsub_measurement_window(&ctx, BENCH_WAIT_TIMEOUT_MS * 4U))
+    {
+        // printf removed
+        kill(publisher_pid, SIGTERM);
+        (void)waitpid(publisher_pid, &status, 0);
+        if (sub_handle >= 0)
+        {
+            zoo_smb_unsubscribe_message(subscriber, sub_handle);
+        }
+        zoo_smb_destroy_subscriber(subscriber);
+        pthread_mutex_destroy(&ctx.mutex);
+        free(ctx.latency_us);
+        return;
+    }
+
+    startup_ms = (double)(monotonic_time_ns() - startup_begin_ns) / 1000000.0;
+        printf("[bench1] startup ready=1 settle_ms=%.2f warmup=%u\n",
+            startup_ms,
+            (unsigned int)BENCH_THROUGHPUT_WARMUP_MESSAGES);
 
     clock_gettime(CLOCK_MONOTONIC, &start);
-    for (int i = 0; i < message_count; ++i)
+    if (time_window_mode)
     {
-        char payload[64];
-        snprintf(payload, sizeof(payload), "msg-%d", i);
-        if (publish_with_retry(publisher, (uint32_t)(i + 1), payload, strlen(payload), 3))
-        {
-            success++;
-        }
+        usleep(g_bench_runtime_config.bench1_measurement_ms * 1000U);
+        received = snapshot_pubsub_context(&ctx, NULL, NULL);
+        kill(publisher_pid, SIGTERM);
+        (void)waitpid(publisher_pid, &status, 0);
+    }
+    else
+    {
+        received = wait_for_pubsub_messages(&ctx, message_count, BENCH_WAIT_TIMEOUT_MS * 12U);
+        (void)waitpid(publisher_pid, &status, 0);
     }
     clock_gettime(CLOCK_MONOTONIC, &end);
 
-    double sec = elapsed_seconds(&start, &end);
-    printf("[bench1] publish throughput: success=%d/%d, %.0f msg/s\n",
-           success,
-           message_count,
-           sec > 0.0 ? success / sec : 0.0);
+    sec = elapsed_seconds(&start, &end);
+    if (!time_window_mode && ctx.first_receive_ns > 0 && ctx.last_receive_ns > ctx.first_receive_ns)
+    {
+        sec = (double)(ctx.last_receive_ns - ctx.first_receive_ns) / 1000000000.0;
+    }
 
-    zoo_smb_destroy_publisher(publisher);
+    if (time_window_mode)
+    {
+        printf("[bench1] publish throughput: received=%d window_ms=%u startup_ms=%.2f, %.0f msg/s\n",
+               received,
+               g_bench_runtime_config.bench1_measurement_ms,
+               startup_ms,
+               sec > 0.0 ? (double)received / sec : 0.0);
+    }
+    else
+    {
+        printf("[bench1] publish throughput: received=%d/%d startup_ms=%.2f, %.0f msg/s\n",
+               received,
+               message_count,
+               startup_ms,
+               sec > 0.0 ? (double)received / sec : 0.0);
+    }
+    print_latency_stats("[bench1-latency]", ctx.latency_us, received, sec);
+
+    if (sub_handle >= 0)
+    {
+        zoo_smb_unsubscribe_message(subscriber, sub_handle);
+    }
+    zoo_smb_destroy_subscriber(subscriber);
+    pthread_mutex_destroy(&ctx.mutex);
+    free(ctx.latency_us);
 }
 
 /*
@@ -576,56 +1254,315 @@ static void benchmark1_publish_throughput(void)
  */
 static void benchmark2_payload_size_impact(void)
 {
+    uint32_t run_id = (uint32_t)(monotonic_time_ns() & 0xffffffffu);
     struct timespec start, end;
-    const int rounds = 20000;
+    const int rounds = g_bench_runtime_config.bench2_rounds;
+    const ZOO_BOOL time_window_mode = g_bench_runtime_config.bench2_measurement_ms > 0U;
     const size_t sizes[] = {64, 256, 1024, 4096};
+    char publisher_name[96];
+    char subscriber_name[96];
+    char topic_name[96];
+    char prefix[48];
+    char rounds_arg[32];
+    char payload_arg[32];
+    char delay_arg[32];
+    int status = 0;
+    double startup_ms;
+    BENCH_PUBSUB_CONTEXT_STRUCT ctx;
 
-    ZOO_SMB_PUBLISHER_HANDLE publisher = zoo_smb_create_publisher(
-        "bench_pub2",
-        "bench_pub2",
-        "bench/topic2",
-        ZOO_SMB_TRANSPORT_TYPE_DEFAULT,
-        NULL);
+    memset(&ctx, 0, sizeof(ctx));
 
-    if (!publisher)
+    ctx.capacity = rounds;
+    ctx.latency_us = (int64_t*)calloc((size_t)rounds, sizeof(int64_t));
+    if (!ctx.latency_us || pthread_mutex_init(&ctx.mutex, NULL) != 0)
     {
-        printf("benchmark2: create publisher failed\n");
+        free(ctx.latency_us);
+        // printf removed
         return;
     }
 
-    usleep(50000);
+    snprintf(delay_arg, sizeof(delay_arg), "%u", (unsigned int)g_bench_runtime_config.inter_send_delay_us);
 
     for (size_t s = 0; s < sizeof(sizes) / sizeof(sizes[0]); ++s)
     {
-        char* payload = (char*)malloc(sizes[s]);
-        if (!payload)
+        ZOO_ERROR_TYPE subscribe_result = ZOO_SMB_ERROR_INVALID_PARAM;
+        ZOO_SMB_SUBSCRIBER_HANDLE subscriber = NULL;
+        int sub_handle = -1;
+        pid_t publisher_pid = -1;
+        ZOO_SMB_PUBLISHER_HANDLE local_publisher = NULL;
+        uint8_t* local_payload = NULL;
+        ZOO_BOOL use_local_publisher = ZOO_FALSE;
+        uint32_t local_seq = (uint32_t)(BENCH_THROUGHPUT_WARMUP_MESSAGES + 1);
+        int helper_rounds = time_window_mode ? INT_MAX : rounds;
+        int received = 0;
+        double sec;
+        ZOO_BOOL ready = ZOO_FALSE;
+        const uint32_t readiness_timeout_ms = 2500U;
+
+        snprintf(prefix, sizeof(prefix), "bench2_pub_%zu", s);
+        make_benchmark_name(publisher_name, sizeof(publisher_name), prefix, run_id);
+        snprintf(prefix, sizeof(prefix), "bench2_sub_%zu", s);
+        make_benchmark_name(subscriber_name, sizeof(subscriber_name), prefix, run_id);
+        snprintf(prefix, sizeof(prefix), "bench2/topic/%zu", s);
+        make_benchmark_name(topic_name, sizeof(topic_name), prefix, run_id);
+
+
+        for (int attempt = 0; attempt < 3 && !subscriber; ++attempt)
         {
+            subscriber = zoo_smb_create_subscriber(subscriber_name, publisher_name, topic_name, NULL);
+            printf("[bench2-debug] payload=%zuB attempt=%d create_subscriber=%p\n", sizes[s], attempt, (void*)subscriber);
+            if (!subscriber)
+            {
+                usleep(200000);
+            }
+        }
+
+        if (!subscriber)
+        {
+            // printf removed
             continue;
         }
-        memset(payload, 'A', sizes[s]);
 
-        int success = 0;
-        clock_gettime(CLOCK_MONOTONIC, &start);
-        for (int i = 0; i < rounds; ++i)
+        for (int attempt = 0; attempt < 3; ++attempt)
         {
-            if (publish_with_retry(publisher, (uint32_t)(100000 + i), payload, sizes[s], 3))
+            subscribe_result = zoo_smb_subscribe_message(subscriber, BENCH_PUBSUB_MSG_ID, benchmark_pubsub_handler, &ctx, &sub_handle);
+            printf("[bench2-debug] payload=%zuB attempt=%d subscribe_result=%d sub_handle=%d\n", sizes[s], attempt, (int)subscribe_result, sub_handle);
+            if (subscribe_result == ZOO_SMB_OK)
             {
-                success++;
+                break;
+            }
+
+            if (attempt + 1 < 3)
+            {
+                usleep(200000);
+            }
+        }
+
+        if (subscribe_result != ZOO_SMB_OK)
+        {
+            // printf removed
+            zoo_smb_destroy_subscriber(subscriber);
+            continue;
+        }
+
+
+        printf("[bench2-debug] payload=%zuB subscriber created and subscribed, sleeping to settle...\n", sizes[s]);
+        usleep(BENCH_SUBSCRIPTION_SETTLE_US);
+
+        snprintf(rounds_arg, sizeof(rounds_arg), "%d", helper_rounds);
+        snprintf(payload_arg, sizeof(payload_arg), "%u", (unsigned int)sizes[s]);
+        reset_pubsub_context(&ctx);
+
+
+        for (int startup_attempt = 0; startup_attempt < 1 && !ready; ++startup_attempt)
+        {
+            uint64_t startup_begin_ns = monotonic_time_ns();
+
+            for (int spawn_attempt = 0; spawn_attempt < 3; ++spawn_attempt)
+            {
+                publisher_pid = spawn_helper_process_args(
+                    "bench6-publisher",
+                    rounds_arg,
+                    publisher_name,
+                    publisher_name,
+                    topic_name,
+                    payload_arg,
+                    delay_arg);
+                printf("[bench2-debug] payload=%zuB spawn_attempt=%d publisher_pid=%d\n", sizes[s], spawn_attempt, (int)publisher_pid);
+                if (publisher_pid > 0)
+                {
+                    break;
+                }
+
+                if (spawn_attempt + 1 < 3)
+                {
+                    usleep(200000);
+                }
+            }
+
+            if (publisher_pid <= 0)
+            {
+                printf("[bench2-debug] payload=%zuB failed to spawn publisher process\n", sizes[s]);
+                break;
+            }
+
+            ready = prepare_pubsub_measurement_window(&ctx, readiness_timeout_ms) ? ZOO_TRUE : ZOO_FALSE;
+            printf("[bench2-debug] payload=%zuB prepare_pubsub_measurement_window ready=%d\n", sizes[s], (int)ready);
+            if (!ready)
+            {
+                kill(publisher_pid, SIGTERM);
+                (void)waitpid(publisher_pid, &status, 0);
+                publisher_pid = -1;
+                reset_pubsub_context(&ctx);
+                usleep(250000);
+                continue;
+            }
+
+            startup_ms = (double)(monotonic_time_ns() - startup_begin_ns) / 1000000.0;
+            printf("[bench2] payload=%zuB startup ready=1 settle_ms=%.2f warmup=%u\n",
+                   sizes[s],
+                   startup_ms,
+                   (unsigned int)BENCH_THROUGHPUT_WARMUP_MESSAGES);
+        }
+
+
+        if (publisher_pid <= 0)
+        {
+            local_publisher = zoo_smb_create_publisher(
+                publisher_name,
+                publisher_name,
+                topic_name,
+                ZOO_SMB_TRANSPORT_TYPE_DEFAULT,
+                NULL);
+            printf("[bench2-debug] payload=%zuB create_publisher=%p\n", sizes[s], (void*)local_publisher);
+            if (!local_publisher)
+            {
+                printf("[bench2] payload=%zuB create publisher helper failed\n", sizes[s]);
+                if (sub_handle >= 0)
+                {
+                    zoo_smb_unsubscribe_message(subscriber, sub_handle);
+                }
+                zoo_smb_destroy_subscriber(subscriber);
+                continue;
+            }
+
+            local_payload = (uint8_t*)malloc(sizes[s]);
+            printf("[bench2-debug] payload=%zuB malloc local_payload=%p\n", sizes[s], (void*)local_payload);
+            if (!local_payload)
+            {
+                printf("[bench2] payload=%zuB allocate local payload failed\n", sizes[s]);
+                zoo_smb_destroy_publisher(local_publisher);
+                if (sub_handle >= 0)
+                {
+                    zoo_smb_unsubscribe_message(subscriber, sub_handle);
+                }
+                zoo_smb_destroy_subscriber(subscriber);
+                continue;
+            }
+
+            for (int i = 0; i < BENCH_THROUGHPUT_WARMUP_MESSAGES; ++i)
+            {
+                fill_pubsub_payload(local_payload, sizes[s], (uint32_t)(i + 1));
+                int pub_result = publish_with_retry(
+                    local_publisher,
+                    BENCH_PUBSUB_MSG_ID,
+                    local_payload,
+                    sizes[s],
+                    g_bench_runtime_config.publish_retry_attempts,
+                    NULL);
+                printf("[bench2-debug] payload=%zuB warmup publish i=%d pub_result=%d\n", sizes[s], i, pub_result);
+                usleep(1000);
+            }
+
+            ready = prepare_pubsub_measurement_window(&ctx, readiness_timeout_ms) ? ZOO_TRUE : ZOO_FALSE;
+            printf("[bench2-debug] payload=%zuB after warmup, ready=%d\n", sizes[s], (int)ready);
+            use_local_publisher = ZOO_TRUE;
+        }
+
+        if (!ready)
+        {
+            // printf removed
+        }
+
+        clock_gettime(CLOCK_MONOTONIC, &start);
+        if (time_window_mode)
+        {
+            if (use_local_publisher)
+            {
+                uint64_t deadline_ns = monotonic_time_ns() + (uint64_t)g_bench_runtime_config.bench2_measurement_ms * 1000000ULL;
+                while (monotonic_time_ns() < deadline_ns)
+                {
+                    fill_pubsub_payload(local_payload, sizes[s], local_seq++);
+                    (void)publish_with_retry(
+                        local_publisher,
+                        BENCH_PUBSUB_MSG_ID,
+                        local_payload,
+                        sizes[s],
+                        g_bench_runtime_config.publish_retry_attempts,
+                        NULL);
+                    if (g_bench_runtime_config.inter_send_delay_us > 0U)
+                    {
+                        usleep(g_bench_runtime_config.inter_send_delay_us);
+                    }
+                }
+            }
+            else
+            {
+                usleep(g_bench_runtime_config.bench2_measurement_ms * 1000U);
+            }
+            received = snapshot_pubsub_context(&ctx, NULL, NULL);
+            if (!use_local_publisher)
+            {
+                kill(publisher_pid, SIGTERM);
+                (void)waitpid(publisher_pid, &status, 0);
+            }
+        }
+        else
+        {
+            if (use_local_publisher)
+            {
+                for (int i = 0; i < rounds; ++i)
+                {
+                    fill_pubsub_payload(local_payload, sizes[s], local_seq++);
+                    (void)publish_with_retry(
+                        local_publisher,
+                        BENCH_PUBSUB_MSG_ID,
+                        local_payload,
+                        sizes[s],
+                        g_bench_runtime_config.publish_retry_attempts,
+                        NULL);
+                }
+            }
+            received = wait_for_pubsub_messages(&ctx, rounds, BENCH_WAIT_TIMEOUT_MS * 12U);
+            if (!use_local_publisher)
+            {
+                (void)waitpid(publisher_pid, &status, 0);
             }
         }
         clock_gettime(CLOCK_MONOTONIC, &end);
 
-        double sec = elapsed_seconds(&start, &end);
-        printf("[bench2] payload=%zuB success=%d/%d throughput=%.0f msg/s\n",
-               sizes[s],
-               success,
-               rounds,
-               sec > 0.0 ? success / sec : 0.0);
+        sec = elapsed_seconds(&start, &end);
+        if (!time_window_mode && ctx.first_receive_ns > 0 && ctx.last_receive_ns > ctx.first_receive_ns)
+        {
+            sec = (double)(ctx.last_receive_ns - ctx.first_receive_ns) / 1000000000.0;
+        }
 
-        free(payload);
+        if (time_window_mode)
+        {
+            printf("[bench2] payload=%zuB received=%d window_ms=%u throughput=%.0f msg/s\n",
+                   sizes[s],
+                   received,
+                   g_bench_runtime_config.bench2_measurement_ms,
+                   sec > 0.0 ? (double)received / sec : 0.0);
+        }
+        else
+        {
+            printf("[bench2] payload=%zuB success=%d/%d throughput=%.0f msg/s\n",
+                   sizes[s],
+                   received,
+                   rounds,
+                   sec > 0.0 ? (double)received / sec : 0.0);
+        }
+        print_latency_stats("[bench2-latency]", ctx.latency_us, received, sec);
+
+        if (sub_handle >= 0)
+        {
+            zoo_smb_unsubscribe_message(subscriber, sub_handle);
+        }
+        if (local_payload)
+        {
+            free(local_payload);
+        }
+        if (local_publisher)
+        {
+            zoo_smb_destroy_publisher(local_publisher);
+        }
+        zoo_smb_destroy_subscriber(subscriber);
+        usleep(200000);
     }
 
-    zoo_smb_destroy_publisher(publisher);
+    pthread_mutex_destroy(&ctx.mutex);
+    free(ctx.latency_us);
 }
 
 /*
@@ -662,10 +1599,10 @@ static void benchmark3_node_lifecycle(void)
     clock_gettime(CLOCK_MONOTONIC, &end);
 
     double sec = elapsed_seconds(&start, &end);
-    printf("[bench3] node lifecycle: success=%d/%d, %.0f create+destroy/s\n",
-           ok,
-           rounds,
-           sec > 0.0 ? ok / sec : 0.0);
+        printf("[bench3] node lifecycle: success=%d/%d, %.0f create+destroy/s\n",
+            ok,
+            rounds,
+            sec > 0.0 ? (double)ok / sec : 0.0);
 }
 
 /*
@@ -716,12 +1653,12 @@ static void benchmark4_mixed_node_creation(void)
     clock_gettime(CLOCK_MONOTONIC, &end);
 
     double sec = elapsed_seconds(&start, &end);
-    printf("[bench4] mixed nodes: srv=%d cli=%d pub=%d sub=%d in %.2fs\n",
-           server_ok,
-           client_ok,
-           pub_ok,
-           sub_ok,
-           sec);
+        printf("[bench4] mixed nodes: srv=%d cli=%d pub=%d sub=%d in %.2fs\n",
+            server_ok,
+            client_ok,
+            pub_ok,
+            sub_ok,
+            sec);
 }
 
 /*
@@ -755,10 +1692,10 @@ static void benchmark5_rpc_round_trip_latency(void)
     snprintf(topic_name, sizeof(topic_name), "bench5/topic/%u", run_id);
 
     // Run server in a dedicated process to emulate real RPC round-trip conditions.
-    server_pid = spawn_helper_process_args("bench5-server", server_name, server_target, topic_name, NULL);
+    server_pid = spawn_helper_process_args("bench5-server", server_name, server_target, topic_name, NULL, NULL, NULL);
     if (server_pid <= 0)
     {
-        printf("[bench5] spawn server process failed\n");
+        // printf removed
         return;
     }
 
@@ -767,7 +1704,7 @@ static void benchmark5_rpc_round_trip_latency(void)
     client = zoo_smb_create_client(client_name, server_target, topic_name, NULL);
     if (!client)
     {
-        printf("[bench5] create client failed\n");
+        // printf removed
         kill(server_pid, SIGTERM);
         (void)waitpid(server_pid, &status, 0);
         return;
@@ -775,7 +1712,7 @@ static void benchmark5_rpc_round_trip_latency(void)
 
     if (!wait_for_server_ready(server_target, BENCH_WAIT_TIMEOUT_MS))
     {
-        printf("[bench5] server not ready within timeout\n");
+        // printf removed
         zoo_smb_destroy_client(client);
         kill(server_pid, SIGTERM);
         (void)waitpid(server_pid, &status, 0);
@@ -855,6 +1792,8 @@ static void benchmark6_pubsub_end_to_end(void)
     int published = 0;
     int received;
     int status = 0;
+    uint64_t first_receive_ns = 0;
+    uint64_t last_receive_ns = 0;
     pid_t publisher_pid = -1;
     ZOO_ERROR_TYPE subscribe_result = ZOO_SMB_ERROR_INVALID_PARAM;
     ZOO_SMB_SUBSCRIBER_HANDLE subscriber = NULL;
@@ -870,7 +1809,7 @@ static void benchmark6_pubsub_end_to_end(void)
     if (!ctx.latency_us || pthread_mutex_init(&ctx.mutex, NULL) != 0)
     {
         free(ctx.latency_us);
-        printf("[bench6] context initialization failed\n");
+        // printf removed
         return;
     }
 
@@ -885,7 +1824,7 @@ static void benchmark6_pubsub_end_to_end(void)
 
     if (!subscriber)
     {
-        printf("[bench6] create pub/sub failed\n");
+        // printf removed
         pthread_mutex_destroy(&ctx.mutex);
         free(ctx.latency_us);
         return;
@@ -907,7 +1846,7 @@ static void benchmark6_pubsub_end_to_end(void)
 
     if (subscribe_result != ZOO_SMB_OK)
     {
-        printf("[bench6] subscribe failed (err=%d)\n", (int)subscribe_result);
+        // printf removed
         kill(publisher_pid, SIGTERM);
         (void)waitpid(publisher_pid, &status, 0);
         zoo_smb_destroy_subscriber(subscriber);
@@ -916,15 +1855,19 @@ static void benchmark6_pubsub_end_to_end(void)
         return;
     }
 
+    usleep(BENCH_SUBSCRIPTION_SETTLE_US);
+
     publisher_pid = spawn_helper_process_args(
         "bench6-publisher",
         rounds_arg,
         publisher_name,
         publisher_name,
-        topic_name);
+        topic_name,
+        NULL,
+        NULL);
     if (publisher_pid <= 0)
     {
-        printf("[bench6] create publisher helper failed\n");
+        // printf removed
         if (sub_handle >= 0)
         {
             zoo_smb_unsubscribe_message(subscriber, sub_handle);
@@ -935,27 +1878,32 @@ static void benchmark6_pubsub_end_to_end(void)
         return;
     }
 
-    if (!wait_for_server_ready(publisher_name, BENCH_WAIT_TIMEOUT_MS))
+    if (!prepare_pubsub_measurement_window(&ctx, BENCH_WAIT_TIMEOUT_MS * 4U))
     {
-        printf("[bench6] publisher helper not ready before publish window\n");
+        // printf removed
     }
-
-    usleep(300000);
 
     clock_gettime(CLOCK_MONOTONIC, &start);
     published = BENCH_PUBSUB_ROUNDS;
     received = wait_for_pubsub_messages(&ctx, published, BENCH_WAIT_TIMEOUT_MS * 6U);
     (void)waitpid(publisher_pid, &status, 0);
     clock_gettime(CLOCK_MONOTONIC, &end);
+    (void)snapshot_pubsub_context(&ctx, &first_receive_ns, &last_receive_ns);
 
-        snprintf(label,
-              sizeof(label),
-              "[bench6] pub/sub e2e published=%d/%d received=%d loss=%d",
-              published,
-              BENCH_PUBSUB_ROUNDS,
-              received,
-              published - received);
-        print_latency_stats(label, ctx.latency_us, received, elapsed_seconds(&start, &end));
+    double sec = elapsed_seconds(&start, &end);
+    if (received > 1 && first_receive_ns > 0 && last_receive_ns > first_receive_ns)
+    {
+        sec = (double)(last_receive_ns - first_receive_ns) / 1000000000.0;
+    }
+
+    snprintf(label,
+             sizeof(label),
+             "[bench6] pub/sub e2e published=%d/%d received=%d loss=%d",
+             published,
+             BENCH_PUBSUB_ROUNDS,
+             received,
+             published - received);
+    print_latency_stats(label, ctx.latency_us, received, sec);
 
     if (sub_handle >= 0)
     {
@@ -968,6 +1916,221 @@ static void benchmark6_pubsub_end_to_end(void)
 }
 
 /*
+ * Run benchmark 5 in client-only mode for cross-machine LAN execution.
+ *
+ * This mode assumes the RPC server is already running on another machine.
+ * It measures round-trip latency from this client process only.
+ */
+static int run_benchmark5_rpc_client_only(
+    const char* client_name,
+    const char* server_target,
+    const char* topic_name,
+    int rounds)
+{
+    struct timespec start;
+    struct timespec end;
+    int64_t* latencies_us;
+    int success = 0;
+    int attempted = 0;
+    int consecutive_failures = 0;
+    int total_rounds = rounds;
+    char label[192];
+    ZOO_SMB_CLIENT_HANDLE client;
+
+    if (total_rounds <= 0)
+    {
+        total_rounds = BENCH_RPC_ROUNDS;
+    }
+
+    latencies_us = (int64_t*)calloc((size_t)total_rounds, sizeof(int64_t));
+    if (!latencies_us)
+    {
+        // printf removed
+        return 2;
+    }
+
+    client = zoo_smb_create_client(client_name, server_target, topic_name, NULL);
+    if (!client)
+    {
+        // printf removed
+        free(latencies_us);
+        return 3;
+    }
+
+    if (!wait_for_server_ready(server_target, BENCH_WAIT_TIMEOUT_MS * 2U))
+    {
+        // printf removed
+        zoo_smb_destroy_client(client);
+        free(latencies_us);
+        return 4;
+    }
+
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    for (int i = 0; i < total_rounds; ++i)
+    {
+        char request[64];
+        char reply[128] = {0};
+        void* reply_ptr = reply;
+        size_t reply_size = 0;
+        int64_t request_id = 0;
+        uint64_t begin_ns;
+        uint64_t end_ns;
+
+        attempted++;
+        snprintf(request, sizeof(request), "rpc-%d", i + 1);
+        begin_ns = monotonic_time_ns();
+        if (zoo_smb_client_send_request(client, BENCH_RPC_MSG_ID, request, strlen(request) + 1U, &request_id) != ZOO_SMB_OK)
+        {
+            consecutive_failures++;
+            if (consecutive_failures >= 3)
+            {
+                break;
+            }
+            continue;
+        }
+
+        if (zoo_smb_client_recv_reply(client, BENCH_RPC_MSG_ID, request_id, &reply_ptr, &reply_size, BENCH_WAIT_TIMEOUT_MS) != ZOO_SMB_OK)
+        {
+            consecutive_failures++;
+            if (consecutive_failures >= 3)
+            {
+                break;
+            }
+            continue;
+        }
+
+        end_ns = monotonic_time_ns();
+        consecutive_failures = 0;
+        latencies_us[success++] = (int64_t)((end_ns - begin_ns) / 1000ULL);
+        usleep(200);
+    }
+    clock_gettime(CLOCK_MONOTONIC, &end);
+
+    snprintf(label,
+             sizeof(label),
+             "[bench5-client] rpc round-trip target=%s attempts=%d/%d",
+             server_target,
+             attempted,
+             total_rounds);
+    print_latency_stats(label, latencies_us, success, elapsed_seconds(&start, &end));
+
+    zoo_smb_destroy_client(client);
+    free(latencies_us);
+    return 0;
+}
+
+/*
+ * Run benchmark 6 in subscriber-only mode for cross-machine LAN execution.
+ *
+ * This mode assumes a publisher is already active on another machine.
+ */
+static int run_benchmark6_subscriber_only(
+    const char* subscriber_name,
+    const char* publisher_name,
+    const char* topic_name,
+    int rounds)
+{
+    struct timespec start;
+    struct timespec end;
+    BENCH_PUBSUB_CONTEXT_STRUCT ctx;
+    ZOO_SMB_SUBSCRIBER_HANDLE subscriber = NULL;
+    ZOO_ERROR_TYPE subscribe_result = ZOO_SMB_ERROR_INVALID_PARAM;
+    int32_t sub_handle = -1;
+    int expected = rounds;
+    int received;
+    uint64_t first_receive_ns = 0;
+    uint64_t last_receive_ns = 0;
+    char label[192];
+
+    if (expected <= 0)
+    {
+        expected = BENCH_PUBSUB_ROUNDS;
+    }
+
+    memset(&ctx, 0, sizeof(ctx));
+    ctx.capacity = expected;
+    ctx.latency_us = (int64_t*)calloc((size_t)expected, sizeof(int64_t));
+    if (!ctx.latency_us || pthread_mutex_init(&ctx.mutex, NULL) != 0)
+    {
+        free(ctx.latency_us);
+        // printf removed
+        return 2;
+    }
+
+    for (int attempt = 0; attempt < 3 && !subscriber; ++attempt)
+    {
+        subscriber = zoo_smb_create_subscriber(subscriber_name, publisher_name, topic_name, NULL);
+        if (!subscriber)
+        {
+            usleep(200000);
+        }
+    }
+
+    if (!subscriber)
+    {
+        // printf removed
+        pthread_mutex_destroy(&ctx.mutex);
+        free(ctx.latency_us);
+        return 3;
+    }
+
+    for (int attempt = 0; attempt < 3; ++attempt)
+    {
+        subscribe_result = zoo_smb_subscribe_message(subscriber, BENCH_PUBSUB_MSG_ID, benchmark_pubsub_handler, &ctx, &sub_handle);
+        if (subscribe_result == ZOO_SMB_OK)
+        {
+            break;
+        }
+
+        if (attempt + 1 < 3)
+        {
+            usleep(200000);
+        }
+    }
+
+    if (subscribe_result != ZOO_SMB_OK)
+    {
+        // printf removed
+        zoo_smb_destroy_subscriber(subscriber);
+        pthread_mutex_destroy(&ctx.mutex);
+        free(ctx.latency_us);
+        return 4;
+    }
+
+    usleep(BENCH_SUBSCRIPTION_SETTLE_US);
+
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    received = wait_for_pubsub_messages(&ctx, expected, BENCH_WAIT_TIMEOUT_MS * 12U);
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    (void)snapshot_pubsub_context(&ctx, &first_receive_ns, &last_receive_ns);
+
+    double sec = elapsed_seconds(&start, &end);
+    if (received > 1 && first_receive_ns > 0 && last_receive_ns > first_receive_ns)
+    {
+        sec = (double)(last_receive_ns - first_receive_ns) / 1000000000.0;
+    }
+
+    snprintf(label,
+             sizeof(label),
+             "[bench6-subscriber] pub/sub e2e publisher=%s expected=%d received=%d loss=%d",
+             publisher_name,
+             expected,
+             received,
+             expected - received);
+    print_latency_stats(label, ctx.latency_us, received, sec);
+
+    if (sub_handle >= 0)
+    {
+        zoo_smb_unsubscribe_message(subscriber, sub_handle);
+    }
+
+    zoo_smb_destroy_subscriber(subscriber);
+    pthread_mutex_destroy(&ctx.mutex);
+    free(ctx.latency_us);
+    return 0;
+}
+
+/*
  * Dispatch the requested benchmark mode or helper role.
  *
  * Besides the public benchmark numbers, the binary also supports hidden helper
@@ -976,7 +2139,19 @@ static void benchmark6_pubsub_end_to_end(void)
  */
 int main(int argc, char* argv[])
 {
+    BENCH_RUNTIME_MODE_ENUM mode;
+
     g_program_path = argv[0];
+
+    if (argc >= 2 &&
+        (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "help") == 0))
+    {
+        print_benchmark_usage(argv[0]);
+        return 0;
+    }
+
+    zoo_log_set_level(ZOO_LOG_LEVEL_WARN);
+    bench_apply_network_overrides();
 
     // Hidden helper modes used by bench5/bench6 parent orchestration.
     if (argc >= 2 && strcmp(argv[1], "bench5-server") == 0)
@@ -990,6 +2165,8 @@ int main(int argc, char* argv[])
     if (argc >= 2 && strcmp(argv[1], "bench6-publisher") == 0)
     {
         int rounds = BENCH_PUBSUB_ROUNDS;
+        size_t payload_size = sizeof(BENCH_PUBSUB_PAYLOAD_STRUCT);
+        useconds_t inter_send_delay_us = 1000U;
         const char* publisher_name = argc >= 4 ? argv[3] : "fish";
         const char* target_name = argc >= 5 ? argv[4] : "sea";
         const char* topic_name = argc >= 6 ? argv[5] : "water";
@@ -1001,16 +2178,45 @@ int main(int argc, char* argv[])
                 rounds = BENCH_PUBSUB_ROUNDS;
             }
         }
-        return run_pubsub_publisher_child(rounds, publisher_name, target_name, topic_name);
+        if (argc >= 7)
+        {
+            payload_size = (size_t)strtoul(argv[6], NULL, 10);
+        }
+        if (argc >= 8)
+        {
+            inter_send_delay_us = (useconds_t)strtoul(argv[7], NULL, 10);
+        }
+        return run_pubsub_publisher_child(rounds, publisher_name, target_name, topic_name, payload_size, inter_send_delay_us);
+    }
+
+    if (argc >= 2 && strcmp(argv[1], "bench5-client") == 0)
+    {
+        int rounds = argc >= 6 ? atoi(argv[5]) : BENCH_RPC_ROUNDS;
+        const char* client_name = argc >= 3 ? argv[2] : "bench_rpc_client";
+        const char* server_target = argc >= 4 ? argv[3] : "127.0.0.1:8080";
+        const char* topic_name = argc >= 5 ? argv[4] : "default_topic";
+        return run_benchmark5_rpc_client_only(client_name, server_target, topic_name, rounds);
+    }
+
+    if (argc >= 2 && strcmp(argv[1], "bench6-subscriber") == 0)
+    {
+        int rounds = argc >= 6 ? atoi(argv[5]) : BENCH_PUBSUB_ROUNDS;
+        const char* subscriber_name = argc >= 3 ? argv[2] : "bench_subscriber";
+        const char* publisher_name = argc >= 4 ? argv[3] : "bench_publisher";
+        const char* topic_name = argc >= 5 ? argv[4] : "default_topic";
+        return run_benchmark6_subscriber_only(subscriber_name, publisher_name, topic_name, rounds);
     }
 
     if (argc < 2)
     {
-        printf("Usage: %s <benchmark_number> [1|2|3|4|5|6|all]\n", argv[0]);
+        print_benchmark_usage(argv[0]);
         return 1;
     }
 
-    printf("\n========== ZOO SMB E2E Benchmarks (node API) ==========\n");
+    mode = bench_runtime_parse_mode(argc >= 3 ? argv[2] : NULL);
+    bench_runtime_set_mode(mode);
+
+    // printf removed
 
     if (strcmp(argv[1], "all") == 0)
     {
@@ -1020,52 +2226,49 @@ int main(int argc, char* argv[])
         snprintf(
             cmd,
             sizeof(cmd),
-            "\"%s\" 1 && sleep %u && "
-            "\"%s\" 2 && sleep %u && "
-            "\"%s\" 3 && sleep %u && "
-            "\"%s\" 4 && sleep %u && "
-            "\"%s\" 5 && sleep %u && "
-            "\"%s\" 6",
-            g_program_path, settle_seconds,
-            g_program_path, settle_seconds,
-            g_program_path, settle_seconds,
-            g_program_path, settle_seconds,
-            g_program_path, settle_seconds,
-            g_program_path);
+            "\"%s\" 1 %s && sleep %u && "
+            "\"%s\" 2 %s && sleep %u && "
+            "\"%s\" 3 %s && sleep %u && "
+            "\"%s\" 4 %s && sleep %u && "
+            "\"%s\" 5 %s && sleep %u && "
+            "\"%s\" 6 %s",
+            g_program_path, g_bench_runtime_config.mode_name, settle_seconds,
+            g_program_path, g_bench_runtime_config.mode_name, settle_seconds,
+            g_program_path, g_bench_runtime_config.mode_name, settle_seconds,
+            g_program_path, g_bench_runtime_config.mode_name, settle_seconds,
+            g_program_path, g_bench_runtime_config.mode_name, settle_seconds,
+            g_program_path, g_bench_runtime_config.mode_name);
 
         execl("/bin/sh", "sh", "-c", cmd, (char*)NULL);
-        printf("Failed to execute all-mode benchmark chain\n");
+        // printf removed
         return 1;
     }
-    else
+
+    switch (atoi(argv[1]))
     {
-        int n = atoi(argv[1]);
-        switch (n)
-        {
-            case 1:
-                benchmark1_publish_throughput();
-                break;
-            case 2:
-                benchmark2_payload_size_impact();
-                break;
-            case 3:
-                benchmark3_node_lifecycle();
-                break;
-            case 4:
-                benchmark4_mixed_node_creation();
-                break;
-            case 5:
-                benchmark5_rpc_round_trip_latency();
-                break;
-            case 6:
-                benchmark6_pubsub_end_to_end();
-                break;
-            default:
-                printf("Invalid benchmark number\n");
-                return 1;
-        }
+        case 1:
+            benchmark1_publish_throughput();
+            break;
+        case 2:
+            benchmark2_payload_size_impact();
+            break;
+        case 3:
+            benchmark3_node_lifecycle();
+            break;
+        case 4:
+            benchmark4_mixed_node_creation();
+            break;
+        case 5:
+            benchmark5_rpc_round_trip_latency();
+            break;
+        case 6:
+            benchmark6_pubsub_end_to_end();
+            break;
+        default:
+            // printf removed
+            return 1;
     }
 
-    printf("========== Benchmarks Complete ==========\n");
+    // printf removed
     return 0;
 }

@@ -25,6 +25,9 @@
 #include "zoo.h"
 #include <string.h>
 #include <stdatomic.h>
+#include <time.h>
+#include <unistd.h>
+#include <stdio.h>
 
 #define ROUTING_ENGINE_TASK_SUBMIT_MAX_RETRIES 100
 #define ROUTING_ENGINE_TASK_SUBMIT_BACKOFF_MS 10
@@ -64,7 +67,6 @@ typedef struct
 {
     ZOO_SMB_RULE_HANDLE rule;     // Handle to the routing rule
     ZOO_STRING_T receiver;        // Receiver for the message
-    char* receiver_owned;         // Owned receiver copy for async lifetime safety
     ZOO_BOOL delete_message_flag; // Flag to indicate if the message should be deleted after processing
     ZOO_SMB_MSG_STRUCT* message;  // Pointer to the message being routed
 } ROUTING_CONTEXT_STRUCT;
@@ -122,6 +124,47 @@ static void routing_engine_record_drop(
         default:
             break;
     }
+}
+
+/**
+ * @brief Rate-limit enqueue pressure logs under high contention.
+ * @return void
+ * @details Emits at most one warning per second and aggregates suppressed
+ *          events to keep logs actionable under queue saturation.
+ */
+static void routing_engine_log_enqueue_pressure(void)
+{
+    const uint64_t interval_ns = 1000000000ULL;
+    static atomic_ullong last_log_ns = 0;
+    static atomic_ullong suppressed = 0;
+    struct timespec ts;
+    uint64_t now_ns;
+    uint64_t previous_ns;
+
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    now_ns = (uint64_t)ts.tv_sec * 1000000000ULL + (uint64_t)ts.tv_nsec;
+    previous_ns = atomic_load(&last_log_ns);
+
+    if (previous_ns == 0ULL || now_ns - previous_ns >= interval_ns)
+    {
+        uint64_t expected = previous_ns;
+        if (atomic_compare_exchange_strong(&last_log_ns, &expected, now_ns))
+        {
+            uint64_t dropped = atomic_exchange(&suppressed, 0ULL);
+            if (dropped > 0ULL)
+            {
+                ZOO_LOG_WARN("Failed to enqueue message for routing after retries (suppressed=%llu)",
+                             (unsigned long long)dropped);
+            }
+            else
+            {
+                ZOO_LOG_WARN("Failed to enqueue message for routing after retries");
+            }
+            return;
+        }
+    }
+
+    atomic_fetch_add(&suppressed, 1ULL);
 }
 
 /**
@@ -192,11 +235,17 @@ static void process_message_and_notify_observer(IN void* rule_handle,
     }
 
     ZOO_USIZE_T observer_count = zoo_list_size(rule->incoming_data_observers);
+    // printf removed
     for (ZOO_USIZE_T i = 0; i < observer_count; i++)
     {
         ZOO_SMB_NODE_OBSERVER_HANDLE observer = zoo_list_at(rule->incoming_data_observers, i);
+        if (observer)
+        {
+            // printf removed
+        }
         if (observer && observer->handler.node_msg_cb && message->header.msg_type == observer->msg_type)
         {
+            // printf removed
             observer->handler.node_msg_cb(observer->usr_data, message, message->header.payload_size);
         }
     }
@@ -326,7 +375,14 @@ static void handle_transport_incoming_data(
         return;
     }
 
-    zoo_smb_copy_message(message, msg);
+    if (!zoo_smb_copy_message(message, msg))
+    {
+        (void)atomic_fetch_sub(&e->ingress_in_flight, 1);
+        routing_engine_record_drop(e, ZOO_SMB_INGRESS_DROP_INVALID_PARAM);
+        zoo_smb_destroy_message(msg);
+        return;
+    }
+
     if (!zoo_queue_enqueue(e->message_queue, msg, NULL, process_message_and_notify_observer, rule))
     {
         (void)atomic_fetch_sub(&e->ingress_in_flight, 1);
@@ -619,26 +675,29 @@ static ROUTING_CONTEXT_STRUCT* create_routing_context(
     ZOO_SMB_MSG_STRUCT* message,
     ZOO_BOOL delete_message_after_send)
 {
-    ROUTING_CONTEXT_STRUCT* context = zoo_allocate_from_pool(sizeof(ROUTING_CONTEXT_STRUCT));
+    size_t receiver_len = 0;
+    size_t context_size = sizeof(ROUTING_CONTEXT_STRUCT);
+    ROUTING_CONTEXT_STRUCT* context;
+
+    if (receiver)
+    {
+        receiver_len = strlen(receiver) + 1;
+        context_size += receiver_len;
+    }
+
+    context = zoo_allocate_from_pool(context_size);
     if (!context)
     {
         ZOO_LOG_ERROR("Failed to allocate routing context");
         return NULL;
     }
-    memset(context, 0, sizeof(ROUTING_CONTEXT_STRUCT));
+    memset(context, 0, context_size);
 
     if (receiver)
     {
-        ZOO_USIZE_T receiver_len = strlen(receiver) + 1;
-        context->receiver_owned = (char*)zoo_allocate_from_pool(receiver_len);
-        if (!context->receiver_owned)
-        {
-            ZOO_LOG_ERROR("Failed to allocate routing receiver");
-            zoo_free_to_pool(context);
-            return NULL;
-        }
-        memcpy(context->receiver_owned, receiver, receiver_len);
-        context->receiver = context->receiver_owned;
+        char* receiver_copy = (char*)((uint8_t*)context + sizeof(ROUTING_CONTEXT_STRUCT));
+        memcpy(receiver_copy, receiver, receiver_len);
+        context->receiver = receiver_copy;
     }
 
     context->rule = rule;
@@ -656,10 +715,6 @@ static void destroy_routing_context(ROUTING_CONTEXT_STRUCT* context)
 {
     if (context)
     {
-        if (context->receiver_owned)
-        {
-            zoo_free_to_pool(context->receiver_owned);
-        }
         zoo_free_to_pool(context);
     }
 }
@@ -719,6 +774,8 @@ ZOO_ERROR_T zoo_smb_routing_engine_handle_route_message(ZOO_SMB_ROUTING_ENGINE_H
                                                                IN ZOO_STRING_T receiver,
                                                                IN ZOO_BOOL delete_message_after_send)
 {
+    const int enqueue_retry_limit = 16;
+    const useconds_t enqueue_retry_sleep_us = 200;
     ZOO_LOG_DEBUG("Routing message use: %s, delete_message_after_send: %d",
                       rule->name,
                       delete_message_after_send);
@@ -742,13 +799,27 @@ ZOO_ERROR_T zoo_smb_routing_engine_handle_route_message(ZOO_SMB_ROUTING_ENGINE_H
         return ZOO_SMB_ERROR_OUT_OF_MEMORY;
     }
 
-    if (!zoo_queue_enqueue(e->message_queue, (ZOO_SMB_MSG_STRUCT*)message, context, engine_handle_route_message, e->transport_manager))
+    for (int attempt = 0; attempt < enqueue_retry_limit; ++attempt)
     {
-        ZOO_LOG_ERROR("Failed to enqueue message for routing");
-        destroy_routing_context(context);  // Free the context if enqueue fails
-        return ZOO_SMB_ERROR_QUEUE_FULL;
+        if (zoo_queue_enqueue(e->message_queue,
+                              (ZOO_SMB_MSG_STRUCT*)message,
+                              context,
+                              engine_handle_route_message,
+                              e->transport_manager))
+        {
+            return ZOO_SMB_OK;
+        }
+
+        if (attempt + 1 < enqueue_retry_limit)
+        {
+            usleep(enqueue_retry_sleep_us);
+        }
     }
-    return ZOO_SMB_OK;
+
+    routing_engine_record_drop(e, ZOO_SMB_INGRESS_DROP_QUEUE_FULL);
+    routing_engine_log_enqueue_pressure();
+    destroy_routing_context(context);  // Free the context if enqueue fails
+    return ZOO_SMB_ERROR_QUEUE_FULL;
 }
 
 /**

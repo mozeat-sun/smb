@@ -23,6 +23,36 @@
 #include <time.h>
 
 /**
+ * @brief Allocate message memory from SMB memory pool.
+ * @param size Number of bytes to allocate.
+ * @return void* Allocated memory pointer, or NULL on failure.
+ */
+static void* smb_message_alloc(size_t size)
+{
+    if (size == 0)
+    {
+        return NULL;
+    }
+
+    return zoo_allocate_from_pool(size);
+}
+
+/**
+ * @brief Free message memory back to SMB memory pool.
+ * @param ptr Memory pointer to release.
+ * @return void
+ */
+static void smb_message_free(void* ptr)
+{
+    if (!ptr)
+    {
+        return;
+    }
+
+    zoo_free_to_pool(ptr);
+}
+
+/**
  * @brief Calculates the effective maximum payload size for SMB messages.
  *
  * Determines the maximum payload size that can be sent in a single SMB message,
@@ -138,7 +168,7 @@ static ZOO_BOOL allocate_and_copy_payload(ZOO_SMB_MSG_STRUCT* message, const voi
         return ZOO_FALSE;
     }
 
-    message->payload = zoo_allocate_from_pool(payload_size);
+    message->payload = smb_message_alloc(payload_size);
     if (!message->payload)
     {
         ZOO_LOG_ERROR("Failed to allocate payload memory: size=%zu", payload_size);
@@ -204,7 +234,7 @@ ZOO_SMB_MSG_STRUCT* zoo_smb_create_message(
         return NULL;
     }
 
-    ZOO_SMB_MSG_STRUCT* msg = (ZOO_SMB_MSG_STRUCT*)zoo_allocate_from_pool(sizeof(ZOO_SMB_MSG_STRUCT));
+    ZOO_SMB_MSG_STRUCT* msg = (ZOO_SMB_MSG_STRUCT*)smb_message_alloc(sizeof(ZOO_SMB_MSG_STRUCT));
     if (!msg)
     {
         ZOO_LOG_ERROR("zoo_smb_create_message: Allocation failed");
@@ -215,7 +245,7 @@ ZOO_SMB_MSG_STRUCT* zoo_smb_create_message(
     if (!allocate_and_copy_payload(msg, payload, payload_size))
     {
         ZOO_LOG_ERROR("zoo_smb_create_message: Payload allocation failed");
-        zoo_free_to_pool(msg);
+        smb_message_free(msg);
         return NULL;
     }
 
@@ -241,7 +271,7 @@ ZOO_SMB_MSG_STRUCT* zoo_smb_create_message(
  */
 ZOO_SMB_MSG_STRUCT* zoo_smb_default_message()
 {
-    ZOO_SMB_MSG_STRUCT* msg = (ZOO_SMB_MSG_STRUCT*)zoo_allocate_from_pool(sizeof(ZOO_SMB_MSG_STRUCT));
+    ZOO_SMB_MSG_STRUCT* msg = (ZOO_SMB_MSG_STRUCT*)smb_message_alloc(sizeof(ZOO_SMB_MSG_STRUCT));
     if (!msg)
     {
         ZOO_LOG_ERROR("zoo_smb_default_message: Allocation failed");
@@ -300,8 +330,8 @@ void zoo_smb_destroy_message(IN ZOO_SMB_MSG_STRUCT* msg)
 {
     if (!msg)
         return;
-    zoo_free_to_pool(msg->payload);
-    zoo_free_to_pool(msg);
+    smb_message_free(msg->payload);
+    smb_message_free(msg);
     ZOO_LOG_TRACE("Destroying message[%p]: msg_id=%u, type=%u, sender=%s, topic=%s", msg, msg->header.msg_id, msg->header.msg_type, msg->header.sender, msg->header.topic);
 }
 
@@ -327,7 +357,7 @@ ZOO_SMB_MSG_HEADER_STRUCT* zoo_smb_create_message_header(
         ZOO_LOG_ERROR("zoo_smb_create_message_header: Invalid parameters");
         return NULL;
     }
-    ZOO_SMB_MSG_HEADER_STRUCT* header = (ZOO_SMB_MSG_HEADER_STRUCT*)zoo_allocate_from_pool(sizeof(ZOO_SMB_MSG_HEADER_STRUCT));
+    ZOO_SMB_MSG_HEADER_STRUCT* header = (ZOO_SMB_MSG_HEADER_STRUCT*)smb_message_alloc(sizeof(ZOO_SMB_MSG_HEADER_STRUCT));
     if (!header)
     {
         ZOO_LOG_ERROR("zoo_smb_create_message_header: Allocation failed");
@@ -357,7 +387,7 @@ void zoo_smb_destroy_message_header(IN ZOO_SMB_MSG_HEADER_STRUCT* msg_header)
                       msg_header->msg_type,
                       msg_header->sender,
                       msg_header->topic);
-    zoo_free_to_pool(msg_header);
+    smb_message_free(msg_header);
 }
 
 /**
@@ -369,25 +399,40 @@ void zoo_smb_destroy_message_header(IN ZOO_SMB_MSG_HEADER_STRUCT* msg_header)
  * This function copies header metadata and duplicates payload storage when
  * payload_size is non-zero.
  */
-void zoo_smb_copy_message(IN const ZOO_SMB_MSG_STRUCT* from,
-                          IN ZOO_SMB_MSG_STRUCT* to)
+ZOO_BOOL zoo_smb_copy_message(IN const ZOO_SMB_MSG_STRUCT* from,
+                              IN ZOO_SMB_MSG_STRUCT* to)
 {
     if (!from || !to)
     {
         ZOO_LOG_ERROR("zoo_smb_copy_message: NULL pointer");
-        return;
+        return ZOO_FALSE;
     }
 
-    // Perform the copy (shallow copy in this case)
-    memcpy(to, from, sizeof(ZOO_SMB_MSG_STRUCT));
-    if (from->header.payload_size > 0)
+    memset(to, 0, sizeof(ZOO_SMB_MSG_STRUCT));
+    to->header = from->header;
+
+    if (from->header.payload_size == 0)
     {
-        to->payload = zoo_allocate_from_pool(from->header.payload_size);
-        if (to->payload)
-        {
-            memcpy(to->payload, from->payload, from->header.payload_size);
-        }
+        to->payload = NULL;
+        return ZOO_TRUE;
     }
+
+    if (!from->payload)
+    {
+        ZOO_LOG_ERROR("zoo_smb_copy_message: Invalid source payload, payload_size=%u", from->header.payload_size);
+        return ZOO_FALSE;
+    }
+
+    to->payload = smb_message_alloc(from->header.payload_size);
+    if (!to->payload)
+    {
+        ZOO_LOG_ERROR("zoo_smb_copy_message: Payload allocation failed, size=%u", from->header.payload_size);
+        memset(to, 0, sizeof(ZOO_SMB_MSG_STRUCT));
+        return ZOO_FALSE;
+    }
+
+    memcpy(to->payload, from->payload, from->header.payload_size);
+    return ZOO_TRUE;
 }
 
 /**

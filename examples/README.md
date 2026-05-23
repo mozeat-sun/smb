@@ -82,3 +82,27 @@ Useful flags:
 - `--topic <name>`
 - `--timeout-ms <ms>` (client only)
 - `--log-level <0-6>`
+
+## Local Runner Tool
+
+For one-command local example runs (including auto-build with examples enabled), use:
+
+```bash
+bash tools/run_local_examples.sh all
+```
+
+Supported modes:
+
+- `tcp`
+- `udp`
+- `pubsub`
+- `shm`
+- `all`
+
+Quick examples:
+
+```bash
+bash tools/run_local_examples.sh udp
+SKIP_BUILD=1 bash tools/run_local_examples.sh shm
+EXAMPLES_LOG_LEVEL=1 bash tools/run_local_examples.sh all
+```

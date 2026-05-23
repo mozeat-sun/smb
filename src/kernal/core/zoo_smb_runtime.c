@@ -69,25 +69,6 @@ static ZOO_BOOL is_valid_role(ZOO_SMB_RUNTIME_ROLE_ENUM role)
 }
 
 /**
- * @brief Check whether a domain profile value is valid.
- * @param profile Domain profile value
- * @return ZOO_TRUE when valid, otherwise ZOO_FALSE
- */
-static ZOO_BOOL is_valid_domain_profile(ZOO_DOMAIN_PROFILE_ENUM profile)
-{
-    switch (profile)
-    {
-        case ZOO_DOMAIN_PROFILE_GENERIC:
-        case ZOO_DOMAIN_PROFILE_INDUSTRIAL:
-        case ZOO_DOMAIN_PROFILE_AUTOMOTIVE:
-        case ZOO_DOMAIN_PROFILE_MILITARY:
-            return ZOO_TRUE;
-        default:
-            return ZOO_FALSE;
-    }
-}
-
-/**
  * @brief Resolve effective domain profile for runtime policy decisions.
  * @param runtime Runtime handle
  * @return ZOO_DOMAIN_PROFILE_ENUM Effective domain profile
@@ -96,7 +77,7 @@ static ZOO_DOMAIN_PROFILE_ENUM runtime_get_effective_profile(
     ZOO_SMB_RUNTIME_HANDLE runtime)
 {
     if (runtime && runtime->options.domain_profile_override_enabled &&
-        is_valid_domain_profile(runtime->options.domain_profile_override))
+        zoo_domain_profile_is_valid(runtime->options.domain_profile_override))
     {
         return runtime->options.domain_profile_override;
     }
@@ -377,7 +358,7 @@ ZOO_SMB_RUNTIME_HANDLE zoo_smb_runtime_create_ex(
             runtime->options.peer_wire_major = 1U;
         }
         if (runtime->options.domain_profile_override_enabled &&
-            !is_valid_domain_profile(runtime->options.domain_profile_override))
+            !zoo_domain_profile_is_valid(runtime->options.domain_profile_override))
         {
             runtime->options.domain_profile_override_enabled = ZOO_FALSE;
             runtime->options.domain_profile_override = ZOO_DOMAIN_PROFILE_GENERIC;

@@ -166,6 +166,38 @@ void test_domain_policy_partition_ranges(void)
     TEST_ASSERT_FALSE(zoo_domain_policy_is_partition_allowed(ZOO_DOMAIN_PROFILE_MILITARY, 40U));
 }
 
+void test_domain_policy_fail_closed_for_invalid_profile(void)
+{
+    ZOO_DOMAIN_PROFILE_ENUM invalid_profile = (ZOO_DOMAIN_PROFILE_ENUM)99;
+
+    TEST_ASSERT_FALSE(zoo_domain_profile_is_valid(invalid_profile));
+    TEST_ASSERT_EQUAL(
+        ZOO_DOMAIN_STARTUP_DECISION_REQUIRE_PROTOCOL_COMPATIBILITY,
+        zoo_domain_policy_get_startup_decision(invalid_profile));
+    TEST_ASSERT_EQUAL(
+        ZOO_DOMAIN_ASSURANCE_CLASS_SAFETY_CRITICAL,
+        zoo_domain_policy_classify_startup(invalid_profile));
+    TEST_ASSERT_EQUAL(UINT32_MAX, zoo_domain_policy_get_partition_id(invalid_profile));
+    TEST_ASSERT_FALSE(zoo_domain_policy_is_partition_allowed(invalid_profile, 0U));
+    TEST_ASSERT_TRUE(zoo_domain_policy_requires_identity(invalid_profile));
+}
+
+void test_domain_profile_mesh_helper_consistent_with_identity_policy(void)
+{
+    TEST_ASSERT_EQUAL(
+        zoo_domain_profile_uses_assurance_mesh(ZOO_DOMAIN_PROFILE_GENERIC),
+        zoo_domain_policy_requires_identity(ZOO_DOMAIN_PROFILE_GENERIC));
+    TEST_ASSERT_EQUAL(
+        zoo_domain_profile_uses_assurance_mesh(ZOO_DOMAIN_PROFILE_INDUSTRIAL),
+        zoo_domain_policy_requires_identity(ZOO_DOMAIN_PROFILE_INDUSTRIAL));
+    TEST_ASSERT_EQUAL(
+        zoo_domain_profile_uses_assurance_mesh(ZOO_DOMAIN_PROFILE_AUTOMOTIVE),
+        zoo_domain_policy_requires_identity(ZOO_DOMAIN_PROFILE_AUTOMOTIVE));
+    TEST_ASSERT_EQUAL(
+        zoo_domain_profile_uses_assurance_mesh(ZOO_DOMAIN_PROFILE_MILITARY),
+        zoo_domain_policy_requires_identity(ZOO_DOMAIN_PROFILE_MILITARY));
+}
+
 void test_assurance_admission_requires_identity_for_assurance_profiles(void)
 {
     ZOO_ASSURANCE_ADMISSION_CONTEXT_STRUCT admission = {0};
@@ -199,6 +231,8 @@ int main(void)
     RUN_TEST(test_assurance_policy_snapshot_validation);
     RUN_TEST(test_domain_policy_identity_requirement);
     RUN_TEST(test_domain_policy_partition_ranges);
+    RUN_TEST(test_domain_policy_fail_closed_for_invalid_profile);
+    RUN_TEST(test_domain_profile_mesh_helper_consistent_with_identity_policy);
     RUN_TEST(test_assurance_admission_requires_identity_for_assurance_profiles);
 
     return UNITY_END();

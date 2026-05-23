@@ -10,6 +10,12 @@
 
 #include "assurance/zoo_assurance_mesh.h"
 
+/**
+ * @brief Resolve policy snapshot fields for a given domain profile.
+ * @param profile Domain profile used to derive startup policy.
+ * @param snapshot Output policy snapshot populated on success.
+ * @return ZOO_ERROR_TYPE ZOO_SMB_OK on success, error code on failure.
+ */
 ZOO_ERROR_TYPE zoo_assurance_resolve_policy(
     ZOO_DOMAIN_PROFILE_ENUM profile,
     ZOO_ASSURANCE_POLICY_SNAPSHOT_STRUCT* snapshot)
@@ -25,6 +31,12 @@ ZOO_ERROR_TYPE zoo_assurance_resolve_policy(
     return ZOO_SMB_OK;
 }
 
+/**
+ * @brief Validate a policy snapshot against profile-derived policy constraints.
+ * @param profile Domain profile used for validation.
+ * @param snapshot Policy snapshot to validate.
+ * @return ZOO_ERROR_TYPE ZOO_SMB_OK when valid, error code otherwise.
+ */
 ZOO_ERROR_TYPE zoo_assurance_validate_policy_snapshot(
     ZOO_DOMAIN_PROFILE_ENUM profile,
     const ZOO_ASSURANCE_POLICY_SNAPSHOT_STRUCT* snapshot)
@@ -50,6 +62,11 @@ ZOO_ERROR_TYPE zoo_assurance_validate_policy_snapshot(
     return ZOO_SMB_OK;
 }
 
+/**
+ * @brief Check protocol wire compatibility between local and peer endpoints.
+ * @param context Protocol compatibility context.
+ * @return ZOO_ASSURANCE_PROTOCOL_COMPATIBILITY_ENUM Compatibility result.
+ */
 ZOO_ASSURANCE_PROTOCOL_COMPATIBILITY_ENUM zoo_assurance_check_protocol_compatibility(
     const ZOO_ASSURANCE_PROTOCOL_CONTEXT_STRUCT* context)
 {
@@ -71,6 +88,11 @@ ZOO_ASSURANCE_PROTOCOL_COMPATIBILITY_ENUM zoo_assurance_check_protocol_compatibi
     return ZOO_ASSURANCE_PROTOCOL_COMPATIBLE;
 }
 
+/**
+ * @brief Evaluate startup admission using profile policy and protocol checks.
+ * @param context Startup context for policy and compatibility evaluation.
+ * @return ZOO_ERROR_TYPE ZOO_SMB_OK when startup is allowed, error otherwise.
+ */
 ZOO_ERROR_TYPE zoo_assurance_evaluate_startup(const ZOO_ASSURANCE_STARTUP_CONTEXT_STRUCT* context)
 {
     ZOO_ASSURANCE_POLICY_SNAPSHOT_STRUCT snapshot;
@@ -103,6 +125,11 @@ ZOO_ERROR_TYPE zoo_assurance_evaluate_startup(const ZOO_ASSURANCE_STARTUP_CONTEX
     return ZOO_SMB_OK;
 }
 
+/**
+ * @brief Evaluate peer admission constraints for runtime communication.
+ * @param context Admission context containing identity and partition inputs.
+ * @return ZOO_ERROR_TYPE ZOO_SMB_OK when admission is allowed, error otherwise.
+ */
 ZOO_ERROR_TYPE zoo_assurance_evaluate_admission(
     const ZOO_ASSURANCE_ADMISSION_CONTEXT_STRUCT* context)
 {

@@ -497,6 +497,11 @@ ZOO_BOOL zoo_smb_service_is_online(const char* service_name)
     return service != NULL && service->is_online;
 }
 
+/**
+ * @brief Check whether a service is currently available in registration cache.
+ * @param service_name Service name to query.
+ * @return ZOO_BOOL ZOO_TRUE when the service exists and is online.
+ */
 ZOO_BOOL zoo_smb_service_is_available(const char* service_name)
 {
     if (!g_smb_instance || !service_name)
@@ -509,6 +514,11 @@ ZOO_BOOL zoo_smb_service_is_available(const char* service_name)
     return service != NULL && service->is_online;
 }
 
+/**
+ * @brief Register an SMB service observer callback.
+ * @param observer Observer handle to register.
+ * @return ZOO_ERROR_TYPE ZOO_SMB_OK on success, error code on failure.
+ */
 ZOO_ERROR_TYPE zoo_smb_add_service_observer(IN ZOO_SMB_SERVICE_OBSERVER_HANDLE observer)
 {
     if (!g_smb_instance || !observer)
@@ -520,6 +530,11 @@ ZOO_ERROR_TYPE zoo_smb_add_service_observer(IN ZOO_SMB_SERVICE_OBSERVER_HANDLE o
     return ZOO_SMB_OK;
 }
 
+/**
+ * @brief Unregister a previously registered SMB service observer.
+ * @param observer Observer handle to unregister.
+ * @return void
+ */
 void zoo_smb_remove_service_observer(IN ZOO_SMB_SERVICE_OBSERVER_HANDLE observer)
 {
     if (!g_smb_instance || !observer)

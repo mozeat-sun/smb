@@ -23,6 +23,10 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <errno.h>
+#include <ifaddrs.h>
+#include <arpa/inet.h>
+#include <net/if.h>
+#include <net/route.h>
 #if __has_include(<libconfig.h>)
 #include <libconfig.h>
 #else
@@ -75,8 +79,8 @@ static const ZOO_SMB_CONFIG_STRUCT ZOO_SMB_CONFIG_DEFAULT = {
         .max_thread_queue_size = 128, 
         .send_high_watermark = 96,
         .send_low_watermark = 64,
-        .ingress_high_watermark = 768,
-        .ingress_low_watermark = 512,
+        .ingress_high_watermark = 0,
+        .ingress_low_watermark = 0,
         .enable_deterministic_memory_profile = ZOO_FALSE,
         .memory_high_watermark_pct = ZOO_SMB_MEMORY_HIGH_WATERMARK_PCT_DEFAULT,
         .memory_low_watermark_pct = ZOO_SMB_MEMORY_LOW_WATERMARK_PCT_DEFAULT,
@@ -103,6 +107,224 @@ static ZOO_BOOL g_config_initialized = ZOO_FALSE;
 /* Function prototypes */
 static ZOO_BOOL zoo_smb_config_load_from_file(ZOO_SMB_CONFIG_STRUCT* config, const char* file_path);
 static ZOO_BOOL create_default_config_file(const char* file_path);
+static void safe_string_copy(char* dest, const char* src, size_t dest_size);
+static void reset_config_to_defaults(ZOO_SMB_CONFIG_STRUCT* config);
+static void load_config_sections(config_t* cfg, ZOO_SMB_CONFIG_STRUCT* config);
+static ZOO_BOOL load_effective_config(ZOO_SMB_CONFIG_STRUCT* config, const char* file_path);
+static void ensure_default_config_file_exists(void);
+
+/**
+ * @brief Check whether an IPv4 address is loopback or unspecified.
+ * @param address Address string to evaluate.
+ * @return ZOO_BOOL ZOO_TRUE when address is loopback/unspecified.
+ */
+static ZOO_BOOL is_loopback_or_unspecified_ip(const char* address)
+{
+    return address &&
+           (strcmp(address, "127.0.0.1") == 0 ||
+            strcmp(address, "0.0.0.0") == 0 ||
+            strcmp(address, "") == 0);
+}
+
+    /**
+     * @brief Read default-route interface from Linux route table.
+     * @param interface_name Output interface-name buffer.
+     * @param interface_name_size Output buffer size.
+     * @return ZOO_BOOL ZOO_TRUE when interface is detected.
+     */
+static ZOO_BOOL read_default_route_interface(char* interface_name, size_t interface_name_size)
+{
+    if (!interface_name || interface_name_size == 0)
+    {
+        return ZOO_FALSE;
+    }
+
+    FILE* route_file = fopen("/proc/net/route", "r");
+    if (!route_file)
+    {
+        return ZOO_FALSE;
+    }
+
+    char line[256];
+    while (fgets(line, sizeof(line), route_file))
+    {
+        char iface[IFNAMSIZ] = {0};
+        unsigned long destination = 0;
+        unsigned long gateway = 0;
+        unsigned int flags = 0;
+
+        if (sscanf(line, "%15s %lx %lx %X", iface, &destination, &gateway, &flags) != 4)
+        {
+            continue;
+        }
+
+        if (destination == 0 && (flags & RTF_UP) != 0)
+        {
+            safe_string_copy(interface_name, iface, interface_name_size);
+            fclose(route_file);
+            return ZOO_TRUE;
+        }
+    }
+
+    fclose(route_file);
+    return ZOO_FALSE;
+}
+
+/**
+ * @brief Find first non-loopback IPv4 address for a specific interface.
+ * @param interface_name Interface name.
+ * @param address Output IPv4 string buffer.
+ * @param address_size Output buffer size.
+ * @return ZOO_BOOL ZOO_TRUE when an IPv4 address is found.
+ */
+static ZOO_BOOL find_ipv4_for_interface(const char* interface_name, char* address, size_t address_size)
+{
+    if (!interface_name || !address || address_size == 0)
+    {
+        return ZOO_FALSE;
+    }
+
+    struct ifaddrs* ifaddr = NULL;
+    if (getifaddrs(&ifaddr) != 0)
+    {
+        return ZOO_FALSE;
+    }
+
+    ZOO_BOOL found = ZOO_FALSE;
+    for (struct ifaddrs* entry = ifaddr; entry != NULL; entry = entry->ifa_next)
+    {
+        if (!entry->ifa_addr || entry->ifa_addr->sa_family != AF_INET)
+        {
+            continue;
+        }
+
+        if (strcmp(entry->ifa_name, interface_name) != 0)
+        {
+            continue;
+        }
+
+        if ((entry->ifa_flags & IFF_LOOPBACK) != 0)
+        {
+            continue;
+        }
+
+        const struct sockaddr_in* ipv4 = (const struct sockaddr_in*)entry->ifa_addr;
+        if (!inet_ntop(AF_INET, &ipv4->sin_addr, address, (socklen_t)address_size))
+        {
+            continue;
+        }
+
+        found = ZOO_TRUE;
+        break;
+    }
+
+    freeifaddrs(ifaddr);
+    return found;
+}
+
+/**
+ * @brief Detect preferred local IPv4 address for runtime defaults.
+ * @param address Output IPv4 string buffer.
+ * @param address_size Output buffer size.
+ * @return ZOO_BOOL ZOO_TRUE when detection succeeds.
+ */
+static ZOO_BOOL detect_preferred_local_ipv4(char* address, size_t address_size)
+{
+    char interface_name[IFNAMSIZ] = {0};
+    if (read_default_route_interface(interface_name, sizeof(interface_name)) &&
+        find_ipv4_for_interface(interface_name, address, address_size))
+    {
+        return ZOO_TRUE;
+    }
+
+    struct ifaddrs* ifaddr = NULL;
+    if (getifaddrs(&ifaddr) != 0)
+    {
+        return ZOO_FALSE;
+    }
+
+    ZOO_BOOL found = ZOO_FALSE;
+    for (struct ifaddrs* entry = ifaddr; entry != NULL; entry = entry->ifa_next)
+    {
+        if (!entry->ifa_addr || entry->ifa_addr->sa_family != AF_INET)
+        {
+            continue;
+        }
+
+        if ((entry->ifa_flags & IFF_LOOPBACK) != 0)
+        {
+            continue;
+        }
+
+        const struct sockaddr_in* ipv4 = (const struct sockaddr_in*)entry->ifa_addr;
+        if (!inet_ntop(AF_INET, &ipv4->sin_addr, address, (socklen_t)address_size))
+        {
+            continue;
+        }
+
+        found = ZOO_TRUE;
+        break;
+    }
+
+    freeifaddrs(ifaddr);
+    return found;
+}
+
+/**
+ * @brief Apply runtime network overrides and auto-detected defaults.
+ * @param config Configuration object to update.
+ * @return void
+ */
+static void apply_runtime_network_defaults(ZOO_SMB_CONFIG_STRUCT* config)
+{
+    if (!config)
+    {
+        return;
+    }
+
+    const char* local_address_override = getenv("ZOO_SMB_LOCAL_ADDRESS");
+    const char* multicast_interface_override = getenv("ZOO_SMB_MULTICAST_INTERFACE");
+
+    if (local_address_override && local_address_override[0] != '\0')
+    {
+        safe_string_copy(config->local_machine.address,
+                         local_address_override,
+                         sizeof(config->local_machine.address));
+    }
+
+    if (multicast_interface_override && multicast_interface_override[0] != '\0')
+    {
+        safe_string_copy(config->multicast.interface,
+                         multicast_interface_override,
+                         sizeof(config->multicast.interface));
+    }
+
+    if (!is_loopback_or_unspecified_ip(config->local_machine.address) &&
+        !is_loopback_or_unspecified_ip(config->multicast.interface))
+    {
+        return;
+    }
+
+    char detected_ipv4[64] = {0};
+    if (!detect_preferred_local_ipv4(detected_ipv4, sizeof(detected_ipv4)))
+    {
+        return;
+    }
+
+    if (is_loopback_or_unspecified_ip(config->local_machine.address))
+    {
+        safe_string_copy(config->local_machine.address,
+                         detected_ipv4,
+                         sizeof(config->local_machine.address));
+    }
+
+    if (is_loopback_or_unspecified_ip(config->multicast.interface))
+    {
+        safe_string_copy(config->multicast.interface,
+                         detected_ipv4,
+                         sizeof(config->multicast.interface));
+    }
+}
 
 /**
  * @brief Check if a file exists
@@ -199,6 +421,21 @@ static ZOO_BOOL get_config_bool(config_setting_t* setting, const char* name, ZOO
     return (config_setting_lookup_bool(setting, name, &value) == CONFIG_TRUE) ? (value != 0) : default_value;
 }
 
+static void load_string_setting(config_setting_t* section,
+                                const char* name,
+                                char* destination,
+                                size_t destination_size)
+{
+    if (!section || !destination || destination_size == 0)
+    {
+        return;
+    }
+
+    safe_string_copy(destination,
+                     get_config_string(section, name, destination),
+                     destination_size);
+}
+
 /**
  * @brief Copy string with guaranteed null termination
  * @param dest Destination buffer
@@ -210,6 +447,16 @@ static void safe_string_copy(char* dest, const char* src, size_t dest_size)
 {
     strncpy(dest, src, dest_size - 1);
     dest[dest_size - 1] = '\0';
+}
+
+static void reset_config_to_defaults(ZOO_SMB_CONFIG_STRUCT* config)
+{
+    if (!config)
+    {
+        return;
+    }
+
+    memcpy(config, &ZOO_SMB_CONFIG_DEFAULT, sizeof(ZOO_SMB_CONFIG_STRUCT));
 }
 
 /**
@@ -224,16 +471,15 @@ static void load_local_machine_config(config_t* cfg, ZOO_SMB_CONFIG_STRUCT* conf
     if (!section)
         return;
 
-    const char* addr = get_config_string(section, "address", config->local_machine.address);
-    safe_string_copy(config->local_machine.address, addr, sizeof(config->local_machine.address));
+    load_string_setting(section,
+                        "address",
+                        config->local_machine.address,
+                        sizeof(config->local_machine.address));
 
     config->local_machine.port_min = get_config_int(section, "port_min", config->local_machine.port_min);
     config->local_machine.port_max = get_config_int(section, "port_max", config->local_machine.port_max);
 
-    printf("[DEBUG] Local machine: %s:%d-%d\n",
-           config->local_machine.address,
-           config->local_machine.port_min,
-           config->local_machine.port_max);
+    // printf removed
 }
 
 /**
@@ -248,14 +494,16 @@ static void load_broadcast_config(config_t* cfg, ZOO_SMB_CONFIG_STRUCT* config)
     if (!section)
         return;
 
-    const char* addr = get_config_string(section, "address", config->broadcast.address);
-    safe_string_copy(config->broadcast.address, addr, sizeof(config->broadcast.address));
+    load_string_setting(section,
+                        "address",
+                        config->broadcast.address,
+                        sizeof(config->broadcast.address));
 
     config->broadcast.port = get_config_int(section, "port", config->broadcast.port);
     config->broadcast.interval_ms = get_config_int(section, "interval_ms", config->broadcast.interval_ms);
     config->broadcast.max_check_timeout_ms = get_config_int(section, "max_check_timeout_ms", config->broadcast.max_check_timeout_ms);
 
-    printf("[DEBUG] Broadcast: %s:%d\n", config->broadcast.address, config->broadcast.port);
+    // printf removed
 }
 
 /**
@@ -270,20 +518,20 @@ static void load_multicast_config(config_t* cfg, ZOO_SMB_CONFIG_STRUCT* config)
     if (!section)
         return;
 
-    const char* addr = get_config_string(section, "address", config->multicast.address);
-    safe_string_copy(config->multicast.address, addr, sizeof(config->multicast.address));
-
-    const char* interface = get_config_string(section, "interface", config->multicast.interface);
-    safe_string_copy(config->multicast.interface, interface, sizeof(config->multicast.interface));
+    load_string_setting(section,
+                        "address",
+                        config->multicast.address,
+                        sizeof(config->multicast.address));
+    load_string_setting(section,
+                        "interface",
+                        config->multicast.interface,
+                        sizeof(config->multicast.interface));
 
     config->multicast.port = get_config_int(section, "port", config->multicast.port);
     config->multicast.ttl = get_config_int(section, "ttl", config->multicast.ttl);
     config->multicast.loopback = get_config_bool(section, "loopback", config->multicast.loopback);
 
-    printf("[DEBUG] Multicast: %s:%d (TTL:%d)\n",
-           config->multicast.address,
-           config->multicast.port,
-           config->multicast.ttl);
+    // printf removed
 }
 
 /**
@@ -321,9 +569,7 @@ static void load_sys_config(config_t* cfg, ZOO_SMB_CONFIG_STRUCT* config)
     config->sys.default_transport_type = get_config_int(section, "default_transport_type", config->sys.default_transport_type);
     config->sys.transport_auto_select = get_config_int(section, "transport_auto_select", config->sys.transport_auto_select);
 
-    printf("[DEBUG] System: threads=%d, memory=%dKB\n",
-           config->sys.default_thread_numbers,
-           config->sys.mem_pool_size / 1024);
+    // printf removed
 }
 
 /**
@@ -338,18 +584,17 @@ static void load_log_config(config_t* cfg, ZOO_SMB_CONFIG_STRUCT* config)
     if (!section)
         return;
 
-    const char* file_path_str = get_config_string(section, "file_path", config->log.file_path);
-    safe_string_copy(config->log.file_path, file_path_str, sizeof(config->log.file_path));
+    load_string_setting(section,
+                        "file_path",
+                        config->log.file_path,
+                        sizeof(config->log.file_path));
 
     config->log.level = get_config_int(section, "level", config->log.level);
     config->log.target = get_config_int(section, "target", config->log.target);
     config->log.max_file_size = get_config_int(section, "max_file_size", config->log.max_file_size);
     config->log.max_backup_files = get_config_int(section, "max_backup_files", config->log.max_backup_files);
 
-    printf("[DEBUG] Log: %s (level:%d, target:%d)\n",
-           config->log.file_path,
-           config->log.level,
-           config->log.target);
+    // printf removed
 }
 
 /**
@@ -366,22 +611,48 @@ static void load_bridge_config(config_t* cfg, ZOO_SMB_CONFIG_STRUCT* config)
 
     config->bridge.enable_bridge = get_config_bool(section, "enable_bridge", config->bridge.enable_bridge);
 
-    const char* from_service = get_config_string(section, "from_service", config->bridge.from_service);
-    safe_string_copy(config->bridge.from_service, from_service, sizeof(config->bridge.from_service));
-
-    const char* to_service = get_config_string(section, "to_service", config->bridge.to_service);
-    safe_string_copy(config->bridge.to_service, to_service, sizeof(config->bridge.to_service));
-
-    const char* from_topic = get_config_string(section, "from_topic", config->bridge.from_topic);
-    safe_string_copy(config->bridge.from_topic, from_topic, sizeof(config->bridge.from_topic));
-
-    const char* to_topic = get_config_string(section, "to_topic", config->bridge.to_topic);
-    safe_string_copy(config->bridge.to_topic, to_topic, sizeof(config->bridge.to_topic));
+    load_string_setting(section,
+                        "from_service",
+                        config->bridge.from_service,
+                        sizeof(config->bridge.from_service));
+    load_string_setting(section,
+                        "to_service",
+                        config->bridge.to_service,
+                        sizeof(config->bridge.to_service));
+    load_string_setting(section,
+                        "from_topic",
+                        config->bridge.from_topic,
+                        sizeof(config->bridge.from_topic));
+    load_string_setting(section,
+                        "to_topic",
+                        config->bridge.to_topic,
+                        sizeof(config->bridge.to_topic));
 
     config->bridge.from_transport_type = get_config_int(section, "from_transport_type", config->bridge.from_transport_type);
     config->bridge.to_transport_type = get_config_int(section, "to_transport_type", config->bridge.to_transport_type);
 
-    printf("[DEBUG] Bridge: %s\n", config->bridge.enable_bridge ? "enabled" : "disabled");
+    // printf removed
+}
+
+/**
+ * @brief Load all supported configuration sections into target config.
+ * @param cfg Parsed libconfig object.
+ * @param config Target configuration structure.
+ * @return void
+ */
+static void load_config_sections(config_t* cfg, ZOO_SMB_CONFIG_STRUCT* config)
+{
+    if (!cfg || !config)
+    {
+        return;
+    }
+
+    load_local_machine_config(cfg, config);
+    load_broadcast_config(cfg, config);
+    load_multicast_config(cfg, config);
+    load_sys_config(cfg, config);
+    load_log_config(cfg, config);
+    load_bridge_config(cfg, config);
 }
 
 /**
@@ -551,35 +822,54 @@ static ZOO_BOOL zoo_smb_config_load_from_file(ZOO_SMB_CONFIG_STRUCT* config, con
     if (!config || !file_path)
         return ZOO_FALSE;
 
-    // Initialize with defaults first
-    memcpy(config, &ZOO_SMB_CONFIG_DEFAULT, sizeof(ZOO_SMB_CONFIG_STRUCT));
+    reset_config_to_defaults(config);
 
     config_t cfg;
     config_init(&cfg);
 
     if (config_read_file(&cfg, file_path) != CONFIG_TRUE)
     {
-        printf("[ERROR] Failed to read config file %s: %s at line %d\n",
-               file_path,
-               config_error_text(&cfg),
-               config_error_line(&cfg));
+        // printf removed
         config_destroy(&cfg);
         return ZOO_FALSE;
     }
 
-    printf("[DEBUG] Loading configuration from file: %s\n", file_path);
+    // printf removed
 
-    // Load all configuration sections atomically
-    load_local_machine_config(&cfg, config);
-    load_broadcast_config(&cfg, config);
-    load_multicast_config(&cfg, config);
-    load_sys_config(&cfg, config);
-    load_log_config(&cfg, config);
-    load_bridge_config(&cfg, config);
+    load_config_sections(&cfg, config);
 
     config_destroy(&cfg);
-    printf("[INFO] Configuration loaded successfully from: %s\n", file_path);
+    // printf removed
     return ZOO_TRUE;
+}
+
+/**
+ * @brief Load file configuration and apply runtime network normalization.
+ * @param config Target configuration structure.
+ * @param file_path Configuration file path.
+ * @return ZOO_BOOL ZOO_TRUE on success, ZOO_FALSE on failure.
+ */
+static ZOO_BOOL load_effective_config(ZOO_SMB_CONFIG_STRUCT* config, const char* file_path)
+{
+    if (!zoo_smb_config_load_from_file(config, file_path))
+    {
+        return ZOO_FALSE;
+    }
+
+    apply_runtime_network_defaults(config);
+    return ZOO_TRUE;
+}
+
+/**
+ * @brief Ensure the default configuration file exists on disk.
+ * @return void
+ */
+static void ensure_default_config_file_exists(void)
+{
+    if (!file_exists(SMB_CONFIG_FILE_PATH))
+    {
+        create_default_config_file(SMB_CONFIG_FILE_PATH);
+    }
 }
 
 /**
@@ -611,11 +901,11 @@ static ZOO_BOOL create_default_config_file(const char* file_path)
     ZOO_BOOL success = (config_write_file(&cfg, file_path) == CONFIG_TRUE);
     if (!success)
     {
-        printf("[ERROR] Failed to write default config file: %s\n", file_path);
+        // printf removed
     }
     else
     {
-        printf("[INFO] Created default configuration file: %s\n", file_path);
+        // printf removed
     }
 
     config_destroy(&cfg);
@@ -632,9 +922,7 @@ static ZOO_ERROR_TYPE validate_config(void)
     // Port range validation
     if (g_smb_config.local_machine.port_min >= g_smb_config.local_machine.port_max)
     {
-        printf("[ERROR] Invalid port range: min=%d, max=%d\n",
-               g_smb_config.local_machine.port_min,
-               g_smb_config.local_machine.port_max);
+        // printf removed
         return ZOO_SMB_ERROR_INVALID_PARAM;
     }
 
@@ -830,20 +1118,11 @@ const ZOO_SMB_CONFIG_STRUCT* zoo_smb_config_init(void)
         return &g_smb_config;
     }
 
-    printf("[DEBUG] Starting SMB configuration initialization\n");
+    // printf removed
 
-    // Load defaults
-    memcpy(&g_smb_config, &ZOO_SMB_CONFIG_DEFAULT, sizeof(ZOO_SMB_CONFIG_STRUCT));
-
-    // Handle config file
-    if (!file_exists(SMB_CONFIG_FILE_PATH))
-    {
-        printf("[INFO] Creating default configuration file: %s\n", SMB_CONFIG_FILE_PATH);
-        create_default_config_file(SMB_CONFIG_FILE_PATH);
-    }
-
-    // Load from file
-    zoo_smb_config_load_from_file(&g_smb_config, SMB_CONFIG_FILE_PATH);
+    reset_config_to_defaults(&g_smb_config);
+    ensure_default_config_file_exists();
+    load_effective_config(&g_smb_config, SMB_CONFIG_FILE_PATH);
 
     // Initialize logging and validate
     initialize_logging();
@@ -872,6 +1151,10 @@ const ZOO_SMB_CONFIG_STRUCT* zoo_smb_get_config(void)
     return &g_smb_config;
 }
 
+/**
+ * @brief Read current configuration pointer without forcing initialization.
+ * @return const ZOO_SMB_CONFIG_STRUCT* Current config pointer, or NULL if not initialized.
+ */
 const ZOO_SMB_CONFIG_STRUCT* zoo_smb_config_peek(void)
 {
     return g_config_initialized ? &g_smb_config : NULL;
@@ -904,7 +1187,7 @@ ZOO_ERROR_TYPE zoo_smb_config_reload(const char* file_path)
     const char* config_file = file_path ? file_path : SMB_CONFIG_FILE_PATH;
 
     ZOO_SMB_CONFIG_STRUCT temp_config;
-    if (!zoo_smb_config_load_from_file(&temp_config, config_file))
+    if (!load_effective_config(&temp_config, config_file))
     {
         ZOO_LOG_ERROR("Failed to reload configuration from file: %s", config_file);
         return ZOO_SMB_ERROR_CONFIG_FILE_READ_FAILED;

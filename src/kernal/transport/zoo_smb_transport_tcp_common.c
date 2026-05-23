@@ -451,7 +451,7 @@ void tcp_process_received_message(ZOO_SMB_TCP_TRANSPORT_COMMON* tcp, int fd, con
 void tcp_handle_incoming_data(ZOO_SMB_TCP_TRANSPORT_COMMON* tcp, int fd, TCP_CLIENT_INFO_STRUCT* client_info)
 {
     ZOO_LOG_TRACE("Handling incoming data: fd=%d", fd);
-
+    // printf removed
     // Step 1: Allocate memory for header only
     uint8_t* header_buffer = (uint8_t*)zoo_allocate_from_pool(sizeof(ZOO_SMB_MSG_HEADER_STRUCT));
     if (!header_buffer)

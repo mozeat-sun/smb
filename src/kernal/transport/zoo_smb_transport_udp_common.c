@@ -22,6 +22,7 @@
 #include <arpa/inet.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <stdio.h>
 
 /**
  * @brief Notify all registered data observers about received message
@@ -39,6 +40,9 @@ void udp_notify_data_observers(ZOO_SMB_UDP_TRANSPORT_COMMON* udp, const ZOO_SMB_
     }
 
     size_t observer_count = zoo_list_size(udp->data_observers);
+    printf("[udp-printf] pid=%ld notify observers=%zu msg_type=%u payload_size=%u\n", (long)getpid(), observer_count, msg->header.msg_type, msg->header.payload_size);
+    fflush(stdout);
+    ZOO_LOG_DEBUG("[udp-debug] Notifying %zu observers for msg_type=%u, payload_size=%u", observer_count, msg->header.msg_type, msg->header.payload_size);
     TRANSPORT_DATA_OBSERVER_STRUCT** snapshot = NULL;
     if (observer_count > 0)
     {
@@ -53,6 +57,11 @@ void udp_notify_data_observers(ZOO_SMB_UDP_TRANSPORT_COMMON* udp, const ZOO_SMB_
     for (size_t i = 0; i < observer_count; i++)
     {
         TRANSPORT_DATA_OBSERVER_STRUCT* observer = (TRANSPORT_DATA_OBSERVER_STRUCT*)zoo_list_at(udp->data_observers, i);
+        if (observer && observer->handler) {
+            printf("[udp-printf] pid=%ld observer[%zu] handler=%p user_data=%p msg_type=%u payload_size=%u\n", (long)getpid(), i, (void*)observer->handler, observer->user_data, msg->header.msg_type, msg->header.payload_size);
+            fflush(stdout);
+            ZOO_LOG_DEBUG("[udp-debug] Calling observer %zu handler=%p user_data=%p for msg_type=%u, payload_size=%u", i, (void*)observer->handler, observer->user_data, msg->header.msg_type, msg->header.payload_size);
+        }
         if (snapshot)
         {
             snapshot[i] = observer;
@@ -75,6 +84,9 @@ void udp_notify_data_observers(ZOO_SMB_UDP_TRANSPORT_COMMON* udp, const ZOO_SMB_
             TRANSPORT_DATA_OBSERVER_STRUCT* observer = snapshot[i];
             if (observer && observer->handler)
             {
+                printf("[udp-printf] pid=%ld snapshot observer[%zu] handler=%p user_data=%p msg_type=%u payload_size=%u\n", (long)getpid(), i, (void*)observer->handler, observer->user_data, msg->header.msg_type, msg->header.payload_size);
+                fflush(stdout);
+                ZOO_LOG_DEBUG("[udp-debug] (snapshot) Calling observer %zu handler=%p user_data=%p for msg_type=%u, payload_size=%u", i, (void*)observer->handler, observer->user_data, msg->header.msg_type, msg->header.payload_size);
                 observer->handler(observer->user_data, msg);
             }
         }
@@ -142,6 +154,10 @@ void handle_incoming_data(ZOO_SMB_UDP_TRANSPORT_COMMON* udp, uint8_t* buffer, si
         return;
     }
 
+
+    ZOO_LOG_DEBUG("[udp-debug] handle_incoming_data: bytes_received=%zu, first4=0x%02x%02x%02x%02x", bytes_received, buffer[0], buffer[1], buffer[2], buffer[3]);
+    printf("[udp-printf] pid=%ld incoming bytes=%zu first4=0x%02x%02x%02x%02x\n", (long)getpid(), bytes_received, buffer[0], buffer[1], buffer[2], buffer[3]);
+    fflush(stdout);
     ZOO_SMB_MSG_STRUCT* msg_out = zoo_smb_default_message();
     if (!msg_out)
     {
@@ -149,7 +165,11 @@ void handle_incoming_data(ZOO_SMB_UDP_TRANSPORT_COMMON* udp, uint8_t* buffer, si
         return;
     }
 
-    if (ZOO_SMB_OK != zoo_smb_protocol_deserialize(buffer, bytes_received, msg_out, sizeof(ZOO_SMB_MSG_STRUCT)))
+    ZOO_ERROR_TYPE deser_result = zoo_smb_protocol_deserialize(buffer, bytes_received, msg_out, sizeof(ZOO_SMB_MSG_STRUCT));
+    printf("[udp-printf] pid=%ld deserialize result=%d msg_type=%u payload_size=%u\n", (long)getpid(), deser_result, msg_out->header.msg_type, msg_out->header.payload_size);
+    fflush(stdout);
+    ZOO_LOG_DEBUG("[udp-debug] protocol_deserialize result=%d, msg_type=%u, payload_size=%u", deser_result, msg_out->header.msg_type, msg_out->header.payload_size);
+    if (deser_result != ZOO_SMB_OK)
     {
         ZOO_LOG_ERROR("Failed to deserialize UDP message from %s:%d",
                           inet_ntoa(sender_addr->sin_addr),
@@ -158,12 +178,13 @@ void handle_incoming_data(ZOO_SMB_UDP_TRANSPORT_COMMON* udp, uint8_t* buffer, si
         return;
     }
 
-    ZOO_LOG_DEBUG("Received UDP message from %s:%d, sender:%s, size: %zu bytes,udp->name:%s",
+    ZOO_LOG_DEBUG("Received UDP message from %s:%d, sender:%s, size: %zu bytes,udp->name:%s, payload_size=%u",
                       inet_ntoa(sender_addr->sin_addr),
                       ntohs(sender_addr->sin_port),
                       msg_out->header.sender,
                       bytes_received,
-                      udp->name);
+                      udp->name,
+                      msg_out->header.payload_size);
 
     udp_register_client(udp, sender_addr, &msg_out->header);
     udp_process_received_message(udp, msg_out);
@@ -242,7 +263,7 @@ ZOO_ERROR_TYPE udp_common_send(ZOO_SMB_UDP_TRANSPORT_COMMON* udp, const ZOO_SMB_
 /**
  * @brief Send message via UDP multicast
  * @details Sends a message to a multicast group using the specified multicast address.
- *          This function sets up the multicast address and sends the message to all
+        // printf removed
  *          members of the multicast group.
  * @param[in] udp Pointer to UDP transport common structure
  * @param[in] msg Message structure to send
@@ -261,6 +282,7 @@ ZOO_ERROR_TYPE udp_send_multicast(ZOO_SMB_UDP_TRANSPORT_COMMON* udp,
     }
 
     // Validate multicast IP range (224.0.0.0 to 239.255.255.255)
+                // printf removed
     uint32_t ip_addr = ntohl(multicast_addr->sin_addr.s_addr);
     if ((ip_addr < 0xE0000000) || (ip_addr > 0xEFFFFFFF))
     {
@@ -287,6 +309,7 @@ ZOO_ERROR_TYPE udp_send_multicast(ZOO_SMB_UDP_TRANSPORT_COMMON* udp,
                           zoo_smb_get_error_string(result));
     }
 
+                    // printf removed
     return result;
 }
 

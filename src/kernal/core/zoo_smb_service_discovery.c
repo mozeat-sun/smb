@@ -22,7 +22,6 @@
 #include <string.h>
 #include <time.h>
 #include <sys/select.h>
-#include <unistd.h>
 #include <stdatomic.h>
 
 #define DISCOVERY_TASK_SUBMIT_MAX_RETRIES 100

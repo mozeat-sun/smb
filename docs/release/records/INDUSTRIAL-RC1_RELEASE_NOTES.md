@@ -5,7 +5,7 @@ Industrial domain candidate release focused on domain and kernal assurance harde
 ## Release metadata
 
 - Version: INDUSTRIAL-RC1
-- Commit: ea4d810e7a7807f588ba17dc4f74dc6623dc0aaf
+- Commit: a3fa41191b26e327630cc4002db63e61228b059a
 - Date: 2026-04-25
 - Release owner: zoo-release-board
 
@@ -26,7 +26,7 @@ Industrial domain candidate release focused on domain and kernal assurance harde
 
 - Internal candidate readiness: Ready for internal Industrial RC validation scope.
 - External release readiness: Not ready.
-- Blocking conditions: Candidate tag publication pending, approvals pending, full CI release-gate artifact archive pending, and working tree not clean during review (`241` local changes).
+- Blocking conditions: approvals pending and full CI release-gate artifact archive pending.
 
 ## Migration guidance
 
@@ -41,3 +41,5 @@ Industrial domain candidate release focused on domain and kernal assurance harde
 - Security or traceability artifacts: artifacts/quality/vulnerability_sla_summary.json, artifacts/quality/fuzz_summary.json, artifacts/quality/traceability_gate_summary.json
 - Industrial profile validation run: build-industrial with `ZOO_DOMAIN_PROFILE=industrial`, tests `test_zoo_assurance_domain_unit` and `test_zoo_smb_runtime_assurance_unit` passed.
 - Review evidence refresh (2026-04-25T04:00:59Z): configure/build succeeded, focused industrial assurance tests passed (`2/2`), protocol compatibility matrix generated, traceability gate passed, vulnerability SLA gate passed.
+- Release candidate tag publication (2026-04-25T04:07:32Z): `INDUSTRIAL-RC1` published and resolves to commit `a3fa41191b26e327630cc4002db63e61228b059a`.
+- Local quality job refresh (2026-04-25T04:16:01Z): fuzz gate passed, benchmark artifacts regenerated, and short soak evidence generated (`failures=0`).

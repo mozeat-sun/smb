@@ -20,26 +20,124 @@ if [[ ! -x "${BENCHMARK_BIN}" ]]; then
 fi
 
 export LD_LIBRARY_PATH="$PWD/stage/lib:$PWD/${BUILD_DIR}/hidden_shared_libs:${LD_LIBRARY_PATH:-}"
+BENCHMARK_LOG="${ARTIFACT_DIR}/benchmark.log"
+exec > >(tee "${BENCHMARK_LOG}") 2>&1
 
-{
-  echo "Benchmark execution path: isolated modes 1, 2, 5, and 6"
-  echo "Date: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-  echo
-  echo "[mode 1]"
-  "${BENCHMARK_BIN}" 1 2>&1 | grep '\[bench' || true
-  sleep 6
-  echo
-  echo "[mode 2]"
-  "${BENCHMARK_BIN}" 2 2>&1 | grep '\[bench' || true
-  sleep 6
-  echo
-  echo "[mode 5]"
-  "${BENCHMARK_BIN}" 5 2>&1 | grep '\[bench' || true
-  sleep 6
-  echo
-  echo "[mode 6]"
-  "${BENCHMARK_BIN}" 6 2>&1 | grep '\[bench' || true
-} | tee "${ARTIFACT_DIR}/benchmark.log"
+run_isolated_bench2_payload() {
+  local payload_size="$1"
+  local rounds="${BENCH2_ROUNDS:-5000}"
+  local publish_delay_us="${BENCH2_PUBLISH_DELAY_US:-1000}"
+  local run_id
+  local subscriber_name
+  local publisher_name
+  local topic_name
+  local subscriber_log
+  local publisher_log
+  local subscriber_pid
+  local summary_line
+
+  run_id="$(date +%s)${payload_size}"
+  subscriber_name="b2s_${run_id}"
+  publisher_name="b2p_${run_id}"
+  topic_name="b2/${run_id}"
+  subscriber_log="${ARTIFACT_DIR}/bench2_payload_${payload_size}_subscriber.log"
+  publisher_log="${ARTIFACT_DIR}/bench2_payload_${payload_size}_publisher.log"
+  rm -f "${subscriber_log}" "${publisher_log}"
+
+  "${BENCHMARK_BIN}" bench6-subscriber \
+    "${subscriber_name}" \
+    "${publisher_name}" \
+    "${topic_name}" \
+    "${rounds}" >"${subscriber_log}" 2>&1 &
+  subscriber_pid=$!
+
+  sleep 2
+
+  if ! "${BENCHMARK_BIN}" bench6-publisher \
+    "${rounds}" \
+    "${publisher_name}" \
+    "${publisher_name}" \
+    "${topic_name}" \
+    "${payload_size}" \
+    "${publish_delay_us}" >"${publisher_log}" 2>&1; then
+    echo "[bench2] payload=${payload_size}B success=0/${rounds} throughput=0 msg/s"
+    echo "[bench2-latency] no successful samples"
+    if [[ -n "${subscriber_pid:-}" ]] && kill -0 "${subscriber_pid}" 2>/dev/null; then
+      kill "${subscriber_pid}" 2>/dev/null || true
+      wait "${subscriber_pid}" 2>/dev/null || true
+    fi
+    rm -f "${subscriber_log}" "${publisher_log}"
+    return 0
+  fi
+
+  wait "${subscriber_pid}" || true
+  summary_line="$(grep '\[bench6-subscriber\]' "${subscriber_log}" | tail -n 1 || true)"
+
+  if [[ -z "${summary_line}" ]]; then
+    echo "[bench2] payload=${payload_size}B success=0/${rounds} throughput=0 msg/s"
+    echo "[bench2-latency] no successful samples"
+    rm -f "${subscriber_log}" "${publisher_log}"
+    return 0
+  fi
+
+  python3 - "${payload_size}" "${rounds}" "${summary_line}" <<'PY'
+import re
+import sys
+
+payload_size = sys.argv[1]
+rounds = sys.argv[2]
+summary = sys.argv[3]
+match = re.search(
+    r"received=(\d+)\s+loss=(\d+)\s+success=(\d+)\s+throughput=([0-9]+(?:\.[0-9]+)?)\s+msg/s\s+avg=([0-9]+(?:\.[0-9]+)?)\s+us\s+p50=([0-9]+(?:\.[0-9]+)?)\s+us\s+p95=([0-9]+(?:\.[0-9]+)?)\s+us\s+p99=([0-9]+(?:\.[0-9]+)?)\s+us\s+min=([0-9]+(?:\.[0-9]+)?)\s+us\s+max=([0-9]+(?:\.[0-9]+)?)\s+us",
+    summary,
+)
+if not match:
+    print(f"[bench2] payload={payload_size}B success=0/{rounds} throughput=0 msg/s")
+    print("[bench2-latency] no successful samples")
+    raise SystemExit(0)
+
+received = match.group(1)
+throughput = match.group(4)
+avg_us = match.group(5)
+p50_us = match.group(6)
+p95_us = match.group(7)
+p99_us = match.group(8)
+min_us = match.group(9)
+max_us = match.group(10)
+
+print(f"[bench2] payload={payload_size}B success={received}/{rounds} throughput={throughput} msg/s")
+print(
+    f"[bench2-latency] success={received} throughput={throughput} msg/s avg={avg_us} us "
+    f"p50={p50_us} us p95={p95_us} us p99={p99_us} us min={min_us} us max={max_us} us"
+)
+PY
+
+  rm -f "${subscriber_log}" "${publisher_log}"
+}
+
+echo "Benchmark execution path: isolated modes 1, 2, 5, and 6"
+echo "Date: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+echo
+echo "[mode 2]"
+run_isolated_bench2_payload 64
+sleep 2
+run_isolated_bench2_payload 256
+sleep 2
+run_isolated_bench2_payload 1024
+sleep 2
+run_isolated_bench2_payload 4096
+sleep 6
+echo
+echo "[mode 1]"
+"${BENCHMARK_BIN}" 1 2>&1 | grep '\[bench' || true
+sleep 6
+echo
+echo "[mode 5]"
+"${BENCHMARK_BIN}" 5 2>&1 | grep '\[bench' || true
+sleep 6
+echo
+echo "[mode 6]"
+"${BENCHMARK_BIN}" 6 2>&1 | grep '\[bench' || true
 
 python3 - "${ARTIFACT_DIR}/benchmark.log" > "${ARTIFACT_DIR}/benchmark_metrics.json" <<'PY'
 import json
@@ -70,7 +168,10 @@ try:
   if bench1:
     metrics["throughput_ops"] = float(bench1.group(1))
 
-  for payload_size, throughput in re.findall(r"\[bench2\]\s+payload=([0-9]+)B\s+success=[0-9]+/[0-9]+\s+throughput=([0-9]+(?:\.[0-9]+)?)\s+msg/s", content):
+
+  # Match all bench2 throughput lines: attempted/received/loss, window_ms, or success
+  for m in re.finditer(r"\[bench2\]\s+payload=([0-9]+)B.*?throughput=([0-9]+(?:\.[0-9]+)?)\s+msg/s", content):
+    payload_size, throughput = m.group(1), m.group(2)
     metrics["message_size_throughput_ops"][payload_size] = float(throughput)
 
   bench5 = re.search(

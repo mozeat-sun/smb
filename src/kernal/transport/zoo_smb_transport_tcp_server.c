@@ -22,6 +22,14 @@
 #include "zoo_smb_transport_tcp_server.h"
 #include "zoo_smb_error.h"
 #include "zoo_memory_pool.h"
+
+/**
+ * @brief Register message callback for TCP server transport.
+ * @param server TCP server transport instance.
+ * @param callback Message callback function.
+ * @param user_data User context passed to callback.
+ * @return void
+ */
 void tcp_server_register_message_callback(TCP_SERVER_TRANSPORT_STRUCT *server, tcp_server_message_callback_t callback, void *user_data)
 {
     if (!server)
@@ -30,6 +38,11 @@ void tcp_server_register_message_callback(TCP_SERVER_TRANSPORT_STRUCT *server, t
     server->message_callback_user_data = user_data;
 }
 
+/**
+ * @brief Initialize TCP server transport implementation.
+ * @param transport Generic transport wrapper with configuration.
+ * @return ZOO_ERROR_TYPE ZOO_SMB_OK on success, error code otherwise.
+ */
 ZOO_ERROR_TYPE tcp_server_init(const ZOO_SMB_TRANSPORT_STRUCT *transport)
 {
     if (!transport || !transport->config)
@@ -66,7 +79,11 @@ ZOO_ERROR_TYPE tcp_server_init(const ZOO_SMB_TRANSPORT_STRUCT *transport)
     return ZOO_SMB_OK;
 }
 
-// Destroy TCP server transport and release resources.
+/**
+ * @brief Destroy TCP server transport and release owned resources.
+ * @param impl TCP server implementation pointer.
+ * @return ZOO_ERROR_TYPE ZOO_SMB_OK on success, error code otherwise.
+ */
 ZOO_ERROR_TYPE tcp_server_destroy(void *impl)
 {
     if (!impl)
@@ -82,7 +99,11 @@ ZOO_ERROR_TYPE tcp_server_destroy(void *impl)
     return ZOO_SMB_OK;
 }
 
-// Start TCP server transport.
+/**
+ * @brief Start TCP server transport and begin listening.
+ * @param impl TCP server implementation pointer.
+ * @return ZOO_ERROR_TYPE ZOO_SMB_OK on success, error code otherwise.
+ */
 ZOO_ERROR_TYPE tcp_server_start(void *impl)
 {
     if (!impl)
@@ -121,7 +142,11 @@ ZOO_ERROR_TYPE tcp_server_start(void *impl)
     return ZOO_SMB_OK;
 }
 
-// Stop TCP server transport.
+/**
+ * @brief Stop TCP server transport and close all active sockets.
+ * @param impl TCP server implementation pointer.
+ * @return ZOO_ERROR_TYPE ZOO_SMB_OK on success, error code otherwise.
+ */
 ZOO_ERROR_TYPE tcp_server_stop(void *impl)
 {
     if (!impl)
@@ -151,7 +176,13 @@ ZOO_ERROR_TYPE tcp_server_stop(void *impl)
     return ZOO_SMB_OK;
 }
 
-// Send a message through TCP server transport (not supported).
+/**
+ * @brief Send message through TCP server transport.
+ * @param impl Transport implementation pointer.
+ * @param msg Message to send.
+ * @param receiver Optional receiver identifier; NULL means broadcast.
+ * @return ZOO_ERROR_TYPE ZOO_SMB_OK on success, error code otherwise.
+ */
 ZOO_ERROR_TYPE tcp_server_send(void *impl, const ZOO_SMB_MSG_STRUCT *msg, const char *receiver)
 {
     if (!impl || !msg)
@@ -283,7 +314,13 @@ ZOO_ERROR_TYPE tcp_server_accept_client(TCP_SERVER_TRANSPORT_STRUCT *server)
     return ZOO_SMB_OK;
 }
 
-// Add a client to the TCP server (not supported).
+/**
+ * @brief Add accepted client metadata to TCP server client list.
+ * @param server TCP server instance.
+ * @param client_fd Accepted client socket descriptor.
+ * @param client_addr Accepted client address.
+ * @return ZOO_ERROR_TYPE ZOO_SMB_OK on success, error code otherwise.
+ */
 ZOO_ERROR_TYPE tcp_server_add_client(TCP_SERVER_TRANSPORT_STRUCT *server, int client_fd, struct sockaddr_in *client_addr)
 {
     if (!server || !client_addr)
@@ -303,7 +340,12 @@ ZOO_ERROR_TYPE tcp_server_add_client(TCP_SERVER_TRANSPORT_STRUCT *server, int cl
     return ZOO_SMB_OK;
 }
 
-// Remove a client from the TCP server (not supported).
+/**
+ * @brief Remove client by socket descriptor and release its resources.
+ * @param server TCP server instance.
+ * @param client_fd Client socket descriptor.
+ * @return ZOO_ERROR_TYPE ZOO_SMB_OK when removed, error otherwise.
+ */
 ZOO_ERROR_TYPE tcp_server_remove_client(TCP_SERVER_TRANSPORT_STRUCT *server, int client_fd)
 {
     if (!server)
@@ -323,7 +365,12 @@ ZOO_ERROR_TYPE tcp_server_remove_client(TCP_SERVER_TRANSPORT_STRUCT *server, int
     return ZOO_SMB_ERROR_INVALID_PARAM;
 }
 
-// Find a client by file descriptor (not supported).
+/**
+ * @brief Find client metadata by socket descriptor.
+ * @param server TCP server instance.
+ * @param client_fd Client socket descriptor.
+ * @return TCP_CLIENT_INFO_STRUCT* Matching client entry, or NULL if not found.
+ */
 TCP_CLIENT_INFO_STRUCT *tcp_server_find_client(TCP_SERVER_TRANSPORT_STRUCT *server, int client_fd)
 {
     if (!server)
@@ -338,7 +385,12 @@ TCP_CLIENT_INFO_STRUCT *tcp_server_find_client(TCP_SERVER_TRANSPORT_STRUCT *serv
     return NULL;
 }
 
-// Broadcast a message to all clients (not supported).
+/**
+ * @brief Broadcast message payload to all active TCP clients.
+ * @param server TCP server instance.
+ * @param msg Message payload holder.
+ * @return ZOO_ERROR_TYPE Last send result across clients.
+ */
 ZOO_ERROR_TYPE tcp_server_broadcast_message(TCP_SERVER_TRANSPORT_STRUCT *server, const ZOO_SMB_MSG_STRUCT *msg)
 {
     if (!server || !msg)
@@ -359,7 +411,14 @@ ZOO_ERROR_TYPE tcp_server_broadcast_message(TCP_SERVER_TRANSPORT_STRUCT *server,
     return last_err;
 }
 
-// Send a message to a specific client (not supported).
+/**
+ * @brief Send raw payload to a specific TCP client.
+ * @param server TCP server instance.
+ * @param client_fd Target client descriptor.
+ * @param msg Payload pointer.
+ * @param size Payload size in bytes.
+ * @return ZOO_ERROR_TYPE ZOO_SMB_OK on success, error code otherwise.
+ */
 ZOO_ERROR_TYPE tcp_server_send_to_client(TCP_SERVER_TRANSPORT_STRUCT *server, int client_fd, const void *msg, size_t size)
 {
     if (!server || !msg || size == 0)
@@ -372,7 +431,11 @@ ZOO_ERROR_TYPE tcp_server_send_to_client(TCP_SERVER_TRANSPORT_STRUCT *server, in
     return err;
 }
 
-// Clean up disconnected clients (not supported).
+/**
+ * @brief Remove inactive clients from TCP server client list.
+ * @param server TCP server instance.
+ * @return void
+ */
 void tcp_server_cleanup_disconnected_clients(TCP_SERVER_TRANSPORT_STRUCT *server)
 {
     if (!server || !server->clients)
@@ -395,7 +458,11 @@ void tcp_server_cleanup_disconnected_clients(TCP_SERVER_TRANSPORT_STRUCT *server
     }
 }
 
-// Main server event loop (not supported).
+/**
+ * @brief Run epoll-driven TCP server event loop.
+ * @param server TCP server instance.
+ * @return ZOO_ERROR_TYPE ZOO_SMB_OK on clean exit, error code otherwise.
+ */
 ZOO_ERROR_TYPE tcp_server_event_loop(TCP_SERVER_TRANSPORT_STRUCT *server)
 {
     if (!server || !server->common.running)
@@ -456,7 +523,13 @@ ZOO_ERROR_TYPE tcp_server_event_loop(TCP_SERVER_TRANSPORT_STRUCT *server)
     return ZOO_SMB_OK;
 }
 
-// Process epoll events for the server (not supported).
+/**
+ * @brief Process a batch of epoll events for TCP server.
+ * @param server TCP server instance.
+ * @param events Event array from epoll.
+ * @param event_count Number of valid events.
+ * @return void
+ */
 void tcp_server_process_events(TCP_SERVER_TRANSPORT_STRUCT *server, struct epoll_event *events, int event_count)
 {
     // TODO: Iterate over epoll events and dispatch to listen/client handlers
@@ -465,7 +538,12 @@ void tcp_server_process_events(TCP_SERVER_TRANSPORT_STRUCT *server, struct epoll
     (void)event_count;
 }
 
-// Handle listen socket events (not supported).
+/**
+ * @brief Handle listen-socket events for TCP server.
+ * @param server TCP server instance.
+ * @param events Event bitmask.
+ * @return void
+ */
 void tcp_server_handle_listen_events(TCP_SERVER_TRANSPORT_STRUCT *server, uint32_t events)
 {
     // TODO: Handle new incoming connections on the listen socket
@@ -473,7 +551,13 @@ void tcp_server_handle_listen_events(TCP_SERVER_TRANSPORT_STRUCT *server, uint32
     (void)events;
 }
 
-// Handle events for a client socket (epoll-driven, non-blocking).
+/**
+ * @brief Handle epoll events for a client socket in non-blocking mode.
+ * @param server TCP server instance.
+ * @param client_fd Client socket descriptor.
+ * @param events Event bitmask.
+ * @return void
+ */
 void tcp_server_handle_client_events(TCP_SERVER_TRANSPORT_STRUCT *server, int client_fd, uint32_t events)
 {
     if (!server)

@@ -261,17 +261,16 @@ extern "C"
     void zoo_smb_destroy_message_header(IN ZOO_SMB_MSG_HEADER_STRUCT* msg_header);
 
     /**
-     * @brief Copies the contents of one ZOO_SMB_MSG_STRUCT to another.
+     * @brief Deep-copies one message into another.
      *
-     * @param from Pointer to the source ZOO_SMB_MSG_STRUCT to copy from.
-        * @param to Pointer to destination ZOO_SMB_MSG_STRUCT.
+     * @param from Pointer to source message.
+     * @param to Pointer to destination message.
+     * @return ZOO_TRUE on success, ZOO_FALSE when copy fails.
      *
-     * This function performs a deep or shallow copy (depending on implementation)
-     * of the ZOO_SMB_MSG_STRUCT structure from the source to the destination.
-     * Ensure that both source and destination pointers are valid before calling.
+     * On failure, destination message is left in a safe zeroed state.
      */
-    void zoo_smb_copy_message(IN const ZOO_SMB_MSG_STRUCT* from,
-                              IN ZOO_SMB_MSG_STRUCT* to);
+    ZOO_BOOL zoo_smb_copy_message(IN const ZOO_SMB_MSG_STRUCT* from,
+                                  IN ZOO_SMB_MSG_STRUCT* to);
 
     /**
      * @brief Sets the fields of a ZOO SMB message header.

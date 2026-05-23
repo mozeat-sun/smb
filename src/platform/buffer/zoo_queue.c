@@ -630,6 +630,12 @@ void zoo_queue_sort(
         return;
     }
 
+    if (strategy == ZOO_QUEUE_SORT_STRATEGY_NONE ||
+        strategy == ZOO_QUEUE_SORT_STRATEGY_FIFO)
+    {
+        return;
+    }
+
     ZOO_QUEUE_STRUCT* queue = (ZOO_QUEUE_STRUCT*)queue_handle;
 
     ZOO_MUTEX_LOCK(&queue->messages_mutex);

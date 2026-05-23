@@ -15,7 +15,8 @@
     "cross-aarch64-linux-gnu": {
       "generator": "Ninja",
       "cmake_options": [
-        "-DCMAKE_BUILD_TYPE=Release"
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DZOO_BUILD_EXAMPLES=ON"
       ],
       "toolchain_file": "cmake/toolchains/aarch64-linux-gnu.cmake"
     },

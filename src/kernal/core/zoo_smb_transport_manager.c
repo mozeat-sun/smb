@@ -31,6 +31,25 @@
 #define TRANSPORT_SEND_FAIL_OPEN_THRESHOLD 5
 #define TRANSPORT_SEND_OPEN_COOLDOWN_SEC 2
 
+/**
+ * @brief Check whether a send error should trip the transport circuit breaker.
+ * @param err Transport send error code.
+ * @return ZOO_BOOL ZOO_TRUE when the error should open circuit protection.
+ */
+static ZOO_BOOL transport_send_failure_should_trip_circuit(ZOO_ERROR_TYPE err)
+{
+    return !((ZOO_ERROR_TYPE)ZOO_SMB_ERROR_QUEUE_FULL == err ||
+             (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_TIMEOUT == err ||
+             (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_BUSY == err ||
+             (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_AGAIN == err ||
+             (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_OUT_OF_MEMORY == err ||
+             (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_ALLOCATION_FAILED == err ||
+             (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_POOL_EXHAUSTED == err ||
+             (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_SERVICE_UNAVAILABLE == err ||
+             (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_SERVICE_NOT_FOUND == err ||
+             (ZOO_ERROR_TYPE)ZOO_SMB_ERROR_SHM_BUFFER_FULL == err);
+}
+
 typedef struct ZOO_SMB_TRANSPORT_INDEX_ENTRY_STRUCT
 {
     char key[2 * MAX_TRANSPORT_ADDRESS_LENGTH + 40];
@@ -1008,18 +1027,26 @@ ZOO_ERROR_TYPE zoo_smb_transport_manager_send_message(
     {
         LOCK_MANAGER(manager);
         entry->total_send_failures++;
-        entry->consecutive_send_failures++;
-        if (entry->consecutive_send_failures >= TRANSPORT_SEND_FAIL_OPEN_THRESHOLD)
+        if (transport_send_failure_should_trip_circuit(ret))
         {
-            entry->circuit_open_until = now + TRANSPORT_SEND_OPEN_COOLDOWN_SEC;
-            UNLOCK_MANAGER(manager);
-            ZOO_LOG_WARN("transport '%s' send circuit opened for %ds after %u consecutive failures",
-                             zoo_smb_transport_get_name(transport),
-                             TRANSPORT_SEND_OPEN_COOLDOWN_SEC,
-                             entry->consecutive_send_failures);
+            entry->consecutive_send_failures++;
+            if (entry->consecutive_send_failures >= TRANSPORT_SEND_FAIL_OPEN_THRESHOLD)
+            {
+                entry->circuit_open_until = now + TRANSPORT_SEND_OPEN_COOLDOWN_SEC;
+                UNLOCK_MANAGER(manager);
+                ZOO_LOG_WARN("transport '%s' send circuit opened for %ds after %u consecutive failures",
+                                 zoo_smb_transport_get_name(transport),
+                                 TRANSPORT_SEND_OPEN_COOLDOWN_SEC,
+                                 entry->consecutive_send_failures);
+            }
+            else
+            {
+                UNLOCK_MANAGER(manager);
+            }
         }
         else
         {
+            entry->consecutive_send_failures = 0;
             UNLOCK_MANAGER(manager);
         }
     }

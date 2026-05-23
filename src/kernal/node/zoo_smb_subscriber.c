@@ -20,8 +20,9 @@
 #include "zoo_smb_subscription_session_manager.h"
 #include "zoo_thread_pool.h"
 #include "zoo.h"
-#include <string.h>
+#include <stdio.h>
 #include <unistd.h>
+#include <string.h>
 #include <stdatomic.h>
 
 #define SUBSCRIBER_RECONCILE_SUBMIT_RETRIES 16U
@@ -35,6 +36,7 @@ typedef struct ZOO_SMB_SUBSCRIBER_STRUCT
     ZOO_SMB_SUBSCRIPTION_SESSION_MANAGER_HANDLE session_manager;
     ZOO_SMB_QOS_ENTITY_HANDLE qos_entity;
     ZOO_MUTEX_T mutex;
+    ZOO_COND_T reconcile_cond;
     ZOO_SMB_SERVICE_OBSERVER_HANDLE service_observer;
     atomic_bool running;
     atomic_bool reconcile_active;
@@ -157,10 +159,9 @@ static void subscriber_on_handle_PUB_msg_cb(IN void* context, IN const void* msg
     ZOO_SMB_SUBSCRIBER_STRUCT* subscriber = (ZOO_SMB_SUBSCRIBER_STRUCT*)context;
     ZOO_SMB_MSG_STRUCT* message = (ZOO_SMB_MSG_STRUCT*)msg;
 
-    ZOO_LOG_INFO("Received PUB message: msg_id=%u, req_id=%llu, payload_size=%zu",
-                 message->header.msg_id,
-                 message->header.request_id,
-                 message->header.payload_size);
+        printf("[sub-printf] pid=%ld PUB callback msg_id=%u req_id=%llu payload_size=%u msg_len=%zu context=%p\n", (long)getpid(), message->header.msg_id, (unsigned long long)message->header.request_id, message->header.payload_size, msg_len, context);
+        fflush(stdout);
+    ZOO_LOG_INFO("[sub-debug] Received PUB message: handler=%p context=%p msg_id=%u, req_id=%llu, payload_size=%zu, msg_len=%zu", (void*)subscriber_on_handle_PUB_msg_cb, context, message->header.msg_id, message->header.request_id, message->header.payload_size, msg_len);
 
     if (subscriber->qos_entity)
     {
@@ -278,6 +279,11 @@ static void subscriber_on_service_change_cb(const ZOO_SMB_SERVICE_HANDLE service
 static void subscriber_request_reconcile(ZOO_SMB_SUBSCRIBER_STRUCT* subscriber)
 {
     atomic_store(&subscriber->reconcile_requested, true);
+
+    ZOO_MUTEX_LOCK(&subscriber->mutex);
+    ZOO_COND_SIGNAL(&subscriber->reconcile_cond);
+    ZOO_MUTEX_UNLOCK(&subscriber->mutex);
+
     if (atomic_exchange(&subscriber->reconcile_active, true))
     {
         return;
@@ -289,7 +295,16 @@ static void subscriber_request_reconcile(ZOO_SMB_SUBSCRIBER_STRUCT* subscriber)
         {
             return;
         }
-        usleep(SUBSCRIBER_RECONCILE_SUBMIT_BACKOFF_MS * 1000U);
+
+        ZOO_MUTEX_LOCK(&subscriber->mutex);
+        if (atomic_load(&subscriber->running))
+        {
+            (void)ZOO_COND_WAIT_TIMEOUT(
+                &subscriber->reconcile_cond,
+                &subscriber->mutex,
+                SUBSCRIBER_RECONCILE_SUBMIT_BACKOFF_MS);
+        }
+        ZOO_MUTEX_UNLOCK(&subscriber->mutex);
     }
 
     atomic_store(&subscriber->reconcile_active, false);
@@ -330,13 +345,21 @@ static ZOO_ERROR_T subscriber_reconcile_task(void* user_data, void* argument)
             break;
         }
 
-        if (sleep_ms > 0U)
+        if (sleep_ms > 0U && atomic_load(&subscriber->running) && !atomic_load(&subscriber->reconcile_requested))
         {
-            usleep((useconds_t)sleep_ms * 1000U);
+            ZOO_MUTEX_LOCK(&subscriber->mutex);
+            if (atomic_load(&subscriber->running) && !atomic_load(&subscriber->reconcile_requested))
+            {
+                (void)ZOO_COND_WAIT_TIMEOUT(&subscriber->reconcile_cond, &subscriber->mutex, sleep_ms);
+            }
+            ZOO_MUTEX_UNLOCK(&subscriber->mutex);
         }
     }
 
     atomic_store(&subscriber->reconcile_active, false);
+    ZOO_MUTEX_LOCK(&subscriber->mutex);
+    ZOO_COND_BROADCAST(&subscriber->reconcile_cond);
+    ZOO_MUTEX_UNLOCK(&subscriber->mutex);
     if (atomic_load(&subscriber->running) && atomic_load(&subscriber->reconcile_requested))
     {
         subscriber_request_reconcile(subscriber);
@@ -438,6 +461,7 @@ ZOO_SMB_SUBSCRIBER_HANDLE zoo_smb_create_subscriber(
     }
 
     ZOO_MUTEX_INIT(&subscriber->mutex);
+    ZOO_COND_INIT(&subscriber->reconcile_cond);
     atomic_init(&subscriber->running, true);
     atomic_init(&subscriber->reconcile_active, false);
     atomic_init(&subscriber->reconcile_requested, false);
@@ -450,6 +474,7 @@ ZOO_SMB_SUBSCRIBER_HANDLE zoo_smb_create_subscriber(
         {
             zoo_smb_destroy_service_observer(subscriber->service_observer);
         }
+        ZOO_COND_DESTROY(&subscriber->reconcile_cond);
         ZOO_MUTEX_DESTROY(&subscriber->mutex);
         zoo_smb_subscription_session_manager_destroy(subscriber->session_manager, subscriber->qos_entity);
         zoo_smb_destroy_qos_entity(subscriber->qos_entity);
@@ -476,18 +501,24 @@ void zoo_smb_destroy_subscriber(IN ZOO_SMB_SUBSCRIBER_HANDLE subscriber)
 
     atomic_store(&subscriber->running, false);
     atomic_store(&subscriber->reconcile_requested, false);
+    ZOO_MUTEX_LOCK(&subscriber->mutex);
+    ZOO_COND_BROADCAST(&subscriber->reconcile_cond);
+    ZOO_MUTEX_UNLOCK(&subscriber->mutex);
     zoo_smb_remove_service_observer(subscriber->service_observer);
 
-    for (uint32_t i = 0; i < 200U && atomic_load(&subscriber->reconcile_active); ++i)
+    ZOO_MUTEX_LOCK(&subscriber->mutex);
+    while (atomic_load(&subscriber->reconcile_active))
     {
-        usleep(10U * 1000U);
+        (void)ZOO_COND_WAIT_TIMEOUT(&subscriber->reconcile_cond, &subscriber->mutex, 10U);
     }
+    ZOO_MUTEX_UNLOCK(&subscriber->mutex);
 
     if (subscriber->service_observer)
     {
         zoo_smb_destroy_service_observer(subscriber->service_observer);
     }
 
+    ZOO_COND_DESTROY(&subscriber->reconcile_cond);
     ZOO_MUTEX_DESTROY(&subscriber->mutex);
     zoo_smb_subscription_session_manager_destroy(subscriber->session_manager, subscriber->qos_entity);
     zoo_smb_destroy_qos_entity(subscriber->qos_entity);

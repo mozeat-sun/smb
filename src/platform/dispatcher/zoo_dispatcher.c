@@ -99,7 +99,7 @@ ZOO_DISPATCHER_HANDLE zoo_create_dispatcher(
     // Initialize dispatcher fields
     dispatcher->queue = queue;
     dispatcher->is_running = ZOO_FALSE;
-    dispatcher->sort_strategy = ZOO_QUEUE_SORT_STRATEGY_PRIORITY;
+    dispatcher->sort_strategy = ZOO_QUEUE_SORT_STRATEGY_NONE;
     dispatcher->dispatcher_id = zoo_generate_uuid64();
 
     // Initialize threading primitives
@@ -215,7 +215,6 @@ void zoo_start_dispatcher(
     while (dispatcher->is_running)
     {
         process_message(dispatcher);
-        ZOO_SLEEP_MS(10);
     }
 }
 
@@ -320,23 +319,9 @@ void zoo_dispatcher_on_queue_changed(void *queue_handle, void *observer, void *m
     ZOO_QUEUE_HANDLE queue = (ZOO_QUEUE_HANDLE)queue_handle;
     ZOO_DISPATCHER_STRUCT *dispatcher = (ZOO_DISPATCHER_STRUCT *)observer;
 
-    // Sort queue according to configured strategy
-    zoo_queue_sort(queue, dispatcher->sort_strategy);
-
-    // Signal waiting threads
-    if (ZOO_MUTEX_LOCK(&dispatcher->mutex))
+    if (dispatcher->sort_strategy == ZOO_QUEUE_SORT_STRATEGY_PRIORITY ||
+        dispatcher->sort_strategy == ZOO_QUEUE_SORT_STRATEGY_TIMESTAMP)
     {
-        if (!ZOO_COND_SIGNAL(&dispatcher->cond))
-        {
-            ZOO_LOG_WARN("%s", "Failed to signal dispatcher condition variable");
-        }
-        if (!ZOO_MUTEX_UNLOCK(&dispatcher->mutex))
-        {
-            ZOO_LOG_WARN("%s", "Failed to unlock dispatcher mutex in queue callback");
-        }
-    }
-    else
-    {
-        ZOO_LOG_WARN("%s", "Failed to lock dispatcher mutex in queue callback");
+        zoo_queue_sort(queue, dispatcher->sort_strategy);
     }
 }

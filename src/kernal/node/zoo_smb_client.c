@@ -159,7 +159,18 @@ static void client_on_handle_REPL_message_cb(IN void* context, IN const void* ms
         return;
     }
     ZOO_SMB_MSG_STRUCT* message = zoo_smb_default_message();
-    zoo_smb_copy_message(reply_message, message);
+    if (message == NULL)
+    {
+        ZOO_LOG_ERROR("Failed to allocate reply message container");
+        return;
+    }
+
+    if (!zoo_smb_copy_message(reply_message, message))
+    {
+        ZOO_LOG_ERROR("Failed to copy reply message");
+        zoo_smb_destroy_message(message);
+        return;
+    }
     ZOO_MUTEX_LOCK(&client->mutex);
     if (ZOO_SMB_OK != zoo_list_push_back(client->reply_message_list, message))
     {

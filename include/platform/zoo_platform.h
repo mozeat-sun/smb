@@ -37,6 +37,11 @@ extern "C"
 #include <stdio.h>
 #include <time.h>
 
+#if defined(__linux__) || defined(__unix__)
+#include <sys/select.h>
+#include <sys/time.h>
+#endif
+
 #define ZOO_PLATFORM_VERSION "1.2.0"
 
 // ==============================================================================
@@ -196,6 +201,53 @@ extern "C"
 #define ZOO_IS_EMBEDDED 0
 #endif
 
+#if ZOO_HAS_POSIX
+static inline int zoo_platform_get_realtime_timespec(struct timespec *ts)
+{
+    if (!ts)
+    {
+        return -1;
+    }
+
+#if defined(CLOCK_REALTIME)
+    return clock_gettime(CLOCK_REALTIME, ts);
+#else
+    struct timeval tv;
+    if (gettimeofday(&tv, NULL) != 0)
+    {
+        return -1;
+    }
+
+    ts->tv_sec = tv.tv_sec;
+    ts->tv_nsec = (long)tv.tv_usec * 1000L;
+    return 0;
+#endif
+}
+
+static inline int zoo_platform_get_monotonic_timespec(struct timespec *ts)
+{
+    if (!ts)
+    {
+        return -1;
+    }
+
+#if defined(CLOCK_MONOTONIC)
+    return clock_gettime(CLOCK_MONOTONIC, ts);
+#else
+    return zoo_platform_get_realtime_timespec(ts);
+#endif
+}
+
+static inline void zoo_platform_sleep_us_impl(unsigned int delay_us)
+{
+    struct timeval timeout;
+
+    timeout.tv_sec = (time_t)(delay_us / 1000000U);
+    timeout.tv_usec = (long)(delay_us % 1000000U);
+    (void)select(0, NULL, NULL, NULL, &timeout);
+}
+#endif
+
 // ==============================================================================
 // CROSS-PLATFORM THREADING AND ATOMIC OPERATIONS
 // ==============================================================================
@@ -232,11 +284,14 @@ extern "C"
 #define ZOO_COND_BROADCAST(cond) (pthread_cond_broadcast(cond) == 0)
 #define ZOO_COND_WAIT_TIMEOUT(cond, mutex, timeout_ms) \
     ({ struct timespec ts; \
-           clock_gettime(CLOCK_REALTIME, &ts); \
-           ts.tv_sec += (timeout_ms) / 1000; \
-           ts.tv_nsec += ((timeout_ms) % 1000) * 1000000; \
-           if (ts.tv_nsec >= 1000000000) { ts.tv_sec++; ts.tv_nsec -= 1000000000; } \
-           pthread_cond_timedwait((cond), (mutex), &ts) == 0; })
+           int zoo_wait_ok = 0; \
+           if (zoo_platform_get_realtime_timespec(&ts) == 0) { \
+               ts.tv_sec += (timeout_ms) / 1000; \
+               ts.tv_nsec += ((timeout_ms) % 1000) * 1000000; \
+               if (ts.tv_nsec >= 1000000000) { ts.tv_sec++; ts.tv_nsec -= 1000000000; } \
+               zoo_wait_ok = (pthread_cond_timedwait((cond), (mutex), &ts) == 0); \
+           } \
+           zoo_wait_ok; })
 
 #elif defined(ZOO_OS_FREERTOS)
 #include "FreeRTOS.h"
@@ -364,12 +419,12 @@ typedef int ZOO_COND_T;
 #if defined(ZOO_OS_LINUX) || ZOO_HAS_POSIX
 #include <unistd.h>
 #include <time.h>
-#define ZOO_SLEEP_MS(ms) usleep((ms) * 1000)
-#define ZOO_SLEEP_US(us) usleep(us)
+#define ZOO_SLEEP_MS(ms) zoo_platform_sleep_us_impl((unsigned int)((ms) * 1000U))
+#define ZOO_SLEEP_US(us) zoo_platform_sleep_us_impl((unsigned int)(us))
 static inline uint64_t zoo_clock_realtime_ns_impl(void)
 {
     struct timespec ts;
-    if (clock_gettime(CLOCK_REALTIME, &ts) != 0)
+    if (zoo_platform_get_realtime_timespec(&ts) != 0)
     {
         return 0ULL;
     }
@@ -379,7 +434,7 @@ static inline uint64_t zoo_clock_realtime_ns_impl(void)
 static inline uint64_t zoo_clock_monotonic_ns_impl(void)
 {
     struct timespec ts;
-    if (clock_gettime(CLOCK_MONOTONIC, &ts) != 0)
+    if (zoo_platform_get_monotonic_timespec(&ts) != 0)
     {
         return 0ULL;
     }
@@ -450,17 +505,11 @@ static inline uint64_t zoo_clock_monotonic_ns_impl(void)
 #if ZOO_HAS_POSIX
 // POSIX-compliant systems (Linux, Unix-like)
 #include <sys/stat.h>
-#include <sys/syscall.h>
 #include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
 #if ZOO_HAS_SYSLOG
 #include <syslog.h>
-#endif
-// Ensure syscall and usleep are declared
-#if defined(__linux__) && !defined(_GNU_SOURCE)
-    // syscall() needs _GNU_SOURCE on some systems
-    extern long syscall(long number, ...);
 #endif
 #elif ZOO_IS_EMBEDDED
 // Embedded systems headers
@@ -504,7 +553,7 @@ static inline uint64_t zoo_clock_monotonic_ns_impl(void)
 
 #if ZOO_HAS_POSIX
         struct timespec ts;
-        if (clock_gettime(CLOCK_REALTIME, &ts) != 0)
+    if (zoo_platform_get_realtime_timespec(&ts) != 0)
         {
             return snprintf(buffer, buffer_size, "UNKNOWN_TIME");
         }
@@ -574,10 +623,7 @@ static inline uint64_t zoo_clock_monotonic_ns_impl(void)
             return 0;
         }
 
-#if defined(ZOO_OS_LINUX)
-        pid_t tid = syscall(SYS_gettid);
-        return snprintf(buffer, buffer_size, "[%d]", tid);
-#elif ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
     pthread_t tid = pthread_self();
     return snprintf(buffer, buffer_size, "[%lu]", (unsigned long)tid);
 #elif defined(ZOO_OS_FREERTOS)
