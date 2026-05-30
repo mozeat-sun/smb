@@ -49,7 +49,7 @@ static int create_and_configure_epoll(UDP_BROADCAST_TRANSPORT_STRUCT* udp)
     int epoll_fd = epoll_create1(0);
     if (epoll_fd == INVALID_TRANSPORT_FD)
     {
-        ZOO_LOG_TRACE("epoll_create1 failed\n");
+        ZOO_LOG_TRACE("epoll_create1 failed");
         return INVALID_TRANSPORT_FD;
     }
 
@@ -58,7 +58,7 @@ static int create_and_configure_epoll(UDP_BROADCAST_TRANSPORT_STRUCT* udp)
     ev.data.fd = udp->sockfd;
     if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, udp->sockfd, &ev) == INVALID_TRANSPORT_FD)
     {
-        ZOO_LOG_TRACE("epoll_ctl failed\n");
+        ZOO_LOG_TRACE("epoll_ctl failed");
         close(epoll_fd);
         return INVALID_TRANSPORT_FD;
     }
@@ -153,11 +153,11 @@ static void handle_incoming_data(UDP_BROADCAST_TRANSPORT_STRUCT* udp, uint8_t* b
     ZOO_SMB_MSG_STRUCT* msg_out = zoo_smb_default_message();
     if (ZOO_SMB_OK != zoo_smb_protocol_deserialize(buffer, bytes_received, msg_out, sizeof(ZOO_SMB_MSG_STRUCT)))
     {
-        ZOO_LOG_ERROR("Failed to deserialize message from UDP transport\n");
+        ZOO_LOG_ERROR("Failed to deserialize message from UDP transport");
         return;
     }
 
-    ZOO_LOG_DEBUG("Received message from %s:%d, type: %d, size: %zu\n",
+    ZOO_LOG_DEBUG("Received message from %s:%d, type: %d, size: %zu",
                      inet_ntoa(sender_addr.sin_addr),
                      ntohs(sender_addr.sin_port),
                      msg_out->header.msg_type,
@@ -180,7 +180,7 @@ static void handle_epoll_events(UDP_BROADCAST_TRANSPORT_STRUCT* udp, int epoll_f
     ZOO_ERROR_TYPE wait_ret = zoo_smb_reactor_wait(epoll_fd, events, 10, 1000, &nfds);
     if (wait_ret != ZOO_SMB_OK)
     {
-        ZOO_LOG_TRACE("reactor_wait failed\n");
+        ZOO_LOG_TRACE("reactor_wait failed");
         return;
     }
     if (nfds == 0)
@@ -201,11 +201,11 @@ static void handle_epoll_events(UDP_BROADCAST_TRANSPORT_STRUCT* udp, int epoll_f
             // Receive data from the socket
             ssize_t bytes_received = recvfrom(
                 udp->sockfd, buffer, MAX_BROADCAST_TRANSPORT_BUFFER_SIZE, 0, (struct sockaddr*)&sender_addr, &sender_len);
-            ZOO_LOG_TRACE("recvfrom: sockfd=%d, sender_ip=%s, sender_port=%d, bytes_received=%zd\n",
+            ZOO_LOG_TRACE("recvfrom: sockfd=%d, sender_ip=%s, sender_port=%d, bytes_received=%zd",
                               udp->sockfd, inet_ntoa(sender_addr.sin_addr), ntohs(sender_addr.sin_port), bytes_received);
             if (bytes_received < 0)
             {
-                ZOO_LOG_TRACE("recvfrom failed with error code: %zd\n", bytes_received);
+                ZOO_LOG_TRACE("recvfrom failed with error code: %zd", bytes_received);
                 continue;
             }
 
@@ -222,7 +222,7 @@ static void udp_broadcast_receive_thread(void* arg)
 {
     if (!arg)
     {
-        ZOO_LOG_TRACE("udp_broadcast_receive_thread: arg is NULL\n");
+        ZOO_LOG_TRACE("udp_broadcast_receive_thread: arg is NULL");
         return;
     }
 
@@ -237,7 +237,7 @@ static void udp_broadcast_receive_thread(void* arg)
     uint8_t* buffer = (uint8_t*)zoo_allocate_from_pool(MAX_BROADCAST_TRANSPORT_BUFFER_SIZE);
     if (buffer == NULL)
     {
-        ZOO_LOG_ERROR("zoo_smb_allocate_from_pool failed\n");
+        ZOO_LOG_ERROR("zoo_smb_allocate_from_pool failed");
         close(epoll_fd);
         return;
     }
@@ -269,7 +269,7 @@ static int create_and_configure_socket(UDP_BROADCAST_TRANSPORT_STRUCT* udp, cons
     udp->sockfd = socket(AF_INET, SOCK_DGRAM, 0);
     if (udp->sockfd < 0)
     {
-        ZOO_LOG_ERROR("[transport]socket failed\n");
+        ZOO_LOG_ERROR("[transport]socket failed");
         return INVALID_TRANSPORT_FD;
     }
 
@@ -277,7 +277,7 @@ static int create_and_configure_socket(UDP_BROADCAST_TRANSPORT_STRUCT* udp, cons
     int reuse_addr = 1;
     if (setsockopt(udp->sockfd, SOL_SOCKET, SO_REUSEADDR, &reuse_addr, sizeof(reuse_addr)) < 0)
     {
-        ZOO_LOG_ERROR("[transport]setsockopt SO_REUSEADDR failed\n");
+        ZOO_LOG_ERROR("[transport]setsockopt SO_REUSEADDR failed");
         close(udp->sockfd);
         return INVALID_TRANSPORT_FD;
     }
@@ -286,7 +286,7 @@ static int create_and_configure_socket(UDP_BROADCAST_TRANSPORT_STRUCT* udp, cons
     // Set broadcast option
     if (setsockopt(udp->sockfd, SOL_SOCKET, SO_BROADCAST, &broadcast_enable, sizeof(broadcast_enable)) < 0)
     {
-        ZOO_LOG_ERROR("[transport]setsockopt SO_BROADCAST failed\n");
+        ZOO_LOG_ERROR("[transport]setsockopt SO_BROADCAST failed");
         close(udp->sockfd);
         return INVALID_TRANSPORT_FD;
     }
@@ -307,18 +307,18 @@ static int create_and_configure_socket(UDP_BROADCAST_TRANSPORT_STRUCT* udp, cons
     {
         if (inet_pton(AF_INET, ip, &udp->addr.sin_addr) <= 0)
         {
-            ZOO_LOG_ERROR("[transport]inet_pton Invalid address/ Address not supported\n");
+            ZOO_LOG_ERROR("[transport]inet_pton Invalid address/ Address not supported");
             close(udp->sockfd);
             return INVALID_TRANSPORT_FD;
         }
     }
 
-    ZOO_LOG_DEBUG("[transport]udp addr:port %s:%d\n", inet_ntoa(udp->addr.sin_addr), config->port);
+    ZOO_LOG_DEBUG("[transport]udp addr:port %s:%d", inet_ntoa(udp->addr.sin_addr), config->port);
 
     // Bind socket
     if (bind(udp->sockfd, (struct sockaddr*)&udp->addr, sizeof(udp->addr)) < 0)
     {
-        ZOO_LOG_ERROR("[transport]bind failed\n");
+        ZOO_LOG_ERROR("[transport]bind failed");
         close(udp->sockfd);
         return INVALID_TRANSPORT_FD;
     }
@@ -347,7 +347,7 @@ static ZOO_ERROR_TYPE udp_broadcast_init(ZOO_SMB_TRANSPORT_STRUCT* transport)
 
     if (create_and_configure_socket(udp, transport->config) == INVALID_TRANSPORT_FD)
     {
-        ZOO_LOG_DEBUG("[transport]Failed to create and configure socket\n");
+        ZOO_LOG_DEBUG("[transport]Failed to create and configure socket");
         zoo_free_to_pool(udp);
         return ZOO_SMB_ERROR_TRANSPORT_INIT_FAILED;
     }
@@ -358,7 +358,7 @@ static ZOO_ERROR_TYPE udp_broadcast_init(ZOO_SMB_TRANSPORT_STRUCT* transport)
     udp->broadcast_addr.sin_port = htons(transport->config->port);
     if (inet_pton(AF_INET, transport->config->address, &udp->broadcast_addr.sin_addr) <= 0)
     {
-        ZOO_LOG_DEBUG("[transport]Invalid address/ Address not supported\n");
+        ZOO_LOG_DEBUG("[transport]Invalid address/ Address not supported");
         close(udp->sockfd);
         zoo_free_to_pool(udp);
         return ZOO_SMB_ERROR_TRANSPORT_INIT_FAILED;
@@ -447,21 +447,21 @@ static ZOO_ERROR_TYPE udp_broadcast_send(void* impl,
     size_t total_size = sizeof(ZOO_SMB_MSG_HEADER_STRUCT) + msg->header.payload_size;
     if (total_size > MAX_TRANSPORT_BUFFER_SIZE)
     {
-        ZOO_LOG_ERROR("udp_send: message payload size exceeds maximum buffer size\n");
+        ZOO_LOG_ERROR("udp_send: message payload size exceeds maximum buffer size");
         return ZOO_SMB_ERROR_TRANSPORT_SEND_FAILED;
     }
 
     uint8_t* msg_buffer = zoo_allocate_from_pool(total_size);
     if (!msg_buffer)
     {
-        ZOO_LOG_ERROR("udp_send: failed to allocate memory for message buffer\n");
+        ZOO_LOG_ERROR("udp_send: failed to allocate memory for message buffer");
         return ZOO_SMB_ERROR_ALLOCATION_FAILED;
     }
 
     size_t msg_size = zoo_smb_protocol_serialize(msg, msg_buffer, total_size);
     if (msg_size == 0)
     {
-        ZOO_LOG_ERROR("udp_send: failed to serialize message\n");
+        ZOO_LOG_ERROR("udp_send: failed to serialize message");
         zoo_free_to_pool(msg_buffer);
         return ZOO_SMB_ERROR_TRANSPORT_SEND_FAILED;
     }
@@ -472,10 +472,10 @@ static ZOO_ERROR_TYPE udp_broadcast_send(void* impl,
     ssize_t bytes_sent = sendto(
         udp->sockfd, msg_buffer, msg_size, 0, (struct sockaddr*)&udp->broadcast_addr, sizeof(udp->broadcast_addr));
 
-    ZOO_LOG_TRACE("udp_broadcast_send to %s ,service_name:%s, send size:%zd\n", receiver == NULL ? "all" : receiver, msg->header.sender, bytes_sent);
+    ZOO_LOG_TRACE("udp_broadcast_send to %s ,service_name:%s, send size:%zd", receiver == NULL ? "all" : receiver, msg->header.sender, bytes_sent);
     if (bytes_sent != (ssize_t)msg_size)
     {
-        ZOO_LOG_ERROR("udp_send: sendto failed, sent %zd bytes, expected %zu bytes, error: %s\n",
+        ZOO_LOG_ERROR("udp_send: sendto failed, sent %zd bytes, expected %zu bytes, error: %s",
                           bytes_sent,
                           msg_size,
                           strerror(errno));
@@ -518,6 +518,6 @@ static ZOO_SMB_TRANSPORT_OPS_STRUCT udp_broadcast_ops = {
  */
 void zoo_smb_transport_udp_broadcast_init(void)
 {
-    ZOO_LOG_INFO("Registering UDP broadcast transport\n");
+    ZOO_LOG_INFO("Registering UDP broadcast transport");
     zoo_smb_transport_register(ZOO_SMB_TRANSPORT_TYPE_UDP_BROADCAST, &udp_broadcast_ops);
 }

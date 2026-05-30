@@ -18,6 +18,7 @@
 #include "zoo_smb.h"
 #include "zoo_util.h"
 #include <errno.h>
+#include <stdlib.h>
 typedef struct ZOO_SMB_CLIENT_STRUCT
 {
     int32_t id[2]; /**< Unique identifier for the server */
@@ -27,6 +28,26 @@ typedef struct ZOO_SMB_CLIENT_STRUCT
     ZOO_MUTEX_T mutex;                        /**< Mutex for thread safety */
     ZOO_COND_T reply_cond;
 } ZOO_SMB_CLIENT_STRUCT;
+
+static void client_clear_reply_message_list(IN ZOO_SMB_CLIENT_STRUCT* client)
+{
+    if (client == NULL || client->reply_message_list == NULL)
+    {
+        return;
+    }
+
+    while (!zoo_list_empty(client->reply_message_list))
+    {
+        ZOO_SMB_MSG_STRUCT* message = (ZOO_SMB_MSG_STRUCT*)zoo_list_pop_front(client->reply_message_list);
+        if (message != NULL)
+        {
+            zoo_smb_destroy_message(message);
+        }
+    }
+
+    zoo_list_destroy(client->reply_message_list);
+    client->reply_message_list = NULL;
+}
 
 /**
  * @brief Predicate used to match reply messages by request id.
@@ -176,6 +197,7 @@ static void client_on_handle_REPL_message_cb(IN void* context, IN const void* ms
     {
         ZOO_MUTEX_UNLOCK(&client->mutex);
         ZOO_LOG_ERROR("Failed to push reply message to list");
+        zoo_smb_destroy_message(message);
         return;
     }
     ZOO_COND_SIGNAL(&client->reply_cond);
@@ -240,6 +262,12 @@ ZOO_SMB_CLIENT_HANDLE zoo_smb_create_client(
     IN const ZOO_SMB_QOS_POLICY_STRUCT* policy)
 {
     ZOO_SMB_CLIENT_STRUCT* client = (ZOO_SMB_CLIENT_STRUCT*)zoo_allocate_from_pool(sizeof(ZOO_SMB_CLIENT_STRUCT));
+    if (client == NULL)
+    {
+        ZOO_LOG_ERROR("Failed to allocate client context");
+        return NULL;
+    }
+
     client->node = zoo_smb_create_node(name, target, topic, ZOO_SMB_NODE_TYPE_CLIENT, ZOO_SMB_TRANSPORT_TYPE_DEFAULT);
     if (client->node == NULL)
     {
@@ -269,6 +297,7 @@ ZOO_SMB_CLIENT_HANDLE zoo_smb_create_client(
     if (client->qos_entity == NULL)
     {
         ZOO_LOG_ERROR("Failed to create QoS entity for client: %s", name);
+        client_clear_reply_message_list(client);
         zoo_smb_destroy_node(client->node);
         zoo_free_to_pool(client);
         return NULL;
@@ -279,6 +308,8 @@ ZOO_SMB_CLIENT_HANDLE zoo_smb_create_client(
     if (repl_observer == NULL)
     {
         ZOO_LOG_ERROR("Failed to create reply observer");
+        zoo_smb_destroy_qos_entity(client->qos_entity);
+        client_clear_reply_message_list(client);
         zoo_smb_destroy_node(client->node);
         zoo_free_to_pool(client);
         return NULL;
@@ -289,6 +320,8 @@ ZOO_SMB_CLIENT_HANDLE zoo_smb_create_client(
     if (reqack_observer == NULL)
     {
         ZOO_LOG_ERROR("Failed to create request acknowledgment observer");
+        zoo_smb_destroy_qos_entity(client->qos_entity);
+        client_clear_reply_message_list(client);
         zoo_smb_destroy_node(client->node);
         zoo_free_to_pool(client);
         return NULL;
@@ -297,18 +330,34 @@ ZOO_SMB_CLIENT_HANDLE zoo_smb_create_client(
     if (ZOO_SMB_OK != zoo_smb_register_node(client->node))
     {
         ZOO_LOG_ERROR("Failed to register node");
+        zoo_smb_destroy_qos_entity(client->qos_entity);
+        client_clear_reply_message_list(client);
         zoo_smb_destroy_node(client->node);
         zoo_free_to_pool(client);
         return NULL;
     }
 
-    if (!ZOO_MUTEX_INIT(&client->mutex) || !ZOO_COND_INIT(&client->reply_cond))
+    if (!ZOO_MUTEX_INIT(&client->mutex))
     {
-        ZOO_LOG_ERROR("Failed to initialize client synchronization primitives");
+        ZOO_LOG_ERROR("Failed to initialize client mutex");
+        zoo_smb_destroy_qos_entity(client->qos_entity);
+        client_clear_reply_message_list(client);
         zoo_smb_destroy_node(client->node);
         zoo_free_to_pool(client);
         return NULL;
     }
+
+    if (!ZOO_COND_INIT(&client->reply_cond))
+    {
+        ZOO_LOG_ERROR("Failed to initialize client condition variable");
+        ZOO_MUTEX_DESTROY(&client->mutex);
+        zoo_smb_destroy_qos_entity(client->qos_entity);
+        client_clear_reply_message_list(client);
+        zoo_smb_destroy_node(client->node);
+        zoo_free_to_pool(client);
+        return NULL;
+    }
+
     ZOO_LOG_INFO("Created SMB client node: %s, target: %s, topic: %s", client->node->name, client->node->target, client->node->topic);
     return (ZOO_SMB_CLIENT_HANDLE)client;
 }
@@ -349,6 +398,7 @@ void zoo_smb_destroy_client(IN ZOO_SMB_CLIENT_HANDLE client)
     zoo_smb_destroy_qos_entity(c->qos_entity); /**< Clean up QoS entity */
     ZOO_COND_DESTROY(&c->reply_cond);
     ZOO_MUTEX_DESTROY(&c->mutex);
+    client_clear_reply_message_list(c);
     zoo_smb_destroy_node(c->node);
     zoo_free_to_pool(client);
     ZOO_LOG_DEBUG("SMB client node destroyed: %p", c);
@@ -387,7 +437,11 @@ ZOO_ERROR_TYPE zoo_smb_client_send_request(ZOO_SMB_CLIENT_HANDLE client,
         return ZOO_SMB_ERROR_SERVICE_UNAVAILABLE;
     }
 
-    *request_id = zoo_generate_uuid64();
+    if (*request_id == 0)
+    {
+        *request_id = zoo_generate_uuid64();
+    }
+
     ZOO_SMB_MSG_STRUCT* req_msg = zoo_smb_create_message(
         ZOO_SMB_MSG_TYPE_REQ, client->node->name, client->node->topic, payload, payload_size, msg_id, *request_id);
     if (req_msg == NULL)
@@ -414,12 +468,12 @@ ZOO_ERROR_TYPE zoo_smb_client_send_request(ZOO_SMB_CLIENT_HANDLE client,
  * @brief Waits for buffered REPL matching msg_id and request_id.
  *
  * This call may block up to timeout_ms. On success, payload bytes are copied
- * into caller-provided output buffer and the buffered reply entry is removed.
+ * into a newly allocated output buffer and the buffered reply entry is removed.
  *
  * @param client Client handle.
  * @param msg_id Expected reply message identifier.
  * @param request_id Expected request identifier.
- * @param payload Output buffer pointer receiving copied payload bytes.
+ * @param payload Output pointer receiving a heap buffer (caller releases via free()).
  * @param payload_size Output payload length in bytes.
  * @param timeout_ms Maximum wait duration in milliseconds.
  * @return ZOO_SMB_OK on success, or timeout/invalid-param/other module error code.
@@ -469,6 +523,14 @@ ZOO_ERROR_TYPE zoo_smb_client_recv_reply(ZOO_SMB_CLIENT_HANDLE client,
         }
 
         replys_message = client_find_reply_message_locked(c, msg_id, request_id);
+    }
+
+    *payload = malloc(replys_message->header.payload_size);
+    if (*payload == NULL)
+    {
+        ZOO_MUTEX_UNLOCK(&c->mutex);
+        ZOO_LOG_ERROR("Failed to allocate payload buffer for request_id=%llu", request_id);
+        return ZOO_SMB_ERROR_OUT_OF_MEMORY;
     }
 
     memcpy(*payload, replys_message->payload, replys_message->header.payload_size); /**< Copy the payload to the output buffer */

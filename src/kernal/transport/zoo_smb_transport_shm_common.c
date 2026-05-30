@@ -39,6 +39,7 @@
  *
  * @param client Pointer to a SHM_CLIENT_INFO_STRUCT structure containing information
  *               about the client for which the shared memory segment is to be created.
+ * @param reg_info Registration context associated with this client segment request.
  *
  * @return ZOO_ERROR_TYPE Returns an error code indicating the result of the operation.
  *         Possible values include success or specific error codes related to shared memory
@@ -51,6 +52,8 @@ ZOO_ERROR_TYPE shm_create_client_segment(SHM_CLIENT_INFO_STRUCT* client,
     {
         return ZOO_SMB_ERROR_INVALID_PARAM;
     }
+
+    ZOO_SMB_UNUSED(reg_info);
 
     // Calculate required size for client segment
     size_t segment_size = ZOO_SMB_SHM_CLIENT_SIZE;
@@ -120,7 +123,7 @@ ZOO_ERROR_TYPE shm_init_client_resources(SHM_CLIENT_INFO_STRUCT* client)
     }
 
     // Set event fd (should be created before calling this function)
-    if (client->event_fd <= 0)
+    if (client->event_fd < 0)
     {
         client->event_fd = eventfd(0, EFD_NONBLOCK);
         if (client->event_fd == -1)
@@ -200,7 +203,7 @@ void shm_cleanup_client_resources(SHM_CLIENT_INFO_STRUCT* client)
     }
 
     // Close event fd
-    if (client->event_fd > 0)
+    if (client->event_fd >= 0)
     {
         close(client->event_fd);
         client->event_fd = -1;
@@ -451,7 +454,7 @@ void shm_notify_peer(int event_fd)
  */
 void shm_notify_client(SHM_CLIENT_INFO_STRUCT* client)
 {
-    if (client && client->event_fd > 0)
+    if (client && client->event_fd >= 0)
     {
         shm_notify_peer(client->event_fd);
     }

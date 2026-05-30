@@ -239,11 +239,12 @@ ZOO_ERROR_TYPE shm_client_start(void* impl_ptr)
 /**
  * @brief Send message through shared memory transport
  * @param impl_ptr Pointer to client implementation
- * @param msg Message data to send
- * @param size Size of message in bytes
- * @param consumer Consumer information (ZOO_SMB_UNUSED in client mode)
- * @return ZOO_SMB_OK on success, error code on failure
- * @note Messages are written to RX ring buffer and server is notified
+ * @param msg Message to send.
+ * @param receiver Target receiver identifier (unused in SHM client mode).
+ * @return ZOO_SMB_OK on successful enqueue; module error code on validation,
+ *         serialization, ring-buffer, or notification failures.
+ * @note Non-blocking for transport loop control; enqueues serialized bytes to
+ *       client RX ring and then signals server via notification path.
  */
 ZOO_ERROR_TYPE shm_client_send(void* impl_ptr,
                                    const ZOO_SMB_MSG_STRUCT* msg,
@@ -271,14 +272,14 @@ ZOO_ERROR_TYPE shm_client_send(void* impl_ptr,
     uint8_t* msg_buffer = zoo_allocate_from_pool(MAX_TRANSPORT_BUFFER_SIZE);
     if (!msg_buffer)
     {
-        ZOO_LOG_ERROR("Failed to allocate memory for message buffer\n");
+        ZOO_LOG_ERROR("Failed to allocate memory for message buffer");
         return ZOO_SMB_ERROR_ALLOCATION_FAILED;
     }
 
     size_t msg_size = zoo_smb_protocol_serialize(msg, msg_buffer, MAX_TRANSPORT_BUFFER_SIZE);
     if (msg_size == 0)
     {
-        ZOO_LOG_ERROR("Failed to serialize message\n");
+        ZOO_LOG_ERROR("Failed to serialize message");
         zoo_free_to_pool(msg_buffer);
         return ZOO_SMB_ERROR_TRANSPORT_SEND_FAILED;
     }
@@ -423,6 +424,7 @@ static ZOO_ERROR_TYPE client_register_with_server(ZOO_SMB_SHM_CLIENT_IMPL* impl)
         impl->client_info = NULL;
         return ZOO_SMB_ERROR_EVENTFD_CREATION_FAILED;
     }
+    impl->client_info->event_fd = event_fd;
 
     // Prepare registration information
     ZOO_SMB_SHM_CLIENT_REGISTRATION reg_info;
@@ -477,28 +479,9 @@ static ZOO_ERROR_TYPE client_register_with_server(ZOO_SMB_SHM_CLIENT_IMPL* impl)
     impl->client_id = client_id;
     impl->client_info->state = TRANSPORT_CONN_STATE_CONNECTED;
 
-    // Obtain server event fd for notifications
-    int retry_count = 0;
-    while (retry_count < CLIENT_REGISTRATION_MAX_RETRIES)
-    {
-        if (impl->server_header && impl->server_header->server_event_fd > 0)
-        {
-            impl->server_event_fd = impl->server_header->server_event_fd;
-            ZOO_LOG_DEBUG("Server event fd obtained: %d (after %d retries)",
-                              impl->server_event_fd,
-                              retry_count);
-            break;
-        }
-
-        usleep(CLIENT_REGISTRATION_RETRY_MS * 1000);
-        retry_count++;
-    }
-
-    if (impl->server_event_fd <= 0)
-    {
-        ZOO_LOG_WARN("Server event fd not available, using alternative notification");
-        impl->server_event_fd = -1;
-    }
+    // Event fds are process-local; use shared-memory flag fallback for cross-process notification.
+    impl->server_event_fd = -1;
+    ZOO_LOG_WARN("Using shared-memory fallback notification (server_event_fd disabled)");
 
     ZOO_LOG_INFO("Client registered successfully: %s (ID: %d, PID: %d), server_event_fd: %d",
                      impl->client_info->name,
@@ -978,12 +961,14 @@ static ZOO_ERROR_TYPE client_notify_observers(ZOO_SMB_SHM_CLIENT_IMPL* impl,
         {
             snapshot[i] = observer;
         }
-        else if (observer && observer->handler)
-        {
-            observer->handler(observer->user_data, message);
-        }
     }
     ZOO_MUTEX_UNLOCK(&impl->transport->data_observers_lock);
+
+    if (observer_count > 0 && snapshot == NULL)
+    {
+        ZOO_LOG_ERROR("Failed to allocate observer snapshot");
+        return ZOO_SMB_ERROR_OUT_OF_MEMORY;
+    }
 
     if (snapshot)
     {

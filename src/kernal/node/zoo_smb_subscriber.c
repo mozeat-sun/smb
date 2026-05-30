@@ -159,8 +159,6 @@ static void subscriber_on_handle_PUB_msg_cb(IN void* context, IN const void* msg
     ZOO_SMB_SUBSCRIBER_STRUCT* subscriber = (ZOO_SMB_SUBSCRIBER_STRUCT*)context;
     ZOO_SMB_MSG_STRUCT* message = (ZOO_SMB_MSG_STRUCT*)msg;
 
-        printf("[sub-printf] pid=%ld PUB callback msg_id=%u req_id=%llu payload_size=%u msg_len=%zu context=%p\n", (long)getpid(), message->header.msg_id, (unsigned long long)message->header.request_id, message->header.payload_size, msg_len, context);
-        fflush(stdout);
     ZOO_LOG_INFO("[sub-debug] Received PUB message: handler=%p context=%p msg_id=%u, req_id=%llu, payload_size=%zu, msg_len=%zu", (void*)subscriber_on_handle_PUB_msg_cb, context, message->header.msg_id, message->header.request_id, message->header.payload_size, msg_len);
 
     if (subscriber->qos_entity)

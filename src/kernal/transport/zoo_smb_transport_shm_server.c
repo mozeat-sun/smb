@@ -695,12 +695,16 @@ static ZOO_ERROR_TYPE shm_process_single_message(SHM_SERVER_IMPL_STRUCT* impl,
         {
             snapshot[i] = observer;
         }
-        else if (observer && observer->handler)
-        {
-            observer->handler(observer->user_data, msg_out);
-        }
     }
     ZOO_MUTEX_UNLOCK(&impl->common.transport->data_observers_lock);
+
+    if (observer_count > 0 && snapshot == NULL)
+    {
+        ZOO_LOG_ERROR("Failed to allocate observer snapshot");
+        zoo_free_to_pool(msg_buffer);
+        zoo_smb_destroy_message(msg_out);
+        return ZOO_SMB_ERROR_OUT_OF_MEMORY;
+    }
 
     if (snapshot)
     {
@@ -858,9 +862,10 @@ static ZOO_ERROR_TYPE shm_validate_and_register_client(SHM_SERVER_IMPL_STRUCT* i
 
     memset(client_info, 0, sizeof(SHM_CLIENT_INFO_STRUCT));
     strncpy(client_info->name, reg_request->client_name, sizeof(client_info->name) - 1);
+    client_info->name[sizeof(client_info->name) - 1] = '\0';
     client_info->client_id = impl->next_client_id++;
     client_info->pid = reg_request->client_pid;
-    client_info->event_fd = reg_request->client_event_fd;
+    client_info->event_fd = -1;
     client_info->shm_id = client_shm_id;
     client_info->shm_addr = client_shm_addr;
     client_info->shm_size = shm_info.shm_segsz;
@@ -879,6 +884,7 @@ static ZOO_ERROR_TYPE shm_validate_and_register_client(SHM_SERVER_IMPL_STRUCT* i
     client_header->magic = ZOO_SMB_MSG_MAGIC_NUMBER;
     client_header->version = ZOO_SMB_PROTOCOL_VERSION;
     strncpy(client_header->client_name, reg_request->client_name, sizeof(client_header->client_name) - 1);
+    client_header->client_name[sizeof(client_header->client_name) - 1] = '\0';
 
     ZOO_LOG_INFO("Initializing client header for %s", reg_request->client_name);
 
@@ -1116,7 +1122,19 @@ ZOO_ERROR_TYPE shm_server_start(void* impl_ptr)
 
     result = shm_server_init_event_fd(impl);
     if (ZOO_SMB_IS_ERROR(result))
+    {
+        if (impl->common.server_header)
+        {
+            shmdt(impl->common.server_header);
+            impl->common.server_header = NULL;
+        }
+        if (impl->common.master_shm_id != -1)
+        {
+            shmctl(impl->common.master_shm_id, IPC_RMID, NULL);
+            impl->common.master_shm_id = -1;
+        }
         return result;
+    }
 
     impl->common.is_started = ZOO_TRUE;
     impl->common.should_stop = ZOO_FALSE;

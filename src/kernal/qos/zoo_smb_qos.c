@@ -163,6 +163,12 @@ ZOO_SMB_MSG_STRUCT* zoo_smb_qos_build_msg(
     IN ZOO_U32 msg_id,
     IN ZOO_U64 request_id)
 {
+    if (qos_entity == NULL)
+    {
+        ZOO_LOG_ERROR("zoo_smb_qos_build_msg: qos_entity is NULL");
+        return NULL;
+    }
+
     return zoo_smb_create_message(
         msg_type, name, topic, qos_entity->policy ? (void*)qos_entity->policy : NULL, qos_entity->policy ? sizeof(ZOO_SMB_QOS_POLICY_STRUCT) : 0, msg_id, request_id);
 }
@@ -206,6 +212,12 @@ ZOO_SMB_QOS_CTX_HANDLE zoo_smb_qos_get_ctx(IN ZOO_SMB_QOS_ENTITY_HANDLE qos_enti
 ZOO_ERROR_TYPE zoo_smb_qos_wait_for_negotiation_completed(IN ZOO_SMB_QOS_ENTITY_HANDLE qos_entity,
                                                               IN uint64_t request_id)
 {
+    if (qos_entity == NULL || qos_entity->qos_ctx == NULL)
+    {
+        ZOO_LOG_ERROR("zoo_smb_qos_wait_for_negotiation_completed: invalid qos_entity/qos_ctx");
+        return ZOO_SMB_ERROR_INVALID_PARAM;
+    }
+
     uint32_t timeout_ms = qos_entity_get_effective_wait_timeout_ms(qos_entity);
     ZOO_LOG_INFO(
         "Waiting for QoS negotiation to complete for request_id: %llu, timeout_ms: %u", request_id, timeout_ms);
@@ -244,6 +256,12 @@ ZOO_ERROR_TYPE zoo_smb_qos_wait_for_negotiation_completed(IN ZOO_SMB_QOS_ENTITY_
  */
 ZOO_ERROR_TYPE zoo_smb_qos_wait_for_msg_status(IN ZOO_SMB_QOS_ENTITY_HANDLE qos_entity, IN uint64_t request_id, IN ZOO_SMB_MSG_ST_ENUM status)
 {
+    if (qos_entity == NULL || qos_entity->qos_ctx == NULL)
+    {
+        ZOO_LOG_ERROR("zoo_smb_qos_wait_for_msg_status: invalid qos_entity/qos_ctx");
+        return ZOO_SMB_ERROR_INVALID_PARAM;
+    }
+
     ZOO_LOG_INFO(
         "Waiting for QoS for request_id: %llu, status: %d", request_id, status);
     uint32_t timeout_ms = qos_entity_get_effective_wait_timeout_ms(qos_entity);

@@ -613,21 +613,21 @@ ZOO_ERROR_TYPE tcp_send_complete_message(int fd, const ZOO_SMB_MSG_STRUCT* msg)
     size_t total_size = sizeof(ZOO_SMB_MSG_HEADER_STRUCT) + msg->header.payload_size;
     if (total_size > MAX_TRANSPORT_BUFFER_SIZE)
     {
-        ZOO_LOG_ERROR("tcp_send: message payload size exceeds maximum buffer size\n");
+        ZOO_LOG_ERROR("tcp_send: message payload size exceeds maximum buffer size");
         return ZOO_SMB_ERROR_TRANSPORT_SEND_FAILED;
     }
 
     uint8_t* msg_buffer = zoo_allocate_from_pool(total_size);
     if (!msg_buffer)
     {
-        ZOO_LOG_ERROR("tcp_send: failed to allocate memory for message buffer\n");
+        ZOO_LOG_ERROR("tcp_send: failed to allocate memory for message buffer");
         return ZOO_SMB_ERROR_ALLOCATION_FAILED;
     }
 
     size_t msg_size = zoo_smb_protocol_serialize(msg, msg_buffer, total_size);
     if (msg_size == 0)
     {
-        ZOO_LOG_ERROR("tcp_send: failed to serialize message\n");
+        ZOO_LOG_ERROR("tcp_send: failed to serialize message");
         zoo_free_to_pool(msg_buffer);
         return ZOO_SMB_ERROR_TRANSPORT_SEND_FAILED;
     }

@@ -41,7 +41,7 @@ ZOO_SMB_SERVICE_HANDLE zoo_smb_create_service(
 {
     if (!name || !topic)
     {
-        ZOO_LOG_ERROR("zoo_smb_create_service: name or topic is NULL");
+        ZOO_LOG_ERROR("zoo_smb_create_service: required parameter name/topic is NULL");
         return NULL;
     }
     ZOO_SMB_SERVICE_HANDLE info = (ZOO_SMB_SERVICE_HANDLE)zoo_allocate_from_pool(sizeof(ZOO_SMB_SERVICE_STRUCT));
@@ -62,10 +62,10 @@ ZOO_SMB_SERVICE_HANDLE zoo_smb_create_service(
     info->name[sizeof(info->name) - 1] = '\0';  // Ensure null-termination
     snprintf(info->topic, sizeof(info->topic), "%s", topic);
     info->topic[sizeof(info->topic) - 1] = '\0';  // Ensure null-termination
-    snprintf(info->address, sizeof(info->address), "%s", address);
+    snprintf(info->address, sizeof(info->address), "%s", address ? address : "");
     info->address[sizeof(info->address) - 1] = '\0';  // Ensure null-termination
     info->port = port;
-    snprintf(info->multicast_address, sizeof(info->multicast_address), "%s", multicast_address);
+    snprintf(info->multicast_address, sizeof(info->multicast_address), "%s", multicast_address ? multicast_address : "");
     info->multicast_address[sizeof(info->multicast_address) - 1] = '\0';  // Ensure null-termination
     info->multicast_port = multicast_port;
     info->transport_type = transport_type;

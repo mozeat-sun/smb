@@ -603,13 +603,9 @@ static ZOO_ERROR_TYPE copy_payload_data(const uint8_t* buffer, size_t buffer_siz
 ZOO_ERROR_TYPE zoo_smb_protocol_deserialize(const uint8_t* buffer, size_t buffer_size, ZOO_SMB_MSG_STRUCT* msg_out, size_t msg_out_size)
 {
     ZOO_LOG_DEBUG("[proto-debug] Starting message deserialization: buffer_size=%zu", buffer_size);
-    printf("[proto-printf] pid=%ld deserialize start buffer_size=%zu msg_out_size=%zu\n", (long)getpid(), buffer_size, msg_out_size);
-    fflush(stdout);
     if (!buffer || !msg_out || msg_out_size < sizeof(ZOO_SMB_MSG_STRUCT))
     {
         ZOO_LOG_ERROR("Deserialization failed: NULL parameters or insufficient output size");
-        printf("[proto-printf] pid=%ld deserialize invalid params\n", (long)getpid());
-        fflush(stdout);
         return ZOO_SMB_ERROR_INVALID_PARAM;
     }
 
@@ -617,29 +613,12 @@ ZOO_ERROR_TYPE zoo_smb_protocol_deserialize(const uint8_t* buffer, size_t buffer
     if (result == ZOO_SMB_OK)
     {
         result = extract_and_validate_header(buffer, &msg_out->header);
-        printf("[proto-printf] pid=%ld header result=%d msg_type=%u payload_size=%u\n", (long)getpid(), result, msg_out->header.msg_type, msg_out->header.payload_size);
-        fflush(stdout);
     }
 
     if (result == ZOO_SMB_OK)
     {
         result = copy_payload_data(buffer, buffer_size, msg_out);
-        printf("[proto-printf] pid=%ld payload copy result=%d payload_size=%u\n", (long)getpid(), result, msg_out->header.payload_size);
-        fflush(stdout);
         ZOO_LOG_DEBUG("[proto-debug] After header extraction: msg_type=%u, payload_size=%u", msg_out->header.msg_type, msg_out->header.payload_size);
-    }
-
-    if (result == ZOO_SMB_OK)
-    {
-        printf("[proto-printf] pid=%ld deserialize success msg_type=%u payload_size=%u\n", (long)getpid(), msg_out->header.msg_type, msg_out->header.payload_size);
-        fflush(stdout);
-        ZOO_LOG_DEBUG("[proto-debug] Message deserialized successfully: msg_type=%u, payload_size=%u, result=%d", msg_out->header.msg_type, msg_out->header.payload_size, result);
-    }
-    else
-    {
-        printf("[proto-printf] pid=%ld deserialize fail result=%d\n", (long)getpid(), result);
-        fflush(stdout);
-        ZOO_LOG_ERROR("[proto-debug] Message deserialization failed: result=%d", result);
     }
 
     return result;

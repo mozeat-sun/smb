@@ -124,8 +124,8 @@ ZOO_ERROR_TYPE tcp_server_start(void *impl)
     memset(&addr, 0, sizeof(addr));
     addr.in.family = ZOO_AF_INET;
     addr.in.port = config->port;
-    // TODO: Convert config->address (string) to uint32_t IP (host byte order)
-    // For now, bind to any address
+    // TODO(smb-transport-tcp): Parse config->address into addr.in.addr (host byte order).
+    // Current behavior binds to any interface until address parsing is implemented.
     addr.in.addr = ZOO_INADDR_ANY;
 
     err = zoo_socket_bind(&server->common.socket_info, &addr);
@@ -228,12 +228,10 @@ ZOO_BOOL tcp_server_is_started(void *impl)
 }
 
 /**
- * @brief Create a listen socket for the TCP server (not supported).
- *
- * This function is a stub and always returns not supported.
+ * @brief Create a listen socket for the TCP server.
  *
  * @param server Server transport pointer.
- * @return ZOO_SMB_ERROR_NOT_SUPPORTED always.
+ * @return ZOO_SMB_OK on success, error code otherwise.
  */
 ZOO_ERROR_TYPE tcp_server_create_listen_socket(TCP_SERVER_TRANSPORT_STRUCT *server)
 {
@@ -248,12 +246,10 @@ ZOO_ERROR_TYPE tcp_server_create_listen_socket(TCP_SERVER_TRANSPORT_STRUCT *serv
 }
 
 /**
- * @brief Bind the TCP server socket (not supported).
- *
- * This function is a stub and always returns not supported.
+ * @brief Bind the TCP server socket using current transport config.
  *
  * @param server Server transport pointer.
- * @return ZOO_SMB_ERROR_NOT_SUPPORTED always.
+ * @return ZOO_SMB_OK on success, error code otherwise.
  */
 ZOO_ERROR_TYPE tcp_server_bind_socket(TCP_SERVER_TRANSPORT_STRUCT *server)
 {
@@ -264,17 +260,16 @@ ZOO_ERROR_TYPE tcp_server_bind_socket(TCP_SERVER_TRANSPORT_STRUCT *server)
     memset(&addr, 0, sizeof(addr));
     addr.in.family = ZOO_AF_INET;
     addr.in.port = server->common.config->port;
-    addr.in.addr = ZOO_INADDR_ANY; // TODO: parse config->address
+    // TODO(smb-transport-tcp): Parse server->common.config->address instead of binding to any interface.
+    addr.in.addr = ZOO_INADDR_ANY;
     return zoo_socket_bind(&server->common.socket_info, &addr);
 }
 
 /**
- * @brief Start listening on the TCP server socket (not supported).
- *
- * This function is a stub and always returns not supported.
+ * @brief Start listening on the TCP server socket.
  *
  * @param server Server transport pointer.
- * @return ZOO_SMB_ERROR_NOT_SUPPORTED always.
+ * @return ZOO_SMB_OK on success, error code otherwise.
  */
 ZOO_ERROR_TYPE tcp_server_start_listening(TCP_SERVER_TRANSPORT_STRUCT *server)
 {
@@ -284,12 +279,10 @@ ZOO_ERROR_TYPE tcp_server_start_listening(TCP_SERVER_TRANSPORT_STRUCT *server)
 }
 
 /**
- * @brief Accept a client connection on the TCP server (not supported).
- *
- * This function is a stub and always returns not supported.
+ * @brief Accept one client connection and register it in the client list.
  *
  * @param server Server transport pointer.
- * @return ZOO_SMB_ERROR_NOT_SUPPORTED always.
+ * @return ZOO_SMB_OK on success, error code otherwise.
  */
 ZOO_ERROR_TYPE tcp_server_accept_client(TCP_SERVER_TRANSPORT_STRUCT *server)
 {
@@ -495,28 +488,7 @@ ZOO_ERROR_TYPE tcp_server_event_loop(TCP_SERVER_TRANSPORT_STRUCT *server)
                 continue;
             break;
         }
-        for (int i = 0; i < n; ++i)
-        {
-            if (events[i].data.fd == server->listen_fd)
-            {
-                // Accept new client
-                tcp_server_accept_client(server);
-                // Add new client fd to epoll
-                TCP_CLIENT_INFO_STRUCT *client = (TCP_CLIENT_INFO_STRUCT *)zoo_list_at(server->clients, zoo_list_size(server->clients) - 1);
-                if (client)
-                {
-                    struct epoll_event client_ev;
-                    client_ev.events = EPOLLIN | EPOLLRDHUP;
-                    client_ev.data.fd = client->socket_info.fd;
-                    epoll_ctl(epoll_fd, EPOLL_CTL_ADD, client->socket_info.fd, &client_ev);
-                }
-            }
-            else
-            {
-                // Find client and handle events
-                tcp_server_handle_client_events(server, events[i].data.fd, events[i].events);
-            }
-        }
+        tcp_server_process_events(server, events, n);
     }
     close(epoll_fd);
     server->common.epoll_fd = INVALID_TRANSPORT_FD;
@@ -532,10 +504,21 @@ ZOO_ERROR_TYPE tcp_server_event_loop(TCP_SERVER_TRANSPORT_STRUCT *server)
  */
 void tcp_server_process_events(TCP_SERVER_TRANSPORT_STRUCT *server, struct epoll_event *events, int event_count)
 {
-    // TODO: Iterate over epoll events and dispatch to listen/client handlers
-    (void)server;
-    (void)events;
-    (void)event_count;
+    if (!server || !events || event_count <= 0)
+    {
+        return;
+    }
+
+    for (int i = 0; i < event_count; ++i)
+    {
+        if (events[i].data.fd == server->listen_fd)
+        {
+            tcp_server_handle_listen_events(server, events[i].events);
+            continue;
+        }
+
+        tcp_server_handle_client_events(server, events[i].data.fd, events[i].events);
+    }
 }
 
 /**
@@ -546,9 +529,43 @@ void tcp_server_process_events(TCP_SERVER_TRANSPORT_STRUCT *server, struct epoll
  */
 void tcp_server_handle_listen_events(TCP_SERVER_TRANSPORT_STRUCT *server, uint32_t events)
 {
-    // TODO: Handle new incoming connections on the listen socket
-    (void)server;
-    (void)events;
+    if (!server)
+    {
+        return;
+    }
+
+    if (!(events & EPOLLIN))
+    {
+        return;
+    }
+
+    if (tcp_server_accept_client(server) != ZOO_SMB_OK)
+    {
+        ZOO_LOG_WARN("Failed to accept client on listen socket");
+        return;
+    }
+
+    if (server->common.epoll_fd == INVALID_TRANSPORT_FD || zoo_list_size(server->clients) == 0)
+    {
+        return;
+    }
+
+    TCP_CLIENT_INFO_STRUCT *client =
+        (TCP_CLIENT_INFO_STRUCT *)zoo_list_at(server->clients, zoo_list_size(server->clients) - 1);
+    if (!client)
+    {
+        return;
+    }
+
+    struct epoll_event client_ev;
+    memset(&client_ev, 0, sizeof(client_ev));
+    client_ev.events = EPOLLIN | EPOLLRDHUP;
+    client_ev.data.fd = client->socket_info.fd;
+    if (epoll_ctl(server->common.epoll_fd, EPOLL_CTL_ADD, client->socket_info.fd, &client_ev) < 0)
+    {
+        ZOO_LOG_WARN("Failed to add accepted client fd=%d to epoll", client->socket_info.fd);
+        tcp_server_remove_client(server, client->socket_info.fd);
+    }
 }
 
 /**
@@ -627,7 +644,7 @@ void tcp_server_handle_client_events(TCP_SERVER_TRANSPORT_STRUCT *server, int cl
                 // Clean up payload if allocated by deserializer (implementation-dependent)
                 if (msg.payload)
                 {
-                    free(msg.payload);
+                    zoo_free_to_pool(msg.payload);
                     msg.payload = NULL;
                 }
                 offset += total_msg_size;

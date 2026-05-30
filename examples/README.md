@@ -91,6 +91,19 @@ For one-command local example runs (including auto-build with examples enabled),
 bash tools/run_local_examples.sh all
 ```
 
+For a shorter command from repository root, use:
+
+```bash
+bash examples/start.sh all
+```
+
+For split terminal style, use role commands:
+
+```bash
+bash examples/start.sh udp server
+bash examples/start.sh udp client
+```
+
 Supported modes:
 
 - `tcp`
@@ -105,4 +118,7 @@ Quick examples:
 bash tools/run_local_examples.sh udp
 SKIP_BUILD=1 bash tools/run_local_examples.sh shm
 EXAMPLES_LOG_LEVEL=1 bash tools/run_local_examples.sh all
+bash examples/start.sh udp
+bash examples/start.sh tcp server
+bash examples/start.sh tcp client
 ```

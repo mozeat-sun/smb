@@ -82,8 +82,6 @@ static void server_on_handle_REPLACK_msg_cb(void* context, const void* msg, ZOO_
         ZOO_SMB_QOS_CTX_HANDLE qos_ctx = zoo_smb_qos_get_ctx(server->qos_entity);
         zoo_smb_qos_ctx_set_msg_status(qos_ctx, message->header.request_id, ZOO_SMB_MSG_ST_ACKED);
     }
-
-    return;
 }
 
 /**
@@ -126,7 +124,6 @@ static void server_on_handle_REQ_msg_cb(void* context, const void* msg, ZOO_USIZ
             ZOO_LOG_DEBUG("Message handled successfully: msg_id=%llu, payload_size=%zu", message->header.request_id, message->header.payload_size);
         }
     }
-
 }
 
 /**
@@ -153,10 +150,16 @@ ZOO_SMB_SERVER_HANDLE zoo_smb_create_server(
     }
 
     ZOO_SMB_SERVER_STRUCT* server = (ZOO_SMB_SERVER_STRUCT*)zoo_allocate_from_pool(sizeof(ZOO_SMB_SERVER_STRUCT));
+    if(server == NULL)
+    {
+        ZOO_LOG_ERROR("Failed to allocate memory for server: %s", name);
+        return NULL;
+    }
     server->node = zoo_smb_create_node(name, target, topic, ZOO_SMB_NODE_TYPE_SERVER, transport_type);
     if (NULL == server->node)
     {
         ZOO_LOG_ERROR("Fail to create server : %s", name);
+        zoo_free_to_pool(server);
         return NULL;
     }
 
@@ -182,6 +185,7 @@ ZOO_SMB_SERVER_HANDLE zoo_smb_create_server(
     if (repl_observer == NULL)
     {
         ZOO_LOG_ERROR("Failed to create server observer");
+        zoo_smb_destroy_qos_entity(server->qos_entity);
         zoo_smb_destroy_node(server->node);
         zoo_free_to_pool(server);
         return NULL;
@@ -192,6 +196,7 @@ ZOO_SMB_SERVER_HANDLE zoo_smb_create_server(
     if (replack_observer == NULL)
     {
         ZOO_LOG_ERROR("Failed to create server observer");
+        zoo_smb_destroy_qos_entity(server->qos_entity);
         zoo_smb_destroy_node(server->node);
         zoo_free_to_pool(server);
         return NULL;
@@ -200,6 +205,7 @@ ZOO_SMB_SERVER_HANDLE zoo_smb_create_server(
     if (ZOO_SMB_OK != zoo_smb_register_node(server->node))
     {
         ZOO_LOG_ERROR("Failed to register node");
+        zoo_smb_destroy_qos_entity(server->qos_entity);
         zoo_smb_destroy_node(server->node);
         zoo_free_to_pool(server);
         return NULL;
@@ -258,7 +264,7 @@ ZOO_ERROR_T zoo_smb_server_send_reply(
     if (server == NULL || payload == NULL)
     {
         ZOO_LOG_ERROR(
-            "Invalid parameters: server=%p, payload=%p, request_id=%ld", server, payload, request_id);
+            "Invalid parameters: server=%p, payload=%p, request_id=%lld", server, payload, (long long)request_id);
         return ZOO_SMB_ERROR_INVALID_PARAM;
     }
 

@@ -58,6 +58,12 @@ ZOO_SMB_NODE_HANDLE zoo_smb_create_node(
     IN ZOO_SMB_NODE_TYPE_ENUM node_type,
     IN ZOO_SMB_TRANSPORT_TYPE_ENUM transport_type)
 {
+    if (name == NULL || target == NULL || topic == NULL)
+    {
+        ZOO_LOG_ERROR("Invalid parameters: name=%p, target=%p, topic=%p", name, target, topic);
+        return NULL;
+    }
+
     ZOO_SMB_NODE_STRUCT* node = (ZOO_SMB_NODE_STRUCT*)zoo_allocate_from_pool(sizeof(ZOO_SMB_NODE_STRUCT));
     if (node == NULL)
     {
@@ -78,6 +84,7 @@ ZOO_SMB_NODE_HANDLE zoo_smb_create_node(
     if (!node->observers)
     {
         ZOO_LOG_ERROR("Failed to create observers list for node: %s", name);
+        zoo_free_to_pool(node);
         return NULL;
     }
     node->active = ZOO_FALSE;
