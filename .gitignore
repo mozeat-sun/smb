@@ -1,6 +1,9 @@
 
 # Top-level build outputs
 /build/
+/build-industrial/
+/build-perf/
+/build-previous/
 /stage/
 /bin/
 /lib/
