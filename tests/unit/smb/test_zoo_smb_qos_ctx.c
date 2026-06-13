@@ -1,5 +1,5 @@
 #include "unity.h"
-#include "test_utils.h"
+#include "test_smb_helpers.h"
 #include "zoo_smb_qos_ctx.h"
 #include <string.h>
 #include <stdint.h>

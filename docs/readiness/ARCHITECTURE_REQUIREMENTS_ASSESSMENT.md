@@ -13,6 +13,7 @@ Overall conclusion:
 - The current architecture is sufficient to support the next industrial-grade hardening iterations without a rewrite.
 - The current architecture remains partial for later automotive-grade and military/aerospace-grade iterations, but now includes runtime-selectable profile composition and admission-time assurance checks.
 - The repository is currently best characterized as late Milestone M3 with early Milestone M4 scaffolding in place.
+- Current maintained repository verification baseline is green: full build, full CTest, and full local example matrix pass.
 
 ## Requirement Matrix
 
@@ -78,6 +79,11 @@ The current architecture does not yet meet the needs of later iterations if thos
 - durable recovery guarantees
 - full compatibility governance across transports
 - certification-oriented safety and security assurance
+
+Repository synchronization note (2026-05-31):
+
+- Core SMB source paths have been aligned with repository code specifications in current active development slices.
+- The architecture and readiness posture statements remain unchanged at grade level, but confidence in repository baseline stability is higher due to current full verification pass.
 
 ## Recommended architecture priorities
 

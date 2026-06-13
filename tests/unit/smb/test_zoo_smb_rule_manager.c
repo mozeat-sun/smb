@@ -1,5 +1,5 @@
 #include "unity.h"
-#include "test_utils.h"
+#include "test_smb_helpers.h"
 #include "zoo_smb_rule_manager.h"
 #include "zoo_smb_routing_rule.h"
 #include "zoo_smb_node.h"
@@ -89,7 +89,7 @@ void test_make_and_get_rule(void) {
     TEST_ASSERT_EQUAL_PTR(rule, rule2);
 
     // Test get interface
-    const char* rule_key = zoo_smb_make_name_3(node->target, node->topic, node->transport_type);
+    const char* rule_key = zoo_smb_get_routing_rule_name(rule);
     ZOO_SMB_RULE_HANDLE got = zoo_smb_rule_manager_get_rule(mgr, rule_key);
     TEST_ASSERT_EQUAL_PTR(got, rule);
 
@@ -230,7 +230,7 @@ void test_find_rule(void) {
     ZOO_SMB_RULE_HANDLE rule = zoo_smb_rule_manager_make_rule(mgr, node, service, transport);
     TEST_ASSERT_NOT_NULL(rule);
 
-    const char* rule_key = zoo_smb_make_name_3(node->target, node->topic, node->transport_type);
+    const char* rule_key = zoo_smb_get_routing_rule_name(rule);
     ZOO_SMB_RULE_HANDLE found = zoo_smb_rule_manager_get_rule(mgr, rule_key);
     TEST_ASSERT_EQUAL_PTR(found, rule);
 

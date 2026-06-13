@@ -30,6 +30,7 @@ Candidate focus areas:
 - benchmark, soak, reliability, fuzz, and compatibility artifacts
 - pre-assessment readiness gate artifacts (`artifacts/quality/pre_assessment_readiness_report.md` and `artifacts/quality/pre_assessment_readiness_summary.json`)
 - remediation plan artifacts (`artifacts/quality/pre_assessment_remediation_plan.md` and `artifacts/quality/pre_assessment_remediation_plan_summary.json`)
+- current repository verification snapshot artifacts (full build + full CTest + full local examples run logs)
 
 ## 3. External review questions
 
@@ -47,6 +48,7 @@ Candidate focus areas:
 5. create remediation owners and target dates
 6. re-run the review after material remediation is complete
 7. publish a readiness summary for stakeholders
+8. confirm the assessed baseline still passes full repository verification before submission
 
 ## 5. Deliverables
 

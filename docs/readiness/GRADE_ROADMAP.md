@@ -21,17 +21,20 @@ Each level has mandatory architecture controls, process controls, verification t
 
 ## Current Grade Statement
 
-Current repository claim as of 2026-04-11:
+Current repository claim as of 2026-05-31:
 
 - The repository is operating in pre-Grade-1 completion territory.
 - The current implementation and evidence set support late Milestone M3 with repository-level M4 scaffolding, but do not yet satisfy the full Grade 1 Industrial exit gates.
-- Grade 1 hardening progress is substantial in benchmark governance, reliability scaffolding, traceability, and security workflow evidence, but Grade 1 remains unachieved until the remaining industrial exit criteria are met.
+- Grade 1 hardening progress is substantial in benchmark governance, reliability scaffolding, traceability, security workflow evidence, and repository-wide code-specification alignment in core SMB paths.
+- Full repository verification currently passes in the maintained build profile: full CTest suite and local examples execution are green for the current baseline.
+- Grade 1 remains unachieved until long-duration operational evidence and external pilot criteria are complete.
 - Grade 2 Automotive and Grade 3 Military/Aerospace claims are not currently supportable from repository evidence.
 
 Evidence basis for this statement:
 
 - `docs/readiness/ROADMAP_EXECUTION_BACKLOG.md` records the current repository status as late M3 with M4 scaffolding in place.
 - `docs/readiness/ARCHITECTURE_REQUIREMENTS_ASSESSMENT.md` states that the architecture is sufficient for next industrial-grade hardening iterations, but not yet sufficient for later automotive-grade and military/aerospace-grade iterations.
+- Current repository validation runs confirm full CTest pass and full local example pass for the latest baseline.
 - Grade 1 exit gates below still require completion of longer-duration reliability, recovery, and field-use evidence.
 
 ## Grade 1: Industrial
@@ -164,6 +167,53 @@ Evidence basis for this statement:
 - Stabilize core protocol and routing invariants
 - Add explicit wire protocol versioning and compatibility tests
 - Introduce deterministic memory profile and telemetry baseline
+
+### Transport Auto-Choose Architecture (Same Host -> SHM)
+
+Objective:
+
+- When two processes communicate on the same machine, automatically select SHM transport for lower latency and lower kernel/network overhead.
+- Preserve compatibility and fail-open behavior by falling back to network transport when SHM is unavailable.
+
+Design principles:
+
+- Deterministic selection precedence with explicit override support.
+- Backward-compatible discovery payload extension.
+- No in-session transport migration in initial implementation.
+- Strong observability for selection and fallback decisions.
+
+Selection precedence:
+
+1. Explicit node/service transport setting (manual override) wins.
+2. If auto-select is disabled, keep current transport behavior.
+3. If auto-select is enabled and peer is same-host and SHM-capable, choose SHM.
+4. Otherwise choose discovered/default network transport.
+
+Required metadata and protocol extensions:
+
+- Add host fingerprint to service-discovery metadata.
+- Add transport capability bitmask to service-discovery metadata.
+- Add optional SHM endpoint/channel hint.
+- Keep old discovery payloads valid by treating new fields as optional.
+
+Resolver integration points:
+
+- Add a transport resolver stage in transport manager before transport creation.
+- Resolver input: node intent, service metadata, global config, and local host fingerprint.
+- Resolver output: selected transport type, fallback candidate, and decision reason.
+
+Failure and fallback policy:
+
+- If SHM attach/register fails, fall back automatically to configured network transport.
+- Apply cooldown before retrying SHM to avoid oscillation.
+- Record fallback reason and retry counters.
+
+Telemetry and evidence:
+
+- Selection counters by transport type.
+- Fallback counters by reason.
+- Selection decision latency metric.
+- Quality artifact summarizing auto-select decisions in CI verification runs.
 
 ## Phase B: Operational excellence
 

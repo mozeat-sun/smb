@@ -8,7 +8,7 @@ This file contains issue-ready epics and milestones aligned with the grade roadm
 - Copy each issue title and checklist into a GitHub issue.
 - Link pull requests to these issues and track evidence artifacts.
 
-## Current Repository Status (2026-04-16)
+## Current Repository Status (2026-05-31)
 
 Current execution position:
 
@@ -25,8 +25,11 @@ Current practical milestone call:
 - Late M3, with repository-level M4 scaffolding in place.
 - M3 implementation slice is complete in repository artifacts and quality gates; remaining gaps are higher-grade follow-on work rather than Milestone M3 blockers.
 - M4 still requires execution-time assessor engagement, findings closure, and controlled-baseline discipline beyond repository-side templates and gates.
+- Current repository validation snapshot is green for maintained build/test/example pipelines.
+- Full CTest suite passes in the main build profile.
+- Full local examples run passes across tcp, udp, pubsub, and shm modes.
 
-## Prepared Next Step (2026-04-16)
+## Prepared Next Step (2026-05-31)
 
 Execution focus: Grade 1 closure and evidentiary gate tracking, while keeping Milestone M4 Issue 8 in controlled progress.
 
@@ -131,6 +134,93 @@ Additional evidence now produced:
 
 - `artifacts/quality/latency_scenario_matrix.md`
 - `artifacts/quality/latency_scenario_matrix.json`
+
+### Issue 4A: Same-host transport auto-select to SHM
+
+Goal: automatically select SHM transport when communicating processes are on the same machine while preserving safe fallback behavior.
+
+Checklist:
+
+- [ ] Add transport resolver stage before transport creation in transport manager.
+- [ ] Define deterministic selection precedence (explicit override > auto-select off > same-host SHM > network).
+- [ ] Extend service-discovery payload with optional host fingerprint and transport capabilities.
+- [ ] Preserve backward compatibility with existing discovery payload format.
+- [ ] Add SHM attach/register timeout and fallback-to-network behavior.
+- [ ] Add fallback cooldown policy to avoid repeated SHM thrashing.
+- [ ] Add telemetry fields for selected transport, fallback reason, and selection latency.
+- [ ] Add unit tests for resolver decision matrix.
+- [ ] Add integration tests for same-host SHM select and forced fallback.
+- [ ] Add CI artifact summarizing transport auto-select outcomes.
+
+Exit evidence:
+
+- Resolver decision matrix test report (pass).
+- Same-host integration evidence showing SHM selection.
+- Failure-path evidence showing automatic fallback to network transport.
+- Backward-compatibility evidence with mixed discovery payload versions.
+
+Implementation mapping:
+
+1. Resolver insertion and selection telemetry
+	- `src/kernal/core/zoo_smb_transport_manager.c`
+	- Add resolver entry point before `config->type` is finalized for transport creation.
+	- Record selected transport, fallback transport, fallback reason, and selection latency.
+2. Service capability and host metadata persistence
+	- `src/kernal/core/zoo_smb_service.c`
+	- `src/kernal/core/zoo_smb_service_manager.c`
+	- Extend service model to retain host fingerprint, capability bits, and SHM endpoint hint.
+3. Discovery payload extension and parsing
+	- `src/kernal/core/zoo_smb_service_discovery.c`
+	- `src/kernal/transport/zoo_smb_protocol.c`
+	- Add backward-compatible optional key/value discovery extensions.
+4. Auto-select policy and validation
+	- `src/kernal/utility/zoo_smb_config.c`
+	- Add config keys for auto-select enablement, strategy, SHM handshake timeout, and fallback cooldown.
+	- Validate defaults so current deployments remain fail-safe.
+5. SHM readiness and failure classification
+	- `src/kernal/transport/zoo_smb_transport_shm_client.c`
+	- `src/kernal/transport/zoo_smb_transport_shm_server.c`
+	- Bound SHM attach/register time, expose explicit failure classes, and keep fallback trigger deterministic.
+6. Optional helper utilities if separation is needed
+	- `src/kernal/utility/zoo_smb_error.c`
+	- `src/kernal/utility/zoo_smb_config.c`
+	- Add resolver-visible helper functions for host comparison and policy evaluation.
+
+Recommended implementation order:
+
+1. Extend config and defaults.
+	- Introduce `transport_auto_select` policy semantics first so behavior is explicitly gated.
+2. Extend service/discovery metadata model.
+	- Add host fingerprint and capability fields to internal service representation.
+3. Extend protocol/discovery payload parser.
+	- Keep old payload parsing valid before enabling new resolver logic.
+4. Implement resolver in transport manager.
+	- Select SHM only when same-host and SHM-capable conditions are both satisfied.
+5. Implement SHM failure classification and fallback cooldown.
+	- Ensure resolver can fail open to current network transport behavior.
+6. Add telemetry and logs.
+	- Make selection decisions visible before wide rollout.
+7. Add tests and CI artifact publication.
+	- Lock in resolver behavior with deterministic coverage.
+
+Verification breakdown:
+
+1. Unit tests
+	- Resolver precedence matrix.
+	- Same-host fingerprint matching.
+	- Auto-select disabled path.
+	- Fallback cooldown behavior.
+2. Integration tests
+	- Same-host server/client resolves to SHM and completes request/reply.
+	- Forced SHM attach failure falls back to UDP/TCP and still completes request/reply.
+	- Mixed-version discovery payload remains parse-compatible.
+3. Runtime evidence
+	- Metrics artifact includes selected transport counts and fallback reasons.
+	- Logs show one-line selection decision per transport creation.
+4. Regression gates
+	- Full CTest pass.
+	- Full local examples pass with auto-select disabled.
+	- Focused same-host examples pass with auto-select enabled.
 
 ## Milestone M3: Safety and Assurance
 

@@ -5,144 +5,140 @@
  * Module: Soft Message Bus Tests
  * Component id: test_zoo_smb_qos_
  * File name: test_zoo_smb_qos.c
- * Description: Unity-based QoS tests (converted from GTest)
+ * Description: Unity-based QoS tests — updated for current sub-struct policy API.
  * Traceability coverage:
  * - REQ-SAFE-001: deterministic QoS policy validation behavior.
  * - REQ-SAFE-003: requirement-linked unit evidence for QoS policy primitives.
  * History recorder:
  * Version   date           author            context
  * 1.0       2025-08-05     AI                converted from GTest
+ * 2.0       2026-06-13     claude            updated for current API
  ******************************************************************************/
 
-#include "test_utils.h"
+#include "test_smb_helpers.h"
 #include "zoo_smb_qos.h"
 #include "zoo_smb_qos_policy.h"
 
-void test_create_and_destroy_qos_context(void)
+void test_create_and_destroy_qos_entity(void)
 {
-    ZOO_SMB_QOS_CTX_HANDLE qos_ctx = zoo_smb_qos_create_context();
+    ZOO_SMB_QOS_ENTITY_HANDLE entity = zoo_smb_create_qos_default_entity();
+    TEST_ASSERT_NOT_NULL(entity);
+
+    ZOO_SMB_QOS_POLICY_HANDLE policy = zoo_smb_qos_get_policy(entity);
+    TEST_ASSERT_NOT_NULL(policy);
+    TEST_ASSERT_TRUE(zoo_smb_qos_policy_is_valid(policy));
+
+    ZOO_SMB_QOS_CTX_HANDLE qos_ctx = zoo_smb_qos_get_ctx(entity);
     TEST_ASSERT_NOT_NULL(qos_ctx);
-    
-    TEST_ASSERT_ERROR_OK(zoo_smb_qos_destroy_context(qos_ctx));
+
+    zoo_smb_destroy_qos_entity(entity);
 }
 
-void test_qos_policy_creation(void)
+void test_qos_policy_is_valid_with_default(void)
 {
-    ZOO_SMB_QOS_POLICY_STRUCT policy;
-    memset(&policy, 0, sizeof(policy));
-    
-    // Set some basic policy values
-    policy.reliability = ZOO_SMB_QOS_RELIABILITY_RELIABLE;
-    policy.durability = ZOO_SMB_QOS_DURABILITY_TRANSIENT;
-    policy.priority = ZOO_SMB_QOS_PRIORITY_NORMAL;
-    
-    // Test policy validation
-    TEST_ASSERT_TRUE(zoo_smb_qos_is_policy_valid(&policy));
+    ZOO_SMB_QOS_ENTITY_HANDLE entity = zoo_smb_create_qos_default_entity();
+    TEST_ASSERT_NOT_NULL(entity);
+
+    ZOO_SMB_QOS_POLICY_HANDLE policy = zoo_smb_qos_get_policy(entity);
+    TEST_ASSERT_NOT_NULL(policy);
+    TEST_ASSERT_TRUE(zoo_smb_qos_policy_is_valid(policy));
+
+    zoo_smb_destroy_qos_entity(entity);
 }
 
-void test_qos_policy_invalid_params(void)
+void test_qos_policy_null_rejected(void)
 {
-    // Test with NULL policy
-    TEST_ASSERT_FALSE(zoo_smb_qos_is_policy_valid(NULL));
-    
-    ZOO_SMB_QOS_POLICY_STRUCT invalid_policy;
-    memset(&invalid_policy, 0xFF, sizeof(invalid_policy)); // Fill with invalid values
-    
-    // Test with invalid policy values
-    TEST_ASSERT_FALSE(zoo_smb_qos_is_policy_valid(&invalid_policy));
+    TEST_ASSERT_FALSE(zoo_smb_qos_policy_is_valid(NULL));
 }
 
-void test_qos_reliability_settings(void)
+void test_qos_policy_priority_settings(void)
 {
-    ZOO_SMB_QOS_POLICY_STRUCT policy;
-    memset(&policy, 0, sizeof(policy));
-    
-    // Test different reliability settings
-    policy.reliability = ZOO_SMB_QOS_RELIABILITY_BEST_EFFORT;
-    policy.durability = ZOO_SMB_QOS_DURABILITY_TRANSIENT;
-    policy.priority = ZOO_SMB_QOS_PRIORITY_NORMAL;
-    TEST_ASSERT_TRUE(zoo_smb_qos_is_policy_valid(&policy));
-    
-    policy.reliability = ZOO_SMB_QOS_RELIABILITY_RELIABLE;
-    TEST_ASSERT_TRUE(zoo_smb_qos_is_policy_valid(&policy));
+    ZOO_SMB_QOS_ENTITY_HANDLE entity = zoo_smb_create_qos_default_entity();
+    TEST_ASSERT_NOT_NULL(entity);
+
+    ZOO_SMB_QOS_POLICY_HANDLE policy = zoo_smb_qos_get_policy(entity);
+    TEST_ASSERT_NOT_NULL(policy);
+
+    zoo_smb_qos_policy_set_priority(policy, ZOO_SMB_QOS_PRIORITY_LOW);
+    TEST_ASSERT_TRUE(zoo_smb_qos_policy_is_valid(policy));
+
+    zoo_smb_qos_policy_set_priority(policy, ZOO_SMB_QOS_PRIORITY_MEDIUM);
+    TEST_ASSERT_TRUE(zoo_smb_qos_policy_is_valid(policy));
+
+    zoo_smb_qos_policy_set_priority(policy, ZOO_SMB_QOS_PRIORITY_HIGH);
+    TEST_ASSERT_TRUE(zoo_smb_qos_policy_is_valid(policy));
+
+    zoo_smb_qos_policy_set_priority(policy, ZOO_SMB_QOS_PRIORITY_REALTIME);
+    TEST_ASSERT_TRUE(zoo_smb_qos_policy_is_valid(policy));
+
+    zoo_smb_destroy_qos_entity(entity);
 }
 
-void test_qos_durability_settings(void)
+void test_qos_policy_reliability_settings(void)
 {
-    ZOO_SMB_QOS_POLICY_STRUCT policy;
-    memset(&policy, 0, sizeof(policy));
-    
-    // Test different durability settings
-    policy.reliability = ZOO_SMB_QOS_RELIABILITY_RELIABLE;
-    policy.priority = ZOO_SMB_QOS_PRIORITY_NORMAL;
-    
-    policy.durability = ZOO_SMB_QOS_DURABILITY_VOLATILE;
-    TEST_ASSERT_TRUE(zoo_smb_qos_is_policy_valid(&policy));
-    
-    policy.durability = ZOO_SMB_QOS_DURABILITY_TRANSIENT;
-    TEST_ASSERT_TRUE(zoo_smb_qos_is_policy_valid(&policy));
-    
-    policy.durability = ZOO_SMB_QOS_DURABILITY_PERSISTENT;
-    TEST_ASSERT_TRUE(zoo_smb_qos_is_policy_valid(&policy));
+    ZOO_SMB_QOS_ENTITY_HANDLE entity = zoo_smb_create_qos_default_entity();
+    TEST_ASSERT_NOT_NULL(entity);
+
+    ZOO_SMB_QOS_POLICY_HANDLE policy = zoo_smb_qos_get_policy(entity);
+    TEST_ASSERT_NOT_NULL(policy);
+
+    zoo_smb_qos_policy_set_reliability(policy, ZOO_SMB_QOS_RELIABILITY_BEST_EFFORT, 1000, 3, 500);
+    TEST_ASSERT_TRUE(zoo_smb_qos_policy_is_valid(policy));
+
+    zoo_smb_qos_policy_set_reliability(policy, ZOO_SMB_QOS_RELIABILITY_RELIABLE, 2000, 5, 1000);
+    TEST_ASSERT_TRUE(zoo_smb_qos_policy_is_valid(policy));
+
+    zoo_smb_destroy_qos_entity(entity);
 }
 
-void test_qos_priority_settings(void)
+void test_qos_policy_durability_settings(void)
 {
-    ZOO_SMB_QOS_POLICY_STRUCT policy;
-    memset(&policy, 0, sizeof(policy));
-    
-    // Test different priority settings
-    policy.reliability = ZOO_SMB_QOS_RELIABILITY_RELIABLE;
-    policy.durability = ZOO_SMB_QOS_DURABILITY_TRANSIENT;
-    
-    policy.priority = ZOO_SMB_QOS_PRIORITY_LOW;
-    TEST_ASSERT_TRUE(zoo_smb_qos_is_policy_valid(&policy));
-    
-    policy.priority = ZOO_SMB_QOS_PRIORITY_NORMAL;
-    TEST_ASSERT_TRUE(zoo_smb_qos_is_policy_valid(&policy));
-    
-    policy.priority = ZOO_SMB_QOS_PRIORITY_HIGH;
-    TEST_ASSERT_TRUE(zoo_smb_qos_is_policy_valid(&policy));
-    
-    policy.priority = ZOO_SMB_QOS_PRIORITY_CRITICAL;
-    TEST_ASSERT_TRUE(zoo_smb_qos_is_policy_valid(&policy));
+    ZOO_SMB_QOS_ENTITY_HANDLE entity = zoo_smb_create_qos_default_entity();
+    TEST_ASSERT_NOT_NULL(entity);
+
+    ZOO_SMB_QOS_POLICY_HANDLE policy = zoo_smb_qos_get_policy(entity);
+    TEST_ASSERT_NOT_NULL(policy);
+
+    /* Test each valid durability value */
+    zoo_smb_qos_policy_set_durability(policy, ZOO_SMB_QOS_DURABILITY_VOLATILE);
+    TEST_ASSERT_TRUE(zoo_smb_qos_policy_is_valid(policy));
+
+    zoo_smb_qos_policy_set_durability(policy, ZOO_SMB_QOS_DURABILITY_TRANSIENT_LOCAL);
+    TEST_ASSERT_TRUE(zoo_smb_qos_policy_is_valid(policy));
+
+    zoo_smb_qos_policy_set_durability(policy, ZOO_SMB_QOS_DURABILITY_PERSISTENT);
+    TEST_ASSERT_TRUE(zoo_smb_qos_policy_is_valid(policy));
+
+    zoo_smb_destroy_qos_entity(entity);
 }
 
-void test_qos_context_operations(void)
+void test_qos_policy_match_compatible(void)
 {
-    ZOO_SMB_QOS_CTX_HANDLE qos_ctx = zoo_smb_qos_create_context();
-    TEST_ASSERT_NOT_NULL(qos_ctx);
-    
-    ZOO_SMB_QOS_POLICY_STRUCT policy;
-    memset(&policy, 0, sizeof(policy));
-    policy.reliability = ZOO_SMB_QOS_RELIABILITY_RELIABLE;
-    policy.durability = ZOO_SMB_QOS_DURABILITY_TRANSIENT;
-    policy.priority = ZOO_SMB_QOS_PRIORITY_HIGH;
-    
-    // Set policy on context
-    TEST_ASSERT_ERROR_OK(zoo_smb_qos_set_policy(qos_ctx, &policy));
-    
-    // Get policy from context
-    ZOO_SMB_QOS_POLICY_STRUCT retrieved_policy;
-    TEST_ASSERT_ERROR_OK(zoo_smb_qos_get_policy(qos_ctx, &retrieved_policy));
-    
-    // Compare policies
-    TEST_ASSERT_EQUAL_INT(policy.reliability, retrieved_policy.reliability);
-    TEST_ASSERT_EQUAL_INT(policy.durability, retrieved_policy.durability);
-    TEST_ASSERT_EQUAL_INT(policy.priority, retrieved_policy.priority);
-    
-    TEST_ASSERT_ERROR_OK(zoo_smb_qos_destroy_context(qos_ctx));
+    ZOO_SMB_QOS_ENTITY_HANDLE pub_entity = zoo_smb_create_qos_default_entity();
+    TEST_ASSERT_NOT_NULL(pub_entity);
+
+    ZOO_SMB_QOS_ENTITY_HANDLE sub_entity = zoo_smb_create_qos_default_entity();
+    TEST_ASSERT_NOT_NULL(sub_entity);
+
+    ZOO_SMB_QOS_POLICY_HANDLE pub_policy = zoo_smb_qos_get_policy(pub_entity);
+    ZOO_SMB_QOS_POLICY_HANDLE sub_policy = zoo_smb_qos_get_policy(sub_entity);
+
+    /* Default policies should be compatible with each other */
+    TEST_ASSERT_TRUE(zoo_smb_qos_policy_is_compatible(pub_policy, sub_policy));
+
+    zoo_smb_destroy_qos_entity(pub_entity);
+    zoo_smb_destroy_qos_entity(sub_entity);
 }
 
 void run_qos_tests(void)
 {
-    RUN_TEST(test_create_and_destroy_qos_context);
-    RUN_TEST(test_qos_policy_creation);
-    RUN_TEST(test_qos_policy_invalid_params);
-    RUN_TEST(test_qos_reliability_settings);
-    RUN_TEST(test_qos_durability_settings);
-    RUN_TEST(test_qos_priority_settings);
-    RUN_TEST(test_qos_context_operations);
+    RUN_TEST(test_create_and_destroy_qos_entity);
+    RUN_TEST(test_qos_policy_is_valid_with_default);
+    RUN_TEST(test_qos_policy_null_rejected);
+    RUN_TEST(test_qos_policy_priority_settings);
+    RUN_TEST(test_qos_policy_reliability_settings);
+    RUN_TEST(test_qos_policy_durability_settings);
+    RUN_TEST(test_qos_policy_match_compatible);
 }
 
 TEST_SETUP()

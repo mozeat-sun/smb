@@ -40,3 +40,8 @@ The repository now includes approved CI and release thresholds for:
 - per-message-size throughput profiles for 64B, 256B, 1024B, and 4096B payloads
 
 Pub/sub latency benchmarking in mode `6` is now release-gating for p99 latency and jitter. Exploratory RPC round-trip benchmarking remains available in mode `5`, but it is still informational and not yet threshold-gated.
+
+Current synchronization note (2026-05-31):
+
+- Repository baseline verification currently passes full build, full CTest, and full local example execution.
+- Benchmark governance statements in this document remain valid for the current baseline.

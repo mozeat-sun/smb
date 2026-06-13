@@ -14,7 +14,7 @@
  * 1.0       2025-08-05     AI                converted from GTest
  ******************************************************************************/
 
-#include "test_utils.h"
+#include "test_smb_helpers.h"
 #include "zoo_smb_consumer.h"
 #include <string.h>
 #include <netinet/in.h>

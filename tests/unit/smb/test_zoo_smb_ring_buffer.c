@@ -15,7 +15,7 @@
  * 1.0       2025-08-05     AI                converted from GTest
  ******************************************************************************/
 
-#include "test_utils.h"
+#include "test_smb_helpers.h"
 #include "zoo_smb_ring_buffer.h"
 #include "zoo_smb_protocol.h"
 #include <string.h>
@@ -127,24 +127,20 @@ void test_write_oversized_data(void)
 
 void test_buffer_capacity_info(void)
 {
-    size_t free_space = zoo_smb_ring_buffer_get_free_space(ring);
-    size_t used_space = zoo_smb_ring_buffer_get_used_space(ring);
-    
     // Initially buffer should be empty
-    TEST_ASSERT_GREATER_THAN(0, free_space);
-    TEST_ASSERT_EQUAL_INT(0, used_space);
-    
+    TEST_ASSERT_TRUE(zoo_smb_ring_buffer_is_empty(ring));
+    TEST_ASSERT_FALSE(zoo_smb_ring_buffer_has_data(ring));
+    TEST_ASSERT_EQUAL_INT(0, zoo_smb_ring_buffer_get_available_data_size(ring));
+
     // Write some data
     const char* test_data = "test data";
     size_t len = strlen(test_data) + 1;
     TEST_ASSERT_ERROR_OK(zoo_smb_ring_buffer_write(ring, test_data, len));
-    
-    // Check space changed
-    size_t new_free_space = zoo_smb_ring_buffer_get_free_space(ring);
-    size_t new_used_space = zoo_smb_ring_buffer_get_used_space(ring);
-    
-    TEST_ASSERT_TRUE(new_free_space < free_space);
-    TEST_ASSERT_TRUE(new_used_space > used_space);
+
+    // Check data is now available
+    TEST_ASSERT_TRUE(zoo_smb_ring_buffer_has_data(ring));
+    TEST_ASSERT_FALSE(zoo_smb_ring_buffer_is_empty(ring));
+    TEST_ASSERT_GREATER_THAN(0, zoo_smb_ring_buffer_get_available_data_size(ring));
 }
 
 void run_ring_buffer_tests(void)
