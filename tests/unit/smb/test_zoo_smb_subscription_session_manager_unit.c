@@ -16,6 +16,7 @@
  ******************************************************************************/
 
 #include "unity.h"
+#include "test_smb_helpers.h"
 #include "zoo_smb_subscription_session_manager.h"
 #include "zoo_smb_subscription_session.h"
 #include "zoo_smb_qos_ctx.h"
@@ -61,10 +62,12 @@ static int test_handler_alt(
 
 void setUp(void)
 {
+    test_setup_memory_pool();
 }
 
 void tearDown(void)
 {
+    test_teardown_memory_pool();
 }
 
 void test_manager_add_find_remove_and_invalid_params(void)

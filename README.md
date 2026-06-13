@@ -94,14 +94,29 @@ Benchmark/performance sources are in:
 - `tests/benchmark/`
 - `tests/performance/`
 
-If you run local benchmark experiments, store reports under `reporters/` (repository-local convention).
+Run benchmarks with:
 
-Quality benchmark artifacts include `artifacts/quality/benchmark_summary.json` and the cross-scenario latency matrix files `artifacts/quality/latency_scenario_matrix.md` and `artifacts/quality/latency_scenario_matrix.json`.
+```bash
+bash tools/quality/benchmark.sh
+```
 
-Use `tools/quality/recovery_rto.sh` to generate restart-cycle evidence artifacts: `artifacts/quality/recovery_rto_report.md`, `artifacts/quality/recovery_rto_summary.json`, and `artifacts/quality/recovery_rto_runs.json`.
+Generated benchmark artifacts are written to `artifacts/quality/` and `reporters/`
+(both directories are git-ignored; create them locally as needed).
 
-Use `tools/quality/grade1_exit_gate.sh` to generate Grade 1 exit status artifacts: `artifacts/quality/grade1_exit_report.md` and `artifacts/quality/grade1_exit_summary.json`.
-For Grade 1 long-duration and external-deployment intake, maintain `docs/release/records/GRADE1_LONG_SOAK_EVIDENCE.json` and `docs/release/records/GRADE1_PRODUCTION_PILOT_EVIDENCE.md`.
+Key quality scripts (all under `tools/quality/`):
+
+| Script | Purpose |
+|--------|---------|
+| `benchmark.sh` | Run performance benchmarks, compare against baseline |
+| `soak_test.sh` | Long-duration soak testing |
+| `reliability_until_fail.sh` | Repeated reliability gate |
+| `recovery_rto.sh` | Recovery RTO evidence generation |
+| `fault_injection.sh` | Fault injection suite |
+| `fuzz_protocol.sh` | Protocol fuzzing gate |
+| `static_analysis.sh` | cppcheck static analysis |
+| `traceability_gate.sh` | Enforce requirements-to-test traceability |
+| `protocol_compatibility_matrix.sh` | Wire protocol compatibility matrix |
+| `grade1_exit_gate.sh` | Generate Grade 1 release exit status |
 
 ## Compatibility And Deprecation
 
@@ -109,17 +124,17 @@ API releases follow semantic versioning.
 
 Wire protocol compatibility rules, fail-fast mismatch behavior, and the deprecation lifecycle are defined in `docs/requirements/PROTOCOL_COMPATIBILITY_POLICY.md`.
 
-The CI-generated compatibility matrix is published as the workflow artifact `protocol-compatibility-artifacts` and generated locally at `artifacts/quality/protocol_compatibility_matrix.md` by `tools/quality/protocol_compatibility_matrix.sh`.
+The CI-generated compatibility matrix is published as the `protocol-compatibility-artifacts` workflow artifact.
 
 Use `docs/templates/RELEASE_NOTES_TEMPLATE.md` for release declarations covering API compatibility status, wire compatibility status, breaking changes, and deprecation notices.
 
 ## Pre-Assessment Readiness
 
-Use `tools/quality/pre_assessment_readiness_gate.sh` to validate `docs/readiness/PRE_ASSESSMENT_FINDINGS_LOG.csv` and generate readiness artifacts at `artifacts/quality/pre_assessment_readiness_report.md` and `artifacts/quality/pre_assessment_readiness_summary.json`.
+Use `tools/quality/pre_assessment_readiness_gate.sh` to validate `docs/readiness/PRE_ASSESSMENT_FINDINGS_LOG.csv` and generate readiness artifacts.
 
-Use `tools/quality/pre_assessment_remediation_plan.sh` to generate remediation tracking artifacts at `artifacts/quality/pre_assessment_remediation_plan.md` and `artifacts/quality/pre_assessment_remediation_plan_summary.json`.
+Use `tools/quality/pre_assessment_remediation_plan.sh` to generate remediation tracking artifacts.
 
-The CI workflow publishes these outputs in the `pre-assessment-readiness-artifacts` bundle.
+Pre-assessment outputs are published by CI in the `pre-assessment-readiness-artifacts` bundle.
 
 ## Documentation Index
 

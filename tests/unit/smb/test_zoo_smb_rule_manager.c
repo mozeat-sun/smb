@@ -179,14 +179,14 @@ void test_add_and_remove_rule(void) {
     ZOO_SMB_RULE_HANDLE rule = zoo_smb_create_routing_rule("ruleB", service, transport, observers);
     TEST_ASSERT_NOT_NULL(rule);
 
-    TEST_ASSERT_EQUAL_INT(ZOO_SMB_OK, zoo_smb_rule_manager_add_rule(mgr, rule));
+    TEST_ASSERT_EQUAL_HEX32((uint32_t)ZOO_SMB_OK, (uint32_t)zoo_smb_rule_manager_add_rule(mgr, rule));
     // Adding again should return OK (already exists)
-    TEST_ASSERT_EQUAL_INT(ZOO_SMB_OK, zoo_smb_rule_manager_add_rule(mgr, rule));
+    TEST_ASSERT_EQUAL_HEX32((uint32_t)ZOO_SMB_OK, (uint32_t)zoo_smb_rule_manager_add_rule(mgr, rule));
 
     // Remove
-    TEST_ASSERT_EQUAL_INT(ZOO_SMB_OK, zoo_smb_rule_manager_remove_rule(mgr, rule));
+    TEST_ASSERT_EQUAL_HEX32((uint32_t)ZOO_SMB_OK, (uint32_t)zoo_smb_rule_manager_remove_rule(mgr, rule));
     // Remove again should return NOT_FOUND
-    TEST_ASSERT_EQUAL_INT(ZOO_SMB_ERROR_NOT_FOUND, zoo_smb_rule_manager_remove_rule(mgr, rule));
+    TEST_ASSERT_EQUAL_HEX32((uint32_t)ZOO_SMB_ERROR_NOT_FOUND, (uint32_t)zoo_smb_rule_manager_remove_rule(mgr, rule));
 
     zoo_smb_destroy_rule_manager(mgr);
     zoo_smb_destroy_service(service);
@@ -260,10 +260,10 @@ void test_add_remove_invalid_params(void) {
     ZOO_SMB_RULE_MANAGER_HANDLE mgr = zoo_smb_create_rule_manager();
     TEST_ASSERT_NOT_NULL(mgr);
 
-    TEST_ASSERT_EQUAL_INT(ZOO_SMB_ERROR_INVALID_PARAM, zoo_smb_rule_manager_add_rule(NULL, NULL));
-    TEST_ASSERT_EQUAL_INT(ZOO_SMB_ERROR_INVALID_PARAM, zoo_smb_rule_manager_add_rule(mgr, NULL));
-    TEST_ASSERT_EQUAL_INT(ZOO_SMB_ERROR_INVALID_PARAM, zoo_smb_rule_manager_remove_rule(NULL, NULL));
-    TEST_ASSERT_EQUAL_INT(ZOO_SMB_ERROR_INVALID_PARAM, zoo_smb_rule_manager_remove_rule(mgr, NULL));
+    TEST_ASSERT_EQUAL_HEX32((uint32_t)ZOO_SMB_ERROR_INVALID_PARAM, (uint32_t)zoo_smb_rule_manager_add_rule(NULL, NULL));
+    TEST_ASSERT_EQUAL_HEX32((uint32_t)ZOO_SMB_ERROR_INVALID_PARAM, (uint32_t)zoo_smb_rule_manager_add_rule(mgr, NULL));
+    TEST_ASSERT_EQUAL_HEX32((uint32_t)ZOO_SMB_ERROR_INVALID_PARAM, (uint32_t)zoo_smb_rule_manager_remove_rule(NULL, NULL));
+    TEST_ASSERT_EQUAL_HEX32((uint32_t)ZOO_SMB_ERROR_INVALID_PARAM, (uint32_t)zoo_smb_rule_manager_remove_rule(mgr, NULL));
 
     zoo_smb_destroy_rule_manager(mgr);
 }

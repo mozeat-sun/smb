@@ -239,6 +239,12 @@ void zoo_stop_dispatcher(
 
     dispatcher->is_running = ZOO_FALSE;
 
+    /* Signal the queue to exit blocking dequeue so the dispatcher loop can
+     * observe is_running == ZOO_FALSE and return.  The dispatcher thread
+     * waits on queue->cond, not dispatcher->cond, so we must signal the
+     * queue. */
+    zoo_queue_exit_blocking(dispatcher->queue);
+
     if (ZOO_MUTEX_LOCK(&dispatcher->mutex))
     {
         if (!ZOO_COND_BROADCAST(&dispatcher->cond))

@@ -13,6 +13,7 @@
 
 #include <string.h>
 #include "unity.h"
+#include "test_smb_helpers.h"
 #include "zoo_smb.h"
 #include "zoo_smb_runtime.h"
 #include "domain/zoo_domain_profile.h"
@@ -21,6 +22,7 @@ static ZOO_SMB_RUNTIME_HANDLE g_runtime = NULL;
 
 void setUp(void)
 {
+    test_setup_memory_pool();
     g_runtime = NULL;
 }
 
@@ -31,6 +33,7 @@ void tearDown(void)
         zoo_smb_runtime_destroy(g_runtime);
         g_runtime = NULL;
     }
+    test_teardown_memory_pool();
 }
 
 void test_runtime_startup_with_compatible_protocol_succeeds(void)

@@ -421,6 +421,10 @@ ZOO_SMB_HANDLE zoo_smb_get_instance(void)
  */
 ZOO_BOOL zoo_smb_is_ready()
 {
+    if (!g_smb_instance)
+    {
+        return ZOO_FALSE;
+    }
     return g_smb_instance->is_running;
 }
 
