@@ -55,7 +55,7 @@ target_include_directories(zoo_smb_static PUBLIC
 )
 target_link_libraries(zoo_smb_static PUBLIC
     Threads::Threads
-    atomic
+    ${ZOO_ATOMIC_LIBRARY}
     zoo_dispatcher_static
     zoo_buffer_static
     zoo_thread_pool_static
@@ -97,7 +97,7 @@ target_include_directories(zoo_smb_shared PUBLIC
 )
 target_link_libraries(zoo_smb_shared PUBLIC
     Threads::Threads
-    atomic
+    ${ZOO_ATOMIC_LIBRARY}
     zoo_dispatcher_shared
     zoo_buffer_shared
     zoo_thread_pool_shared

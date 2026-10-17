@@ -18,7 +18,7 @@
 #include <errno.h>
 #include <stdio.h>
 
-#ifdef ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
 #include <sys/socket.h>
 #include <sys/select.h>
 #include <sys/time.h>
@@ -43,6 +43,25 @@
 static bool g_socket_initialized = false;
 static ZOO_MUTEX_T g_socket_mutex;
 
+/*
+ * Thread safety: a global mutex serializes socket data-transfer operations so
+ * that send/recv/sendto/recvfrom are safe across threads.
+ *
+ * ZOO_MUTEX_LOCK/ZOO_MUTEX_UNLOCK are used (rather than raw pthread calls) so
+ * the abstraction also works on FreeRTOS/CMSIS-RTOS/RT-Thread, where
+ * ZOO_HAS_THREADING is enabled but the mutex type is not a pthread mutex.
+ *
+ * NOTE: every ZOO_SOCKET_LOCK() must be paired with ZOO_SOCKET_UNLOCK() on
+ * ALL return paths.
+ */
+#if ZOO_HAS_THREADING
+#define ZOO_SOCKET_LOCK()   ZOO_MUTEX_LOCK(&g_socket_mutex)
+#define ZOO_SOCKET_UNLOCK() ZOO_MUTEX_UNLOCK(&g_socket_mutex)
+#else
+#define ZOO_SOCKET_LOCK()   do {} while(0)
+#define ZOO_SOCKET_UNLOCK() do {} while(0)
+#endif
+
 // ==============================================================================
 // PLATFORM CONVERSION FUNCTIONS
 // ==============================================================================
@@ -51,7 +70,6 @@ static ZOO_MUTEX_T g_socket_mutex;
  * @brief Convert ZOO socket family to platform family
  * @param family ZOO socket family enum value
  * @return Platform-specific socket family value (AF_INET, AF_INET6, etc.)
-static pthread_mutex_t g_socket_mutex = PTHREAD_MUTEX_INITIALIZER;
  */
 static int zoo_to_platform_family(ZOO_SOCKET_FAMILY_ENUM family)
 {
@@ -80,15 +98,6 @@ static int zoo_to_platform_type(ZOO_SOCKET_TYPE_ENUM type)
 {
     switch (type)
     {
-    /* Thread safety: Global mutex for socket operations */
-    #if defined(ZOO_HAS_THREADING)
-        #include <pthread.h>
-        #define ZOO_SOCKET_LOCK()   pthread_mutex_lock(&g_socket_mutex)
-        #define ZOO_SOCKET_UNLOCK() pthread_mutex_unlock(&g_socket_mutex)
-    #else
-        #define ZOO_SOCKET_LOCK()   do {} while(0)
-        #define ZOO_SOCKET_UNLOCK() do {} while(0)
-    #endif
     case ZOO_SOCK_STREAM:
         return SOCK_STREAM;
     case ZOO_SOCK_DGRAM:
@@ -180,7 +189,7 @@ ZOO_ERROR_TYPE zoo_socket_init(void)
         return ZOO_OK;
     }
 
-#ifdef ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
     // Ignore SIGPIPE signal to prevent crashes on broken connections
     signal(SIGPIPE, SIG_IGN);
 #endif
@@ -265,7 +274,7 @@ ZOO_ERROR_TYPE zoo_socket_create(ZOO_SOCKET_FAMILY_ENUM family,
     int platform_type = zoo_to_platform_type(type);
     int platform_protocol = zoo_to_platform_protocol(protocol);
 
-#ifdef ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
     int sock = socket(platform_family, platform_type, platform_protocol);
     if (sock < 0)
     {
@@ -305,7 +314,7 @@ ZOO_ERROR_TYPE zoo_socket_close(ZOO_SOCKET_INFO_STRUCT *socket_info)
         return ZOO_ERROR_INVALID_PARAM;
     }
 
-#ifdef ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
     close(socket_info->fd);
     socket_info->fd = ZOO_INVALID_SOCKET;
 #endif
@@ -342,7 +351,7 @@ ZOO_ERROR_TYPE zoo_socket_bind(ZOO_SOCKET_INFO_STRUCT *socket_info,
     }
 
     int result;
-#ifdef ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
     result = bind(socket_info->fd,
                   (const struct sockaddr *)&addr->storage,
                   sizeof(struct sockaddr));
@@ -377,7 +386,7 @@ ZOO_ERROR_TYPE zoo_socket_listen(ZOO_SOCKET_INFO_STRUCT *socket_info, int backlo
     }
 
     int result;
-#ifdef ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
     result = listen(socket_info->fd, backlog);
 #endif
 
@@ -414,7 +423,7 @@ ZOO_ERROR_TYPE zoo_socket_accept(ZOO_SOCKET_INFO_STRUCT *server_info,
     socklen_t addr_len = sizeof(client_addr->storage);
     int client_sock;
 
-#ifdef ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
     client_sock = accept(server_info->fd,
                          client_addr ? (struct sockaddr *)&client_addr->storage : NULL,
                          client_addr ? &addr_len : NULL);
@@ -468,7 +477,7 @@ ZOO_ERROR_TYPE zoo_socket_connect(ZOO_SOCKET_INFO_STRUCT *socket_info,
     }
 
     int result;
-#ifdef ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
     result = connect(socket_info->fd,
                      (const struct sockaddr *)&addr->storage,
                      sizeof(struct sockaddr));
@@ -519,11 +528,12 @@ ZOO_ERROR_TYPE zoo_socket_send(ZOO_SOCKET_INFO_STRUCT *socket_info,
 
     if (!socket_info->is_connected)
     {
+        ZOO_SOCKET_UNLOCK();
         return ZOO_ERROR_NOT_CONNECTED;
     }
 
     ssize_t result;
-#ifdef ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
     result = send(socket_info->fd, data, data_len, 0);
 #endif
 
@@ -534,10 +544,12 @@ ZOO_ERROR_TYPE zoo_socket_send(ZOO_SOCKET_INFO_STRUCT *socket_info,
     if (result < 0)
     {
         *bytes_sent = 0;
+        ZOO_SOCKET_UNLOCK();
         return platform_to_zoo_error(errno);
     }
 
     *bytes_sent = (size_t)result;
+    ZOO_SOCKET_UNLOCK();
     return ZOO_OK;
 }
 
@@ -566,7 +578,7 @@ ZOO_ERROR_TYPE zoo_socket_recv(ZOO_SOCKET_INFO_STRUCT *socket_info,
     ZOO_SOCKET_LOCK();
 
     ssize_t result;
-#ifdef ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
     result = recv(socket_info->fd, buffer, buffer_len, 0);
 #endif
 
@@ -577,10 +589,12 @@ ZOO_ERROR_TYPE zoo_socket_recv(ZOO_SOCKET_INFO_STRUCT *socket_info,
     if (result < 0)
     {
         *bytes_received = 0;
+        ZOO_SOCKET_UNLOCK();
         return platform_to_zoo_error(errno);
     }
 
     *bytes_received = (size_t)result;
+    ZOO_SOCKET_UNLOCK();
     return ZOO_OK;
 }
 
@@ -606,8 +620,10 @@ ZOO_ERROR_TYPE zoo_socket_sendto(ZOO_SOCKET_INFO_STRUCT *socket_info,
         return ZOO_ERROR_INVALID_PARAM;
     }
 
+    ZOO_SOCKET_LOCK();
+
     ssize_t result;
-#ifdef ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
     result = sendto(socket_info->fd, data, data_len, 0,
                     (const struct sockaddr *)&dest_addr->storage,
                     sizeof(struct sockaddr));
@@ -622,10 +638,12 @@ ZOO_ERROR_TYPE zoo_socket_sendto(ZOO_SOCKET_INFO_STRUCT *socket_info,
     if (result < 0)
     {
         *bytes_sent = 0;
+        ZOO_SOCKET_UNLOCK();
         return platform_to_zoo_error(errno);
     }
 
     *bytes_sent = (size_t)result;
+    ZOO_SOCKET_UNLOCK();
     return ZOO_OK;
 }
 
@@ -651,10 +669,12 @@ ZOO_ERROR_TYPE zoo_socket_recvfrom(ZOO_SOCKET_INFO_STRUCT *socket_info,
         return ZOO_ERROR_INVALID_PARAM;
     }
 
+    ZOO_SOCKET_LOCK();
+
     socklen_t addr_len = sizeof(src_addr->storage);
     ssize_t result;
 
-#ifdef ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
     result = recvfrom(socket_info->fd, buffer, buffer_len, 0,
                       src_addr ? (struct sockaddr *)&src_addr->storage : NULL,
                       src_addr ? &addr_len : NULL);
@@ -669,10 +689,12 @@ ZOO_ERROR_TYPE zoo_socket_recvfrom(ZOO_SOCKET_INFO_STRUCT *socket_info,
     if (result < 0)
     {
         *bytes_received = 0;
+        ZOO_SOCKET_UNLOCK();
         return platform_to_zoo_error(errno);
     }
 
     *bytes_received = (size_t)result;
+    ZOO_SOCKET_UNLOCK();
     return ZOO_OK;
 }
 
@@ -832,7 +854,7 @@ ZOO_ERROR_TYPE zoo_sockaddr_loopback_init(ZOO_SOCKADDR_UNION *addr,
  */
 ZOO_ERROR_TYPE zoo_socket_get_last_error(void)
 {
-#ifdef ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
     return platform_to_zoo_error(errno);
 #endif
 #ifdef ZOO_USE_LWIP
@@ -946,7 +968,7 @@ ZOO_ERROR_TYPE zoo_socket_setsockopt(ZOO_SOCKET_INFO_STRUCT *socket_info,
     }
 
     int result;
-#ifdef ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
     result = setsockopt(socket_info->fd, platform_level, platform_option, value, (socklen_t)value_len);
 #endif
 
@@ -1014,7 +1036,7 @@ ZOO_ERROR_TYPE zoo_socket_getsockopt(ZOO_SOCKET_INFO_STRUCT *socket_info,
 
     socklen_t len = (socklen_t)*value_len;
     int result;
-#ifdef ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
     result = getsockopt(socket_info->fd, platform_level, platform_option, value, &len);
 #endif
 
@@ -1040,7 +1062,7 @@ ZOO_ERROR_TYPE zoo_socket_set_blocking(ZOO_SOCKET_INFO_STRUCT *socket_info, bool
         return ZOO_ERROR_INVALID_PARAM;
     }
 
-#ifdef ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
     int flags = fcntl(socket_info->fd, F_GETFL, 0);
     if (flags < 0)
     {
@@ -1112,7 +1134,7 @@ ZOO_ERROR_TYPE zoo_socket_select(ZOO_SOCKET_INFO_STRUCT *socket_info,
     *ready_write = false;
     *has_error = false;
 
-#ifdef ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
     fd_set read_fds, write_fds, error_fds;
     struct timeval tv;
     struct timeval *tv_ptr = NULL;
@@ -1246,7 +1268,7 @@ ZOO_ERROR_TYPE zoo_socket_shutdown(ZOO_SOCKET_INFO_STRUCT *socket_info,
     }
 
     int result;
-#ifdef ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
     result = shutdown(socket_info->fd, platform_how);
 #endif
 
@@ -1276,7 +1298,7 @@ ZOO_ERROR_TYPE zoo_sockaddr_ipv4(ZOO_SOCKADDR_UNION *addr, const char *ip_str, u
         return ZOO_ERROR_INVALID_PARAM;
     }
 
-#ifdef ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
     struct in_addr inaddr;
     if (inet_aton(ip_str, &inaddr) == 0)
     {
@@ -1312,7 +1334,7 @@ ZOO_ERROR_TYPE zoo_sockaddr_ipv6(ZOO_SOCKADDR_UNION *addr, const char *ip_str, u
         return ZOO_ERROR_INVALID_PARAM;
     }
 
-#ifdef ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
     struct in6_addr in6addr;
     if (inet_pton(AF_INET6, ip_str, &in6addr) != 1)
     {
@@ -1357,7 +1379,7 @@ ZOO_ERROR_TYPE zoo_sockaddr_to_string(const ZOO_SOCKADDR_UNION *addr, char *buff
         {
             return ZOO_ERROR_INVALID_PARAM;
         }
-#ifdef ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
         char ip_str[INET_ADDRSTRLEN];
         if (!inet_ntop(AF_INET, &sin->sin_addr, ip_str, INET_ADDRSTRLEN))
         {
@@ -1374,7 +1396,7 @@ ZOO_ERROR_TYPE zoo_sockaddr_to_string(const ZOO_SOCKADDR_UNION *addr, char *buff
         {
             return ZOO_ERROR_INVALID_PARAM;
         }
-#ifdef ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
         char ip_str[INET6_ADDRSTRLEN];
         if (!inet_ntop(AF_INET6, &sin6->sin6_addr, ip_str, INET6_ADDRSTRLEN))
         {
@@ -1472,7 +1494,7 @@ ZOO_ERROR_TYPE zoo_socket_resolve_hostname(const char *hostname,
         return ZOO_ERROR_INVALID_PARAM;
     }
 
-#ifdef ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
     struct addrinfo hints, *result;
     memset(&hints, 0, sizeof(hints));
 
@@ -1535,7 +1557,7 @@ ZOO_ERROR_TYPE zoo_socket_get_addresses(ZOO_SOCKET_INFO_STRUCT *socket_info,
         return ZOO_ERROR_INVALID_PARAM;
     }
 
-#ifdef ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
     if (local_addr)
     {
         socklen_t len = sizeof(local_addr->storage);

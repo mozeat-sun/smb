@@ -29,7 +29,8 @@
 #include <signal.h>
 
 #define PORT_TABLE_SIZE (MAX_TRANSPORT_PORT - MIN_TRANSPORT_PORT + 1)
-#define LOCK_FILE_DIR "/var/lock"
+#define DEFAULT_LOCK_DIR "/tmp"
+#define LOCK_DIR_NAME "zoo_smb_ports"
 #define SHM_NAME "/zoo_smb_port_table"
 #define PORT_TABLE_FILE "/tmp/zoo_smb_port_table"
 
@@ -48,6 +49,7 @@ typedef struct
 
 /* Internal function declarations */
 static ZOO_SMB_PORT_TABLE_STRUCT* init_port_table(void);
+static const char* get_lock_dir(void);
 static int lock_port(int port);
 static void unlock_port(int lock_fd, int port);
 static int acquire_port(ZOO_SMB_PORT_TABLE_STRUCT* table, int port);
@@ -230,17 +232,44 @@ static ZOO_SMB_PORT_TABLE_STRUCT* init_port_table(void)
  * @note Creates lock directory if it doesn't exist
  * @note Uses LOCK_FILE_DIR as base directory
  */
+static const char* get_lock_dir(void)
+{
+    const char* lock_dir = getenv("ZOO_SMB_LOCK_DIR");
+    if (lock_dir != NULL && lock_dir[0] != '\0')
+    {
+        return lock_dir;
+    }
+
+    const char* tmp_dir = getenv("TMPDIR");
+    if (tmp_dir != NULL && tmp_dir[0] != '\0')
+    {
+        return tmp_dir;
+    }
+
+    return DEFAULT_LOCK_DIR;
+}
+
 static ZOO_BOOL create_lock_file_path(int port, char* lockfile, size_t buffer_size)
 {
-    if (mkdir(LOCK_FILE_DIR, 0755) != 0 && errno != EEXIST)
+    const char* lock_dir = get_lock_dir();
+    char lock_dir_path[256];
+
+    int ret = snprintf(lock_dir_path, sizeof(lock_dir_path), "%s/%s", lock_dir, LOCK_DIR_NAME);
+    if (ret < 0 || (size_t)ret >= sizeof(lock_dir_path))
+    {
+        ZOO_LOG_ERROR("Lock directory path too long for %s", lock_dir);
+        return ZOO_FALSE;
+    }
+
+    if (mkdir(lock_dir_path, 0755) != 0 && errno != EEXIST)
     {
         ZOO_LOG_ERROR("Failed to create lock directory %s: %s",
-                          LOCK_FILE_DIR,
+                          lock_dir_path,
                           strerror(errno));
         return ZOO_FALSE;
     }
 
-    int ret = snprintf(lockfile, buffer_size, "%s/zoo_smb_port_%d.lock", LOCK_FILE_DIR, port);
+    ret = snprintf(lockfile, buffer_size, "%s/zoo_smb_port_%d.lock", lock_dir_path, port);
     if (ret >= (int)buffer_size)
     {
         ZOO_LOG_ERROR("Lock file path too long for port %d", port);
@@ -363,8 +392,14 @@ static void unlock_port(int lock_fd, int port)
 
         /* Remove lock file */
         char lockfile[128];
-        snprintf(lockfile, sizeof(lockfile), "%s/zoo_smb_port_%d.lock", LOCK_FILE_DIR, port);
-        unlink(lockfile);
+        const char* lock_dir = get_lock_dir();
+        char lock_dir_path[256];
+        int len = snprintf(lock_dir_path, sizeof(lock_dir_path), "%s/%s", lock_dir, LOCK_DIR_NAME);
+        if (len >= 0 && (size_t)len < sizeof(lock_dir_path))
+        {
+            snprintf(lockfile, sizeof(lockfile), "%s/zoo_smb_port_%d.lock", lock_dir_path, port);
+            unlink(lockfile);
+        }
     }
 }
 
@@ -702,8 +737,8 @@ int zoo_smb_find_available_port(int min, int max)
     }
 
     ZOO_LOG_ERROR("No available ports found in range [%d, %d]",
-                      MIN_TRANSPORT_PORT,
-                      MAX_TRANSPORT_PORT);
+                      min,
+                      max);
     return ZOO_SMB_INVALID_PORT;
 }
 

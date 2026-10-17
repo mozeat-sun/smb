@@ -112,6 +112,101 @@ void test_transport_type_validation(void)
     TEST_ASSERT_TRUE(ZOO_SMB_TRANSPORT_TYPE_SHM >= 0);
 }
 
+void test_discovery_payload_ex2_round_trip_with_metadata(void)
+{
+    ZOO_SMB_MSG_STRUCT msg = {0};
+    ZOO_BOOL made = zoo_smb_protocol_make_discovery_payload_message_ex2(
+        &msg,
+        "svc_meta",
+        "127.0.0.1",
+        23456,
+        "meta/topic",
+        ZOO_SMB_TRANSPORT_TYPE_TCP,
+        "239.0.0.1",
+        10000,
+        "127.0.0.1",
+        ZOO_SMB_SERVICE_CAPABILITY_SHM | ZOO_SMB_SERVICE_CAPABILITY_TCP,
+        "svc_meta_endpoint");
+    TEST_ASSERT_TRUE(made);
+
+    char service[32] = {0};
+    char address[32] = {0};
+    char topic[32] = {0};
+    char multicast[32] = {0};
+    char host_fingerprint[64] = {0};
+    char shm_endpoint[64] = {0};
+    uint16_t port = 0;
+    uint16_t multicast_port = 0;
+    uint32_t capabilities = 0;
+    ZOO_SMB_TRANSPORT_TYPE_ENUM transport = ZOO_SMB_TRANSPORT_TYPE_MIN;
+
+    ZOO_BOOL parsed = zoo_smb_protocol_parse_discovery_payload_message_ex2(
+        &msg,
+        service,
+        address,
+        &port,
+        topic,
+        &transport,
+        multicast,
+        &multicast_port,
+        host_fingerprint,
+        &capabilities,
+        shm_endpoint);
+
+    TEST_ASSERT_TRUE(parsed);
+    TEST_ASSERT_STREQ("svc_meta", service);
+    TEST_ASSERT_STREQ("127.0.0.1", address);
+    TEST_ASSERT_STREQ("meta/topic", topic);
+    TEST_ASSERT_EQUAL_UINT16(23456, port);
+    TEST_ASSERT_EQUAL_INT(ZOO_SMB_TRANSPORT_TYPE_TCP, transport);
+    TEST_ASSERT_STREQ("239.0.0.1", multicast);
+    TEST_ASSERT_EQUAL_UINT16(10000, multicast_port);
+    TEST_ASSERT_STREQ("127.0.0.1", host_fingerprint);
+    TEST_ASSERT_EQUAL_UINT32(ZOO_SMB_SERVICE_CAPABILITY_SHM | ZOO_SMB_SERVICE_CAPABILITY_TCP, capabilities);
+    TEST_ASSERT_STREQ("svc_meta_endpoint", shm_endpoint);
+}
+
+void test_discovery_payload_ex2_parses_legacy_token_order(void)
+{
+    ZOO_SMB_MSG_STRUCT msg = {0};
+    const char legacy_payload[] = "svc_legacy t1 127.0.0.1:12345 0:0 3";
+
+    msg.payload = zoo_allocate_from_pool(sizeof(legacy_payload));
+    TEST_ASSERT_NOT_NULL(msg.payload);
+    memcpy(msg.payload, legacy_payload, sizeof(legacy_payload));
+    msg.header.payload_size = (uint32_t)(sizeof(legacy_payload) - 1U);
+
+    char service[32] = {0};
+    char address[32] = {0};
+    char topic[32] = {0};
+    char multicast[32] = {0};
+    uint16_t port = 0;
+    uint16_t multicast_port = 0;
+    ZOO_SMB_TRANSPORT_TYPE_ENUM transport = ZOO_SMB_TRANSPORT_TYPE_MIN;
+
+    ZOO_BOOL parsed = zoo_smb_protocol_parse_discovery_payload_message_ex2(
+        &msg,
+        service,
+        address,
+        &port,
+        topic,
+        &transport,
+        multicast,
+        &multicast_port,
+        NULL,
+        NULL,
+        NULL);
+
+    TEST_ASSERT_TRUE(parsed);
+    TEST_ASSERT_STREQ("svc_legacy", service);
+    TEST_ASSERT_STREQ("127.0.0.1", address);
+    TEST_ASSERT_STREQ("t1", topic);
+    TEST_ASSERT_EQUAL_UINT16(12345, port);
+    TEST_ASSERT_EQUAL_INT(ZOO_SMB_TRANSPORT_TYPE_TCP, transport);
+    TEST_ASSERT_STREQ("0", multicast);
+    TEST_ASSERT_EQUAL_UINT16(0, multicast_port);
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -122,6 +217,8 @@ int main(void)
     RUN_TEST(test_invalid_header_version);
     RUN_TEST(test_protocol_constants);
     RUN_TEST(test_transport_type_validation);
+    RUN_TEST(test_discovery_payload_ex2_round_trip_with_metadata);
+    RUN_TEST(test_discovery_payload_ex2_parses_legacy_token_order);
     
     return UNITY_END();
 }

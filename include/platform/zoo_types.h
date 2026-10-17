@@ -38,6 +38,7 @@ extern "C"
 #include <stdbool.h>
 #include <stddef.h>
 #include <inttypes.h>
+#include <sys/types.h>
 #include "zoo_platform.h"
 
     // ==============================================================================
@@ -74,7 +75,6 @@ extern "C"
     typedef int64_t ZOO_S64_T;
     typedef uint64_t ZOO_U64_T;
     typedef size_t ZOO_USIZE_T;
-    typedef ssize_t ZOO_SSIZE_T;
     typedef void *ZOO_PVOID_T;
     typedef const void *ZOO_CPVOID_T;
     typedef char *ZOO_PCHAR_T;
@@ -101,7 +101,6 @@ extern "C"
     typedef int64_t ZOO_S64;
     typedef uint64_t ZOO_U64;
     typedef size_t ZOO_USIZE;
-    typedef ssize_t ZOO_SSIZE;
     typedef void *ZOO_PVOID;
     typedef const void *ZOO_CPVOID;
     typedef char *ZOO_PCHAR;
@@ -126,24 +125,24 @@ extern "C"
      */
 #ifdef ZOO_PLATFORM_64BIT
     typedef uint64_t ZOO_SIZE_T;
-    typedef int64_t ZOO_SSIZE_T;
+    typedef ssize_t ZOO_SSIZE_T;
     typedef uint64_t ZOO_UINTPTR_T;
-    typedef int64_t ZOO_INTPTR_T;
+    typedef intptr_t ZOO_INTPTR_T;
     // Legacy compatibility
     typedef uint64_t ZOO_SIZE;
-    typedef int64_t ZOO_SSIZE;
+    typedef ssize_t ZOO_SSIZE;
     typedef uint64_t ZOO_UINTPTR;
-    typedef int64_t ZOO_INTPTR;
+    typedef intptr_t ZOO_INTPTR;
 #else
     typedef uint32_t ZOO_SIZE_T;
-    typedef int32_t ZOO_SSIZE_T;
+    typedef ssize_t ZOO_SSIZE_T;
     typedef uint32_t ZOO_UINTPTR_T;
-    typedef int32_t ZOO_INTPTR_T;
+    typedef intptr_t ZOO_INTPTR_T;
     // Legacy compatibility
     typedef uint32_t ZOO_SIZE;
-    typedef int32_t ZOO_SSIZE;
+    typedef ssize_t ZOO_SSIZE;
     typedef uint32_t ZOO_UINTPTR;
-    typedef int32_t ZOO_INTPTR;
+    typedef intptr_t ZOO_INTPTR;
 #endif
 
 // ==============================================================================
@@ -193,7 +192,7 @@ extern "C"
     #include <windows.h>
     typedef HANDLE ZOO_THREAD;
     typedef DWORD ZOO_THREAD_ID;
-#elif defined(ZOO_HAS_POSIX)
+#elif ZOO_HAS_POSIX
     #include <pthread.h>
     typedef pthread_t ZOO_THREAD;
     typedef pthread_t ZOO_THREAD_ID;

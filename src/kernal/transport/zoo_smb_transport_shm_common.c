@@ -21,7 +21,10 @@
 #include "zoo_memory_pool.h"
 #include "zoo.h"
 #include <sys/shm.h>
+#if defined(__linux__)
 #include <sys/eventfd.h>
+#endif
+#include <sys/socket.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
@@ -29,6 +32,101 @@
 #include <time.h>
 #include <signal.h>
 #include <stdio.h>
+
+#define ZOO_SMB_EVENTFD_PAIR_CAPACITY 32
+
+static struct
+{
+    int primary_fd;
+    int peer_fd;
+} g_shm_eventfd_pairs[ZOO_SMB_EVENTFD_PAIR_CAPACITY];
+
+static size_t g_shm_eventfd_pair_count = 0;
+
+static void shm_register_eventfd_pair(int primary_fd, int peer_fd)
+{
+    if (primary_fd < 0 || peer_fd < 0 || g_shm_eventfd_pair_count >= ZOO_SMB_EVENTFD_PAIR_CAPACITY)
+    {
+        return;
+    }
+
+    g_shm_eventfd_pairs[g_shm_eventfd_pair_count].primary_fd = primary_fd;
+    g_shm_eventfd_pairs[g_shm_eventfd_pair_count].peer_fd = peer_fd;
+    g_shm_eventfd_pair_count++;
+}
+
+static void shm_unregister_eventfd_pair(int event_fd)
+{
+    for (size_t i = 0; i < g_shm_eventfd_pair_count; ++i)
+    {
+        if (g_shm_eventfd_pairs[i].primary_fd == event_fd || g_shm_eventfd_pairs[i].peer_fd == event_fd)
+        {
+            if (g_shm_eventfd_pairs[i].primary_fd >= 0)
+            {
+                close(g_shm_eventfd_pairs[i].primary_fd);
+            }
+            if (g_shm_eventfd_pairs[i].peer_fd >= 0)
+            {
+                close(g_shm_eventfd_pairs[i].peer_fd);
+            }
+
+            g_shm_eventfd_pairs[i].primary_fd = -1;
+            g_shm_eventfd_pairs[i].peer_fd = -1;
+            if (i + 1 < g_shm_eventfd_pair_count)
+            {
+                g_shm_eventfd_pairs[i] = g_shm_eventfd_pairs[g_shm_eventfd_pair_count - 1];
+            }
+            g_shm_eventfd_pair_count--;
+            return;
+        }
+    }
+}
+
+int shm_eventfd_create(void)
+{
+#if defined(__linux__) && defined(__GLIBC__)
+    int event_fd = eventfd(0, EFD_NONBLOCK);
+    if (event_fd >= 0)
+    {
+        return event_fd;
+    }
+#endif
+
+    int fds[2];
+    if (socketpair(AF_UNIX, SOCK_STREAM, 0, fds) != 0)
+    {
+        return -1;
+    }
+
+    int flags = fcntl(fds[0], F_GETFL, 0);
+    if (flags == -1)
+    {
+        close(fds[0]);
+        close(fds[1]);
+        return -1;
+    }
+
+    if (fcntl(fds[0], F_SETFL, flags | O_NONBLOCK) == -1)
+    {
+        close(fds[0]);
+        close(fds[1]);
+        return -1;
+    }
+
+    shm_register_eventfd_pair(fds[0], fds[1]);
+    shm_register_eventfd_pair(fds[1], fds[0]);
+    return fds[0];
+}
+
+void shm_eventfd_close(int event_fd)
+{
+    if (event_fd < 0)
+    {
+        return;
+    }
+
+    shm_unregister_eventfd_pair(event_fd);
+}
 
 /**
  * @brief Creates a shared memory segment for a SMB client.
@@ -125,7 +223,7 @@ ZOO_ERROR_TYPE shm_init_client_resources(SHM_CLIENT_INFO_STRUCT* client)
     // Set event fd (should be created before calling this function)
     if (client->event_fd < 0)
     {
-        client->event_fd = eventfd(0, EFD_NONBLOCK);
+        client->event_fd = shm_eventfd_create();
         if (client->event_fd == -1)
         {
             ZOO_LOG_ERROR("Failed to create client event fd: %s", strerror(errno));
@@ -149,7 +247,7 @@ ZOO_ERROR_TYPE shm_init_client_resources(SHM_CLIENT_INFO_STRUCT* client)
     if (!client->tx_ring)
     {
         ZOO_LOG_ERROR("Failed to create TX ring buffer for client: %s", client->name);
-        close(client->event_fd);
+        shm_eventfd_close(client->event_fd);
         client->event_fd = -1;
         return ZOO_SMB_ERROR_RINGBUF_CREATE_FAILED;
     }
@@ -162,7 +260,7 @@ ZOO_ERROR_TYPE shm_init_client_resources(SHM_CLIENT_INFO_STRUCT* client)
         ZOO_LOG_ERROR("Failed to create RX ring buffer for client: %s", client->name);
         zoo_smb_ring_buffer_destroy(client->tx_ring);
         client->tx_ring = NULL;
-        close(client->event_fd);
+        shm_eventfd_close(client->event_fd);
         client->event_fd = -1;
         return ZOO_SMB_ERROR_RINGBUF_CREATE_FAILED;
     }
@@ -205,7 +303,7 @@ void shm_cleanup_client_resources(SHM_CLIENT_INFO_STRUCT* client)
     // Close event fd
     if (client->event_fd >= 0)
     {
-        close(client->event_fd);
+        shm_eventfd_close(client->event_fd);
         client->event_fd = -1;
     }
 

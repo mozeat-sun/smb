@@ -213,7 +213,7 @@ extern "C"
      *
      * @return ZOO_SMB_MSG_STRUCT* Pointer to the newly created default message structure.
      */
-    ZOO_SMB_MSG_STRUCT* zoo_smb_default_message();
+    ZOO_SMB_MSG_STRUCT* zoo_smb_default_message(void);
 
     /**
      * @brief Destroys a ZOO_SMB_MSG_STRUCT object and releases any associated resources.

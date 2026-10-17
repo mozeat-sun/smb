@@ -14,7 +14,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#if defined(__linux__)
 #include <sys/epoll.h>
+#endif
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <errno.h>
@@ -608,14 +610,18 @@ void tcp_server_handle_client_events(TCP_SERVER_TRANSPORT_STRUCT *server, int cl
                 // Copy header for validation
                 ZOO_SMB_MSG_HEADER_STRUCT header;
                 memcpy(&header, recv_buf + offset, sizeof(ZOO_SMB_MSG_HEADER_STRUCT));
-                if (!zoo_smb_protocol_is_header_valid(&header))
+                // Convert the wire (big-endian) header to host byte order before
+                // validating it or trusting payload_size for framing
+                // (swap_header is an identity on big-endian hosts).
+                ZOO_SMB_MSG_HEADER_STRUCT host_header = zoo_smb_protocol_swap_header(&header);
+                if (!zoo_smb_protocol_is_header_valid(&host_header))
                 {
                     // Protocol violation: log and disconnect
                     ZOO_LOG_ERROR("Invalid message header from client %d", client_fd);
                     client->active = ZOO_FALSE;
                     break;
                 }
-                size_t total_msg_size = sizeof(ZOO_SMB_MSG_HEADER_STRUCT) + header.payload_size;
+                size_t total_msg_size = sizeof(ZOO_SMB_MSG_HEADER_STRUCT) + host_header.payload_size;
                 if (received - offset < total_msg_size)
                 {
                     // Incomplete message: drop and warn (production: buffer for next read)

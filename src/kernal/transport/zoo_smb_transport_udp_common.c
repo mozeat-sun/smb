@@ -19,6 +19,9 @@
 #include "zoo_log.h"
 #include <string.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 #include <arpa/inet.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -292,7 +295,7 @@ ZOO_ERROR_TYPE udp_send_multicast(ZOO_SMB_UDP_TRANSPORT_COMMON* udp,
         ZOO_LOG_DEBUG("Multicast message sent successfully to %s:%d, sender:%s",
                           inet_ntoa(multicast_addr->sin_addr),
                           ntohs(multicast_addr->sin_port),
-                          msg->header.sender ? msg->header.sender : "unknown");
+                          msg->header.sender[0] != '\0' ? msg->header.sender : "unknown");
     }
     else
     {
@@ -340,7 +343,7 @@ ZOO_ERROR_TYPE udp_send_broadcast(ZOO_SMB_UDP_TRANSPORT_COMMON* udp,
     {
         ZOO_LOG_DEBUG("Broadcast message sent successfully to port %d, sender:%s",
                           ntohs(broadcast_addr->sin_port),
-                          msg->header.sender ? msg->header.sender : "unknown");
+                          msg->header.sender[0] != '\0' ? msg->header.sender : "unknown");
     }
     else
     {
@@ -387,7 +390,7 @@ ZOO_ERROR_TYPE udp_send_unicast(ZOO_SMB_UDP_TRANSPORT_COMMON* udp,
         ZOO_LOG_DEBUG("Unicast message sent successfully to %s:%d, sender:%s",
                           inet_ntoa(target_addr->sin_addr),
                           ntohs(target_addr->sin_port),
-                          msg->header.sender ? msg->header.sender : "unknown");
+                          msg->header.sender[0] != '\0' ? msg->header.sender : "unknown");
     }
     else
     {
@@ -495,6 +498,10 @@ ZOO_ERROR_TYPE udp_send_broadcast_on_interface(ZOO_SMB_UDP_TRANSPORT_COMMON* udp
     // Set interface for broadcast if specified
     if (interface_ip)
     {
+#if !defined(IP_MULTICAST_IF)
+        ZOO_LOG_ERROR("IP_MULTICAST_IF is not supported on this platform; cannot force broadcast interface");
+        return ZOO_SMB_ERROR_NOT_SUPPORTED;
+#else
         struct in_addr interface_addr;
         if (inet_pton(AF_INET, interface_ip, &interface_addr) <= 0)
         {
@@ -513,6 +520,7 @@ ZOO_ERROR_TYPE udp_send_broadcast_on_interface(ZOO_SMB_UDP_TRANSPORT_COMMON* udp
         {
             ZOO_LOG_DEBUG("Set broadcast interface to %s", interface_ip);
         }
+#endif
     }
 
     // Setup broadcast address
@@ -530,7 +538,7 @@ ZOO_ERROR_TYPE udp_send_broadcast_on_interface(ZOO_SMB_UDP_TRANSPORT_COMMON* udp
         ZOO_LOG_DEBUG("Interface broadcast message sent successfully to port %d via %s, sender:%s",
                           port,
                           interface_ip ? interface_ip : "default",
-                          msg->header.sender ? msg->header.sender : "unknown");
+                          msg->header.sender[0] != '\0' ? msg->header.sender : "unknown");
     }
     else
     {
@@ -563,6 +571,10 @@ ZOO_ERROR_TYPE udp_setup_multicast(ZOO_SMB_UDP_TRANSPORT_COMMON* udp, ZOO_BOOL i
 
     if (is_sender)
     {
+#if !defined(IP_MULTICAST_TTL) || !defined(IP_MULTICAST_LOOP)
+        ZOO_LOG_ERROR("Multicast sender options are not supported on this platform");
+        return ZOO_SMB_ERROR_NOT_SUPPORTED;
+#else
         // Publisher settings
         int ttl = 1;
         if (setsockopt(udp->sockfd, IPPROTO_IP, IP_MULTICAST_TTL, &ttl, sizeof(ttl)) < 0)
@@ -575,6 +587,7 @@ ZOO_ERROR_TYPE udp_setup_multicast(ZOO_SMB_UDP_TRANSPORT_COMMON* udp, ZOO_BOOL i
         {
             ZOO_LOG_WARN("Failed to set multicast loop: %s", strerror(errno));
         }
+#endif
     }
 
     return ZOO_SMB_OK;
@@ -594,13 +607,23 @@ ZOO_ERROR_TYPE udp_join_multicast_group(ZOO_SMB_UDP_TRANSPORT_COMMON* udp, const
 
     ZOO_LOG_DEBUG("Attempting to join multicast group: %s on socket %d", multicast_ip, udp->sockfd);
 
-    // Set up multicast membership request
-    struct ip_mreq mreq;
+#if !defined(IP_ADD_MEMBERSHIP)
+    (void)udp;
+    (void)multicast_ip;
+    ZOO_LOG_WARN("Multicast membership is not supported on this platform");
+    return ZOO_SMB_ERROR_NOT_SUPPORTED;
+#else
+    // Use a compatibility layout to avoid platform-specific unresolved forward declarations.
+    struct zoo_ip_mreq_compat
+    {
+        struct in_addr imr_multiaddr;
+        struct in_addr imr_interface;
+    } mreq;
+
     memset(&mreq, 0, sizeof(mreq));
     mreq.imr_multiaddr.s_addr = inet_addr(multicast_ip);
     mreq.imr_interface.s_addr = htonl(INADDR_ANY);
 
-    // Attempt to join the multicast group
     if (setsockopt(udp->sockfd, IPPROTO_IP, IP_ADD_MEMBERSHIP, &mreq, sizeof(mreq)) < 0)
     {
         if (errno == ENODEV)
@@ -622,6 +645,7 @@ ZOO_ERROR_TYPE udp_join_multicast_group(ZOO_SMB_UDP_TRANSPORT_COMMON* udp, const
 
     ZOO_LOG_INFO("Successfully joined multicast group: %s", multicast_ip);
     return ZOO_SMB_OK;
+#endif
 }
 
 /**
@@ -737,13 +761,17 @@ static ZOO_ERROR_TYPE bind_udp_socket(ZOO_SMB_UDP_TRANSPORT_COMMON* udp)
     // Set multicast-specific socket options ONLY for multicast clients
     if (!udp->is_server && udp->multicast_addr.sin_port > 0)
     {
+#if defined(SO_REUSEPORT)
         int reuse_port = 1;
         if (setsockopt(udp->sockfd, SOL_SOCKET, SO_REUSEPORT, &reuse_port, sizeof(reuse_port)) < 0)
         {
             ZOO_LOG_WARN("Failed to set SO_REUSEPORT: %s (continuing anyway)", strerror(errno));
             // Continue without SO_REUSEPORT as it may not be available
         }
-        
+#else
+        ZOO_LOG_DEBUG("SO_REUSEPORT is not available on this platform; continuing with SO_REUSEADDR only");
+#endif
+
         ZOO_LOG_DEBUG("Set socket options for multicast port sharing");
     }
     
@@ -884,7 +912,7 @@ ZOO_ERROR_TYPE udp_common_init(ZOO_SMB_TRANSPORT_STRUCT* transport,
 
     ZOO_LOG_DEBUG("Starting UDP %s initialization: %s:%d",
                       transport->config->is_server ? "server" : "client",
-                      transport->config->address ? transport->config->address : "default",
+                      transport->config->address[0] != '\0' ? transport->config->address : "default",
                       transport->config->port);
 
     // Step 2: Initialize UDP structure fields

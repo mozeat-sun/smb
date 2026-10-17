@@ -56,7 +56,7 @@ extern "C"
      * @param[in] smb The handle to the SMB context to check.
      * @return ZOO_TRUE if the SMB handle is ready; ZOO_FALSE otherwise.
      */
-    ZOO_BOOL zoo_smb_is_ready();
+    ZOO_BOOL zoo_smb_is_ready(void);
 
     /**
      * @brief Registers a SMB node with the system.

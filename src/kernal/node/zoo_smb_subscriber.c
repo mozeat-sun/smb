@@ -572,7 +572,10 @@ ZOO_ERROR_TYPE zoo_smb_subscribe_message(
             existing->desired_active = ZOO_TRUE;
         }
         ZOO_MUTEX_UNLOCK(&subscriber->mutex);
-        subscriber_request_reconcile(subscriber);
+        if (zoo_smb_service_is_available(subscriber->node->target))
+        {
+            subscriber_request_reconcile(subscriber);
+        }
         return ZOO_SMB_OK;
     }
 
@@ -585,11 +588,21 @@ ZOO_ERROR_TYPE zoo_smb_subscribe_message(
         return result;
     }
 
-    subscriber_request_reconcile(subscriber);
-    ZOO_LOG_INFO("Subscription intent registered: topic=%s, msg_id=%u, handle=%d. Negotiation continues asynchronously.",
-                 subscriber->node->topic,
-                 msg_id,
-                 *handle);
+    if (zoo_smb_service_is_available(subscriber->node->target))
+    {
+        subscriber_request_reconcile(subscriber);
+        ZOO_LOG_INFO("Subscription intent registered: topic=%s, msg_id=%u, handle=%d. Negotiation continues asynchronously.",
+                     subscriber->node->topic,
+                     msg_id,
+                     *handle);
+    }
+    else
+    {
+        ZOO_LOG_INFO("Subscription intent registered: topic=%s, msg_id=%u, handle=%d. Target service is offline; negotiation will start on service-online event.",
+                     subscriber->node->topic,
+                     msg_id,
+                     *handle);
+    }
     return ZOO_SMB_OK;
 }
 

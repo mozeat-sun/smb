@@ -174,7 +174,7 @@ ZOO_ERROR_T zoo_get_timestamp_high_precision(ZOO_TIMESTAMP_T *timestamp)
     ZOO_UINT64 remaining_ticks = ticks_since_epoch % g_performance_frequency;
     timestamp->nanoseconds = (ZOO_UINT32)((remaining_ticks * 1000000000ULL) / g_performance_frequency);
 
-#elif defined(ZOO_HAS_POSIX) && defined(_POSIX_TIMERS)
+#elif ZOO_HAS_POSIX && defined(_POSIX_TIMERS)
     struct timespec ts;
     if (clock_gettime(CLOCK_REALTIME, &ts) != 0)
     {
@@ -184,7 +184,7 @@ ZOO_ERROR_T zoo_get_timestamp_high_precision(ZOO_TIMESTAMP_T *timestamp)
     timestamp->seconds = (ZOO_UINT64)ts.tv_sec;
     timestamp->nanoseconds = (ZOO_UINT32)ts.tv_nsec;
 
-#elif defined(ZOO_HAS_POSIX)
+#elif ZOO_HAS_POSIX
     struct timeval tv;
     if (gettimeofday(&tv, NULL) != 0)
     {
@@ -407,7 +407,7 @@ ZOO_ERROR_T zoo_get_system_uptime(ZOO_UINT64 *uptime_ms)
     *uptime_ms = (ZOO_UINT64)GetTickCount64();
     return ZOO_OK;
 
-#elif defined(ZOO_HAS_POSIX) && defined(_POSIX_MONOTONIC_CLOCK)
+#elif ZOO_HAS_POSIX && defined(_POSIX_MONOTONIC_CLOCK)
     struct timespec ts;
     if (clock_gettime(CLOCK_MONOTONIC, &ts) != 0)
     {
@@ -466,7 +466,7 @@ static ZOO_ERROR_T zoo_util_init_timing(void)
  */
 static ZOO_INT32 zoo_util_get_timezone_offset(void)
 {
-#ifdef ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
     time_t now = time(NULL);
     struct tm *local_tm = localtime(&now);
     struct tm *utc_tm = gmtime(&now);

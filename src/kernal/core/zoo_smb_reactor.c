@@ -15,8 +15,33 @@
 #include "zoo_smb_error.h"
 #include <errno.h>
 
-#if defined(__linux__)
-#include <sys/epoll.h>
+#if !defined(__linux__)
+int epoll_create1(int flags)
+{
+    (void)flags;
+    errno = ENOSYS;
+    return -1;
+}
+
+int epoll_ctl(int epfd, int op, int fd, struct epoll_event* event)
+{
+    (void)epfd;
+    (void)op;
+    (void)fd;
+    (void)event;
+    errno = ENOSYS;
+    return -1;
+}
+
+int epoll_wait(int epfd, struct epoll_event* events, int maxevents, int timeout)
+{
+    (void)epfd;
+    (void)events;
+    (void)maxevents;
+    (void)timeout;
+    errno = ENOSYS;
+    return -1;
+}
 #endif
 
 /**

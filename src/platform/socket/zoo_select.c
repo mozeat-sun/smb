@@ -12,12 +12,12 @@
 #include <string.h>
 #include <errno.h>
 
-#ifdef ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
 #include <sys/select.h>
 #include <unistd.h>
 #endif
 
-#ifdef ZOO_USE_EPOLL
+#if ZOO_USE_EPOLL
 #include <sys/epoll.h>
 #include <unistd.h>
 #endif
@@ -43,7 +43,7 @@ struct ZOO_SOCKET_SET_IMPL_STRUCT
     bool error_ready[ZOO_SELECT_MAX_SOCKETS];                /**< Error flags */
     size_t count;                                            /**< Number of sockets in set */
     int max_fd;                                              /**< Highest file descriptor (for POSIX) */
-#ifdef ZOO_USE_EPOLL
+#if ZOO_USE_EPOLL
     int epoll_fd;                                            /**< Epoll file descriptor */
     bool epoll_initialized;                                  /**< Whether epoll is initialized */
 #endif
@@ -120,7 +120,7 @@ static int find_socket_index(const ZOO_SOCKET_SET_STRUCT *socket_set,
     return -1;
 }
 
-#ifdef ZOO_USE_EPOLL
+#if ZOO_USE_EPOLL
 /**
  * @brief Initialize epoll for a socket set
  * 
@@ -283,7 +283,7 @@ ZOO_ERROR_TYPE zoo_socket_set_init(ZOO_SOCKET_SET_STRUCT *socket_set)
     set_impl->count = 0;
     set_impl->max_fd = -1;
 
-#ifdef ZOO_USE_EPOLL
+#if ZOO_USE_EPOLL
     set_impl->epoll_fd = -1;
     set_impl->epoll_initialized = false;
 #endif
@@ -346,7 +346,7 @@ ZOO_ERROR_TYPE zoo_socket_set_add(ZOO_SOCKET_SET_STRUCT *socket_set,
         set_impl->max_fd = socket_info->fd;
     }
 
-#ifdef ZOO_USE_EPOLL
+#if ZOO_USE_EPOLL
     // Add to epoll with all events for flexibility
     uint32_t epoll_events = EPOLLIN | EPOLLOUT | EPOLLERR | EPOLLHUP;
     ZOO_ERROR_TYPE epoll_ret = add_socket_to_epoll(socket_set, socket_info, epoll_events);
@@ -398,7 +398,7 @@ ZOO_ERROR_TYPE zoo_socket_set_remove(ZOO_SOCKET_SET_STRUCT *socket_set,
         return ZOO_ERROR_NOT_FOUND;
     }
 
-#ifdef ZOO_USE_EPOLL
+#if ZOO_USE_EPOLL
     // Remove from epoll first
     if (set_impl->epoll_initialized)
     {
@@ -457,7 +457,7 @@ ZOO_ERROR_TYPE zoo_socket_set_clear(ZOO_SOCKET_SET_STRUCT *socket_set)
 
     struct ZOO_SOCKET_SET_IMPL_STRUCT *set_impl = (struct ZOO_SOCKET_SET_IMPL_STRUCT *)socket_set;
 
-#ifdef ZOO_USE_EPOLL
+#if ZOO_USE_EPOLL
     cleanup_epoll(socket_set);
 #endif
 
@@ -569,7 +569,7 @@ ZOO_ERROR_TYPE zoo_socket_select_multiple(ZOO_SOCKET_SET_STRUCT *read_set,
         memset(error_impl->error_ready, 0, sizeof(error_impl->error_ready));
     }
 
-#ifdef ZOO_USE_EPOLL
+#if ZOO_USE_EPOLL
     // Epoll implementation - more efficient for large numbers of sockets
     struct epoll_event events[ZOO_EPOLL_MAX_EVENTS];
     int timeout_epoll = timeout_ms;
@@ -681,7 +681,7 @@ ZOO_ERROR_TYPE zoo_socket_select_multiple(ZOO_SOCKET_SET_STRUCT *read_set,
 use_select_fallback:
 #endif /* ZOO_USE_EPOLL */
 
-#ifdef ZOO_HAS_POSIX
+#if ZOO_HAS_POSIX
     {
     fd_set read_fds, write_fds, error_fds;
     fd_set *read_fds_ptr = NULL, *write_fds_ptr = NULL, *error_fds_ptr = NULL;
@@ -1272,7 +1272,7 @@ ZOO_ERROR_TYPE zoo_socket_has_error(ZOO_SOCKET_INFO_STRUCT *socket_info,
  */
 bool zoo_socket_epoll_available(void)
 {
-#ifdef ZOO_USE_EPOLL
+#if ZOO_USE_EPOLL
     return true;
 #else
     return false;

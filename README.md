@@ -116,6 +116,7 @@ Key quality scripts (all under `tools/quality/`):
 | `static_analysis.sh` | cppcheck static analysis |
 | `traceability_gate.sh` | Enforce requirements-to-test traceability |
 | `protocol_compatibility_matrix.sh` | Wire protocol compatibility matrix |
+| `transport_autoselect_outcomes.sh` | Same-host SHM auto-select evidence artifact |
 | `grade1_exit_gate.sh` | Generate Grade 1 release exit status |
 
 ## Compatibility And Deprecation
@@ -123,6 +124,15 @@ Key quality scripts (all under `tools/quality/`):
 API releases follow semantic versioning.
 
 Wire protocol compatibility rules, fail-fast mismatch behavior, and the deprecation lifecycle are defined in `docs/requirements/PROTOCOL_COMPATIBILITY_POLICY.md`.
+
+At startup, SMB logs a transport capability matrix (multicast sender options, multicast group join, port sharing, broadcast interface selection, and default-route probing). When requested multicast features are unavailable on the current platform, SMB reports explicit degraded-mode warnings instead of silently assuming Linux-only behavior.
+
+Transport auto-select now supports a same-host SHM preference path with fail-open behavior:
+
+- Discovery payloads may carry optional host fingerprint, transport capability bits, and SHM endpoint hints.
+- When `sys.transport_auto_select=1`, registration services on the same host that advertise SHM capability are resolved to SHM first.
+- SHM endpoint readiness is probed with `sys.transport_shm_probe_timeout_ms` before selecting SHM for registration services.
+- If SHM transport creation fails, SMB falls back to the discovered network transport and applies `sys.transport_shm_fallback_cooldown_ms` before retrying SHM selection.
 
 The CI-generated compatibility matrix is published as the `protocol-compatibility-artifacts` workflow artifact.
 

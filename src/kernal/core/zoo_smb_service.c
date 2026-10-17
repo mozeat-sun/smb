@@ -20,6 +20,22 @@
 #include <string.h>
 #include <stdlib.h>
 
+static uint32_t default_capability_bits_from_transport(ZOO_SMB_TRANSPORT_TYPE_ENUM transport_type)
+{
+    switch (transport_type)
+    {
+        case ZOO_SMB_TRANSPORT_TYPE_SHM:
+            return ZOO_SMB_SERVICE_CAPABILITY_SHM;
+        case ZOO_SMB_TRANSPORT_TYPE_TCP:
+            return ZOO_SMB_SERVICE_CAPABILITY_TCP;
+        case ZOO_SMB_TRANSPORT_TYPE_UDP:
+        case ZOO_SMB_TRANSPORT_TYPE_UDP_BROADCAST:
+            return ZOO_SMB_SERVICE_CAPABILITY_UDP;
+        default:
+            return 0U;
+    }
+}
+
 /**
  * @brief Creates and initializes a new ZOO_SMB_SERVICE_STRUCT instance.
  *
@@ -69,6 +85,10 @@ ZOO_SMB_SERVICE_HANDLE zoo_smb_create_service(
     info->multicast_address[sizeof(info->multicast_address) - 1] = '\0';  // Ensure null-termination
     info->multicast_port = multicast_port;
     info->transport_type = transport_type;
+    info->transport_capabilities = default_capability_bits_from_transport(transport_type);
+    info->host_fingerprint[0] = '\0';
+    snprintf(info->shm_endpoint, sizeof(info->shm_endpoint), "%s", info->name);
+    info->shm_endpoint[sizeof(info->shm_endpoint) - 1] = '\0';
     info->is_online = ZOO_TRUE;
     info->last_seen = time(NULL);
     info->broadcast_interval_ms = broadcast_interval_ms < 1000 ? 1000 : broadcast_interval_ms;  // Ensure minimum interval of 1 second

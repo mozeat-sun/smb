@@ -21,7 +21,6 @@
 #include "zoo_smb_protocol.h"
 #include "zoo_memory_pool.h"
 #include <sys/select.h>
-#include <sys/eventfd.h>
 #include <sys/shm.h>
 #include <signal.h>
 #include <unistd.h>
@@ -465,7 +464,7 @@ static ZOO_ERROR_TYPE shm_server_create_master_segment(SHM_SERVER_IMPL_STRUCT* i
  */
 static ZOO_ERROR_TYPE shm_server_init_event_fd(SHM_SERVER_IMPL_STRUCT* impl)
 {
-    impl->server_event_fd = eventfd(0, EFD_NONBLOCK);
+    impl->server_event_fd = shm_eventfd_create();
     if (impl->server_event_fd == -1)
     {
         ZOO_LOG_ERROR("Failed to create server event fd: %s", strerror(errno));
@@ -1260,7 +1259,7 @@ void shm_server_destroy(void* impl_ptr)
     // Close event file descriptor
     if (impl->server_event_fd >= 0)
     {
-        close(impl->server_event_fd);
+        shm_eventfd_close(impl->server_event_fd);
         impl->server_event_fd = -1;
     }
 

@@ -20,16 +20,24 @@
 #include "zoo_thread_pool.h"
 #include "zoo_list.h"
 #include "zoo_log.h"
+#include "zoo_smb_transport_shm_common.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
 #include <stdatomic.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#if defined(__unix__) || defined(__APPLE__)
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#endif
 
 #define TRANSPORT_INDEX_BUCKET_COUNT 257
 #define TRANSPORT_START_WAIT_STEP_MS 20
 #define TRANSPORT_SEND_FAIL_OPEN_THRESHOLD 5
 #define TRANSPORT_SEND_OPEN_COOLDOWN_SEC 2
+#define TRANSPORT_AUTO_SELECT_REASON_MAX 63
 
 /**
  * @brief Check whether a send error should trip the transport circuit breaker.
@@ -88,7 +96,17 @@ typedef struct ZOO_SMB_TRANSPORT_MANAGER_STRUCT
     atomic_ullong total_send_failures;
     atomic_ullong backpressure_drops;
     atomic_ullong circuit_open_rejections;
+    atomic_ullong auto_select_shm_total;
+    atomic_ullong auto_select_network_total;
+    atomic_ullong auto_select_fallback_total;
+    atomic_ullong auto_select_cooldown_block_total;
+    atomic_ullong auto_select_last_latency_us;
     ZOO_BOOL telemetry_enabled;
+    int last_selected_transport_type;
+    int last_fallback_transport_type;
+    char last_auto_select_reason[64];
+    uint64_t shm_fallback_cooldown_until_ms;
+    ZOO_SMB_TRANSPORT_RUNTIME_CAPABILITY_STRUCT runtime_capability;
 } ZOO_SMB_TRANSPORT_MANAGER_STRUCT;
 
 #define LOCK_MANAGER(mgr) ZOO_MUTEX_LOCK(&(mgr)->mutex)
@@ -98,6 +116,297 @@ static void init_transport_config(
     ZOO_SMB_TRANSPORT_CONFIG_STRUCT* config,
     const ZOO_SMB_CONFIG_STRUCT* global_config,
     ZOO_SMB_SERVICE_HANDLE service);
+
+typedef struct
+{
+    ZOO_SMB_TRANSPORT_TYPE_ENUM selected_type;
+    ZOO_SMB_TRANSPORT_TYPE_ENUM fallback_type;
+    ZOO_BOOL selected_shm;
+    ZOO_BOOL cooldown_blocked;
+    ZOO_BOOL fallback_applied;
+    uint64_t latency_us;
+    char reason[64];
+} TRANSPORT_SELECTION_RESULT_STRUCT;
+
+static uint64_t transport_now_monotonic_us(void)
+{
+    struct timespec ts;
+    if (clock_gettime(CLOCK_MONOTONIC, &ts) != 0)
+    {
+        return 0U;
+    }
+    return ((uint64_t)ts.tv_sec * 1000000ULL) + ((uint64_t)ts.tv_nsec / 1000ULL);
+}
+
+static uint64_t transport_now_realtime_ms(void)
+{
+    struct timespec ts;
+    if (clock_gettime(CLOCK_REALTIME, &ts) != 0)
+    {
+        return 0U;
+    }
+    return ((uint64_t)ts.tv_sec * 1000ULL) + ((uint64_t)ts.tv_nsec / 1000000ULL);
+}
+
+static ZOO_BOOL transport_is_same_host(
+    const ZOO_SMB_CONFIG_STRUCT* global_config,
+    const ZOO_SMB_SERVICE_HANDLE service)
+{
+    if (!global_config || !service)
+    {
+        return ZOO_FALSE;
+    }
+
+    if (service->host_fingerprint[0] != '\0' &&
+        strcmp(service->host_fingerprint, global_config->local_machine.address) == 0)
+    {
+        return ZOO_TRUE;
+    }
+
+    return service->address[0] != '\0' &&
+           global_config->local_machine.address[0] != '\0' &&
+           strcmp(service->address, global_config->local_machine.address) == 0;
+}
+
+static ZOO_BOOL service_capability_supports_shm(const ZOO_SMB_SERVICE_HANDLE service)
+{
+    if (!service)
+    {
+        return ZOO_FALSE;
+    }
+
+    uint32_t cap_bits = service->transport_capabilities;
+    if (cap_bits == 0U)
+    {
+        return service->transport_type == ZOO_SMB_TRANSPORT_TYPE_SHM;
+    }
+    return (cap_bits & ZOO_SMB_SERVICE_CAPABILITY_SHM) != 0U;
+}
+
+static void record_selection_result(
+    ZOO_SMB_TRANSPORT_MANAGER_HANDLE manager,
+    const TRANSPORT_SELECTION_RESULT_STRUCT* result)
+{
+    if (!manager || !result)
+    {
+        return;
+    }
+
+    atomic_store(&manager->auto_select_last_latency_us, result->latency_us);
+    manager->last_selected_transport_type = (int)result->selected_type;
+    manager->last_fallback_transport_type = (int)result->fallback_type;
+    snprintf(manager->last_auto_select_reason, sizeof(manager->last_auto_select_reason), "%s", result->reason);
+    manager->last_auto_select_reason[sizeof(manager->last_auto_select_reason) - 1] = '\0';
+
+    if (result->selected_type == ZOO_SMB_TRANSPORT_TYPE_SHM)
+    {
+        atomic_fetch_add(&manager->auto_select_shm_total, 1);
+    }
+    else
+    {
+        atomic_fetch_add(&manager->auto_select_network_total, 1);
+    }
+    if (result->cooldown_blocked)
+    {
+        atomic_fetch_add(&manager->auto_select_cooldown_block_total, 1);
+    }
+    if (result->fallback_applied)
+    {
+        atomic_fetch_add(&manager->auto_select_fallback_total, 1);
+    }
+}
+
+static ZOO_BOOL transport_shm_endpoint_ready(
+    const char* shm_endpoint,
+    uint32_t probe_timeout_ms)
+{
+#if defined(__unix__) || defined(__APPLE__)
+    if (!shm_endpoint || shm_endpoint[0] == '\0')
+    {
+        return ZOO_FALSE;
+    }
+
+    uint64_t deadline_us = transport_now_monotonic_us() + ((uint64_t)probe_timeout_ms * 1000ULL);
+    do
+    {
+        key_t key = shm_generate_key(shm_endpoint, 0);
+        if (key != (key_t)-1)
+        {
+            int shm_id = shmget(key, 0, 0666);
+            if (shm_id >= 0)
+            {
+                return ZOO_TRUE;
+            }
+        }
+
+        if (probe_timeout_ms == 0U)
+        {
+            break;
+        }
+        ZOO_SMB_SLEEP_MS(10);
+    } while (transport_now_monotonic_us() < deadline_us);
+#else
+    ZOO_SMB_UNUSED(shm_endpoint);
+    ZOO_SMB_UNUSED(probe_timeout_ms);
+#endif
+    return ZOO_FALSE;
+}
+
+static TRANSPORT_SELECTION_RESULT_STRUCT resolve_transport_selection(
+    ZOO_SMB_TRANSPORT_MANAGER_HANDLE manager,
+    const ZOO_SMB_SERVICE_HANDLE service)
+{
+    TRANSPORT_SELECTION_RESULT_STRUCT out;
+    uint64_t begin_us = transport_now_monotonic_us();
+
+    memset(&out, 0, sizeof(out));
+    out.selected_type = service ? service->transport_type : ZOO_SMB_TRANSPORT_TYPE_DEFAULT;
+    out.fallback_type = out.selected_type;
+    snprintf(out.reason, sizeof(out.reason), "service-transport");
+
+    if (!manager || !manager->global_config || !service)
+    {
+        out.latency_us = transport_now_monotonic_us() - begin_us;
+        return out;
+    }
+
+    if (!manager->global_config->sys.transport_auto_select)
+    {
+        snprintf(out.reason, sizeof(out.reason), "auto-select-disabled");
+        out.latency_us = transport_now_monotonic_us() - begin_us;
+        return out;
+    }
+
+    if (service->transport_type == ZOO_SMB_TRANSPORT_TYPE_SHM)
+    {
+        snprintf(out.reason, sizeof(out.reason), "explicit-shm-service");
+        out.selected_shm = ZOO_TRUE;
+        out.latency_us = transport_now_monotonic_us() - begin_us;
+        return out;
+    }
+
+    if (service->service_type != ZOO_SMB_SERVICE_TYPE_REGISTRATION)
+    {
+        snprintf(out.reason, sizeof(out.reason), "non-registration");
+        out.latency_us = transport_now_monotonic_us() - begin_us;
+        return out;
+    }
+
+    if (!transport_is_same_host(manager->global_config, service) ||
+        !service_capability_supports_shm(service))
+    {
+        snprintf(out.reason, sizeof(out.reason), "network-preferred");
+        out.latency_us = transport_now_monotonic_us() - begin_us;
+        return out;
+    }
+
+    uint64_t now_ms = transport_now_realtime_ms();
+    if (manager->shm_fallback_cooldown_until_ms > now_ms)
+    {
+        out.cooldown_blocked = ZOO_TRUE;
+        snprintf(out.reason, sizeof(out.reason), "shm-cooldown-active");
+        out.latency_us = transport_now_monotonic_us() - begin_us;
+        return out;
+    }
+
+    out.selected_type = ZOO_SMB_TRANSPORT_TYPE_SHM;
+    out.fallback_type = service->transport_type;
+    out.selected_shm = ZOO_TRUE;
+    if (!transport_shm_endpoint_ready(
+            service->shm_endpoint,
+            manager->global_config->sys.transport_shm_probe_timeout_ms))
+    {
+        out.selected_type = service->transport_type;
+        out.fallback_type = service->transport_type;
+        out.selected_shm = ZOO_FALSE;
+        out.fallback_applied = ZOO_TRUE;
+        snprintf(out.reason, sizeof(out.reason), "shm-not-ready");
+        out.latency_us = transport_now_monotonic_us() - begin_us;
+        return out;
+    }
+
+    snprintf(out.reason, sizeof(out.reason), "same-host-shm");
+    out.latency_us = transport_now_monotonic_us() - begin_us;
+    return out;
+}
+
+static void init_runtime_capability(
+    ZOO_SMB_TRANSPORT_MANAGER_HANDLE manager,
+    const ZOO_SMB_CONFIG_STRUCT* config)
+{
+    if (!manager || !config)
+    {
+        return;
+    }
+
+    manager->runtime_capability.mode = ZOO_SMB_TRANSPORT_RUNTIME_MODE_FULL;
+    manager->runtime_capability.broadcast_transport_ready = ZOO_FALSE;
+#if defined(IP_MULTICAST_TTL) && defined(IP_MULTICAST_LOOP)
+    manager->runtime_capability.multicast_sender_options_supported = ZOO_TRUE;
+#else
+    manager->runtime_capability.multicast_sender_options_supported = ZOO_FALSE;
+#endif
+#if defined(IP_ADD_MEMBERSHIP)
+    manager->runtime_capability.multicast_group_join_supported = ZOO_TRUE;
+#else
+    manager->runtime_capability.multicast_group_join_supported = ZOO_FALSE;
+#endif
+#if defined(SO_REUSEPORT)
+    manager->runtime_capability.multicast_reuseport_supported = ZOO_TRUE;
+#else
+    manager->runtime_capability.multicast_reuseport_supported = ZOO_FALSE;
+#endif
+#if defined(IP_MULTICAST_IF)
+    manager->runtime_capability.broadcast_interface_select_supported = ZOO_TRUE;
+#else
+    manager->runtime_capability.broadcast_interface_select_supported = ZOO_FALSE;
+#endif
+#if defined(__linux__)
+    manager->runtime_capability.default_route_probe_supported = ZOO_TRUE;
+#else
+    manager->runtime_capability.default_route_probe_supported = ZOO_FALSE;
+#endif
+
+    if (!manager->runtime_capability.multicast_sender_options_supported ||
+        !manager->runtime_capability.multicast_group_join_supported ||
+        !manager->runtime_capability.multicast_reuseport_supported ||
+        !manager->runtime_capability.broadcast_interface_select_supported ||
+        !manager->runtime_capability.default_route_probe_supported)
+    {
+        manager->runtime_capability.mode = ZOO_SMB_TRANSPORT_RUNTIME_MODE_DEGRADED;
+    }
+
+    if ((config->multicast.port > 0 && config->multicast.address[0] != '\0') &&
+        (!manager->runtime_capability.multicast_sender_options_supported ||
+         !manager->runtime_capability.multicast_group_join_supported))
+    {
+        manager->runtime_capability.mode = ZOO_SMB_TRANSPORT_RUNTIME_MODE_DEGRADED;
+    }
+}
+
+static void log_runtime_capability(
+    const ZOO_SMB_TRANSPORT_RUNTIME_CAPABILITY_STRUCT* capability)
+{
+    if (!capability)
+    {
+        return;
+    }
+
+    ZOO_LOG_INFO("Transport manager runtime mode: %s",
+                 capability->mode == ZOO_SMB_TRANSPORT_RUNTIME_MODE_FULL ? "full" : "degraded");
+    ZOO_LOG_INFO("  broadcast_transport_ready: %s",
+                 capability->broadcast_transport_ready ? "ZOO_TRUE" : "ZOO_FALSE");
+    ZOO_LOG_INFO("  multicast_sender_options_supported: %s",
+                 capability->multicast_sender_options_supported ? "ZOO_TRUE" : "ZOO_FALSE");
+    ZOO_LOG_INFO("  multicast_group_join_supported: %s",
+                 capability->multicast_group_join_supported ? "ZOO_TRUE" : "ZOO_FALSE");
+    ZOO_LOG_INFO("  multicast_reuseport_supported: %s",
+                 capability->multicast_reuseport_supported ? "ZOO_TRUE" : "ZOO_FALSE");
+    ZOO_LOG_INFO("  broadcast_interface_select_supported: %s",
+                 capability->broadcast_interface_select_supported ? "ZOO_TRUE" : "ZOO_FALSE");
+    ZOO_LOG_INFO("  default_route_probe_supported: %s",
+                 capability->default_route_probe_supported ? "ZOO_TRUE" : "ZOO_FALSE");
+}
 
 /**
  * @brief Wait until a transport enters the started state or timeout expires.
@@ -413,7 +722,8 @@ static void destroy_transport_index(ZOO_SMB_TRANSPORT_MANAGER_HANDLE manager)
  */
 static ZOO_SMB_TRANSPORT_HANDLE find_transport_by_service(
     ZOO_SMB_TRANSPORT_MANAGER_HANDLE manager,
-    ZOO_SMB_SERVICE_HANDLE service)
+    ZOO_SMB_SERVICE_HANDLE service,
+    ZOO_SMB_TRANSPORT_TYPE_ENUM transport_type)
 {
     if (!manager || !service)
     {
@@ -424,7 +734,7 @@ static ZOO_SMB_TRANSPORT_HANDLE find_transport_by_service(
         manager,
         service->address,
         service->port,
-        service->transport_type,
+        transport_type,
         service->is_server);
     if (indexed)
     {
@@ -439,15 +749,15 @@ static ZOO_SMB_TRANSPORT_HANDLE find_transport_by_service(
             transport &&
             strcmp(config->address, service->address) == 0 &&
             config->port == service->port &&
-            config->type == service->transport_type &&
+            config->type == transport_type &&
             config->is_server == service->is_server)
         {
-            ZOO_LOG_DEBUG("Found transport for address '%s:%d' of type %d", service->address, service->port, service->transport_type);
+            ZOO_LOG_DEBUG("Found transport for address '%s:%d' of type %d", service->address, service->port, transport_type);
             (void)transport_index_upsert(
                 manager,
                 service->address,
                 service->port,
-                service->transport_type,
+                transport_type,
                 service->is_server,
                 transport);
             return transport;
@@ -494,7 +804,12 @@ ZOO_ERROR_TYPE init_broadcast_transport(
     ZOO_LOG_INFO("Broadcast transport initialized: %s at %s:%d", config.name, config.address, config.port);
     zoo_list_push_back(manager->transport_list, transport);
     (void)transport_index_upsert(manager, config.address, config.port, config.type, config.is_server, transport);
-    return zoo_smb_transport_start(transport, ZOO_TRUE);
+    ZOO_ERROR_TYPE start_result = zoo_smb_transport_start(transport, ZOO_TRUE);
+    if (ZOO_SMB_IS_SUCCESS(start_result))
+    {
+        manager->runtime_capability.broadcast_transport_ready = ZOO_TRUE;
+    }
+    return start_result;
 }
 
 /**
@@ -535,6 +850,7 @@ ZOO_SMB_TRANSPORT_MANAGER_HANDLE zoo_smb_create_transport_manager(
         }
     }
     manager->telemetry_enabled = config->sys.enable_transport_telemetry;
+    init_runtime_capability(manager, config);
     if (!ZOO_MUTEX_INIT(&manager->mutex))
     {
         ZOO_LOG_ERROR("failed to init manager mutex");
@@ -547,6 +863,15 @@ ZOO_SMB_TRANSPORT_MANAGER_HANDLE zoo_smb_create_transport_manager(
     atomic_init(&manager->total_send_failures, 0);
     atomic_init(&manager->backpressure_drops, 0);
     atomic_init(&manager->circuit_open_rejections, 0);
+    atomic_init(&manager->auto_select_shm_total, 0);
+    atomic_init(&manager->auto_select_network_total, 0);
+    atomic_init(&manager->auto_select_fallback_total, 0);
+    atomic_init(&manager->auto_select_cooldown_block_total, 0);
+    atomic_init(&manager->auto_select_last_latency_us, 0);
+    manager->last_selected_transport_type = ZOO_SMB_TRANSPORT_TYPE_MIN;
+    manager->last_fallback_transport_type = ZOO_SMB_TRANSPORT_TYPE_MIN;
+    manager->last_auto_select_reason[0] = '\0';
+    manager->shm_fallback_cooldown_until_ms = 0U;
     manager->transport_list = zoo_list_create(256);
     if (!manager->transport_list)
     {
@@ -595,6 +920,8 @@ ZOO_SMB_TRANSPORT_MANAGER_HANDLE zoo_smb_create_transport_manager(
         zoo_free_to_pool(manager);
         return NULL;
     }
+
+    log_runtime_capability(&manager->runtime_capability);
 
     ZOO_LOG_DEBUG("manager created");
     return manager;
@@ -681,7 +1008,7 @@ ZOO_SMB_TRANSPORT_HANDLE zoo_smb_transport_manager_make_transport(
     ZOO_SMB_TRANSPORT_MANAGER_HANDLE manager,
     ZOO_SMB_SERVICE_HANDLE service)
 {
-    if (!manager)
+    if (!manager || !service)
     {
         ZOO_LOG_ERROR("invalid parameters");
         return NULL;
@@ -689,17 +1016,57 @@ ZOO_SMB_TRANSPORT_HANDLE zoo_smb_transport_manager_make_transport(
 
     ZOO_SMB_TRANSPORT_CONFIG_STRUCT config;
     init_transport_config(&config, manager->global_config, service);
-    ZOO_SMB_TRANSPORT_HANDLE transport = find_transport_by_service(manager, service);
+    TRANSPORT_SELECTION_RESULT_STRUCT selection = resolve_transport_selection(manager, service);
+    config.type = selection.selected_type;
+    if (selection.selected_type == ZOO_SMB_TRANSPORT_TYPE_SHM &&
+        service->shm_endpoint[0] != '\0')
+    {
+        snprintf(config.name, sizeof(config.name), "%s", service->shm_endpoint);
+        config.name[sizeof(config.name) - 1] = '\0';
+        snprintf(config.address, sizeof(config.address), "%s", service->shm_endpoint);
+        config.address[sizeof(config.address) - 1] = '\0';
+    }
+
+    ZOO_SMB_TRANSPORT_HANDLE transport = find_transport_by_service(manager, service, config.type);
     if (transport)
     {
         ZOO_LOG_DEBUG("transport for address '%s:%d' already exists", config.address, config.port);
+        LOCK_MANAGER(manager);
+        record_selection_result(manager, &selection);
+        UNLOCK_MANAGER(manager);
         return transport;
     }
 
     transport = zoo_smb_create_transport(&config);
+    if (!transport && selection.selected_shm && selection.fallback_type != selection.selected_type)
+    {
+        selection.fallback_applied = ZOO_TRUE;
+        uint32_t cooldown_ms = manager->global_config->sys.transport_shm_fallback_cooldown_ms;
+        if (cooldown_ms == 0U)
+        {
+            cooldown_ms = 2000U;
+        }
+
+        LOCK_MANAGER(manager);
+        manager->shm_fallback_cooldown_until_ms = transport_now_realtime_ms() + cooldown_ms;
+        UNLOCK_MANAGER(manager);
+
+        config.type = selection.fallback_type;
+        snprintf(config.name, sizeof(config.name), "%s", service->name);
+        config.name[sizeof(config.name) - 1] = '\0';
+        snprintf(config.address, sizeof(config.address), "%s", service->address);
+        config.address[sizeof(config.address) - 1] = '\0';
+        transport = zoo_smb_create_transport(&config);
+        selection.selected_type = config.type;
+        snprintf(selection.reason, sizeof(selection.reason), "shm-create-fallback");
+    }
+
     if (!transport)
     {
         ZOO_LOG_ERROR("failed to create transport for service '%s'", config.name);
+        LOCK_MANAGER(manager);
+        record_selection_result(manager, &selection);
+        UNLOCK_MANAGER(manager);
         return NULL;
     }
 
@@ -711,6 +1078,9 @@ ZOO_SMB_TRANSPORT_HANDLE zoo_smb_transport_manager_make_transport(
     }
 
     (void)transport_index_upsert(manager, config.address, config.port, config.type, config.is_server, transport);
+    LOCK_MANAGER(manager);
+    record_selection_result(manager, &selection);
+    UNLOCK_MANAGER(manager);
 
     return transport;
 }
@@ -1127,8 +1497,17 @@ ZOO_ERROR_TYPE zoo_smb_transport_manager_reset_metrics(
     atomic_store(&manager->total_send_failures, 0);
     atomic_store(&manager->backpressure_drops, 0);
     atomic_store(&manager->circuit_open_rejections, 0);
+    atomic_store(&manager->auto_select_shm_total, 0);
+    atomic_store(&manager->auto_select_network_total, 0);
+    atomic_store(&manager->auto_select_fallback_total, 0);
+    atomic_store(&manager->auto_select_cooldown_block_total, 0);
+    atomic_store(&manager->auto_select_last_latency_us, 0);
 
     LOCK_MANAGER(manager);
+    manager->last_selected_transport_type = ZOO_SMB_TRANSPORT_TYPE_MIN;
+    manager->last_fallback_transport_type = ZOO_SMB_TRANSPORT_TYPE_MIN;
+    manager->last_auto_select_reason[0] = '\0';
+    manager->shm_fallback_cooldown_until_ms = 0U;
     for (ZOO_USIZE i = 0; i < TRANSPORT_INDEX_BUCKET_COUNT; i++)
     {
         ZOO_LIST_HANDLE bucket = manager->transport_index_buckets[i];
@@ -1231,6 +1610,51 @@ ZOO_ERROR_TYPE zoo_smb_transport_manager_set_transport_watermarks(
     LOCK_MANAGER(manager);
     entry->send_high_watermark = high_watermark;
     entry->send_low_watermark = low_watermark;
+    UNLOCK_MANAGER(manager);
+
+    return ZOO_SMB_OK;
+}
+
+ZOO_ERROR_TYPE zoo_smb_transport_manager_get_runtime_capability(
+    ZOO_SMB_TRANSPORT_MANAGER_HANDLE manager,
+    ZOO_SMB_TRANSPORT_RUNTIME_CAPABILITY_STRUCT* out_capability)
+{
+    if (!manager || !out_capability)
+    {
+        return ZOO_SMB_ERROR_INVALID_PARAM;
+    }
+
+    LOCK_MANAGER(manager);
+    *out_capability = manager->runtime_capability;
+    UNLOCK_MANAGER(manager);
+
+    return ZOO_SMB_OK;
+}
+
+ZOO_ERROR_TYPE zoo_smb_transport_manager_get_auto_select_metrics(
+    ZOO_SMB_TRANSPORT_MANAGER_HANDLE manager,
+    ZOO_SMB_TRANSPORT_AUTO_SELECT_METRICS_STRUCT* out_metrics)
+{
+    if (!manager || !out_metrics)
+    {
+        return ZOO_SMB_ERROR_INVALID_PARAM;
+    }
+
+    memset(out_metrics, 0, sizeof(*out_metrics));
+    out_metrics->shm_selected_total = (uint64_t)atomic_load(&manager->auto_select_shm_total);
+    out_metrics->network_selected_total = (uint64_t)atomic_load(&manager->auto_select_network_total);
+    out_metrics->fallback_to_network_total = (uint64_t)atomic_load(&manager->auto_select_fallback_total);
+    out_metrics->cooldown_block_total = (uint64_t)atomic_load(&manager->auto_select_cooldown_block_total);
+    out_metrics->selection_latency_us_last = (uint64_t)atomic_load(&manager->auto_select_last_latency_us);
+
+    LOCK_MANAGER(manager);
+    out_metrics->last_selected_transport_type = manager->last_selected_transport_type;
+    out_metrics->last_fallback_transport_type = manager->last_fallback_transport_type;
+    snprintf(out_metrics->last_decision_reason,
+             sizeof(out_metrics->last_decision_reason),
+             "%s",
+             manager->last_auto_select_reason);
+    out_metrics->last_decision_reason[sizeof(out_metrics->last_decision_reason) - 1] = '\0';
     UNLOCK_MANAGER(manager);
 
     return ZOO_SMB_OK;

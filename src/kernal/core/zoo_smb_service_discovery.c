@@ -17,6 +17,7 @@
 #include "zoo_smb_routing_engine.h"
 #include "zoo_memory_pool.h"
 #include "zoo_util.h"
+#include "zoo_smb_config.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -90,6 +91,9 @@ typedef struct DISCOVERY_PARSED_SERVICE_STRUCT
     ZOO_U16 port;
     ZOO_U16 multicast_port;
     ZOO_SMB_TRANSPORT_TYPE_ENUM transport_type;
+    char host_fingerprint[MAX_SERVICE_HOST_FINGERPRINT_LENGTH];
+    uint32_t transport_capabilities;
+    char shm_endpoint[MAX_SERVICE_SHM_ENDPOINT_LENGTH];
 } DISCOVERY_PARSED_SERVICE_STRUCT;
 
 /**
@@ -107,8 +111,7 @@ static ZOO_BOOL parse_payload_message(const ZOO_SMB_MSG_STRUCT* message, DISCOVE
     memset(parsed, 0, sizeof(*parsed));
     parsed->transport_type = ZOO_SMB_TRANSPORT_TYPE_DEFAULT;
 
-    // Try to parse with extended multicast support first
-    ZOO_BOOL parse_success = zoo_smb_protocol_parse_discovery_payload_message_ex(
+    ZOO_BOOL parse_success = zoo_smb_protocol_parse_discovery_payload_message_ex2(
         message,
         parsed->name,
         parsed->address,
@@ -116,7 +119,10 @@ static ZOO_BOOL parse_payload_message(const ZOO_SMB_MSG_STRUCT* message, DISCOVE
         parsed->topic,
         &parsed->transport_type,
         parsed->multicast_addr,
-        &parsed->multicast_port);
+        &parsed->multicast_port,
+        parsed->host_fingerprint,
+        &parsed->transport_capabilities,
+        parsed->shm_endpoint);
 
     if (!parse_success)
     {
@@ -132,6 +138,13 @@ static ZOO_BOOL parse_payload_message(const ZOO_SMB_MSG_STRUCT* message, DISCOVE
     }
 
     return ZOO_TRUE;
+}
+
+static uint32_t get_local_transport_capabilities(void)
+{
+    return ZOO_SMB_SERVICE_CAPABILITY_SHM |
+           ZOO_SMB_SERVICE_CAPABILITY_TCP |
+           ZOO_SMB_SERVICE_CAPABILITY_UDP;
 }
 
 /**
@@ -186,6 +199,11 @@ static void handle_received_message_cb(
             return;
         }
 
+        snprintf(service->host_fingerprint, sizeof(service->host_fingerprint), "%s", parsed.host_fingerprint);
+        service->host_fingerprint[sizeof(service->host_fingerprint) - 1] = '\0';
+        service->transport_capabilities = parsed.transport_capabilities;
+        snprintf(service->shm_endpoint, sizeof(service->shm_endpoint), "%s", parsed.shm_endpoint);
+        service->shm_endpoint[sizeof(service->shm_endpoint) - 1] = '\0';
         zoo_smb_service_manager_register_service(discover->service_manager, ZOO_SMB_SERVICE_TYPE_REGISTRATION, service);
         zoo_smb_destroy_service(service);
     }
@@ -198,7 +216,10 @@ static void handle_received_message_cb(
             strcmp(exist_service->multicast_address, parsed.multicast_addr) != 0 ||
             exist_service->port != parsed.port ||
             exist_service->multicast_port != parsed.multicast_port ||
-            exist_service->transport_type != parsed.transport_type;
+            exist_service->transport_type != parsed.transport_type ||
+            strcmp(exist_service->host_fingerprint, parsed.host_fingerprint) != 0 ||
+            exist_service->transport_capabilities != parsed.transport_capabilities ||
+            strcmp(exist_service->shm_endpoint, parsed.shm_endpoint) != 0;
 
         snprintf(exist_service->topic, sizeof(exist_service->topic), "%s", parsed.topic);
         exist_service->topic[sizeof(exist_service->topic) - 1] = '\0';
@@ -209,6 +230,11 @@ static void handle_received_message_cb(
         exist_service->port = parsed.port;
         exist_service->multicast_port = parsed.multicast_port;
         exist_service->transport_type = parsed.transport_type;
+        snprintf(exist_service->host_fingerprint, sizeof(exist_service->host_fingerprint), "%s", parsed.host_fingerprint);
+        exist_service->host_fingerprint[sizeof(exist_service->host_fingerprint) - 1] = '\0';
+        exist_service->transport_capabilities = parsed.transport_capabilities;
+        snprintf(exist_service->shm_endpoint, sizeof(exist_service->shm_endpoint), "%s", parsed.shm_endpoint);
+        exist_service->shm_endpoint[sizeof(exist_service->shm_endpoint) - 1] = '\0';
         exist_service->is_online = ZOO_TRUE;
         exist_service->last_seen = time(NULL);
         exist_service->broadcast_interval_ms = discover->config->interval_ms < 1000 ? 1000 : discover->config->interval_ms;
@@ -247,8 +273,20 @@ static void broadcast_single_service(
     ZOO_STRING multicast_addr = service->multicast_address;  // Assuming service->address is the multicast group
     ZOO_U16 multicast_port = service->multicast_port;        // Assuming service->port is the multicast port
 
-    // Use extended protocol function for multicast services
-    zoo_smb_protocol_make_discovery_payload_message_ex(
+    const ZOO_SMB_CONFIG_STRUCT* config = zoo_smb_get_config();
+    const char* host_fingerprint =
+        (config && config->local_machine.address[0] != '\0')
+            ? config->local_machine.address
+            : "127.0.0.1";
+    const char* shm_endpoint =
+        (service->shm_endpoint[0] != '\0') ? service->shm_endpoint : service->name;
+    uint32_t capabilities = get_local_transport_capabilities();
+    if (service->transport_capabilities != 0U)
+    {
+        capabilities |= service->transport_capabilities;
+    }
+
+    zoo_smb_protocol_make_discovery_payload_message_ex2(
         message,
         service->name,
         service->address,  // Service's own address (if different from multicast)
@@ -256,7 +294,10 @@ static void broadcast_single_service(
         service->topic,
         service->transport_type,
         multicast_addr,   // Multicast group address
-        multicast_port);  // Multicast group port
+        multicast_port,   // Multicast group port
+        host_fingerprint,
+        capabilities,
+        shm_endpoint);
 
     ZOO_LOG_DEBUG("[DISC] Broadcasting multicast service '%s' - group: %s:%d, transport: %d",
                       service->name,

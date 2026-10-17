@@ -43,6 +43,8 @@ extern "C"
     typedef struct
     {
         ZOO_SMB_TRANSPORT_MANAGER_METRICS_STRUCT transport; /**< Send-path metrics  */
+        ZOO_SMB_TRANSPORT_RUNTIME_CAPABILITY_STRUCT transport_runtime; /**< Transport runtime mode/capabilities */
+        ZOO_SMB_TRANSPORT_AUTO_SELECT_METRICS_STRUCT transport_auto_select; /**< Auto-select decision/fallback metrics */
         ZOO_SMB_ROUTING_ENGINE_METRICS_STRUCT    routing;   /**< Ingress-path metrics */
         ZOO_SMB_MEMORY_POOL_METRICS_STRUCT       memory;    /**< Memory-pool pressure metrics */
     } ZOO_SMB_METRICS_SNAPSHOT_STRUCT;

@@ -37,9 +37,11 @@ extern "C"
 #include <stdio.h>
 #include <time.h>
 
-#if defined(__linux__) || defined(__unix__)
+#if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+#include <sys/types.h>
 #include <sys/select.h>
 #include <sys/time.h>
+#include <unistd.h>
 #endif
 
 #define ZOO_PLATFORM_VERSION "1.2.0"
@@ -160,45 +162,57 @@ extern "C"
 // ==============================================================================
 
 /** @brief Check if platform supports POSIX features */
-#if defined(ZOO_OS_LINUX) || (defined(__unix__) && !defined(ZOO_PLATFORM_ARM_CORTEX_M))
+#ifndef ZOO_HAS_POSIX
+#if defined(ZOO_OS_LINUX) || defined(ZOO_OS_MACOS) || (defined(__unix__) && !defined(ZOO_PLATFORM_ARM_CORTEX_M))
 #define ZOO_HAS_POSIX 1
 #else
 #define ZOO_HAS_POSIX 0
 #endif
+#endif
 
 /** @brief Check if platform supports epoll (Linux-specific) */
+#ifndef ZOO_USE_EPOLL
 #if defined(ZOO_OS_LINUX) && ZOO_HAS_POSIX
 #define ZOO_USE_EPOLL 1
 #else
 #define ZOO_USE_EPOLL 0
 #endif
+#endif
 
 /** @brief Check if platform supports threading */
+#ifndef ZOO_HAS_THREADING
 #if defined(ZOO_OS_LINUX) || defined(ZOO_OS_FREERTOS) || defined(ZOO_OS_CMSIS_RTOS) || defined(ZOO_OS_RTTHREAD)
 #define ZOO_HAS_THREADING 1
 #else
 #define ZOO_HAS_THREADING 0
 #endif
+#endif
 
 /** @brief Check if platform supports file system operations */
-#if defined(ZOO_OS_LINUX)
+#ifndef ZOO_HAS_FILESYSTEM
+#if defined(ZOO_OS_LINUX) || defined(ZOO_OS_MACOS) || (defined(__unix__) && !defined(ZOO_PLATFORM_ARM_CORTEX_M))
 #define ZOO_HAS_FILESYSTEM 1
 #else
 #define ZOO_HAS_FILESYSTEM 0
 #endif
+#endif
 
 /** @brief Check if platform supports syslog */
-#if defined(ZOO_OS_LINUX)
+#ifndef ZOO_HAS_SYSLOG
+#if defined(ZOO_OS_LINUX) || defined(ZOO_OS_MACOS)
 #define ZOO_HAS_SYSLOG 1
 #else
 #define ZOO_HAS_SYSLOG 0
 #endif
+#endif
 
 /** @brief Check if running in embedded environment */
+#ifndef ZOO_IS_EMBEDDED
 #if defined(ZOO_PLATFORM_ARM_CORTEX_M) && (defined(ZOO_OS_BAREMETAL) || defined(ZOO_OS_FREERTOS) || defined(ZOO_OS_CMSIS_RTOS) || defined(ZOO_OS_RTTHREAD))
 #define ZOO_IS_EMBEDDED 1
 #else
 #define ZOO_IS_EMBEDDED 0
+#endif
 #endif
 
 #if ZOO_HAS_POSIX

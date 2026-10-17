@@ -28,7 +28,7 @@ target_compile_definitions(fuzz_zoo_smb_protocol PRIVATE
 target_link_libraries(fuzz_zoo_smb_protocol PRIVATE
     zoo_smb_shared
     Threads::Threads
-    atomic
+    ${ZOO_ATOMIC_LIBRARY}
 )
 
 set(_zoo_fuzz_runtime_paths

@@ -224,7 +224,12 @@ static void smb_slab_free_pages(ZOO_MEMORY_POOL_STRUCT *pool, ZOO_SLAB_PAGE_STRU
 static ZOO_SIZE_T zoo_get_page_size(void)
 {
 #if ZOO_HAS_POSIX
-    return (ZOO_SIZE_T)getpagesize();
+    long page_size = sysconf(_SC_PAGESIZE);
+    if (page_size > 0)
+    {
+        return (ZOO_SIZE_T)page_size;
+    }
+    return 4096;
 #elif defined(ZOO_OS_WINDOWS)
     SYSTEM_INFO si;
     GetSystemInfo(&si);

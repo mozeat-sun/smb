@@ -46,6 +46,10 @@ ZOO_ERROR_TYPE zoo_smb_collect_metrics_snapshot(
     {
         (void)zoo_smb_transport_manager_get_metrics(transport_manager,
                                                     &out_snapshot->transport);
+        (void)zoo_smb_transport_manager_get_runtime_capability(transport_manager,
+                                                               &out_snapshot->transport_runtime);
+        (void)zoo_smb_transport_manager_get_auto_select_metrics(transport_manager,
+                                                                &out_snapshot->transport_auto_select);
     }
 
     if (routing_engine)

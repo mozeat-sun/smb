@@ -23,7 +23,10 @@ extern "C"
 #include "zoo_list.h"
 #include "zoo_memory_pool.h"
 #include "zoo_socket.h"
+#include "zoo_smb_reactor.h"
+#if defined(__linux__)
 #include <sys/epoll.h>
+#endif
 #include <netinet/in.h>
 #include <time.h>
 #include <stdint.h>

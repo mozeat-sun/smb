@@ -231,31 +231,6 @@ static inline ZOO_ERROR_TYPE validate_buffer_for_operation(ZOO_SMB_RING_BUFFER_H
 }
 
 /**
- * @brief Update write operation statistics efficiently
- * @param buffer Ring buffer handle
- * @param bytes_written Number of bytes written in this operation
- * @note Uses relaxed memory ordering for performance, suitable for statistics
- */
-static inline void update_write_statistics(ZOO_SMB_RING_BUFFER_HANDLE buffer, size_t bytes_written)
-{
-    atomic_fetch_add_explicit(&buffer->control->total_writes, 1, memory_order_relaxed);
-    atomic_fetch_add_explicit(&buffer->control->write_bytes, bytes_written, memory_order_relaxed);
-    atomic_fetch_sub_explicit(&buffer->control->active_writers, 1, memory_order_relaxed);
-}
-
-/**
- * @brief Update read operation statistics efficiently
- * @param buffer Ring buffer handle
- * @param bytes_read Number of bytes read in this operation
- * @note Uses relaxed memory ordering for performance, suitable for statistics
- */
-static inline void update_read_statistics(ZOO_SMB_RING_BUFFER_HANDLE buffer, size_t bytes_read)
-{
-    atomic_fetch_add_explicit(&buffer->control->total_reads, 1, memory_order_relaxed);
-    atomic_fetch_add_explicit(&buffer->control->read_bytes, bytes_read, memory_order_relaxed);
-}
-
-/**
  * @brief Create a standardized ring buffer message header from payload data
  * @param data Pointer to message payload data
  * @param size Size of the payload data in bytes
@@ -884,6 +859,7 @@ ZOO_ERROR_TYPE zoo_smb_ring_buffer_read(ZOO_SMB_RING_BUFFER_HANDLE buffer,
 
     // 原子地更新读取位置
     atomic_store_explicit(&buffer->control->read_pos, current_pos, memory_order_release);
+    atomic_fetch_add_explicit(&buffer->control->read_seq, 1, memory_order_relaxed);
 
     // 确保读操作对其他线程可见
     atomic_thread_fence(memory_order_seq_cst);

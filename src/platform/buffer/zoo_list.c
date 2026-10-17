@@ -354,14 +354,12 @@ void zoo_list_clear(ZOO_LIST_HANDLE list)
         return;
     }
 
-    ZOO_SIZE_T nodes_cleared = 0;
     NODE_STRUCT* current = linked_list->head;
     while (current)
     {
         NODE_STRUCT* next = current->next;
         free(current);
         current = next;
-        nodes_cleared++;
     }
 
     linked_list->head = NULL;

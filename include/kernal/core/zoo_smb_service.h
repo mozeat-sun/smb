@@ -31,6 +31,12 @@ extern "C"
 #define MAX_SERVICE_ADDRESS_LENGTH 64
 #define MAX_SERVICE_TOPIC_LENGTH 64
 #define MAX_SERVICE_INFO_LIST_SIZE 256
+#define MAX_SERVICE_HOST_FINGERPRINT_LENGTH 64
+#define MAX_SERVICE_SHM_ENDPOINT_LENGTH 64
+
+#define ZOO_SMB_SERVICE_CAPABILITY_SHM (1U << 0)
+#define ZOO_SMB_SERVICE_CAPABILITY_TCP (1U << 1)
+#define ZOO_SMB_SERVICE_CAPABILITY_UDP (1U << 2)
 
     typedef struct ZOO_SMB_SERVICE_STRUCT* ZOO_SMB_SERVICE_HANDLE;
 
@@ -55,6 +61,9 @@ extern "C"
         char multicast_address[MAX_SERVICE_ADDRESS_LENGTH]; /**< Multicast address, if applicable */
         int multicast_port;                         /**< Multicast port, if applicable */
         ZOO_SMB_TRANSPORT_TYPE_ENUM transport_type; /**< Transport type. */
+        char host_fingerprint[MAX_SERVICE_HOST_FINGERPRINT_LENGTH]; /**< Host identity hint for same-host resolution. */
+        uint32_t transport_capabilities;            /**< Capability bitmask (ZOO_SMB_SERVICE_CAPABILITY_*). */
+        char shm_endpoint[MAX_SERVICE_SHM_ENDPOINT_LENGTH]; /**< Optional SHM endpoint/channel hint. */
         uint64_t last_seen;                         /**< Last discovery timestamp */
         ZOO_BOOL is_online;                             /**< Service online status */
         ZOO_BOOL is_server;                             /**< Service server status */

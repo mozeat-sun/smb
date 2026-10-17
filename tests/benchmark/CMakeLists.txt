@@ -33,7 +33,7 @@ target_compile_definitions(e2e_performance_benchmark PRIVATE
 target_link_libraries(e2e_performance_benchmark PRIVATE
     zoo_smb_shared
     Threads::Threads
-    atomic
+    ${ZOO_ATOMIC_LIBRARY}
 )
 
 set(_zoo_benchmark_runtime_paths

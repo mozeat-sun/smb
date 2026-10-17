@@ -20,6 +20,12 @@
 #include <netinet/tcp.h>
 #include <sys/socket.h>
 #include <poll.h>
+#ifndef MSG_DONTWAIT
+#define MSG_DONTWAIT 0
+#endif
+#ifndef MSG_NOSIGNAL
+#define MSG_NOSIGNAL 0
+#endif
 
 // ==============================================================================
 // SOCKET UTILITY FUNCTIONS
@@ -472,9 +478,21 @@ void tcp_handle_incoming_data(ZOO_SMB_TCP_TRANSPORT_COMMON* tcp, int fd, TCP_CLI
 
     // Step 3: Parse header to get payload size
     ZOO_SMB_MSG_HEADER_STRUCT* header = (ZOO_SMB_MSG_HEADER_STRUCT*)header_buffer;
-    size_t payload_size = header->payload_size;
 
-    // Step 4: Validate payload size (修复符号比较警告)
+    // Step 3a: Convert the wire (big-endian) header to host byte order, then
+    // validate it (magic/version/payload) BEFORE trusting payload_size.
+    // zoo_smb_protocol_swap_header() is an identity on big-endian hosts, so it
+    // is safe to call unconditionally; it never byte-swaps string fields.
+    ZOO_SMB_MSG_HEADER_STRUCT host_header = zoo_smb_protocol_swap_header(header);
+    if (!zoo_smb_protocol_is_header_valid(&host_header))
+    {
+        ZOO_LOG_ERROR("Invalid message header: fd=%d", fd);
+        zoo_free_to_pool(header_buffer);
+        return;
+    }
+    size_t payload_size = host_header.payload_size;
+
+    // Step 4: Validate payload size
     if (payload_size > (size_t)(MAX_TRANSPORT_BUFFER_SIZE - header_size))
     {
         ZOO_LOG_ERROR("Payload size too large: %zu, max allowed: %zu", 

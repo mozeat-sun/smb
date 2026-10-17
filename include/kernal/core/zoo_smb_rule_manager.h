@@ -36,7 +36,7 @@ extern "C"
      * @return A handle to the newly created rule manager (ZOO_SMB_RULE_MANAGER_HANDLE),
      *         or NULL if creation fails.
      */
-    ZOO_SMB_RULE_MANAGER_HANDLE zoo_smb_create_rule_manager();
+    ZOO_SMB_RULE_MANAGER_HANDLE zoo_smb_create_rule_manager(void);
 
     /**
      * @brief Destroys the specified SMB rule manager and releases associated resources.

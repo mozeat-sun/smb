@@ -229,6 +229,7 @@ static ZOO_STRING extract_filename(ZOO_STRING filepath)
  *
  * @return ZOO_OK on success, error code on failure
  */
+#if ZOO_HAS_FILESYSTEM
 static ZOO_INT32 rotate_log_file(void)
 {
     if (!g_log_context.config.file_path || g_log_context.config.max_backup_files == 0)
@@ -277,6 +278,7 @@ static ZOO_INT32 rotate_log_file(void)
     g_log_context.current_file_size = 0;
     return ZOO_OK;
 }
+#endif
 
 /**
  * @brief Get file size
@@ -286,6 +288,7 @@ static ZOO_INT32 rotate_log_file(void)
  * @param filepath Path to the file
  * @return File size in bytes, or 0 if file doesn't exist or error occurred
  */
+#if ZOO_HAS_FILESYSTEM
 static ZOO_USIZE_T get_file_size(ZOO_STRING_T filepath)
 {
     if (!filepath)
@@ -301,6 +304,7 @@ static ZOO_USIZE_T get_file_size(ZOO_STRING_T filepath)
 
     return 0;
 }
+#endif
 
 /**
  * @brief Write log entry to file
@@ -311,6 +315,7 @@ static ZOO_USIZE_T get_file_size(ZOO_STRING_T filepath)
  * @param entry Formatted log entry string
  * @return ZOO_OK on success, error code on failure
  */
+#if ZOO_HAS_FILESYSTEM
 static ZOO_INT32 write_to_file(ZOO_STRING entry)
 {
     if (!g_log_context.log_file || !entry)
@@ -344,6 +349,7 @@ static ZOO_INT32 write_to_file(ZOO_STRING entry)
 
     return ZOO_OK;
 }
+#endif
 
 /**
  * @brief Write log entry to console
@@ -382,6 +388,9 @@ static void write_to_console(ZOO_STRING entry, ZOO_LOG_LEVEL_ENUM level)
  */
 static void write_to_syslog(ZOO_STRING entry, ZOO_LOG_LEVEL_ENUM level)
 {
+    (void)entry;
+    (void)level;
+
 #ifdef __linux__
     if (!entry)
     {

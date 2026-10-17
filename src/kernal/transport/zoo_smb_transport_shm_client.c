@@ -19,7 +19,6 @@
 #include "zoo_smb_protocol.h"
 #include "zoo_memory_pool.h"
 #include <sys/select.h>
-#include <sys/eventfd.h>
 #include <sys/shm.h>
 #include <unistd.h>
 #include <errno.h>
@@ -416,7 +415,7 @@ static ZOO_ERROR_TYPE client_register_with_server(ZOO_SMB_SHM_CLIENT_IMPL* impl)
     impl->client_info->shm_key = shm_generate_key(impl->client_info->name, impl->client_info->pid);
 
     // Create event file descriptor for notifications
-    int event_fd = eventfd(0, EFD_NONBLOCK);
+    int event_fd = shm_eventfd_create();
     if (event_fd == -1)
     {
         ZOO_LOG_ERROR("Failed to create event fd: %s", strerror(errno));
@@ -438,7 +437,7 @@ static ZOO_ERROR_TYPE client_register_with_server(ZOO_SMB_SHM_CLIENT_IMPL* impl)
     if (ZOO_SMB_IS_ERROR(result))
     {
         ZOO_LOG_ERROR("Failed to create client segment: %s", zoo_smb_get_error_string(result));
-        close(event_fd);
+        shm_eventfd_close(event_fd);
         zoo_free_to_pool(impl->client_info);
         impl->client_info = NULL;
         return result;

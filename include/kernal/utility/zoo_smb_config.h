@@ -93,6 +93,8 @@ extern "C"
         ZOO_BOOL reuse_transport;               /**< Reuse transport connections */
         int default_transport_type;         /**< Default transport type (see ZOO_SMB_TRANSPORT_TYPE_ENUM) */
         int transport_auto_select;          /**< Transport auto-select flag */
+        uint32_t transport_shm_probe_timeout_ms; /**< SHM probe timeout budget for auto-select resolution */
+        uint32_t transport_shm_fallback_cooldown_ms; /**< Cooldown before retrying SHM after fallback */
     } SYS_CONFIG_STRUCT;
 
     /**
@@ -112,7 +114,7 @@ extern "C"
      * @brief Initialize a configuration structure with default values
      * @param config Pointer to the configuration structure to initialize
      */
-    const ZOO_SMB_CONFIG_STRUCT* zoo_smb_config_init();
+    const ZOO_SMB_CONFIG_STRUCT* zoo_smb_config_init(void);
 
     /**
      * @brief Retrieves the current SMB configuration.
@@ -122,7 +124,7 @@ extern "C"
      *
      * @return const ZOO_SMB_CONFIG_STRUCT* Pointer to the current SMB configuration structure.
      */
-    const ZOO_SMB_CONFIG_STRUCT* zoo_smb_get_config();
+    const ZOO_SMB_CONFIG_STRUCT* zoo_smb_get_config(void);
 
     /**
      * @brief Returns the active SMB configuration without forcing initialization.

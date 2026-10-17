@@ -141,6 +141,13 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 # Find threading support
 find_package(Threads QUIET)
 
+# Linux still requires libatomic for some atomic builtins; macOS and modern Clang do not.
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux" OR CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+    find_library(ZOO_ATOMIC_LIBRARY atomic)
+else()
+    set(ZOO_ATOMIC_LIBRARY "")
+endif()
+
 # Find Unity testing framework
 if(ZOO_BUILD_TESTS)
     find_package(Unity QUIET)

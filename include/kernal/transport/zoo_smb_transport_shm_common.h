@@ -220,6 +220,22 @@ extern "C"
     ZOO_BOOL shm_is_process_alive(pid_t pid);
 
     /**
+     * @brief Create a portable local notifier descriptor.
+     *
+     * On Linux this uses eventfd(2); otherwise it falls back to a socketpair so
+     * the same descriptor can be used in the local select/read/write logic.
+     *
+     * @return A non-blocking notifier fd, or -1 on failure.
+     */
+    int shm_eventfd_create(void);
+
+    /**
+     * @brief Close a notifier descriptor and its peer if it was created via socketpair.
+     * @param event_fd Event file descriptor
+     */
+    void shm_eventfd_close(int event_fd);
+
+    /**
      * @brief Notify peer through event fd
      * @param event_fd Event file descriptor
      */

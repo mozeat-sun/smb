@@ -25,12 +25,17 @@
 #include "zoo_smb_message.h"
 #include "zoo_smb_config.h"
 #include "zoo_smb_error.h"
+#include "zoo_smb_transport_shm_common.h"
 #include "zoo_log.h"
 #include "zoo_memory_pool.h"
 #include "zoo_thread_pool.h"
 #include <stdint.h>
 #include <string.h>
 #include <unistd.h>
+#if defined(__unix__) || defined(__APPLE__)
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#endif
 
 /* --------------------------------------------------------------------------
  * Test fixture
@@ -176,6 +181,176 @@ void test_tm_metrics_watermarks_match_config(void)
     TEST_ASSERT_EQUAL_UINT32(g_cfg.sys.send_low_watermark,  m.send_low_watermark);
 }
 
+void test_tm_runtime_capability_is_reported(void)
+{
+    TEST_ASSERT_NOT_NULL(g_tm);
+
+    ZOO_SMB_TRANSPORT_RUNTIME_CAPABILITY_STRUCT capability;
+    memset(&capability, 0, sizeof(capability));
+
+    ZOO_ERROR_TYPE ret = zoo_smb_transport_manager_get_runtime_capability(g_tm, &capability);
+    TEST_ASSERT_SMB_STATUS_EQUAL(ZOO_SMB_OK, ret);
+    TEST_ASSERT_TRUE(capability.mode == ZOO_SMB_TRANSPORT_RUNTIME_MODE_FULL ||
+                     capability.mode == ZOO_SMB_TRANSPORT_RUNTIME_MODE_DEGRADED);
+    TEST_ASSERT_TRUE(capability.broadcast_transport_ready == ZOO_TRUE ||
+                     capability.broadcast_transport_ready == ZOO_FALSE);
+}
+
+void test_tm_runtime_capability_null_handle_returns_error(void)
+{
+    ZOO_SMB_TRANSPORT_RUNTIME_CAPABILITY_STRUCT capability;
+    memset(&capability, 0, sizeof(capability));
+
+    ZOO_ERROR_TYPE ret = zoo_smb_transport_manager_get_runtime_capability(NULL, &capability);
+    TEST_ASSERT_SMB_STATUS_NOT_EQUAL(ZOO_SMB_OK, ret);
+}
+
+void test_tm_runtime_capability_null_out_returns_error(void)
+{
+    TEST_ASSERT_NOT_NULL(g_tm);
+
+    ZOO_ERROR_TYPE ret = zoo_smb_transport_manager_get_runtime_capability(g_tm, NULL);
+    TEST_ASSERT_SMB_STATUS_NOT_EQUAL(ZOO_SMB_OK, ret);
+}
+
+void test_tm_auto_select_prefers_shm_on_same_host_capable_service(void)
+{
+    ZOO_SMB_CONFIG_STRUCT cfg;
+    memcpy(&cfg, &g_cfg, sizeof(cfg));
+    cfg.sys.transport_auto_select = 1;
+    cfg.sys.transport_shm_fallback_cooldown_ms = 1000;
+
+    ZOO_SMB_SERVICE_MANAGER_HANDLE sm = zoo_smb_create_service_manager(&cfg);
+    ZOO_SMB_TRANSPORT_MANAGER_HANDLE tm = zoo_smb_create_transport_manager(sm, &cfg);
+    TEST_ASSERT_NOT_NULL(sm);
+    TEST_ASSERT_NOT_NULL(tm);
+
+    ZOO_SMB_SERVICE_HANDLE svc = make_test_service("auto_sel_shm", 19921);
+    TEST_ASSERT_NOT_NULL(svc);
+    snprintf(svc->address, sizeof(svc->address), "%s", cfg.local_machine.address);
+    svc->address[sizeof(svc->address) - 1] = '\0';
+    snprintf(svc->host_fingerprint, sizeof(svc->host_fingerprint), "%s", cfg.local_machine.address);
+    svc->host_fingerprint[sizeof(svc->host_fingerprint) - 1] = '\0';
+    svc->transport_capabilities = ZOO_SMB_SERVICE_CAPABILITY_SHM | ZOO_SMB_SERVICE_CAPABILITY_TCP;
+    snprintf(svc->shm_endpoint, sizeof(svc->shm_endpoint), "%s", "auto_sel_shm");
+    svc->shm_endpoint[sizeof(svc->shm_endpoint) - 1] = '\0';
+
+#if defined(__unix__) || defined(__APPLE__)
+    int probe_shm_id = -1;
+    key_t probe_key = shm_generate_key(svc->shm_endpoint, 0);
+    if (probe_key != (key_t)-1)
+    {
+        probe_shm_id = shmget(probe_key, 256, IPC_CREAT | 0666);
+    }
+#endif
+
+    ZOO_SMB_TRANSPORT_HANDLE tp = zoo_smb_transport_manager_make_transport(tm, svc);
+    TEST_ASSERT_NOT_NULL(tp);
+
+    const ZOO_SMB_TRANSPORT_CONFIG_STRUCT* tp_cfg = zoo_smb_transport_get_config(tp);
+    TEST_ASSERT_NOT_NULL(tp_cfg);
+    TEST_ASSERT_EQUAL_INT(ZOO_SMB_TRANSPORT_TYPE_SHM, tp_cfg->type);
+
+    ZOO_SMB_TRANSPORT_AUTO_SELECT_METRICS_STRUCT am;
+    memset(&am, 0, sizeof(am));
+    TEST_ASSERT_SMB_STATUS_EQUAL(ZOO_SMB_OK, zoo_smb_transport_manager_get_auto_select_metrics(tm, &am));
+    TEST_ASSERT_TRUE(am.shm_selected_total >= 1U);
+    TEST_ASSERT_EQUAL_INT(ZOO_SMB_TRANSPORT_TYPE_SHM, am.last_selected_transport_type);
+
+#if defined(__unix__) || defined(__APPLE__)
+    if (probe_shm_id >= 0)
+    {
+        (void)shmctl(probe_shm_id, IPC_RMID, NULL);
+    }
+#endif
+
+    zoo_smb_destroy_transport_manager(tm);
+    zoo_smb_destroy_service(svc);
+    zoo_smb_destroy_service_manager(sm);
+}
+
+void test_tm_auto_select_disabled_keeps_service_transport(void)
+{
+    ZOO_SMB_CONFIG_STRUCT cfg;
+    memcpy(&cfg, &g_cfg, sizeof(cfg));
+    cfg.sys.transport_auto_select = 0;
+
+    ZOO_SMB_SERVICE_MANAGER_HANDLE sm = zoo_smb_create_service_manager(&cfg);
+    ZOO_SMB_TRANSPORT_MANAGER_HANDLE tm = zoo_smb_create_transport_manager(sm, &cfg);
+    TEST_ASSERT_NOT_NULL(sm);
+    TEST_ASSERT_NOT_NULL(tm);
+
+    ZOO_SMB_SERVICE_HANDLE svc = make_test_service("auto_sel_off", 19922);
+    TEST_ASSERT_NOT_NULL(svc);
+    svc->transport_type = ZOO_SMB_TRANSPORT_TYPE_TCP;
+    snprintf(svc->address, sizeof(svc->address), "%s", cfg.local_machine.address);
+    svc->address[sizeof(svc->address) - 1] = '\0';
+    snprintf(svc->host_fingerprint, sizeof(svc->host_fingerprint), "%s", cfg.local_machine.address);
+    svc->host_fingerprint[sizeof(svc->host_fingerprint) - 1] = '\0';
+    svc->transport_capabilities = ZOO_SMB_SERVICE_CAPABILITY_SHM | ZOO_SMB_SERVICE_CAPABILITY_TCP;
+
+    ZOO_SMB_TRANSPORT_HANDLE tp = zoo_smb_transport_manager_make_transport(tm, svc);
+    TEST_ASSERT_NOT_NULL(tp);
+
+    const ZOO_SMB_TRANSPORT_CONFIG_STRUCT* tp_cfg = zoo_smb_transport_get_config(tp);
+    TEST_ASSERT_NOT_NULL(tp_cfg);
+    TEST_ASSERT_EQUAL_INT(ZOO_SMB_TRANSPORT_TYPE_TCP, tp_cfg->type);
+
+    zoo_smb_destroy_transport_manager(tm);
+    zoo_smb_destroy_service(svc);
+    zoo_smb_destroy_service_manager(sm);
+}
+
+void test_tm_auto_select_shm_not_ready_falls_back_to_network(void)
+{
+    ZOO_SMB_CONFIG_STRUCT cfg;
+    memcpy(&cfg, &g_cfg, sizeof(cfg));
+    cfg.sys.transport_auto_select = 1;
+    cfg.sys.transport_shm_probe_timeout_ms = 20;
+
+    ZOO_SMB_SERVICE_MANAGER_HANDLE sm = zoo_smb_create_service_manager(&cfg);
+    ZOO_SMB_TRANSPORT_MANAGER_HANDLE tm = zoo_smb_create_transport_manager(sm, &cfg);
+    TEST_ASSERT_NOT_NULL(sm);
+    TEST_ASSERT_NOT_NULL(tm);
+
+    ZOO_SMB_SERVICE_HANDLE svc = make_test_service("auto_sel_fallback", 19923);
+    TEST_ASSERT_NOT_NULL(svc);
+    snprintf(svc->address, sizeof(svc->address), "%s", cfg.local_machine.address);
+    svc->address[sizeof(svc->address) - 1] = '\0';
+    snprintf(svc->host_fingerprint, sizeof(svc->host_fingerprint), "%s", cfg.local_machine.address);
+    svc->host_fingerprint[sizeof(svc->host_fingerprint) - 1] = '\0';
+    svc->transport_capabilities = ZOO_SMB_SERVICE_CAPABILITY_SHM | ZOO_SMB_SERVICE_CAPABILITY_TCP;
+    snprintf(svc->shm_endpoint, sizeof(svc->shm_endpoint), "%s", "definitely_missing_shm_endpoint_for_test");
+    svc->shm_endpoint[sizeof(svc->shm_endpoint) - 1] = '\0';
+
+    ZOO_SMB_TRANSPORT_HANDLE tp = zoo_smb_transport_manager_make_transport(tm, svc);
+    TEST_ASSERT_NOT_NULL(tp);
+
+    const ZOO_SMB_TRANSPORT_CONFIG_STRUCT* tp_cfg = zoo_smb_transport_get_config(tp);
+    TEST_ASSERT_NOT_NULL(tp_cfg);
+    TEST_ASSERT_EQUAL_INT(ZOO_SMB_TRANSPORT_TYPE_TCP, tp_cfg->type);
+
+    ZOO_SMB_TRANSPORT_AUTO_SELECT_METRICS_STRUCT am;
+    memset(&am, 0, sizeof(am));
+    TEST_ASSERT_SMB_STATUS_EQUAL(ZOO_SMB_OK, zoo_smb_transport_manager_get_auto_select_metrics(tm, &am));
+    TEST_ASSERT_TRUE(am.fallback_to_network_total >= 1U);
+
+    zoo_smb_destroy_transport_manager(tm);
+    zoo_smb_destroy_service(svc);
+    zoo_smb_destroy_service_manager(sm);
+}
+
+void test_tm_auto_select_metrics_null_param_returns_error(void)
+{
+    ZOO_SMB_TRANSPORT_AUTO_SELECT_METRICS_STRUCT m;
+    TEST_ASSERT_SMB_STATUS_NOT_EQUAL(
+        ZOO_SMB_OK,
+        zoo_smb_transport_manager_get_auto_select_metrics(NULL, &m));
+    TEST_ASSERT_SMB_STATUS_NOT_EQUAL(
+        ZOO_SMB_OK,
+        zoo_smb_transport_manager_get_auto_select_metrics(g_tm, NULL));
+}
+
 void test_metrics_snapshot_reports_memory_watermarks(void)
 {
     ZOO_SMB_METRICS_SNAPSHOT_STRUCT snapshot;
@@ -189,6 +364,10 @@ void test_metrics_snapshot_reports_memory_watermarks(void)
                              snapshot.memory.high_watermark_pct);
     TEST_ASSERT_EQUAL_UINT32(g_cfg.sys.memory_low_watermark_pct,
                              snapshot.memory.low_watermark_pct);
+    TEST_ASSERT_TRUE(snapshot.transport_runtime.mode == ZOO_SMB_TRANSPORT_RUNTIME_MODE_FULL ||
+                     snapshot.transport_runtime.mode == ZOO_SMB_TRANSPORT_RUNTIME_MODE_DEGRADED);
+    TEST_ASSERT_TRUE(snapshot.transport_runtime.broadcast_transport_ready == ZOO_TRUE ||
+                     snapshot.transport_runtime.broadcast_transport_ready == ZOO_FALSE);
 }
 
 void test_memory_profile_repeated_message_allocations_return_to_baseline(void)
@@ -564,6 +743,13 @@ int main(void)
     RUN_TEST(test_tm_metrics_initial_all_zero);
     RUN_TEST(test_tm_metrics_reset_clears_counters);
     RUN_TEST(test_tm_metrics_watermarks_match_config);
+    RUN_TEST(test_tm_runtime_capability_is_reported);
+    RUN_TEST(test_tm_runtime_capability_null_handle_returns_error);
+    RUN_TEST(test_tm_runtime_capability_null_out_returns_error);
+    RUN_TEST(test_tm_auto_select_prefers_shm_on_same_host_capable_service);
+    RUN_TEST(test_tm_auto_select_disabled_keeps_service_transport);
+    RUN_TEST(test_tm_auto_select_shm_not_ready_falls_back_to_network);
+    RUN_TEST(test_tm_auto_select_metrics_null_param_returns_error);
     RUN_TEST(test_metrics_snapshot_reports_memory_watermarks);
     RUN_TEST(test_memory_profile_repeated_message_allocations_return_to_baseline);
     RUN_TEST(test_message_create_rejects_payload_above_transport_budget);

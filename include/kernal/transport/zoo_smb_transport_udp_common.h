@@ -133,6 +133,7 @@ extern "C"
      * @return ZOO_SMB_OK on success, error code otherwise
      * @retval ZOO_SMB_OK Socket options configured successfully
      * @retval ZOO_SMB_ERROR_INVALID_PARAM Invalid parameters
+     * @retval ZOO_SMB_ERROR_NOT_SUPPORTED Required multicast socket options are not available on this platform
      * @retval ZOO_SMB_ERROR_TRANSPORT_INIT_FAILED Socket option configuration failed
      * @note Sets SO_REUSEADDR for all multicast sockets
      * @note Configures IP_MULTICAST_TTL and IP_MULTICAST_LOOP for senders
@@ -151,6 +152,7 @@ extern "C"
      * @return ZOO_SMB_OK on success, error code otherwise
      * @retval ZOO_SMB_OK Successfully joined multicast group
      * @retval ZOO_SMB_ERROR_INVALID_PARAM Invalid parameters or IP address
+     * @retval ZOO_SMB_ERROR_NOT_SUPPORTED Multicast membership is not available on this platform
      * @retval ZOO_SMB_ERROR_TRANSPORT_INIT_FAILED Failed to join multicast group
      * @note Validates multicast IP address format
      * @note Uses INADDR_ANY for network interface selection

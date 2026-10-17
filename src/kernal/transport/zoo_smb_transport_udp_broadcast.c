@@ -19,8 +19,12 @@
 #include "zoo.h"
 #include "zoo_types.h"
 #include <unistd.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 #include <arpa/inet.h>
+#if defined(__linux__)
 #include <sys/epoll.h>
+#endif
 #include <errno.h>
 #define MAX_BROADCAST_TRANSPORT_BUFFER_SIZE 512
 /**
@@ -291,36 +295,36 @@ static int create_and_configure_socket(UDP_BROADCAST_TRANSPORT_STRUCT* udp, cons
         return INVALID_TRANSPORT_FD;
     }
 
+#if defined(SO_REUSEPORT)
+    int reuse_port = 1;
+    if (setsockopt(udp->sockfd, SOL_SOCKET, SO_REUSEPORT, &reuse_port, sizeof(reuse_port)) < 0)
+    {
+        ZOO_LOG_WARN("[transport]setsockopt SO_REUSEPORT failed: %s", strerror(errno));
+    }
+#endif
+
     // Set address
     memset(&udp->addr, 0, sizeof(udp->addr));
     udp->addr.sin_family = AF_INET;
     udp->addr.sin_port = htons(config->port);
-
-    // Allow receiving broadcast messages from all addresses
-    const char* ip = config->address;
-
-    if (strcmp(ip, "0.0.0.0") == 0)
-    {
-        udp->addr.sin_addr.s_addr = INADDR_ANY;
-    }
-    else
-    {
-        if (inet_pton(AF_INET, ip, &udp->addr.sin_addr) <= 0)
-        {
-            ZOO_LOG_ERROR("[transport]inet_pton Invalid address/ Address not supported");
-            close(udp->sockfd);
-            return INVALID_TRANSPORT_FD;
-        }
-    }
+    // Bind to any local address so broadcast discovery can receive on all interfaces.
+    udp->addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
     ZOO_LOG_DEBUG("[transport]udp addr:port %s:%d", inet_ntoa(udp->addr.sin_addr), config->port);
 
     // Bind socket
     if (bind(udp->sockfd, (struct sockaddr*)&udp->addr, sizeof(udp->addr)) < 0)
     {
-        ZOO_LOG_ERROR("[transport]bind failed");
-        close(udp->sockfd);
-        return INVALID_TRANSPORT_FD;
+        if (errno == EADDRINUSE)
+        {
+            ZOO_LOG_WARN("[transport]bind failed with EADDRINUSE; continuing in degraded mode without fixed receive port");
+        }
+        else
+        {
+            ZOO_LOG_ERROR("[transport]bind failed: %s", strerror(errno));
+            close(udp->sockfd);
+            return INVALID_TRANSPORT_FD;
+        }
     }
 
     return 0;
@@ -356,13 +360,7 @@ static ZOO_ERROR_TYPE udp_broadcast_init(ZOO_SMB_TRANSPORT_STRUCT* transport)
     memset(&udp->broadcast_addr, 0, sizeof(udp->broadcast_addr));
     udp->broadcast_addr.sin_family = AF_INET;
     udp->broadcast_addr.sin_port = htons(transport->config->port);
-    if (inet_pton(AF_INET, transport->config->address, &udp->broadcast_addr.sin_addr) <= 0)
-    {
-        ZOO_LOG_DEBUG("[transport]Invalid address/ Address not supported");
-        close(udp->sockfd);
-        zoo_free_to_pool(udp);
-        return ZOO_SMB_ERROR_TRANSPORT_INIT_FAILED;
-    }
+    udp->broadcast_addr.sin_addr.s_addr = htonl(INADDR_BROADCAST);
 
     ZOO_LOG_INFO(
         "sockfd=%d, addr=%s:%d, broadcast_addr=%s:%d, running=%d, data_observers=%p, user_data=%p, config=%p",

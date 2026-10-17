@@ -22,7 +22,7 @@
 #ifdef ZOO_OS_WINDOWS
     #include <windows.h>
     #include <process.h>
-#elif defined(ZOO_HAS_POSIX)
+#elif ZOO_HAS_POSIX
     #include <pthread.h>
     #include <unistd.h>
     #include <time.h>
@@ -35,7 +35,7 @@
 #endif
 
 /* POSIX epoll/timerfd based singleton timer manager implementation */
-#if defined(ZOO_HAS_POSIX)
+#if defined(ZOO_OS_LINUX) && ZOO_HAS_POSIX
     #include <sys/epoll.h>
     #include <sys/timerfd.h>
     #include <fcntl.h>
@@ -410,7 +410,7 @@ static ZOO_INT32 zoo_timer_sleep_ms(ZOO_UINT32 milliseconds)
 #ifdef ZOO_OS_WINDOWS
     Sleep(milliseconds);
     return ZOO_OK;
-#elif defined(ZOO_HAS_POSIX)
+#elif ZOO_HAS_POSIX
     struct timespec ts;
     ts.tv_sec = milliseconds / 1000;
     ts.tv_nsec = (milliseconds % 1000) * 1000000;
@@ -451,7 +451,7 @@ static ZOO_INT32 zoo_timer_create_thread(ZOO_THREAD_T *thread, void *(*func)(voi
     *thread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)func, arg, 0, NULL);
     return (*thread != NULL) ? ZOO_OK : ZOO_ERROR_GENERAL;
     
-#elif defined(ZOO_HAS_POSIX)
+#elif ZOO_HAS_POSIX
     ZOO_INT32 result = pthread_create(thread, NULL, func, arg);
     return (result == 0) ? ZOO_OK : ZOO_ERROR_GENERAL;
     
@@ -493,7 +493,7 @@ static ZOO_INT32 zoo_timer_join_thread(ZOO_THREAD_T thread)
     }
     return ZOO_OK;
     
-#elif defined(ZOO_HAS_POSIX)
+#elif ZOO_HAS_POSIX
     ZOO_INT32 result = pthread_join(thread, NULL);
     return (result == 0) ? ZOO_OK : ZOO_ERROR_GENERAL;
     
@@ -535,7 +535,7 @@ static ZOO_UINT32 zoo_timer_get_next_id(void)
  */
 #ifdef ZOO_OS_WINDOWS
 static DWORD WINAPI timer_thread_func(LPVOID arg)
-#elif defined(ZOO_HAS_POSIX)
+#elif ZOO_HAS_POSIX
 static void* timer_thread_func(void *arg)
 #elif defined(ZOO_OS_FREERTOS)
 static void timer_thread_func(void *arg)
@@ -579,7 +579,7 @@ static void timer_thread_func(void *arg)
 
 #ifdef ZOO_OS_WINDOWS
     return 0;
-#elif defined(ZOO_HAS_POSIX)
+#elif ZOO_HAS_POSIX
     return NULL;
 #else
     return;

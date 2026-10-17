@@ -235,8 +235,8 @@ const char* zoo_error_string(uint32_t error_code) {
 /**
  * @brief Test or example function zoo_allocate_from_pool.
  */
-void* zoo_allocate_from_pool(size_t size) {
-    return malloc(size);
+void* zoo_allocate_from_pool(ZOO_SIZE_T size) {
+    return malloc((size_t)size);
 }
 
 /**
@@ -300,7 +300,7 @@ size_t zoo_smb_ring_buffer_get_used_space(void* ring_buffer)
 /**
  * @brief Test or example function zoo_create_memory_pool.
  */
-ZOO_ERROR_TYPE zoo_create_memory_pool(size_t size) {
+ZOO_INT32_T zoo_create_memory_pool(ZOO_SIZE_T size) {
     (void)size;
     return ZOO_ERROR_OK;
 }

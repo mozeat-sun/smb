@@ -53,7 +53,7 @@ extern "C"
      *
      * @return ZOO_SMB_QOS_ENTITY_HANDLE Handle to the newly created default QoS entity.
      */
-    ZOO_SMB_QOS_ENTITY_HANDLE zoo_smb_create_qos_default_entity();
+    ZOO_SMB_QOS_ENTITY_HANDLE zoo_smb_create_qos_default_entity(void);
 
     /**
      * @brief Destroys a QoS (Quality of Service) entity.

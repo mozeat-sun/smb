@@ -41,11 +41,11 @@ void test_atomic_boolean_operations(void) {
     TEST_ASSERT_EQUAL(ZOO_TRUE, ZOO_ATOMIC_LOAD(&atomic_bool));
     
     // Test compare and swap
-    ZOO_ATOMIC_BOOL expected_bool = ZOO_TRUE;
+    bool expected_bool = ZOO_TRUE;
     int success = ZOO_ATOMIC_COMPARE_EXCHANGE(&atomic_bool, &expected_bool, ZOO_FALSE);
     TEST_ASSERT_TRUE(success);
     TEST_ASSERT_EQUAL(ZOO_FALSE, ZOO_ATOMIC_LOAD(&atomic_bool));
-    
+
     // Test failed compare and swap
     expected_bool = ZOO_TRUE; // Wrong expected value
     success = ZOO_ATOMIC_COMPARE_EXCHANGE(&atomic_bool, &expected_bool, ZOO_TRUE);
@@ -84,11 +84,11 @@ void test_atomic_size_t_operations(void) {
     TEST_ASSERT_EQUAL(100, ZOO_ATOMIC_LOAD(&atomic_size));
     
     // Test compare and swap
-    ZOO_ATOMIC_SIZE_T expected_size = 100;
+    size_t expected_size = 100;
     int success = ZOO_ATOMIC_COMPARE_EXCHANGE(&atomic_size, &expected_size, 200);
     TEST_ASSERT_TRUE(success);
     TEST_ASSERT_EQUAL(200, ZOO_ATOMIC_LOAD(&atomic_size));
-    
+
     // Test failed compare and swap
     expected_size = 150; // Wrong expected value
     success = ZOO_ATOMIC_COMPARE_EXCHANGE(&atomic_size, &expected_size, 300);

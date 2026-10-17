@@ -55,6 +55,35 @@ extern "C"
         ZOO_BOOL circuit_open;
     } ZOO_SMB_TRANSPORT_CHANNEL_METRICS_STRUCT;
 
+    typedef enum
+    {
+        ZOO_SMB_TRANSPORT_RUNTIME_MODE_FULL = 0,
+        ZOO_SMB_TRANSPORT_RUNTIME_MODE_DEGRADED = 1
+    } ZOO_SMB_TRANSPORT_RUNTIME_MODE_ENUM;
+
+    typedef struct
+    {
+        ZOO_SMB_TRANSPORT_RUNTIME_MODE_ENUM mode;
+        ZOO_BOOL broadcast_transport_ready;
+        ZOO_BOOL multicast_sender_options_supported;
+        ZOO_BOOL multicast_group_join_supported;
+        ZOO_BOOL multicast_reuseport_supported;
+        ZOO_BOOL broadcast_interface_select_supported;
+        ZOO_BOOL default_route_probe_supported;
+    } ZOO_SMB_TRANSPORT_RUNTIME_CAPABILITY_STRUCT;
+
+    typedef struct
+    {
+        uint64_t shm_selected_total;
+        uint64_t network_selected_total;
+        uint64_t fallback_to_network_total;
+        uint64_t cooldown_block_total;
+        uint64_t selection_latency_us_last;
+        int last_selected_transport_type;
+        int last_fallback_transport_type;
+        char last_decision_reason[64];
+    } ZOO_SMB_TRANSPORT_AUTO_SELECT_METRICS_STRUCT;
+
     typedef struct ZOO_SMB_TRANSPORT_MANAGER_STRUCT* ZOO_SMB_TRANSPORT_MANAGER_HANDLE;
 
     /**
@@ -204,6 +233,14 @@ extern "C"
         ZOO_SMB_TRANSPORT_HANDLE transport,
         uint32_t high_watermark,
         uint32_t low_watermark);
+
+    ZOO_ERROR_TYPE zoo_smb_transport_manager_get_runtime_capability(
+        ZOO_SMB_TRANSPORT_MANAGER_HANDLE manager,
+        ZOO_SMB_TRANSPORT_RUNTIME_CAPABILITY_STRUCT* out_capability);
+
+        ZOO_ERROR_TYPE zoo_smb_transport_manager_get_auto_select_metrics(
+            ZOO_SMB_TRANSPORT_MANAGER_HANDLE manager,
+            ZOO_SMB_TRANSPORT_AUTO_SELECT_METRICS_STRUCT* out_metrics);
 
 #ifdef __cplusplus
 }

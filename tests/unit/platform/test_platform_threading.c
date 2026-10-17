@@ -18,6 +18,7 @@
 #include "unity.h"
 #include <stdio.h>
 
+#if ZOO_HAS_THREADING
 // Global test data for thread communication
 static volatile int g_thread_counter = 0;
 static ZOO_MUTEX_T g_test_mutex;
@@ -65,6 +66,7 @@ static void* test_thread_function(void* arg) {
     
     return NULL;
 }
+#endif
 
 /**
  * Test mutex initialization and destruction

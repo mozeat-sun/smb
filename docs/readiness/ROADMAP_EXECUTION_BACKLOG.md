@@ -141,16 +141,16 @@ Goal: automatically select SHM transport when communicating processes are on the
 
 Checklist:
 
-- [ ] Add transport resolver stage before transport creation in transport manager.
-- [ ] Define deterministic selection precedence (explicit override > auto-select off > same-host SHM > network).
-- [ ] Extend service-discovery payload with optional host fingerprint and transport capabilities.
-- [ ] Preserve backward compatibility with existing discovery payload format.
-- [ ] Add SHM attach/register timeout and fallback-to-network behavior.
-- [ ] Add fallback cooldown policy to avoid repeated SHM thrashing.
-- [ ] Add telemetry fields for selected transport, fallback reason, and selection latency.
+- [x] Add transport resolver stage before transport creation in transport manager.
+- [x] Define deterministic selection precedence (explicit override > auto-select off > same-host SHM > network).
+- [x] Extend service-discovery payload with optional host fingerprint and transport capabilities.
+- [x] Preserve backward compatibility with existing discovery payload format.
+- [x] Add SHM attach/register timeout and fallback-to-network behavior.
+- [x] Add fallback cooldown policy to avoid repeated SHM thrashing.
+- [x] Add telemetry fields for selected transport, fallback reason, and selection latency.
 - [ ] Add unit tests for resolver decision matrix.
-- [ ] Add integration tests for same-host SHM select and forced fallback.
-- [ ] Add CI artifact summarizing transport auto-select outcomes.
+- [x] Add integration tests for same-host SHM select and forced fallback.
+- [x] Add CI artifact summarizing transport auto-select outcomes.
 
 Exit evidence:
 
@@ -158,6 +158,10 @@ Exit evidence:
 - Same-host integration evidence showing SHM selection.
 - Failure-path evidence showing automatic fallback to network transport.
 - Backward-compatibility evidence with mixed discovery payload versions.
+
+Current status note:
+
+- Resolver, metadata extension, compatibility parsing, SHM probe timeout fallback, cooldown policy, telemetry, tests, and CI artifact publication are implemented and covered in active tests.
 
 Implementation mapping:
 

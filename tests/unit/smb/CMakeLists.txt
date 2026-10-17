@@ -52,7 +52,7 @@ function(zoo_add_smb_unit_test target_name source_file)
     target_link_libraries(${target_name} PRIVATE
         zoo_smb_shared
         Threads::Threads
-        atomic
+        ${ZOO_ATOMIC_LIBRARY}
     )
 
     set(_zoo_smb_unit_runtime_paths
@@ -152,20 +152,20 @@ target_compile_definitions(test_zoo_smb_runtime_assurance_unit PRIVATE
 target_link_libraries(test_zoo_smb_subscription_session_manager_unit PRIVATE
     zoo_smb_shared
     Threads::Threads
-    atomic
+    ${ZOO_ATOMIC_LIBRARY}
 )
 
 target_link_libraries(test_zoo_assurance_domain_unit PRIVATE
     zoo_assurance_static
     zoo_domain_static
     Threads::Threads
-    atomic
+    ${ZOO_ATOMIC_LIBRARY}
 )
 
 target_link_libraries(test_zoo_smb_runtime_assurance_unit PRIVATE
     zoo_smb_shared
     Threads::Threads
-    atomic
+    ${ZOO_ATOMIC_LIBRARY}
 )
 
 set(_zoo_smb_unit_runtime_paths

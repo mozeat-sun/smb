@@ -20,10 +20,21 @@
 #include "zoo_util.h"
 #include <stdlib.h>
 #include <string.h>
-#include <endian.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <unistd.h>
+
+#if defined(__APPLE__)
+#include <libkern/OSByteOrder.h>
+#define htobe16(x) OSSwapHostToBigInt16(x)
+#define htobe32(x) OSSwapHostToBigInt32(x)
+#define htobe64(x) OSSwapHostToBigInt64(x)
+#define be16toh(x) OSSwapBigToHostInt16(x)
+#define be32toh(x) OSSwapBigToHostInt32(x)
+#define be64toh(x) OSSwapBigToHostInt64(x)
+#elif defined(__linux__)
+#include <endian.h>
+#endif
 
 /**
  * @brief Validates the protocol magic number
@@ -207,34 +218,16 @@ ZOO_BOOL zoo_smb_protocol_is_header_valid_with_msg_type(const ZOO_SMB_MSG_HEADER
 ZOO_BOOL zoo_smb_protocol_need_swap(void)
 {
     static const int endian_check = 1;
-    ZOO_BOOL need_swap = (*(const char*)&endian_check == 0);
+    /*
+     * On a little-endian host the least-significant byte is stored first, so
+     * the first byte of the int is 1; on a big-endian host it is 0. The ZOO
+     * SMB wire protocol is big-endian (network) byte order, so byte swapping
+     * is required exactly on little-endian hosts.
+     */
+    ZOO_BOOL need_swap = (*(const char*)&endian_check != 0);
 
     ZOO_LOG_TRACE("Endianness check: need_swap=%s", need_swap ? "ZOO_TRUE" : "ZOO_FALSE");
     return need_swap;
-}
-
-/**
- * @brief Converts 16-bit value byte order if needed
- *
- * This function performs byte order conversion for 16-bit values when
- * operating on little-endian systems. It converts from host byte order
- * to big-endian (network) byte order or vice versa.
- *
- * @param value The 16-bit value to potentially swap
- * @param need_swap Whether byte swapping is required
- * @return The value in the correct byte order
- *
- * @note Uses be16toh() for efficient conversion
- * @note Logs TRACE level message when conversion is performed
- */
-static uint32_t swap_uint16(uint16_t value, ZOO_BOOL need_swap)
-{
-    if (!need_swap)
-        return value;
-
-    uint16_t swapped = be16toh(value);
-    ZOO_LOG_TRACE("Swapped uint16: 0x%04X -> 0x%04X", value, swapped);
-    return swapped;
 }
 
 /**
@@ -266,13 +259,14 @@ static uint32_t swap_uint32(uint32_t value, ZOO_BOOL need_swap)
  *
  * This function performs comprehensive validation of a ZOO SMB message header,
  * including magic number verification, protocol version checking, and payload
- * size validation. It handles byte order conversion as needed.
+ * size validation.
  *
  * @param header Pointer to the message header to validate
  * @return ZOO_TRUE if the header is valid, ZOO_FALSE otherwise
  *
  * @note Returns ZOO_FALSE immediately if header pointer is NULL
- * @note Performs endianness-aware validation
+ * @note Operates on an in-memory HOST byte order header. Raw wire (network byte
+ *       order) headers MUST first be converted with zoo_smb_protocol_swap_header().
  * @note Logs DEBUG level messages for validation process
  */
 ZOO_BOOL zoo_smb_protocol_is_header_valid(const ZOO_SMB_MSG_HEADER_STRUCT* header)
@@ -283,27 +277,29 @@ ZOO_BOOL zoo_smb_protocol_is_header_valid(const ZOO_SMB_MSG_HEADER_STRUCT* heade
         return ZOO_FALSE;
     }
 
-    ZOO_BOOL need_swap = zoo_smb_protocol_need_swap();
+    /*
+     * This function validates an in-memory, host byte order header (e.g. a
+     * header produced by zoo_smb_protocol_deserialize()). Wire (network byte
+     * order) headers MUST first be converted with zoo_smb_protocol_swap_header()
+     * before being passed here; do not call this on raw wire bytes.
+     */
 
     // Validate magic number
-    uint32_t magic = swap_uint32(header->magic, need_swap);
-    if (!validate_magic_number(magic))
+    if (!validate_magic_number(header->magic))
         return ZOO_FALSE;
 
     // Validate protocol version
-    uint16_t version = swap_uint16(header->version, need_swap);
-    if (!validate_protocol_version(version))
+    if (!validate_protocol_version(header->version))
         return ZOO_FALSE;
 
     // Validate payload size
-    uint32_t payload_size = swap_uint32(header->payload_size, need_swap);
-    if (!validate_payload_size(payload_size))
+    if (!validate_payload_size(header->payload_size))
         return ZOO_FALSE;
 
     ZOO_LOG_DEBUG("Header validation successful: magic=0x%04X, version=%u, payload_size=%u",
-                      magic,
-                      version,
-                      payload_size);
+                      header->magic,
+                      header->version,
+                      header->payload_size);
     return ZOO_TRUE;
 }
 
@@ -332,16 +328,17 @@ ZOO_SMB_MSG_HEADER_STRUCT zoo_smb_protocol_swap_header(const ZOO_SMB_MSG_HEADER_
 
     ZOO_LOG_DEBUG("Swapping header byte order");
 
-    ZOO_SMB_MSG_HEADER_STRUCT swapped;
-    swapped.magic = htobe16(header->magic);
+    ZOO_SMB_MSG_HEADER_STRUCT swapped = {0};
+    swapped.magic = htobe32(header->magic);
     swapped.version = htobe16(header->version);
     swapped.msg_type = htobe16(header->msg_type);
     swapped.flags = htobe16(header->flags);
     swapped.payload_size = htobe32(header->payload_size);
     swapped.crc32 = htobe32(header->crc32);
     swapped.msg_id = htobe32(header->msg_id);
-    swapped.request_id = htobe64(header->request_id);
+    swapped.sequence = htobe32(header->sequence);
     swapped.timestamp = htobe64(header->timestamp);
+    swapped.request_id = htobe64(header->request_id);
 
     // String fields do not require byte order conversion
     memcpy(swapped.sender, header->sender, sizeof(swapped.sender));
@@ -628,7 +625,7 @@ ZOO_ERROR_TYPE zoo_smb_protocol_deserialize(const uint8_t* buffer, size_t buffer
  * @brief Create discovery payload with multicast support
  * Format: "service_name topic address:port transport_type multicast_addr:multicast_port"
  */
-ZOO_BOOL zoo_smb_protocol_make_discovery_payload_message_ex(
+ZOO_BOOL zoo_smb_protocol_make_discovery_payload_message_ex2(
     ZOO_SMB_MSG_STRUCT* msg,
     const char* service_name,
     const char* address,
@@ -636,27 +633,69 @@ ZOO_BOOL zoo_smb_protocol_make_discovery_payload_message_ex(
     const char* topic,
     ZOO_SMB_TRANSPORT_TYPE_ENUM transport_type,
     const char* multicast_addr,
-    uint16_t multicast_port)
+    uint16_t multicast_port,
+    const char* host_fingerprint,
+    uint32_t transport_capabilities,
+    const char* shm_endpoint)
 {
     if (!msg || !service_name || !address || !topic)
         return ZOO_FALSE;
 
     char payload_buffer[512] = {0};
-    int payload_len;
-
-    // Check if multicast information should be included
-    if (multicast_addr && strlen(multicast_addr) > 0 && multicast_port > 0)
-    {
-        payload_len = snprintf(payload_buffer, sizeof(payload_buffer), "%s %s %s:%d %d %s:%d", service_name, topic, address, port, transport_type, multicast_addr, multicast_port);
-    }
-    else
-    {
-        // Standard format without multicast info
-        payload_len = snprintf(payload_buffer, sizeof(payload_buffer), "%s %s %s:%d 0:0 %d", service_name, topic, address, port, transport_type);
-    }
+    int payload_len = snprintf(payload_buffer,
+                               sizeof(payload_buffer),
+                               "%s %s %s:%d %d %s:%d",
+                               service_name,
+                               topic,
+                               address,
+                               port,
+                               (int)transport_type,
+                               (multicast_addr && multicast_addr[0] != '\0') ? multicast_addr : "0",
+                               multicast_port);
 
     if (payload_len <= 0 || (size_t)payload_len >= sizeof(payload_buffer))
+    {
         return ZOO_FALSE;
+    }
+
+    if (host_fingerprint && host_fingerprint[0] != '\0')
+    {
+        int wrote = snprintf(payload_buffer + payload_len,
+                             sizeof(payload_buffer) - (size_t)payload_len,
+                             " hf=%s",
+                             host_fingerprint);
+        if (wrote <= 0 || (size_t)wrote >= sizeof(payload_buffer) - (size_t)payload_len)
+        {
+            return ZOO_FALSE;
+        }
+        payload_len += wrote;
+    }
+
+    if (transport_capabilities != 0U)
+    {
+        int wrote = snprintf(payload_buffer + payload_len,
+                             sizeof(payload_buffer) - (size_t)payload_len,
+                             " cap=%u",
+                             transport_capabilities);
+        if (wrote <= 0 || (size_t)wrote >= sizeof(payload_buffer) - (size_t)payload_len)
+        {
+            return ZOO_FALSE;
+        }
+        payload_len += wrote;
+    }
+
+    if (shm_endpoint && shm_endpoint[0] != '\0')
+    {
+        int wrote = snprintf(payload_buffer + payload_len,
+                             sizeof(payload_buffer) - (size_t)payload_len,
+                             " shm=%s",
+                             shm_endpoint);
+        if (wrote <= 0 || (size_t)wrote >= sizeof(payload_buffer) - (size_t)payload_len)
+        {
+            return ZOO_FALSE;
+        }
+        payload_len += wrote;
+    }
 
     // Set payload
     if (msg->payload)
@@ -675,11 +714,35 @@ ZOO_BOOL zoo_smb_protocol_make_discovery_payload_message_ex(
     return ZOO_TRUE;
 }
 
+ZOO_BOOL zoo_smb_protocol_make_discovery_payload_message_ex(
+    ZOO_SMB_MSG_STRUCT* msg,
+    const char* service_name,
+    const char* address,
+    uint16_t port,
+    const char* topic,
+    ZOO_SMB_TRANSPORT_TYPE_ENUM transport_type,
+    const char* multicast_addr,
+    uint16_t multicast_port)
+{
+    return zoo_smb_protocol_make_discovery_payload_message_ex2(
+        msg,
+        service_name,
+        address,
+        port,
+        topic,
+        transport_type,
+        multicast_addr,
+        multicast_port,
+        NULL,
+        0U,
+        NULL);
+}
+
 /**
  * @brief Parse discovery payload with multicast support
  * Format: "service_name topic address:port transport_type multicast_addr:multicast_port"
  */
-ZOO_BOOL zoo_smb_protocol_parse_discovery_payload_message_ex(
+ZOO_BOOL zoo_smb_protocol_parse_discovery_payload_message_ex2(
     const ZOO_SMB_MSG_STRUCT* msg,
     char* service_name,
     char* address,
@@ -687,7 +750,10 @@ ZOO_BOOL zoo_smb_protocol_parse_discovery_payload_message_ex(
     char* topic,
     ZOO_SMB_TRANSPORT_TYPE_ENUM* transport_type,
     char* multicast_addr,
-    uint16_t* multicast_port)
+    uint16_t* multicast_port,
+    char* host_fingerprint,
+    uint32_t* transport_capabilities,
+    char* shm_endpoint)
 {
     if (!msg || !msg->payload || !service_name || !address || !port || !topic || !transport_type)
         return ZOO_FALSE;
@@ -700,16 +766,36 @@ ZOO_BOOL zoo_smb_protocol_parse_discovery_payload_message_ex(
     memcpy(payload_copy, msg->payload, msg->header.payload_size);
     payload_copy[msg->header.payload_size] = '\0';
 
-    // Parse basic fields
-    char* tokens[5];
+    if (multicast_addr)
+    {
+        multicast_addr[0] = '\0';
+    }
+    if (multicast_port)
+    {
+        *multicast_port = 0;
+    }
+    if (host_fingerprint)
+    {
+        host_fingerprint[0] = '\0';
+    }
+    if (transport_capabilities)
+    {
+        *transport_capabilities = 0U;
+    }
+    if (shm_endpoint)
+    {
+        shm_endpoint[0] = '\0';
+    }
+
+    char* tokens[16];
     int token_count = 0;
     char* token = strtok(payload_copy, " ");
-    while (token && token_count < 5)
+    while (token && token_count < (int)(sizeof(tokens) / sizeof(tokens[0])))
     {
         tokens[token_count++] = token;
         token = strtok(NULL, " ");
     }
-    if (token_count < 4)
+    if (token_count < 5)
     {
         ZOO_LOG_ERROR("Invalid discovery payload format: %s", payload_copy);
         zoo_free_to_pool(payload_copy);
@@ -726,15 +812,64 @@ ZOO_BOOL zoo_smb_protocol_parse_discovery_payload_message_ex(
         zoo_free_to_pool(payload_copy);
         return ZOO_FALSE;
     }
-    *transport_type = (ZOO_SMB_TRANSPORT_TYPE_ENUM)atoi(tokens[3]);
-    if (sscanf(tokens[4], "%31[^:]:%hu", multicast_addr, multicast_port) != 2)
+    char* transport_token = tokens[3];
+    char* multicast_token = tokens[4];
+    if (strchr(tokens[3], ':') != NULL && strchr(tokens[4], ':') == NULL)
     {
-        ZOO_LOG_ERROR("Invalid address format in payload: %s", tokens[4]);
+        multicast_token = tokens[3];
+        transport_token = tokens[4];
+    }
+
+    *transport_type = (ZOO_SMB_TRANSPORT_TYPE_ENUM)atoi(transport_token);
+    if (multicast_addr && multicast_port && sscanf(multicast_token, "%31[^:]:%hu", multicast_addr, multicast_port) != 2)
+    {
+        ZOO_LOG_ERROR("Invalid multicast address format in payload: %s", multicast_token);
         zoo_free_to_pool(payload_copy);
         return ZOO_FALSE;
     }
-    // Check for multicast information
+
+    for (int i = 5; i < token_count; ++i)
+    {
+        if (strncmp(tokens[i], "hf=", 3) == 0 && host_fingerprint)
+        {
+            strncpy(host_fingerprint, tokens[i] + 3, MAX_SERVICE_HOST_FINGERPRINT_LENGTH - 1);
+            host_fingerprint[MAX_SERVICE_HOST_FINGERPRINT_LENGTH - 1] = '\0';
+        }
+        else if (strncmp(tokens[i], "cap=", 4) == 0 && transport_capabilities)
+        {
+            *transport_capabilities = (uint32_t)strtoul(tokens[i] + 4, NULL, 10);
+        }
+        else if (strncmp(tokens[i], "shm=", 4) == 0 && shm_endpoint)
+        {
+            strncpy(shm_endpoint, tokens[i] + 4, MAX_SERVICE_SHM_ENDPOINT_LENGTH - 1);
+            shm_endpoint[MAX_SERVICE_SHM_ENDPOINT_LENGTH - 1] = '\0';
+        }
+    }
 
     zoo_free_to_pool(payload_copy);
     return ZOO_TRUE;
+}
+
+ZOO_BOOL zoo_smb_protocol_parse_discovery_payload_message_ex(
+    const ZOO_SMB_MSG_STRUCT* msg,
+    char* service_name,
+    char* address,
+    uint16_t* port,
+    char* topic,
+    ZOO_SMB_TRANSPORT_TYPE_ENUM* transport_type,
+    char* multicast_addr,
+    uint16_t* multicast_port)
+{
+    return zoo_smb_protocol_parse_discovery_payload_message_ex2(
+        msg,
+        service_name,
+        address,
+        port,
+        topic,
+        transport_type,
+        multicast_addr,
+        multicast_port,
+        NULL,
+        NULL,
+        NULL);
 }

@@ -22,11 +22,21 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <sys/socket.h>
 #include <errno.h>
+#include <netinet/in.h>
 #include <ifaddrs.h>
 #include <arpa/inet.h>
 #include <net/if.h>
+#if defined(__linux__)
 #include <net/route.h>
+#endif
+#ifndef IFNAMSIZ
+#define IFNAMSIZ 16
+#endif
+#ifndef IFF_LOOPBACK
+#define IFF_LOOPBACK 0x8
+#endif
 #if __has_include(<libconfig.h>)
 #include <libconfig.h>
 #else
@@ -96,7 +106,9 @@ static const ZOO_SMB_CONFIG_STRUCT ZOO_SMB_CONFIG_DEFAULT = {
         .max_transport_buffer_size = ZOO_SMB_DEFAULT_MAX_TRANSPORT_BUFFER_SIZE, 
         .msg_flag = 0, 
         .default_transport_type = ZOO_SMB_TRANSPORT_TYPE_SHM, 
-        .transport_auto_select = 0
+        .transport_auto_select = 0,
+        .transport_shm_probe_timeout_ms = 300,
+        .transport_shm_fallback_cooldown_ms = 2000
     }
 };
 
@@ -112,6 +124,108 @@ static void reset_config_to_defaults(ZOO_SMB_CONFIG_STRUCT* config);
 static void load_config_sections(config_t* cfg, ZOO_SMB_CONFIG_STRUCT* config);
 static ZOO_BOOL load_effective_config(ZOO_SMB_CONFIG_STRUCT* config, const char* file_path);
 static void ensure_default_config_file_exists(void);
+static void log_transport_capability_matrix(void);
+
+typedef enum
+{
+    SMB_CAPABILITY_ENABLED = 0,
+    SMB_CAPABILITY_DEGRADED = 1,
+    SMB_CAPABILITY_NOT_SUPPORTED = 2
+} SMB_CAPABILITY_STATUS_ENUM;
+
+static const char* capability_status_to_text(SMB_CAPABILITY_STATUS_ENUM status)
+{
+    switch (status)
+    {
+        case SMB_CAPABILITY_ENABLED:
+            return "enabled";
+        case SMB_CAPABILITY_DEGRADED:
+            return "degraded";
+        case SMB_CAPABILITY_NOT_SUPPORTED:
+            return "not-supported";
+        default:
+            return "unknown";
+    }
+}
+
+static SMB_CAPABILITY_STATUS_ENUM get_multicast_sender_option_capability(void)
+{
+#if defined(IP_MULTICAST_TTL) && defined(IP_MULTICAST_LOOP)
+    return SMB_CAPABILITY_ENABLED;
+#else
+    return SMB_CAPABILITY_NOT_SUPPORTED;
+#endif
+}
+
+static SMB_CAPABILITY_STATUS_ENUM get_multicast_group_join_capability(void)
+{
+#if defined(IP_ADD_MEMBERSHIP)
+    return SMB_CAPABILITY_ENABLED;
+#else
+    return SMB_CAPABILITY_NOT_SUPPORTED;
+#endif
+}
+
+static SMB_CAPABILITY_STATUS_ENUM get_multicast_reuse_port_capability(void)
+{
+#if defined(SO_REUSEPORT)
+    return SMB_CAPABILITY_ENABLED;
+#else
+    return SMB_CAPABILITY_DEGRADED;
+#endif
+}
+
+static SMB_CAPABILITY_STATUS_ENUM get_broadcast_interface_select_capability(void)
+{
+#if defined(IP_MULTICAST_IF)
+    return SMB_CAPABILITY_ENABLED;
+#else
+    return SMB_CAPABILITY_NOT_SUPPORTED;
+#endif
+}
+
+static SMB_CAPABILITY_STATUS_ENUM get_default_route_probe_capability(void)
+{
+#if defined(__linux__)
+    return SMB_CAPABILITY_ENABLED;
+#else
+    return SMB_CAPABILITY_DEGRADED;
+#endif
+}
+
+static void log_transport_capability_matrix(void)
+{
+    const ZOO_BOOL multicast_requested =
+        (g_smb_config.multicast.port > 0 &&
+         g_smb_config.multicast.address[0] != '\0');
+
+    const SMB_CAPABILITY_STATUS_ENUM multicast_sender_opts = get_multicast_sender_option_capability();
+    const SMB_CAPABILITY_STATUS_ENUM multicast_join = get_multicast_group_join_capability();
+    const SMB_CAPABILITY_STATUS_ENUM multicast_reuse_port = get_multicast_reuse_port_capability();
+    const SMB_CAPABILITY_STATUS_ENUM broadcast_interface_select = get_broadcast_interface_select_capability();
+    const SMB_CAPABILITY_STATUS_ENUM default_route_probe = get_default_route_probe_capability();
+
+    ZOO_LOG_INFO("Transport Capability Matrix:");
+    ZOO_LOG_INFO("  multicast.sender_options: %s",
+                 capability_status_to_text(multicast_sender_opts));
+    ZOO_LOG_INFO("  multicast.group_join: %s",
+                 capability_status_to_text(multicast_join));
+    ZOO_LOG_INFO("  multicast.port_sharing: %s",
+                 capability_status_to_text(multicast_reuse_port));
+    ZOO_LOG_INFO("  broadcast.interface_select: %s",
+                 capability_status_to_text(broadcast_interface_select));
+    ZOO_LOG_INFO("  network.default_route_probe: %s",
+                 capability_status_to_text(default_route_probe));
+
+    if (multicast_requested &&
+        (multicast_sender_opts == SMB_CAPABILITY_NOT_SUPPORTED ||
+         multicast_join == SMB_CAPABILITY_NOT_SUPPORTED))
+    {
+        ZOO_LOG_WARN("Multicast is configured (%s:%u) but current platform lacks required capabilities; behavior is degraded",
+                     g_smb_config.multicast.address,
+                     (unsigned int)g_smb_config.multicast.port);
+    }
+}
 
 /**
  * @brief Check whether an IPv4 address is loopback or unspecified.
@@ -132,6 +246,7 @@ static ZOO_BOOL is_loopback_or_unspecified_ip(const char* address)
      * @param interface_name_size Output buffer size.
      * @return ZOO_BOOL ZOO_TRUE when interface is detected.
      */
+#if defined(__linux__)
 static ZOO_BOOL read_default_route_interface(char* interface_name, size_t interface_name_size)
 {
     if (!interface_name || interface_name_size == 0)
@@ -169,6 +284,14 @@ static ZOO_BOOL read_default_route_interface(char* interface_name, size_t interf
     fclose(route_file);
     return ZOO_FALSE;
 }
+#else
+static ZOO_BOOL read_default_route_interface(char* interface_name, size_t interface_name_size)
+{
+    (void)interface_name;
+    (void)interface_name_size;
+    return ZOO_FALSE;
+}
+#endif
 
 /**
  * @brief Find first non-loopback IPv4 address for a specific interface.
@@ -568,6 +691,8 @@ static void load_sys_config(config_t* cfg, ZOO_SMB_CONFIG_STRUCT* config)
     config->sys.reuse_transport = get_config_bool(section, "reuse_transport", config->sys.reuse_transport);
     config->sys.default_transport_type = get_config_int(section, "default_transport_type", config->sys.default_transport_type);
     config->sys.transport_auto_select = get_config_int(section, "transport_auto_select", config->sys.transport_auto_select);
+    config->sys.transport_shm_probe_timeout_ms = get_config_int(section, "transport_shm_probe_timeout_ms", config->sys.transport_shm_probe_timeout_ms);
+    config->sys.transport_shm_fallback_cooldown_ms = get_config_int(section, "transport_shm_fallback_cooldown_ms", config->sys.transport_shm_fallback_cooldown_ms);
 
     // printf removed
 }
@@ -762,6 +887,10 @@ static void create_sys_section(config_setting_t* root)
                            ZOO_SMB_CONFIG_DEFAULT.sys.default_transport_type);
     config_setting_set_int(config_setting_add(section, "transport_auto_select", CONFIG_TYPE_INT),
                            ZOO_SMB_CONFIG_DEFAULT.sys.transport_auto_select);
+    config_setting_set_int(config_setting_add(section, "transport_shm_probe_timeout_ms", CONFIG_TYPE_INT),
+                           ZOO_SMB_CONFIG_DEFAULT.sys.transport_shm_probe_timeout_ms);
+    config_setting_set_int(config_setting_add(section, "transport_shm_fallback_cooldown_ms", CONFIG_TYPE_INT),
+                           ZOO_SMB_CONFIG_DEFAULT.sys.transport_shm_fallback_cooldown_ms);
 }
 
 /**
@@ -1053,6 +1182,7 @@ static void log_config_summary(void)
     ZOO_LOG_INFO("  ttl: %d", g_smb_config.multicast.ttl);
     ZOO_LOG_INFO("  interface: %s", g_smb_config.multicast.interface);
     ZOO_LOG_INFO("  loopback: %s", g_smb_config.multicast.loopback ? "ZOO_TRUE" : "ZOO_FALSE");
+    log_transport_capability_matrix();
 
     // System configuration
     ZOO_LOG_INFO("System Configuration:");
@@ -1080,6 +1210,8 @@ static void log_config_summary(void)
     ZOO_LOG_INFO("  msg_flag: %d", g_smb_config.sys.msg_flag);
     ZOO_LOG_INFO("  default_transport_type: %d", g_smb_config.sys.default_transport_type);
     ZOO_LOG_INFO("  transport_auto_select: %d", g_smb_config.sys.transport_auto_select);
+    ZOO_LOG_INFO("  transport_shm_probe_timeout_ms: %u", g_smb_config.sys.transport_shm_probe_timeout_ms);
+    ZOO_LOG_INFO("  transport_shm_fallback_cooldown_ms: %u", g_smb_config.sys.transport_shm_fallback_cooldown_ms);
 
     // Log configuration
     ZOO_LOG_INFO("Log Configuration:");

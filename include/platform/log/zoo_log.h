@@ -301,8 +301,8 @@ extern "C"
  * Automatically fills in file, line, and function information.
  * Usage: ZOO_LOG_TRACE("Debug info: %d", value);
  */
-#define ZOO_LOG_TRACE(fmt, ...) \
-    zoo_log_trace(__FILE__, __LINE__, __func__, fmt, ##__VA_ARGS__)
+#define ZOO_LOG_TRACE(...) \
+    zoo_log_trace(__FILE__, __LINE__, __func__, __VA_ARGS__)
 
 /**
  * @brief Convenience macro for debug logging
@@ -310,8 +310,8 @@ extern "C"
  * Automatically fills in file, line, and function information.
  * Usage: ZOO_LOG_DEBUG("Debug info: %d", value);
  */
-#define ZOO_LOG_DEBUG(fmt, ...) \
-    zoo_log_debug(__FILE__, __LINE__, __func__, fmt, ##__VA_ARGS__)
+#define ZOO_LOG_DEBUG(...) \
+    zoo_log_debug(__FILE__, __LINE__, __func__, __VA_ARGS__)
 
 /**
  * @brief Convenience macro for info logging
@@ -319,8 +319,8 @@ extern "C"
  * Automatically fills in file, line, and function information.
  * Usage: ZOO_LOG_INFO("Operation completed: %s", operation_name);
  */
-#define ZOO_LOG_INFO(fmt, ...) \
-    zoo_log_info(__FILE__, __LINE__, __func__, fmt, ##__VA_ARGS__)
+#define ZOO_LOG_INFO(...) \
+    zoo_log_info(__FILE__, __LINE__, __func__, __VA_ARGS__)
 
 /**
  * @brief Convenience macro for warning logging
@@ -328,8 +328,8 @@ extern "C"
  * Automatically fills in file, line, and function information.
  * Usage: ZOO_LOG_WARN("Potential issue detected: %s", issue_desc);
  */
-#define ZOO_LOG_WARN(fmt, ...) \
-    zoo_log_warn(__FILE__, __LINE__, __func__, fmt, ##__VA_ARGS__)
+#define ZOO_LOG_WARN(...) \
+    zoo_log_warn(__FILE__, __LINE__, __func__, __VA_ARGS__)
 
 /**
  * @brief Convenience macro for error logging
@@ -337,8 +337,8 @@ extern "C"
  * Automatically fills in file, line, and function information.
  * Usage: ZOO_LOG_ERROR("Failed to process: %s", error_desc);
  */
-#define ZOO_LOG_ERROR(fmt, ...) \
-    zoo_log_error(__FILE__, __LINE__, __func__, fmt, ##__VA_ARGS__)
+#define ZOO_LOG_ERROR(...) \
+    zoo_log_error(__FILE__, __LINE__, __func__, __VA_ARGS__)
 
 /**
  * @brief Convenience macro for fatal logging
@@ -346,8 +346,8 @@ extern "C"
  * Automatically fills in file, line, and function information.
  * Usage: ZOO_LOG_FATAL("Critical error: %s", error_desc);
  */
-#define ZOO_LOG_FATAL(fmt, ...) \
-    zoo_log_fatal(__FILE__, __LINE__, __func__, fmt, ##__VA_ARGS__)
+#define ZOO_LOG_FATAL(...) \
+    zoo_log_fatal(__FILE__, __LINE__, __func__, __VA_ARGS__)
 
 // ==============================================================================
 // CONDITIONAL LOGGING MACROS
@@ -356,46 +356,46 @@ extern "C"
 /**
  * @brief Conditional logging macros (only log if condition is true)
  */
-#define ZOO_LOG_TRACE_IF(condition, fmt, ...)  \
-    do                                             \
-    {                                              \
-        if (condition)                             \
-            ZOO_LOG_TRACE(fmt, ##__VA_ARGS__); \
+#define ZOO_LOG_TRACE_IF(condition, ...)  \
+    do                                   \
+    {                                    \
+        if (condition)                   \
+            ZOO_LOG_TRACE(__VA_ARGS__);  \
     } while (0)
 
-#define ZOO_LOG_DEBUG_IF(condition, fmt, ...)  \
-    do                                             \
-    {                                              \
-        if (condition)                             \
-            ZOO_LOG_DEBUG(fmt, ##__VA_ARGS__); \
+#define ZOO_LOG_DEBUG_IF(condition, ...)  \
+    do                                   \
+    {                                    \
+        if (condition)                   \
+            ZOO_LOG_DEBUG(__VA_ARGS__);  \
     } while (0)
 
-#define ZOO_LOG_INFO_IF(condition, fmt, ...)  \
-    do                                            \
-    {                                             \
-        if (condition)                            \
-            ZOO_LOG_INFO(fmt, ##__VA_ARGS__); \
+#define ZOO_LOG_INFO_IF(condition, ...)  \
+    do                                  \
+    {                                   \
+        if (condition)                   \
+            ZOO_LOG_INFO(__VA_ARGS__);  \
     } while (0)
 
-#define ZOO_LOG_WARN_IF(condition, fmt, ...)  \
-    do                                            \
-    {                                             \
-        if (condition)                            \
-            ZOO_LOG_WARN(fmt, ##__VA_ARGS__); \
+#define ZOO_LOG_WARN_IF(condition, ...)  \
+    do                                  \
+    {                                   \
+        if (condition)                   \
+            ZOO_LOG_WARN(__VA_ARGS__);  \
     } while (0)
 
-#define ZOO_LOG_ERROR_IF(condition, fmt, ...)  \
-    do                                             \
-    {                                              \
-        if (condition)                             \
-            ZOO_LOG_ERROR(fmt, ##__VA_ARGS__); \
+#define ZOO_LOG_ERROR_IF(condition, ...)  \
+    do                                   \
+    {                                    \
+        if (condition)                   \
+            ZOO_LOG_ERROR(__VA_ARGS__);  \
     } while (0)
 
-#define ZOO_LOG_FATAL_IF(condition, fmt, ...)  \
-    do                                             \
-    {                                              \
-        if (condition)                             \
-            ZOO_LOG_FATAL(fmt, ##__VA_ARGS__); \
+#define ZOO_LOG_FATAL_IF(condition, ...)  \
+    do                                   \
+    {                                    \
+        if (condition)                   \
+            ZOO_LOG_FATAL(__VA_ARGS__);  \
     } while (0)
 
 // ==============================================================================

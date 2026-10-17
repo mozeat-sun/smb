@@ -41,20 +41,26 @@ get_filename_component(ZOO_DISPATCHER_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}" ABS
 get_filename_component(ZOO_REPO_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../.." ABSOLUTE)
 
 # Operating System Detection
-if(UNIX)
+if(APPLE)
+    message(STATUS "Configuring for macOS platform")
+    list(APPEND PLATFORM_DEFINITIONS -D__ZOO_OS_MACOS -DZOO_OS_MACOS)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L")
+    list(APPEND PLATFORM_LIBS pthread dl)
+elseif(UNIX)
     message(STATUS "Configuring for Linux/Unix platform")
     list(APPEND PLATFORM_DEFINITIONS -D__ZOO_OS_LINUX -DZOO_OS_LINUX)
     
     # GNU source feature detection for Linux
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L")
-    list(APPEND PLATFORM_LIBS pthread rt dl)
+    list(APPEND PLATFORM_LIBS pthread dl)
     
-    # Check for additional Linux libraries
+    # Some Linux systems provide realtime support via librt; it is optional.
     find_library(LIBRT_FOUND rt)
-    if(NOT LIBRT_FOUND)
+    if(LIBRT_FOUND)
+        list(APPEND PLATFORM_LIBS rt)
+    else()
         message(WARNING "librt not found, real-time features may be limited")
     endif()
-    
 else()
     message(STATUS "Configuring for unknown/embedded platform")
     list(APPEND PLATFORM_DEFINITIONS -D__ZOO_OS_UNKNOWN -DZOO_OS_UNKNOWN)
@@ -325,6 +331,15 @@ target_include_directories(zoo_dispatcher_static PRIVATE
 
 # Enhanced platform-specific linking
 target_link_libraries(zoo_dispatcher_static PUBLIC ${PLATFORM_LIBS})
+if(TARGET zoo_memory_pool_static)
+    target_link_libraries(zoo_dispatcher_static PUBLIC zoo_memory_pool_static)
+endif()
+if(TARGET zoo_buffer_static)
+    target_link_libraries(zoo_dispatcher_static PUBLIC zoo_buffer_static)
+endif()
+if(TARGET zoo_log_static)
+    target_link_libraries(zoo_dispatcher_static PUBLIC zoo_log_static)
+endif()
 
 # Add pthread threading only if available and needed
 if("pthread" IN_LIST PLATFORM_LIBS AND TARGET Threads::Threads)
@@ -354,6 +369,15 @@ target_include_directories(zoo_dispatcher_shared PRIVATE
 
 # Enhanced platform-specific linking
 target_link_libraries(zoo_dispatcher_shared PUBLIC ${PLATFORM_LIBS})
+if(TARGET zoo_memory_pool_shared)
+    target_link_libraries(zoo_dispatcher_shared PUBLIC zoo_memory_pool_shared)
+endif()
+if(TARGET zoo_buffer_shared)
+    target_link_libraries(zoo_dispatcher_shared PUBLIC zoo_buffer_shared)
+endif()
+if(TARGET zoo_log_shared)
+    target_link_libraries(zoo_dispatcher_shared PUBLIC zoo_log_shared)
+endif()
 
 # Add pthread threading only if available and needed
 if("pthread" IN_LIST PLATFORM_LIBS AND TARGET Threads::Threads)

@@ -81,6 +81,29 @@ extern "C"
         uint16_t multicast_port);
 
     /**
+     * @brief Constructs a discovery message with optional transport-selection metadata.
+     *
+     * Appends optional key-value metadata tokens while preserving the original
+     * five-token discovery layout for backward compatibility.
+     *
+     * @param host_fingerprint Optional same-host fingerprint (NULL/empty to omit).
+     * @param transport_capabilities Capability bitmask (0 means omit).
+     * @param shm_endpoint Optional SHM endpoint/channel hint (NULL/empty to omit).
+     */
+    ZOO_BOOL zoo_smb_protocol_make_discovery_payload_message_ex2(
+        ZOO_SMB_MSG_STRUCT* msg,
+        const char* service_name,
+        const char* address,
+        uint16_t port,
+        const char* topic,
+        ZOO_SMB_TRANSPORT_TYPE_ENUM transport_type,
+        const char* multicast_addr,
+        uint16_t multicast_port,
+        const char* host_fingerprint,
+        uint32_t transport_capabilities,
+        const char* shm_endpoint);
+
+    /**
      * @brief Parses a discovery message in the Zoo SMB protocol.
      *
      * This function processes the incoming discovery message and extracts relevant
@@ -126,6 +149,29 @@ extern "C"
         ZOO_SMB_TRANSPORT_TYPE_ENUM* transport_type,
         char* multicast_addr,
         uint16_t* multicast_port);
+
+    /**
+     * @brief Parses discovery payload and extracts optional metadata extensions.
+     *
+     * Recognized optional tokens:
+     * - hf=<host-fingerprint>
+     * - cap=<unsigned-int>
+     * - shm=<endpoint>
+     *
+     * Any optional output pointer may be NULL.
+     */
+    ZOO_BOOL zoo_smb_protocol_parse_discovery_payload_message_ex2(
+        const ZOO_SMB_MSG_STRUCT* msg,
+        char* service_name,
+        char* address,
+        uint16_t* port,
+        char* topic,
+        ZOO_SMB_TRANSPORT_TYPE_ENUM* transport_type,
+        char* multicast_addr,
+        uint16_t* multicast_port,
+        char* host_fingerprint,
+        uint32_t* transport_capabilities,
+        char* shm_endpoint);
 
     /**
      * @brief Swap the byte order of the message header fields if needed.

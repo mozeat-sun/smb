@@ -109,10 +109,10 @@ uint32_t zoo_get_last_error(void);
 const char* zoo_error_string(uint32_t error_code);
 
 // Memory pool function declarations
-ZOO_ERROR_TYPE zoo_create_memory_pool(size_t size);
+ZOO_INT32_T zoo_create_memory_pool(ZOO_SIZE_T size);
 ZOO_INT32_T zoo_validate_memory_pool(void);
 void zoo_destroy_memory_pool(void);
-void* zoo_allocate_from_pool(size_t size);
+void* zoo_allocate_from_pool(ZOO_SIZE_T size);
 void zoo_free_to_pool(void* ptr);
 
 // Note: List functions are provided by the ZOO library, don't redeclare

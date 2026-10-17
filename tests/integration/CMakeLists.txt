@@ -53,7 +53,7 @@ function(zoo_add_smb_integration_test target_name source_file)
         zoo_smb_shared
         zoo_integration_unity
         Threads::Threads
-        atomic
+        ${ZOO_ATOMIC_LIBRARY}
     )
 
     # Integration binaries depend on internal shared libraries that may be

@@ -19,7 +19,9 @@
 #include "zoo_smb_error.h"
 #include "zoo_memory_pool.h"
 #include <sys/socket.h>
+#if defined(__linux__)
 #include <sys/epoll.h>
+#endif
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>

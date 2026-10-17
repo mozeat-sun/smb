@@ -460,7 +460,7 @@ static const char* get_ringbuf_error_string(uint32_t subcategory, uint32_t speci
  */
 static const char* get_timeout_error_string(uint32_t subcategory, uint32_t specific)
 {
-    specific = specific; // Avoid ZOO_SMB_UNUSED variable warning
+    (void)specific;
     switch (subcategory)
     {
         case ZOO_SMB_TIMEOUT_OPERATION:

@@ -41,6 +41,20 @@ jobs:
           name: protocol-compatibility-artifacts
           path: artifacts/quality/
 
+  transport-autoselect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Generate transport auto-select outcomes evidence
+        run: bash tools/quality/transport_autoselect_outcomes.sh
+      - name: Upload transport auto-select artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: transport-autoselect-artifacts
+          path: artifacts/quality/
+
   static-analysis:
     runs-on: ubuntu-latest
     timeout-minutes: 60
