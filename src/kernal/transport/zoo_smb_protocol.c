@@ -23,6 +23,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <ctype.h>
 
 #if defined(__APPLE__)
 #include <libkern/OSByteOrder.h>
@@ -738,6 +739,23 @@ ZOO_BOOL zoo_smb_protocol_make_discovery_payload_message_ex(
         NULL);
 }
 
+static ZOO_BOOL is_discovery_metadata_value_safe(const char* value)
+{
+    if (!value || value[0] == '\0')
+    {
+        return ZOO_FALSE;
+    }
+
+    for (const unsigned char* p = (const unsigned char*)value; *p != '\0'; ++p)
+    {
+        if (!(isalnum(*p) || *p == '.' || *p == '_' || *p == '-' || *p == ':'))
+        {
+            return ZOO_FALSE;
+        }
+    }
+    return ZOO_TRUE;
+}
+
 /**
  * @brief Parse discovery payload with multicast support
  * Format: "service_name topic address:port transport_type multicast_addr:multicast_port"
@@ -832,6 +850,11 @@ ZOO_BOOL zoo_smb_protocol_parse_discovery_payload_message_ex2(
     {
         if (strncmp(tokens[i], "hf=", 3) == 0 && host_fingerprint)
         {
+            if (!is_discovery_metadata_value_safe(tokens[i] + 3))
+            {
+                zoo_free_to_pool(payload_copy);
+                return ZOO_FALSE;
+            }
             strncpy(host_fingerprint, tokens[i] + 3, MAX_SERVICE_HOST_FINGERPRINT_LENGTH - 1);
             host_fingerprint[MAX_SERVICE_HOST_FINGERPRINT_LENGTH - 1] = '\0';
         }
@@ -841,6 +864,11 @@ ZOO_BOOL zoo_smb_protocol_parse_discovery_payload_message_ex2(
         }
         else if (strncmp(tokens[i], "shm=", 4) == 0 && shm_endpoint)
         {
+            if (!is_discovery_metadata_value_safe(tokens[i] + 4))
+            {
+                zoo_free_to_pool(payload_copy);
+                return ZOO_FALSE;
+            }
             strncpy(shm_endpoint, tokens[i] + 4, MAX_SERVICE_SHM_ENDPOINT_LENGTH - 1);
             shm_endpoint[MAX_SERVICE_SHM_ENDPOINT_LENGTH - 1] = '\0';
         }

@@ -207,6 +207,44 @@ void test_discovery_payload_ex2_parses_legacy_token_order(void)
     TEST_ASSERT_EQUAL_UINT16(0, multicast_port);
 }
 
+void test_discovery_payload_ex2_rejects_unsafe_metadata_values(void)
+{
+    ZOO_SMB_MSG_STRUCT msg = {0};
+    const char payload[] =
+        "svc_meta t1 127.0.0.1:12345 3 239.0.0.1:9000 hf=127.0.0.1$bad cap=3 shm=svc_meta";
+
+    msg.payload = zoo_allocate_from_pool(sizeof(payload));
+    TEST_ASSERT_NOT_NULL(msg.payload);
+    memcpy(msg.payload, payload, sizeof(payload));
+    msg.header.payload_size = (uint32_t)(sizeof(payload) - 1U);
+
+    char service[32] = {0};
+    char address[32] = {0};
+    char topic[32] = {0};
+    char multicast[32] = {0};
+    char host_fingerprint[64] = {0};
+    char shm_endpoint[64] = {0};
+    uint16_t port = 0;
+    uint16_t multicast_port = 0;
+    uint32_t capabilities = 0;
+    ZOO_SMB_TRANSPORT_TYPE_ENUM transport = ZOO_SMB_TRANSPORT_TYPE_MIN;
+
+    ZOO_BOOL parsed = zoo_smb_protocol_parse_discovery_payload_message_ex2(
+        &msg,
+        service,
+        address,
+        &port,
+        topic,
+        &transport,
+        multicast,
+        &multicast_port,
+        host_fingerprint,
+        &capabilities,
+        shm_endpoint);
+
+    TEST_ASSERT_FALSE(parsed);
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -219,6 +257,7 @@ int main(void)
     RUN_TEST(test_transport_type_validation);
     RUN_TEST(test_discovery_payload_ex2_round_trip_with_metadata);
     RUN_TEST(test_discovery_payload_ex2_parses_legacy_token_order);
+    RUN_TEST(test_discovery_payload_ex2_rejects_unsafe_metadata_values);
     
     return UNITY_END();
 }
