@@ -33,6 +33,7 @@ typedef struct
     uint32_t header_cases;
     uint32_t deserialize_cases;
     uint32_t serialize_cases;
+    uint32_t discovery_cases;
 } FUZZ_REPORT_STRUCT;
 
 typedef struct
@@ -94,6 +95,59 @@ static void fuzz_roundtrip_case(FUZZ_REPORT_STRUCT* report)
     zoo_smb_destroy_message(msg);
 }
 
+static void fuzz_discovery_case(FUZZ_REPORT_STRUCT* report, const uint8_t* bytes, size_t len)
+{
+    ZOO_SMB_MSG_STRUCT msg;
+    char service_name[32];
+    char address[32];
+    char topic[32];
+    char multicast_addr[32];
+    char host_fingerprint[64];
+    char shm_endpoint[64];
+    uint16_t port = 0;
+    uint16_t multicast_port = 0;
+    uint32_t capabilities = 0;
+    ZOO_SMB_TRANSPORT_TYPE_ENUM transport_type = ZOO_SMB_TRANSPORT_TYPE_MIN;
+
+    memset(&msg, 0, sizeof(msg));
+    memset(service_name, 0, sizeof(service_name));
+    memset(address, 0, sizeof(address));
+    memset(topic, 0, sizeof(topic));
+    memset(multicast_addr, 0, sizeof(multicast_addr));
+    memset(host_fingerprint, 0, sizeof(host_fingerprint));
+    memset(shm_endpoint, 0, sizeof(shm_endpoint));
+
+    if (!bytes || len == 0)
+    {
+        return;
+    }
+
+    msg.payload = zoo_allocate_from_pool(len + 1u);
+    if (!msg.payload)
+    {
+        return;
+    }
+
+    memcpy(msg.payload, bytes, len);
+    msg.payload[len] = '\0';
+    msg.header.payload_size = (uint32_t)len;
+
+    (void)zoo_smb_protocol_parse_discovery_payload_message_ex2(
+        &msg,
+        service_name,
+        address,
+        &port,
+        topic,
+        &transport_type,
+        multicast_addr,
+        &multicast_port,
+        host_fingerprint,
+        &capabilities,
+        shm_endpoint);
+    zoo_free_to_pool(msg.payload);
+    report->discovery_cases += 1u;
+}
+
 static void write_report(const FUZZ_REPORT_STRUCT* report)
 {
     const char* artifact_dir = getenv("FUZZ_ARTIFACT_DIR");
@@ -115,18 +169,20 @@ static void write_report(const FUZZ_REPORT_STRUCT* report)
             "{\n"
             "  \"target\": \"fuzz_zoo_smb_protocol\",\n"
             "  \"executed\": true,\n"
-            "  \"entrypoints\": [\"zoo_smb_protocol_is_header_valid\", \"zoo_smb_protocol_is_header_valid_with_msg_type\", \"zoo_smb_protocol_swap_header\", \"zoo_smb_protocol_deserialize\", \"zoo_smb_protocol_serialize\"],\n"
+            "  \"entrypoints\": [\"zoo_smb_protocol_is_header_valid\", \"zoo_smb_protocol_is_header_valid_with_msg_type\", \"zoo_smb_protocol_swap_header\", \"zoo_smb_protocol_deserialize\", \"zoo_smb_protocol_serialize\", \"zoo_smb_protocol_parse_discovery_payload_message_ex2\"],\n"
             "  \"seed_cases\": %u,\n"
             "  \"mutated_cases\": %u,\n"
             "  \"header_cases\": %u,\n"
             "  \"deserialize_cases\": %u,\n"
-            "  \"serialize_cases\": %u\n"
+            "  \"serialize_cases\": %u,\n"
+            "  \"discovery_cases\": %u\n"
             "}\n",
             report->seed_cases,
             report->mutated_cases,
             report->header_cases,
             report->deserialize_cases,
-            report->serialize_cases);
+            report->serialize_cases,
+            report->discovery_cases);
     fclose(fp);
 }
 
@@ -149,6 +205,7 @@ int main(void)
     {
         fuzz_header_case(&report, seeds[i], sizeof(seeds[i]));
         fuzz_deserialize_case(&report, seeds[i], sizeof(seeds[i]));
+        fuzz_discovery_case(&report, seeds[i], sizeof(seeds[i]));
         report.seed_cases += 1u;
     }
 
@@ -160,21 +217,30 @@ int main(void)
         }
         fuzz_header_case(&report, mutated, sizeof(mutated));
         fuzz_deserialize_case(&report, mutated, sizeof(mutated));
+        fuzz_discovery_case(&report, mutated, sizeof(mutated));
         report.mutated_cases += 1u;
     }
 
     for (size_t i = 0; i < 32u; ++i)
     {
         fuzz_roundtrip_case(&report);
+        {
+            const char* discovery_payload =
+                "svc_meta topic1 127.0.0.1:1234 3 239.1.1.1:5678 hf=127.0.0.1 cap=3 shm=svc_meta";
+            fuzz_discovery_case(&report,
+                                (const uint8_t*)discovery_payload,
+                                strlen(discovery_payload));
+        }
     }
 
     write_report(&report);
-    printf("fuzz_zoo_smb_protocol seeds=%u mutated=%u header=%u deserialize=%u serialize=%u\n",
+    printf("fuzz_zoo_smb_protocol seeds=%u mutated=%u header=%u deserialize=%u serialize=%u discovery=%u\n",
            report.seed_cases,
            report.mutated_cases,
            report.header_cases,
            report.deserialize_cases,
-           report.serialize_cases);
+           report.serialize_cases,
+           report.discovery_cases);
 
     fflush(NULL);
     _exit(0);
