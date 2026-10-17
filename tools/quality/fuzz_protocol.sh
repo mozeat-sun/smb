@@ -7,7 +7,8 @@ mkdir -p "${ARTIFACT_DIR}"
 
 if [[ ! -d "${BUILD_DIR}" ]]; then
   cmake -S . -B "${BUILD_DIR}"
-  cmake --build "${BUILD_DIR}" -j"$(nproc)"
+  CPU_COUNT="$(nproc 2>/dev/null || getconf _NPROCESSORS_ONLN 2>/dev/null || echo 4)"
+  cmake --build "${BUILD_DIR}" -j"${CPU_COUNT}"
 fi
 
 FUZZ_TEST_COUNT=$(ctest --test-dir "${BUILD_DIR}" -N | grep -Ei "Test #[0-9]+: .*fuzz|Test #[0-9]+: .*afl|Test #[0-9]+: .*libfuzzer" | wc -l)
@@ -24,7 +25,7 @@ if [[ ${FUZZ_TEST_COUNT} -gt 0 ]]; then
   fi
 
   if [[ ! -f "${ARTIFACT_DIR}/fuzz_protocol_coverage.json" ]]; then
-    echo '{"target":"fuzz-protocol","executed":true,"entrypoints":[],"seed_cases":0,"mutated_cases":0}' > "${ARTIFACT_DIR}/fuzz_protocol_coverage.json"
+    echo '{"target":"fuzz-protocol","executed":true,"entrypoints":[],"seed_cases":0,"mutated_cases":0,"discovery_cases":0}' > "${ARTIFACT_DIR}/fuzz_protocol_coverage.json"
   fi
 
   python3 - "${ARTIFACT_DIR}/fuzz_protocol_coverage.json" "${FUZZ_TEST_COUNT}" > "${ARTIFACT_DIR}/fuzz_summary.json" <<'PY'
@@ -43,6 +44,7 @@ summary = {
     "coverage_report": coverage_path.split("/")[-1],
     "seed_cases": int(coverage.get("seed_cases", 0)),
     "mutated_cases": int(coverage.get("mutated_cases", 0)),
+    "discovery_cases": int(coverage.get("discovery_cases", 0)),
     "entrypoints": coverage.get("entrypoints", []),
 }
 
