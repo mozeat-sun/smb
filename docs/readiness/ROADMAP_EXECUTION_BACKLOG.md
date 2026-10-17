@@ -266,6 +266,7 @@ Current status note:
 - Static analysis, dependency scan, fuzz, and vulnerability-SLA workflow artifacts are active in repository CI.
 - `docs/security/THREAT_MODEL.md` provides the maintained threat-model baseline for protocol, control plane, and release surfaces.
 - `docs/security/VULNERABILITY_REMEDIATION_SLA.md` and `docs/security/VULNERABILITY_REMEDIATION_LOG.csv` provide tracked remediation evidence, and CI generates an SLA summary artifact.
+- `tools/quality/security_threat_model_gate.sh` now enforces threat-model structure, required TM scenario coverage, and remediation-log evidence in CI artifacts.
 
 Exit evidence:
 

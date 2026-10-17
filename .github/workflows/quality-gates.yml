@@ -112,6 +112,20 @@ jobs:
           name: vulnerability-sla-artifacts
           path: artifacts/quality/
 
+  security-threat-model:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run security threat-model gate
+        run: bash tools/quality/security_threat_model_gate.sh
+      - name: Upload security threat-model artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-threat-model-artifacts
+          path: artifacts/quality/
+
   pre-assessment-readiness:
     runs-on: ubuntu-latest
     timeout-minutes: 15

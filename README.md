@@ -117,6 +117,7 @@ Key quality scripts (all under `tools/quality/`):
 | `traceability_gate.sh` | Enforce requirements-to-test traceability |
 | `protocol_compatibility_matrix.sh` | Wire protocol compatibility matrix |
 | `transport_autoselect_outcomes.sh` | Same-host SHM auto-select evidence artifact |
+| `security_threat_model_gate.sh` | Threat-model and remediation evidence quality gate |
 | `grade1_exit_gate.sh` | Generate Grade 1 release exit status |
 
 ## Compatibility And Deprecation
