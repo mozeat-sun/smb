@@ -148,7 +148,7 @@ Checklist:
 - [x] Add SHM attach/register timeout and fallback-to-network behavior.
 - [x] Add fallback cooldown policy to avoid repeated SHM thrashing.
 - [x] Add telemetry fields for selected transport, fallback reason, and selection latency.
-- [ ] Add unit tests for resolver decision matrix.
+- [x] Add unit tests for resolver decision matrix.
 - [x] Add integration tests for same-host SHM select and forced fallback.
 - [x] Add CI artifact summarizing transport auto-select outcomes.
 

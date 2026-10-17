@@ -259,6 +259,9 @@ zoo_add_smb_unit_test(test_zoo_smb_service_unit test_zoo_smb_service.c)
 # Service manager: register, unregister, observer, lookup
 zoo_add_smb_unit_test(test_zoo_smb_service_manager_unit test_zoo_smb_service_manager.c)
 
+# Transport manager: resolver decision matrix and auto-select behavior
+zoo_add_smb_unit_test(test_zoo_smb_transport_manager_unit test_zoo_smb_transport_manager.c)
+
 # Error code construction and string conversion
 zoo_add_smb_unit_test(test_error_unit test_error.c)
 
